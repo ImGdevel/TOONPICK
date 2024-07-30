@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class UserDetailsDTO implements UserDetails {
-    private User userEntity;
+    private final User userEntity;
 
     public UserDetailsDTO(User userEntity) {
         this.userEntity = userEntity;
