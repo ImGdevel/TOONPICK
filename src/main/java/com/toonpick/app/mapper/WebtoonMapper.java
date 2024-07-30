@@ -2,7 +2,9 @@ package com.toonpick.app.mapper;
 
 import com.toonpick.app.dto.WebtoonDTO;
 import com.toonpick.app.entity.Webtoon;
+import org.springframework.stereotype.Component;
 
+@Component
 public class WebtoonMapper {
 
     public WebtoonDTO toDTO(Webtoon webtoon) {

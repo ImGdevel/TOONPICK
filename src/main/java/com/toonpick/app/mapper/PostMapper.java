@@ -1,6 +1,5 @@
 package com.toonpick.app.mapper;
 
-
 import com.toonpick.app.dto.PostDTO;
 import com.toonpick.app.entity.Post;
 
