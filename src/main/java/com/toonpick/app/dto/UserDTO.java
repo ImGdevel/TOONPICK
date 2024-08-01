@@ -14,11 +14,14 @@ import java.util.Set;
 @Builder
 public class UserDTO {
     private Long id;
+    private String password;
+    private String role;
     private String name;
     private String profilePicture;
     private LocalDate accountCreationDate;
-    private Set<Long> interestWebtoonIds;
-    private Set<Long> interestAuthorIds;
-    private Set<Long> interestGenreIds;
-    private Set<Long> reviewIds;
+    private Set<InterestWebtoonDTO> interestWebtoons;
+    private Set<InterestAuthorDTO> interestAuthors;
+    private Set<InterestGenreDTO> interestGenres;
+    private Set<ReviewDTO> reviews;
+
 }

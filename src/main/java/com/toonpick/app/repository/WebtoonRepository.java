@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface WebtoonRepository extends JpaRepository<Webtoon, Long> {
-    List<Webtoon> findByGenre(String genre);
+    List<Webtoon> findByGenres_Name(String genreName);
 }

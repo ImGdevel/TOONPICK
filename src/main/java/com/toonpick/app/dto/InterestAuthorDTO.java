@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InterestAuthorDTO {
     private Long id;
-    private Long userId;
-    private Long authorId;
+    private UserDTO user;
+    private AuthorDTO author;
 }

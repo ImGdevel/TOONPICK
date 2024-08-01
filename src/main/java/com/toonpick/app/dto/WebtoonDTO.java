@@ -18,7 +18,7 @@ public class WebtoonDTO {
     private int episodeCount;
     private LocalDate serializationStartDate;
     private String serializationDay;
-    private Set<Long> authorIds;
-    private Set<Long> genreIds;
-    private Set<Long> reviewIds;
+    private Set<AuthorDTO> authors;
+    private Set<GenreDTO> genres;
+    private Set<ReviewDTO> reviews;
 }

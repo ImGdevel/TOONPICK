@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,8 +20,6 @@ public class Genre {
 
     private String name;
 
-    @ManyToMany(mappedBy = "genres")
-    private Set<Webtoon> webtoons;
 
     @Builder
     public Genre(String name) {

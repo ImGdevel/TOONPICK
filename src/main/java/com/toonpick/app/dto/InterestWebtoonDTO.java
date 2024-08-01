@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InterestWebtoonDTO {
     private Long id;
-    private Long userId;
-    private Long webtoonId;
+    private UserDTO user;
+    private WebtoonDTO webtoon;
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -20,8 +21,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String username;
     private String password;
 
     private String role;
@@ -33,16 +32,16 @@ public class User {
     private LocalDate accountCreationDate;
 
     @OneToMany(mappedBy = "user")
-    private Set<InterestWebtoon> interestWebtoons;
+    private Set<InterestWebtoon> interestWebtoons = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<InterestAuthor> interestAuthors;
+    private Set<InterestAuthor> interestAuthors = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<InterestGenre> interestGenres;
+    private Set<InterestGenre> interestGenres = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<Review> reviews;
+    private Set<Review> reviews = new HashSet<>();
 
 
 

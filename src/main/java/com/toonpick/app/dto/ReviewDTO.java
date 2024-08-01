@@ -13,10 +13,11 @@ import java.time.LocalDate;
 @Builder
 public class ReviewDTO {
     private Long id;
-    private Long userId;
-    private Long webtoonId;
+    private UserDTO user;
+    private WebtoonDTO webtoon;
     private LocalDate reviewDate;
     private float rating;
     private String comment;
     private int likes;
+
 }

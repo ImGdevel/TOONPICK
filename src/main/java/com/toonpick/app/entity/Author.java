@@ -1,16 +1,18 @@
 package com.toonpick.app.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "author")
 public class Author {
 
@@ -20,15 +22,9 @@ public class Author {
 
     private String name;
 
-    @ManyToMany(mappedBy = "authors")
-    private Set<Webtoon> webtoons;
 
     @Builder
     public Author(String name) {
-        this.name = name;
-    }
-
-    public void update(String name) {
         this.name = name;
     }
 }
