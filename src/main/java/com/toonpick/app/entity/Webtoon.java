@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Set;
+
 
 @Entity
 @Getter
@@ -19,16 +21,25 @@ public class Webtoon {
 
     private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Author author;
+    private float averageRating;
 
-    private float rating;
+    private float platformRating;
 
-    @Column(length = 1000)
     private String description;
 
-    private String imageUrl;
+    private int episodeCount;
+
+    private LocalDate serializationStartDate;
+
+    private String serializationDay;
+
+    @ManyToMany
+    @JoinTable(
+            name = "webtoon_author",
+            joinColumns = @JoinColumn(name = "webtoon_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private Set<Author> authors;
 
     @ManyToMany
     @JoinTable(
@@ -38,24 +49,29 @@ public class Webtoon {
     )
     private Set<Genre> genres;
 
-
+    @OneToMany(mappedBy = "webtoon")
+    private Set<Review> reviews;
 
     @Builder
-    public Webtoon(String title, Author author, float rating, String description, String imageUrl ,Set<Genre> genres) {
+    public Webtoon(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, String serializationDay) {
         this.title = title;
-        this.author = author;
-        this.rating = rating;
+        this.averageRating = averageRating;
+        this.platformRating = platformRating;
         this.description = description;
-        this.imageUrl = imageUrl;
-        this.genres = genres;
+        this.episodeCount = episodeCount;
+        this.serializationStartDate = serializationStartDate;
+        this.serializationDay = serializationDay;
     }
 
-    public void update(String title, Author author, float rating, String description, String imageUrl, Set<Genre> genres) {
+    public void update(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, String serializationDay, Set<Author> authors, Set<Genre> genres) {
         this.title = title;
-        this.author = author;
-        this.rating = rating;
+        this.averageRating = averageRating;
+        this.platformRating = platformRating;
         this.description = description;
-        this.imageUrl = imageUrl;
+        this.episodeCount = episodeCount;
+        this.serializationStartDate = serializationStartDate;
+        this.serializationDay = serializationDay;
+        this.authors = authors;
         this.genres = genres;
     }
 }

@@ -23,13 +23,11 @@ public class Genre {
     private Set<Webtoon> webtoons;
 
     @Builder
-    public Genre(String name, Set<Webtoon> webtoons) {
+    public Genre(String name) {
         this.name = name;
-        this.webtoons = webtoons;
     }
 
-    public void update(String name, Set<Webtoon> webtoons) {
+    public void update(String name) {
         this.name = name;
-        this.webtoons = webtoons;
     }
 }

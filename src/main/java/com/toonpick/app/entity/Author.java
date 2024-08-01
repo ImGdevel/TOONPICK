@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -19,17 +20,15 @@ public class Author {
 
     private String name;
 
-    @OneToMany(mappedBy = "author")
+    @ManyToMany(mappedBy = "authors")
     private Set<Webtoon> webtoons;
 
     @Builder
-    public Author(String name, Set<Webtoon> webtoons) {
+    public Author(String name) {
         this.name = name;
-        this.webtoons = webtoons;
     }
 
-    public void update(String name, Set<Webtoon> webtoons) {
+    public void update(String name) {
         this.name = name;
-        this.webtoons = webtoons;
     }
 }

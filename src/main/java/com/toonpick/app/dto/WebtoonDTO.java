@@ -2,6 +2,7 @@ package com.toonpick.app.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
@@ -11,9 +12,13 @@ import java.util.Set;
 public class WebtoonDTO {
     private Long id;
     private String title;
-    private Long authorId;
-    private float rating;
+    private float averageRating;
+    private float platformRating;
     private String description;
-    private String imageUrl;
+    private int episodeCount;
+    private LocalDate serializationStartDate;
+    private String serializationDay;
+    private Set<Long> authorIds;
     private Set<Long> genreIds;
+    private Set<Long> reviewIds;
 }

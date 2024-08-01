@@ -1,33 +1,55 @@
 package com.toonpick.app.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+
+import java.time.LocalDate;
+import java.util.Set;
+
 
 @Entity
-@Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Table(name = "user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(unique = true)
     private String username;
     private String password;
 
     private String role;
+
+    private String name;
+
+    private String profilePicture;
+
+    private LocalDate accountCreationDate;
+
+    @OneToMany(mappedBy = "user")
+    private Set<InterestWebtoon> interestWebtoons;
+
+    @OneToMany(mappedBy = "user")
+    private Set<InterestAuthor> interestAuthors;
+
+    @OneToMany(mappedBy = "user")
+    private Set<InterestGenre> interestGenres;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Review> reviews;
+
+
+
+    @Builder
+    public User(String name, String profilePicture, LocalDate accountCreationDate) {
+        this.name = name;
+        this.profilePicture = profilePicture;
+        this.accountCreationDate = accountCreationDate;
+    }
 }
