@@ -1,18 +1,19 @@
 package com.toonpick.app.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
+
+import java.util.Set;
 
 @Data
-@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class WebtoonDTO {
-
     private Long id;
     private String title;
-    private String author;
-    private String genre;
+    private Long authorId;
+    private float rating;
     private String description;
-
+    private String imageUrl;
+    private Set<Long> genreIds;
 }

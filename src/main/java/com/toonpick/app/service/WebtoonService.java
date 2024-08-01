@@ -11,15 +11,26 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.toonpick.app.entity.Author;
+import com.toonpick.app.entity.Genre;
+import com.toonpick.app.repository.AuthorRepository;
+import com.toonpick.app.repository.GenreRepository;
+
+
+import java.util.Set;
+
 @Service
 public class WebtoonService {
 
     private final WebtoonRepository webtoonRepository;
-
+    private final AuthorRepository authorRepository;
+    private final GenreRepository genreRepository;
     private final WebtoonMapper webtoonMapper;
 
-    public WebtoonService(WebtoonRepository webtoonRepository, WebtoonMapper webtoonMapper) {
+    public WebtoonService(WebtoonRepository webtoonRepository, AuthorRepository authorRepository, GenreRepository genreRepository, WebtoonMapper webtoonMapper) {
         this.webtoonRepository = webtoonRepository;
+        this.authorRepository = authorRepository;
+        this.genreRepository = genreRepository;
         this.webtoonMapper = webtoonMapper;
     }
 
@@ -35,11 +46,21 @@ public class WebtoonService {
         Webtoon webtoon = webtoonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
 
+        Author author = authorRepository.findById(webtoonDTO.getAuthorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + webtoonDTO.getAuthorId()));
+
+        Set<Genre> genres = webtoonDTO.getGenreIds().stream()
+                .map(genreId -> genreRepository.findById(genreId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Genre not found with id: " + genreId)))
+                .collect(Collectors.toSet());
+
         webtoon.update(
                 webtoonDTO.getTitle(),
-                webtoonDTO.getAuthor(),
-                webtoonDTO.getGenre(),
-                webtoonDTO.getDescription()
+                author,
+                webtoonDTO.getRating(),
+                webtoonDTO.getDescription(),
+                webtoonDTO.getImageUrl(),
+                genres
         );
 
         webtoon = webtoonRepository.save(webtoon);

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -16,24 +18,44 @@ public class Webtoon {
     private Long id;
 
     private String title;
-    private String author;
-    private String genre;
 
-    @Column(length=500)
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
+
+    private float rating;
+
+    @Column(length = 1000)
     private String description;
 
+    private String imageUrl;
+
+    @ManyToMany
+    @JoinTable(
+            name = "webtoon_genre",
+            joinColumns = @JoinColumn(name = "webtoon_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres;
+
+
+
     @Builder
-    public Webtoon(String title, String author, String genre, String description) {
+    public Webtoon(String title, Author author, float rating, String description, String imageUrl ,Set<Genre> genres) {
         this.title = title;
         this.author = author;
-        this.genre = genre;
+        this.rating = rating;
         this.description = description;
+        this.imageUrl = imageUrl;
+        this.genres = genres;
     }
 
-    public void update(String title, String author, String genre, String description) {
+    public void update(String title, Author author, float rating, String description, String imageUrl, Set<Genre> genres) {
         this.title = title;
         this.author = author;
-        this.genre = genre;
+        this.rating = rating;
         this.description = description;
+        this.imageUrl = imageUrl;
+        this.genres = genres;
     }
 }
