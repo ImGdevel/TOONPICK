@@ -3,11 +3,10 @@ package com.toonpick.app.mapper;
 import com.toonpick.app.dto.AuthorDTO;
 import com.toonpick.app.entity.Author;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 
-@Mapper(uses = WebtoonMapper.class)
+@Mapper(componentModel = "spring")
 public interface AuthorMapper {
     AuthorMapper INSTANCE = Mappers.getMapper(AuthorMapper.class);
 

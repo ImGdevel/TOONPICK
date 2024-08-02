@@ -6,8 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-
-@Mapper(uses = {AuthorMapper.class, GenreMapper.class})
+@Mapper(componentModel = "spring")
 public interface WebtoonMapper {
     WebtoonMapper INSTANCE = Mappers.getMapper(WebtoonMapper.class);
 

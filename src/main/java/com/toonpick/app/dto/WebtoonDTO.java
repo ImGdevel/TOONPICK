@@ -2,6 +2,7 @@ package com.toonpick.app.dto;
 
 import lombok.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -17,8 +18,7 @@ public class WebtoonDTO {
     private String description;
     private int episodeCount;
     private LocalDate serializationStartDate;
-    private String serializationDay;
+    private DayOfWeek serializationDay;
     private Set<AuthorDTO> authors;
     private Set<GenreDTO> genres;
-    private Set<ReviewDTO> reviews;
 }

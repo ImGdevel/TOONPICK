@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,12 +23,20 @@ public class Webtoon {
     private Long id;
 
     private String title;
+
     private float averageRating;
+
     private float platformRating;
+
     private String description;
+
     private int episodeCount;
+
     private LocalDate serializationStartDate;
-    private String serializationDay;
+
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek serializationDay; // Enum으로 변경
+
 
     @ManyToMany
     @JoinTable(
@@ -49,7 +58,7 @@ public class Webtoon {
     private Set<Review> reviews = new HashSet<>();
 
     @Builder
-    public Webtoon(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, String serializationDay, Set<Author> authors, Set<Genre> genres) {
+    public Webtoon(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, DayOfWeek serializationDay, Set<Author> authors, Set<Genre> genres) {
         this.title = title;
         this.averageRating = averageRating;
         this.platformRating = platformRating;
@@ -61,7 +70,7 @@ public class Webtoon {
         this.genres = genres != null ? genres : new HashSet<>();
     }
 
-    public void update(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, String serializationDay, Set<Author> authors, Set<Genre> genres) {
+    public void update(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, DayOfWeek serializationDay, Set<Author> authors, Set<Genre> genres) {
         this.title = title;
         this.averageRating = averageRating;
         this.platformRating = platformRating;

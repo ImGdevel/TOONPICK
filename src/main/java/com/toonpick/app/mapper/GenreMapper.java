@@ -5,7 +5,8 @@ import com.toonpick.app.entity.Genre;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = WebtoonMapper.class)
+
+@Mapper(componentModel = "spring")
 public interface GenreMapper {
     GenreMapper INSTANCE = Mappers.getMapper(GenreMapper.class);
 

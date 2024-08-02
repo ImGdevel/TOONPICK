@@ -19,9 +19,7 @@ import com.toonpick.app.entity.Genre;
 import com.toonpick.app.repository.AuthorRepository;
 import com.toonpick.app.repository.GenreRepository;
 
-
 import java.util.Set;
-
 
 @Service
 public class WebtoonService {
@@ -40,17 +38,14 @@ public class WebtoonService {
 
     @Transactional
     public WebtoonDTO createWebtoon(WebtoonDTO webtoonDTO) {
-        // DTO에서 엔티티로 변환
         Webtoon webtoon = webtoonMapper.webtoonDtoToWebtoon(webtoonDTO);
 
-        // 연관된 엔티티 설정
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(
                 webtoonDTO.getAuthors().stream().map(AuthorDTO::getId).collect(Collectors.toSet())));
 
         Set<Genre> genres = new HashSet<>(genreRepository.findAllById(
                 webtoonDTO.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet())));
 
-        // 엔티티 상태 업데이트
         webtoon.update(
                 webtoonDTO.getTitle(),
                 webtoonDTO.getAverageRating(),
@@ -72,14 +67,12 @@ public class WebtoonService {
         Webtoon existingWebtoon = webtoonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
 
-        // 연관된 엔티티 설정
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(
                 webtoonDTO.getAuthors().stream().map(AuthorDTO::getId).collect(Collectors.toSet())));
 
         Set<Genre> genres = new HashSet<>(genreRepository.findAllById(
                 webtoonDTO.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet())));
 
-        // 엔티티 상태 업데이트
         existingWebtoon.update(
                 webtoonDTO.getTitle(),
                 webtoonDTO.getAverageRating(),
@@ -92,7 +85,6 @@ public class WebtoonService {
                 genres
         );
 
-        // 엔티티를 저장하고 다시 DTO로 변환
         existingWebtoon = webtoonRepository.save(existingWebtoon);
         return webtoonMapper.webtoonToWebtoonDto(existingWebtoon);
     }
@@ -107,6 +99,22 @@ public class WebtoonService {
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getAllWebtoons() {
         List<Webtoon> webtoons = webtoonRepository.findAll();
+        return webtoons.stream()
+                .map(webtoonMapper::webtoonToWebtoonDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<WebtoonDTO> getWebtoonsByAuthorName(String authorName) {
+        List<Webtoon> webtoons = webtoonRepository.findByAuthors_Name(authorName);
+        return webtoons.stream()
+                .map(webtoonMapper::webtoonToWebtoonDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<WebtoonDTO> getWebtoonsByGenreName(String genreName) {
+        List<Webtoon> webtoons = webtoonRepository.findByGenres_Name(genreName);
         return webtoons.stream()
                 .map(webtoonMapper::webtoonToWebtoonDto)
                 .collect(Collectors.toList());
