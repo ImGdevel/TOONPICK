@@ -1,0 +1,21 @@
+/* src/styles.css */
+body {
+    background-color: #212121;
+    color: white;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    width: 1440px;
+    margin: 0 auto;
+  }
+  
+  a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
