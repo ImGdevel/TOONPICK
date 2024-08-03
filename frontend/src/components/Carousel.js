@@ -1,4 +1,4 @@
-// src/components/Carousel/Carousel.js
+// src/components/Carousel.js
 import React, { useState } from 'react';
 import './Carousel.css';
 

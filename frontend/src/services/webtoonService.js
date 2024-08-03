@@ -6,26 +6,27 @@ const WEBTOONS = [
     // 더 많은 웹툰 데이터...
   ];
   
-  // src/services/webtoonService.js
-  export const getWebtoons = async () => {
-    // 실제 API 호출 대신 더미 데이터 반환
-    return [
-      { id: 1, imageUrl: 'https://via.placeholder.com/300x600?text=Webtoon+1', title: 'Webtoon 1', author: 'Author 1', rating: 4.5 },
-      { id: 2, imageUrl: 'https://via.placeholder.com/300x600?text=Webtoon+2', title: 'Webtoon 2', author: 'Author 2', rating: 4.0 },
-      { id: 3, imageUrl: 'https://via.placeholder.com/300x600?text=Webtoon+3', title: 'Webtoon 3', author: 'Author 3', rating: 3.5 },
-    ];
-  };
+export const getWebtoons = async () => {
+  // 더미 데이터 반환
+  return Array.from({ length: 15 }, (_, i) => ({
+    id: i + 1,
+    imageUrl: `https://via.placeholder.com/240x360?text=Webtoon+${i + 1}`,
+    title: `Webtoon ${i + 1}`,
+    author: `Author ${i + 1}`,
+    rating: (Math.random() * 2 + 3).toFixed(1),
+  }));
+};
 
-  export const getCarouselImages = async () => {
-    // 실제 API 호출 대신 더미 데이터 반환
-    return [
-      'https://via.placeholder.com/900x500?text=Slide+1',
-      'https://via.placeholder.com/900x500?text=Slide+2',
-      'https://via.placeholder.com/900x500?text=Slide+3',
-      'https://via.placeholder.com/900x500?text=Slide+4',
-      'https://via.placeholder.com/900x500?text=Slide+5',
-    ];
-  };
+export const getCarouselImages = async () => {
+  // 더미 데이터 반환
+  return [
+    'https://via.placeholder.com/900x500?text=Slide+1',
+    'https://via.placeholder.com/900x500?text=Slide+2',
+    'https://via.placeholder.com/900x500?text=Slide+3',
+    'https://via.placeholder.com/900x500?text=Slide+4',
+    'https://via.placeholder.com/900x500?text=Slide+5',
+  ];
+};
   
   export const getWebtoonById = (id) =>
     new Promise((resolve) => {
