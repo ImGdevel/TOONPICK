@@ -24,7 +24,9 @@ public class SecurityConfig {
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
                         .requestMatchers("/login", "/", "join").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                 )
                 .sessionManagement((session) -> session

@@ -1,6 +1,7 @@
 package toonpick.app.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,11 +22,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String username;
+
     private String password;
 
     private String role;
-
-    private String name;
 
     private String profilePicture;
 
@@ -46,9 +47,15 @@ public class User {
 
 
     @Builder
-    public User(String name, String profilePicture, LocalDate accountCreationDate) {
-        this.name = name;
+    public User(String username, String profilePicture, LocalDate accountCreationDate) {
+        this.username = username;
         this.profilePicture = profilePicture;
         this.accountCreationDate = accountCreationDate;
+    }
+
+    public void update(String username, String password , String role){
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 }
