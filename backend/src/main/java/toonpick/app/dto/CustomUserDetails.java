@@ -6,20 +6,18 @@ import toonpick.app.entity.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-public class CustomUserDetails  implements UserDetails {
+
+public class CustomUserDetails implements UserDetails {
 
     private final User user;
 
-    public CustomUserDetails(User user){
+    public CustomUserDetails(User user) {
         this.user = user;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         Collection<GrantedAuthority> collection = new ArrayList<>();
 
         collection.add(new GrantedAuthority() {
