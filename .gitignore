@@ -62,3 +62,4 @@ out/
 
 ### Log ###
 logs/info.log
+backend/src/main/resources/.env

@@ -3,6 +3,7 @@ package toonpick.app.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import toonpick.app.jwt.JWTFilter;
 import toonpick.app.jwt.JWTUtils;
 import toonpick.app.jwt.LoginFilter;
+import toonpick.app.service.OAuth2UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -20,11 +22,13 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtils jwtUtils;
+    private final OAuth2UserService oAuth2UserService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtils jwtUtils) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtils jwtUtils, OAuth2UserService oAuth2UserService) {
 
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtils = jwtUtils;
+        this.oAuth2UserService = oAuth2UserService;
     }
 
     //AuthenticationManager Bean 등록
@@ -44,6 +48,10 @@ public class SecurityConfig {
                 .csrf((auth) -> auth.disable() )
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
+                .oauth2Login((oauth2) -> oauth2
+                                .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
+                                        .userService(oAuth2UserService)))
+                        )
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
                         .requestMatchers("/login", "/", "join").permitAll()
