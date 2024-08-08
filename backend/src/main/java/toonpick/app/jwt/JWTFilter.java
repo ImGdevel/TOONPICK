@@ -2,6 +2,7 @@ package toonpick.app.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+/* 이전 코드
         String authorization = request.getHeader("Authorization");
 
         // 헤더 검증
@@ -35,8 +37,27 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         String token = authorization.split(" ")[1];
-        if(jwtUtils.isExpired(token)){
+*/
+        String authorization = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+
+            System.out.println(cookie.getName());
+            if (cookie.getName().equals("Authorization")) {
+
+                authorization = cookie.getValue();
+            }
+        }
+
+        if(authorization == null){
             System.out.println("token null");
+            filterChain.doFilter(request, response); // 다음 필터로 전달
+            return;
+        }
+
+        String token = authorization;
+        if(jwtUtils.isExpired(token)){
+            System.out.println("token expired");
             filterChain.doFilter(request, response); // 다음 필터로 전달
             return;
         }

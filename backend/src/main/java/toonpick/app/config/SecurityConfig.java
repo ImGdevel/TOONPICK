@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import toonpick.app.jwt.JWTFilter;
 import toonpick.app.jwt.JWTUtils;
 import toonpick.app.jwt.LoginFilter;
+import toonpick.app.oauth2.CustomSuccessHandler;
 import toonpick.app.service.OAuth2UserService;
 
 @Configuration
@@ -23,12 +24,14 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtils jwtUtils;
     private final OAuth2UserService oAuth2UserService;
+    private final CustomSuccessHandler customSuccessHandler;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtils jwtUtils, OAuth2UserService oAuth2UserService) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtils jwtUtils, OAuth2UserService oAuth2UserService, CustomSuccessHandler customSuccessHandler) {
 
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtils = jwtUtils;
         this.oAuth2UserService = oAuth2UserService;
+        this.customSuccessHandler = customSuccessHandler;
     }
 
     //AuthenticationManager Bean 등록
@@ -51,6 +54,7 @@ public class SecurityConfig {
                 .oauth2Login((oauth2) -> oauth2
                                 .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
                                         .userService(oAuth2UserService)))
+                                .successHandler(customSuccessHandler)
                         )
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
