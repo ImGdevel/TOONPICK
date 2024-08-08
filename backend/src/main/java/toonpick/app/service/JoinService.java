@@ -5,13 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.controller.JoinController;
-import toonpick.app.dto.GenreDTO;
 import toonpick.app.dto.JoinDTO;
-import toonpick.app.dto.UserDTO;
-import toonpick.app.entity.Genre;
 import toonpick.app.entity.User;
-import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.repository.UserRepository;
 
 @Service
