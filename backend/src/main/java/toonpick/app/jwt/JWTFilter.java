@@ -20,50 +20,35 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtils jwtUtils;
 
-    public JWTFilter (JWTUtils jwtUtils){
+    public JWTFilter(JWTUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-/* 이전 코드
-        String authorization = request.getHeader("Authorization");
-
-        // 헤더 검증
-        if(authorization == null || !authorization.startsWith("Bearer")){
-            System.out.println("token null");
-            filterChain.doFilter(request, response); // 다음 필터로 전달
-            return;
-        }
-
-        String token = authorization.split(" ")[1];
-*/
         String authorization = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-
-            System.out.println(cookie.getName());
-            if (cookie.getName().equals("Authorization")) {
-
-                authorization = cookie.getValue();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("Authorization".equals(cookie.getName())) {
+                    authorization = cookie.getValue();
+                    break;
+                }
             }
         }
 
-        if(authorization == null){
-            System.out.println("token null");
-            filterChain.doFilter(request, response); // 다음 필터로 전달
+        if (authorization == null) {
+            filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authorization;
-        if(jwtUtils.isExpired(token)){
-            System.out.println("token expired");
-            filterChain.doFilter(request, response); // 다음 필터로 전달
+        if (jwtUtils.isExpired(authorization)) {
+            filterChain.doFilter(request, response);
             return;
         }
 
-        String username = jwtUtils.getUsername(token);
-        String role = jwtUtils.getRole(token);
+        String username = jwtUtils.getUsername(authorization);
+        String role = jwtUtils.getRole(authorization);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = createUserDetails(username, role);
@@ -72,9 +57,8 @@ public class JWTFilter extends OncePerRequestFilter {
                     userDetails, null, userDetails.getAuthorities());
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authToken);
-
         }
-        
+
         filterChain.doFilter(request, response);
     }
 

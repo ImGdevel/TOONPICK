@@ -13,7 +13,6 @@ import toonpick.app.jwt.JWTUtils;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
 
 @Component
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -21,37 +20,28 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JWTUtils jwtUtil;
 
     public CustomSuccessHandler(JWTUtils jwtUtil) {
-
         this.jwtUtil = jwtUtil;
     }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
-        //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
-
         String username = customUserDetails.getUsername();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+        String role = authorities.stream().findFirst().map(GrantedAuthority::getAuthority).orElse("");
 
-        String token = jwtUtil.createJwt(username, role, 60*60*60L);
-
+        String token = jwtUtil.createJwt(username, role, 60 * 60 * 60L);
         response.addCookie(createCookie("Authorization", token));
         response.sendRedirect("http://localhost:3000/");
     }
 
     private Cookie createCookie(String key, String value) {
-
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60*60*60);
+        cookie.setMaxAge(60 * 60 * 60);
+        cookie.setHttpOnly(true);
         //cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
         return cookie;
     }
 }
