@@ -2,8 +2,10 @@ package toonpick.app.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,23 +39,37 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
         // todo : 로그인 성공
-        CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
-
-        String username = customUserDetails.getUsername();
-        String role = customUserDetails.getAuthorities().stream()
+        String username = authentication.getName();
+        String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
-        String token = jwtUtils.createJwt(username, role, 60*60*10L);
-        // RFC 7235에 따른 인증 헤더 형식
-        //예시 Authorization: Bearer (string)인증토큰
-        response.addHeader("Authorization", "Bearer " + token);
+        //토큰 생성
+        String access = jwtUtils.createJwt("access", username, role, 600000L);
+        String refresh = jwtUtils.createJwt("refresh", username, role, 86400000L);
+
+        //응답 설정
+        response.setHeader("access", access);
+        response.addCookie(createCookie("refresh", refresh));
+        response.setStatus(HttpStatus.OK.value());
 
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+        // 로그인 실패
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    private Cookie createCookie(String key, String value) {
+
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(24*60*60);
+        //cookie.setSecure(true);
+        //cookie.setPath("/");
+        cookie.setHttpOnly(true);
+
+        return cookie;
     }
 
 }
