@@ -13,22 +13,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import toonpick.app.jwt.CustomLogoutFilter;
 import toonpick.app.jwt.JWTFilter;
-import toonpick.app.jwt.JWTUtils;
-import toonpick.app.jwt.LoginFilter;
-import toonpick.app.repository.RefreshRepository;
+import toonpick.app.jwt.JwtUtil;
+import toonpick.app.jwt.CustomLoginFilter;
+import toonpick.app.repository.RefreshTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final JWTUtils jwtUtils;
-    private final RefreshRepository refreshRepository;
+    private final JwtUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtils jwtUtils, RefreshRepository refreshRepository) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {
         this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtUtils = jwtUtils;
-        this.refreshRepository = refreshRepository;
+        this.jwtUtil = jwtUtil;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     //AuthenticationManager Bean 등록
@@ -54,9 +54,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                 )
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtils, refreshRepository), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CustomLogoutFilter(jwtUtils, refreshRepository), LogoutFilter.class)
-                .addFilterBefore(new JWTFilter(jwtUtils), LoginFilter.class)
+                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class)
+                .addFilterBefore(new JWTFilter(jwtUtil), CustomLoginFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         

@@ -1,7 +1,6 @@
 package toonpick.app.jwt;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -11,22 +10,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.AuthenticationException; // 이 부분 추가
-import toonpick.app.entity.RefreshEntity;
-import toonpick.app.repository.RefreshRepository;
+import toonpick.app.entity.RefreshToken;
+import toonpick.app.repository.RefreshTokenRepository;
 
 import java.util.Date;
 import java.util.stream.Collectors;
 
-public class LoginFilter extends UsernamePasswordAuthenticationFilter {
+public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JWTUtils jwtUtils;
-    private final RefreshRepository refreshRepository;
+    private final JwtUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtils jwtUtils, RefreshRepository refreshRepository){
+    public CustomLoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, RefreshTokenRepository refreshTokenRepository){
         this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
-        this.refreshRepository = refreshRepository;
+        this.jwtUtil = jwtUtil;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Override
@@ -46,15 +45,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 .collect(Collectors.joining());
 
         //토큰 생성
-        String access = jwtUtils.createJwt("access", username, role, 600000L);
-        String refresh = jwtUtils.createJwt("refresh", username, role, 86400000L);
+        String access = jwtUtil.createAccessToken(username, role);
+        String refresh = jwtUtil.createRefreshToken(username, role);
 
         //Refresh 토큰 저장
         addRefreshEntity(username, refresh, 86400000L);
 
         //응답 설정
         response.setHeader("access", access);
-        response.addCookie(createCookie("refresh", refresh));
+        response.addCookie(jwtUtil.createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
 
     }
@@ -65,27 +64,19 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    private Cookie createCookie(String key, String value) {
-
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true);
-        //cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        return cookie;
-    }
 
     private void addRefreshEntity(String username, String refresh, Long expiredMs) {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
-        RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setUsername(username);
-        refreshEntity.setRefresh(refresh);
-        refreshEntity.setExpiration(date.toString());
+        RefreshToken refreshToken = RefreshToken
+                .builder()
+                .username(username)
+                .token(refresh)
+                .expiration(date.toString())
+                .build();
 
-        refreshRepository.save(refreshEntity);
+        refreshTokenRepository.save(refreshToken);
     }
 
 }

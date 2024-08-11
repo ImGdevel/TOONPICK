@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -19,10 +18,10 @@ import java.io.PrintWriter;
 
 public class JWTFilter extends OncePerRequestFilter {
 
-    private final JWTUtils jwtUtils;
+    private final JwtUtil jwtUtil;
 
-    public JWTFilter (JWTUtils jwtUtils){
-        this.jwtUtils = jwtUtils;
+    public JWTFilter (JwtUtil jwtUtil){
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -38,7 +37,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
         try {
-            jwtUtils.isExpired(accessToken);
+            jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
             PrintWriter writer = response.getWriter();
             writer.print("access token expired");
@@ -48,7 +47,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // 토큰이 access인지 확인 (발급시 페이로드에 명시)
-        String category = jwtUtils.getCategory(accessToken);
+        String category = jwtUtil.getCategory(accessToken);
         if (!category.equals("access")) {
             //response body
             PrintWriter writer = response.getWriter();
@@ -59,8 +58,8 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        String username = jwtUtils.getUsername(accessToken);
-        String role = jwtUtils.getRole(accessToken);
+        String username = jwtUtil.getUsername(accessToken);
+        String role = jwtUtil.getRole(accessToken);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = createUserDetails(username, role);
