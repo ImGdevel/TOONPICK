@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import toonpick.app.dto.CustomOAuth2User;
-import toonpick.app.jwt.JWTUtils;
+import toonpick.app.jwt.JwtUtil;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -17,9 +17,9 @@ import java.util.Collection;
 @Component
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JWTUtils jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    public CustomSuccessHandler(JWTUtils jwtUtil) {
+    public CustomSuccessHandler(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 

@@ -6,7 +6,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -18,10 +17,10 @@ import java.io.IOException;
 
 public class JWTFilter extends OncePerRequestFilter {
 
-    private final JWTUtils jwtUtils;
+    private final JwtUtil jwtUtil;
 
-    public JWTFilter(JWTUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
+    public JWTFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -42,13 +41,13 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (jwtUtils.isExpired(authorization)) {
+        if (jwtUtil.isExpired(authorization)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String username = jwtUtils.getUsername(authorization);
-        String role = jwtUtils.getRole(authorization);
+        String username = jwtUtil.getUsername(authorization);
+        String role = jwtUtil.getRole(authorization);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = createUserDetails(username, role);

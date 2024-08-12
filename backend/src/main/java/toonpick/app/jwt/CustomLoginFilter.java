@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JWTUtils jwtUtils;
+    private final JwtUtil jwtUtil;
 
-    public CustomLoginFilter(AuthenticationManager authenticationManager, JWTUtils jwtUtils) {
+    public CustomLoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
-        String token = jwtUtils.createJwt(username, role, 60 * 60 * 10L);
+        String token = jwtUtil.createJwt(username, role, 60 * 60 * 10L);
         response.addCookie(createCookie("Authorization", token));
     }
 

@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import toonpick.app.jwt.JWTFilter;
-import toonpick.app.jwt.JWTUtils;
+import toonpick.app.jwt.JwtUtil;
 import toonpick.app.jwt.CustomLoginFilter;
 import toonpick.app.oauth2.CustomSuccessHandler;
 import toonpick.app.service.OAuth2UserService;
@@ -27,13 +27,13 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final JWTUtils jwtUtils;
+    private final JwtUtil jwtUtil;
     private final OAuth2UserService oAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtils jwtUtils, OAuth2UserService oAuth2UserService, CustomSuccessHandler customSuccessHandler) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil, OAuth2UserService oAuth2UserService, CustomSuccessHandler customSuccessHandler) {
         this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtUtils = jwtUtils;
+        this.jwtUtil = jwtUtil;
         this.oAuth2UserService = oAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
     }
@@ -80,9 +80,9 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/", "/join").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtils), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JWTFilter(jwtUtils), OAuth2LoginAuthenticationFilter.class)
+                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();

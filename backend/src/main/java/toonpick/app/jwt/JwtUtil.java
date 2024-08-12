@@ -11,11 +11,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
-public class JWTUtils {
+public class JwtUtil {
 
     private final SecretKey secretKey;
 
-    public JWTUtils(@Value("${spring.jwt.secret}")String secret) {
+    public JwtUtil(@Value("${spring.jwt.secret}")String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
