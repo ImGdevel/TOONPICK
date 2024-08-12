@@ -59,40 +59,43 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        CorsConfiguration configuration = new CorsConfiguration();
 
-                            @Override
-                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+                        configuration.setAllowCredentials(true);
+                        configuration.setMaxAge(3600L);
 
-                                CorsConfiguration configuration = new CorsConfiguration();
+                        configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
-                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                                configuration.setAllowedMethods(Collections.singletonList("*"));
-                                configuration.setAllowedHeaders(Collections.singletonList("*"));
-                                configuration.setAllowCredentials(true);
-                                configuration.setMaxAge(3600L);
-
-                                configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-                                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-
-                                return configuration;
-                            }
-                        }))
-                .formLogin((formLogin) -> formLogin.disable())
-                .httpBasic((httpBasic) -> httpBasic.disable())
-                .oauth2Login((oauth2) -> oauth2
+                        return configuration;
+                    }
+                }))
+                .csrf(csrf -> csrf.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())// CSRF 비활성화
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login") // OAuth2 로그인 설정
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
                         .successHandler(customSuccessHandler))
-                .authorizeHttpRequests((auth) -> auth
+                .formLogin(formLogin -> formLogin
+                        .loginProcessingUrl("/login")
+                        .permitAll())
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
-                        .requestMatchers("/", "/login", "/join", "/reissue").permitAll()
+                        .requestMatchers("/", "/login", "/join", "/reissue").permitAll()  // '/join' 경로를 인증 없이 허용
                         .requestMatchers("/admin").hasRole("ADMIN")
                 )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless 설정
                 .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class)
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class)
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
         return http.build();
     }
+
 }
