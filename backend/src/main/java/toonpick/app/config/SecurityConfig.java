@@ -12,9 +12,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import toonpick.app.jwt.CustomLogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import toonpick.app.jwt.JWTFilter;
+import toonpick.app.jwt.JwtUtil;
+import toonpick.app.jwt.CustomLoginFilter;
+import toonpick.app.repository.RefreshTokenRepository;
 import toonpick.app.jwt.JwtUtil;
 import toonpick.app.jwt.CustomLoginFilter;
 import toonpick.app.oauth2.CustomSuccessHandler;
@@ -30,12 +35,14 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final OAuth2UserService oAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil, OAuth2UserService oAuth2UserService, CustomSuccessHandler customSuccessHandler) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil, OAuth2UserService oAuth2UserService, CustomSuccessHandler customSuccessHandler, RefreshTokenRepository refreshTokenRepository) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.oAuth2UserService = oAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Bean
@@ -77,10 +84,11 @@ public class SecurityConfig {
                         .successHandler(customSuccessHandler))
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
-                        .requestMatchers("/login", "/", "/join").permitAll()
+                        .requestMatchers("/", "/login", "/join", "/reissue").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .anyRequest().authenticated())
-                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                )
+                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class)
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

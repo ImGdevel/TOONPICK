@@ -13,17 +13,22 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.AuthenticationException; // 이 부분 추가
 import toonpick.app.dto.CustomUserDetails;
+import toonpick.app.entity.RefreshToken;
+import toonpick.app.repository.RefreshTokenRepository;
 
+import java.util.Date;
 import java.util.stream.Collectors;
 
 public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public CustomLoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public CustomLoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Override
@@ -69,5 +74,19 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         //cookie.setSecure(true);
         cookie.setPath("/");
         return cookie;
+    }
+
+    private void addRefreshEntity(String username, String refresh, Long expiredMs) {
+
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        RefreshToken refreshToken = RefreshToken
+                .builder()
+                .username(username)
+                .token(refresh)
+                .expiration(date.toString())
+                .build();
+
+        refreshTokenRepository.save(refreshToken);
     }
 }
