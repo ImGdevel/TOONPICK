@@ -1,7 +1,6 @@
 package toonpick.app.jwt;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,12 +15,12 @@ import toonpick.app.dto.CustomUserDetails;
 
 import java.util.stream.Collectors;
 
-public class LoginFilter extends UsernamePasswordAuthenticationFilter {
+public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtils jwtUtils;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtils jwtUtils) {
+    public CustomLoginFilter(AuthenticationManager authenticationManager, JWTUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
     }
