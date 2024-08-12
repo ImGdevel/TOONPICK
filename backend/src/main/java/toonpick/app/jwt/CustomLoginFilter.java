@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,14 +39,22 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        String username = customUserDetails.getUsername();
-        String role = customUserDetails.getAuthorities().stream()
+        String username = authentication.getName();
+        String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
-        String token = jwtUtil.createJwt(username, role, 60 * 60 * 10L);
-        response.addCookie(createCookie("Authorization", token));
+        //토큰 생성
+        String access = jwtUtil.createAccessToken(username, role);
+        String refresh = jwtUtil.createRefreshToken(username, role);
+
+        //Refresh 토큰 저장
+        addRefreshEntity(username, refresh, 86400000L);
+
+        //응답 설정
+        response.setHeader("access", access);
+        response.addCookie(jwtUtil.createCookie("refresh", refresh));
+        response.setStatus(HttpStatus.OK.value());
     }
 
     @Override
