@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtTokenProvider {
 
     private final SecretKey secretKey;
 
@@ -20,9 +20,9 @@ public class JwtUtil {
 
     private final long refreshTokenExpiration;
 
-    public JwtUtil(@Value("${spring.jwt.secret}")String secret,
-                   @Value("${spring.jwt.access-token-expiration}") long accessTokenExpiration,
-                   @Value("${spring.jwt.refresh-token-expiration}") long refreshTokenExpiration) {
+    public JwtTokenProvider(@Value("${spring.jwt.secret}")String secret,
+                            @Value("${spring.jwt.access-token-expiration}") long accessTokenExpiration,
+                            @Value("${spring.jwt.refresh-token-expiration}") long refreshTokenExpiration) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
         this.accessTokenExpiration = accessTokenExpiration;
         this.refreshTokenExpiration = refreshTokenExpiration;

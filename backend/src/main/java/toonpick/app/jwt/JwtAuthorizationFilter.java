@@ -3,7 +3,6 @@ package toonpick.app.jwt;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,12 +16,12 @@ import toonpick.app.entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class JWTFilter extends OncePerRequestFilter {
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public JWTFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    public JwtAuthorizationFilter(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -38,7 +37,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
         try {
-            jwtUtil.isExpired(accessToken);
+            jwtTokenProvider.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
             PrintWriter writer = response.getWriter();
             writer.print("access token expired");
@@ -48,7 +47,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // 토큰이 access인지 확인 (발급시 페이로드에 명시)
-        String category = jwtUtil.getCategory(accessToken);
+        String category = jwtTokenProvider.getCategory(accessToken);
         if (!category.equals("access")) {
             //response body
             PrintWriter writer = response.getWriter();
@@ -59,8 +58,8 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        String username = jwtUtil.getUsername(accessToken);
-        String role = jwtUtil.getRole(accessToken);
+        String username = jwtTokenProvider.getUsername(accessToken);
+        String role = jwtTokenProvider.getRole(accessToken);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = createUserDetails(username, role);

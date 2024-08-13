@@ -14,14 +14,11 @@ import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationF
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import toonpick.app.jwt.CustomLogoutFilter;
+import toonpick.app.jwt.*;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import toonpick.app.jwt.JWTFilter;
-import toonpick.app.jwt.JwtUtil;
-import toonpick.app.jwt.CustomLoginFilter;
+import toonpick.app.jwt.JwtTokenProvider;
 import toonpick.app.repository.RefreshTokenRepository;
-import toonpick.app.jwt.JwtUtil;
 import toonpick.app.jwt.CustomLoginFilter;
 import toonpick.app.oauth2.CustomSuccessHandler;
 import toonpick.app.service.AuthService;
@@ -34,19 +31,22 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final OAuth2UserService oAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final AuthService authService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil, OAuth2UserService oAuth2UserService, CustomSuccessHandler customSuccessHandler, RefreshTokenRepository refreshTokenRepository, AuthService authService) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                          AuthService authService,
+                          JwtTokenProvider jwtTokenProvider,
+                          OAuth2UserService oAuth2UserService,
+                          CustomSuccessHandler customSuccessHandler
+                          ) {
         this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtUtil = jwtUtil;
+        this.authService = authService;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.oAuth2UserService = oAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.authService = authService;
     }
 
     @Bean
@@ -95,10 +95,10 @@ public class SecurityConfig {
 
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless 설정
-                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, authService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class)
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(jwtTokenProvider, authService), LogoutFilter.class)
+                .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthorizationFilter(jwtTokenProvider), OAuth2LoginAuthenticationFilter.class);
 
         return http.build();
     }

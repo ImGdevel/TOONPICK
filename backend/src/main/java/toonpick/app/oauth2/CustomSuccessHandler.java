@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import toonpick.app.dto.CustomOAuth2User;
 import toonpick.app.entity.RefreshToken;
-import toonpick.app.jwt.JwtUtil;
+import toonpick.app.jwt.JwtTokenProvider;
 import toonpick.app.repository.RefreshTokenRepository;
 
 import java.io.IOException;
@@ -20,12 +20,12 @@ import java.util.Date;
 @Component
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public CustomSuccessHandler(JwtUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {
+    public CustomSuccessHandler(JwtTokenProvider jwtTokenProvider, RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.jwtUtil = jwtUtil;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String role = authorities.stream().findFirst().map(GrantedAuthority::getAuthority).orElse("");
 
-        String token = jwtUtil.createRefreshToken(username, role);
+        String token = jwtTokenProvider.createRefreshToken(username, role);
 
         addRefreshEntity(username, token, 86400000L);
         //response.addCookie(createCookie("Authorization", token));

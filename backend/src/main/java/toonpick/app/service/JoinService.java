@@ -32,7 +32,7 @@ public class JoinService {
         user.update(
                 joinDTO.getUsername(),
                 bCryptPasswordEncoder.encode(joinDTO.getPassword()),
-                "ROLE_ADMIN"
+                "ROLE_USER"
         );
         user = userRepository.save(user);
 

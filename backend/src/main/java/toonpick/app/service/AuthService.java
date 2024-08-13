@@ -1,11 +1,12 @@
 package toonpick.app.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import toonpick.app.entity.Genre;
 import toonpick.app.entity.RefreshToken;
-import toonpick.app.jwt.JwtUtil;
+import toonpick.app.exception.ResourceNotFoundException;
+import toonpick.app.jwt.JwtTokenProvider;
 import toonpick.app.repository.RefreshTokenRepository;
 
 import java.util.Date;
@@ -16,11 +17,11 @@ public class AuthService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(RefreshTokenRepository refreshTokenRepository, JwtUtil jwtUtil){
+    public AuthService(RefreshTokenRepository refreshTokenRepository, JwtTokenProvider jwtTokenProvider){
         this. refreshTokenRepository = refreshTokenRepository;
-        this.jwtUtil = jwtUtil;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Transactional
@@ -44,13 +45,33 @@ public class AuthService {
         RefreshToken storedToken = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
 
-        if (jwtUtil.isExpired(refreshToken)) {
+        if (jwtTokenProvider.isExpired(refreshToken)) {
             throw new RuntimeException("Refresh token is expired");
         }
 
-        String username = jwtUtil.getUsername(refreshToken);
-        String role = jwtUtil.getRole(refreshToken);
+        String username = jwtTokenProvider.getUsername(refreshToken);
+        String role = jwtTokenProvider.getRole(refreshToken);
 
-        return jwtUtil.createAccessToken(username, role);
+        return jwtTokenProvider.createAccessToken(username, role);
+    }
+
+    @Transactional
+    public String refreshRefreshToken(String refreshToken) {
+        RefreshToken storedToken = refreshTokenRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+        String username = jwtTokenProvider.getUsername(refreshToken);
+        String role = jwtTokenProvider.getRole(refreshToken);
+        String token = jwtTokenProvider.createAccessToken(username, role);
+        deleteRefreshToken(refreshToken);
+        saveRefreshToken(username,token);
+        return token;
+    }
+
+    @Transactional
+    public void deleteRefreshToken(String refreshToken) {
+        RefreshToken storedToken = refreshTokenRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+
+        refreshTokenRepository.deleteByToken(refreshToken);
     }
 }

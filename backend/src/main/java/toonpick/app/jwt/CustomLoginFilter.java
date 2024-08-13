@@ -12,23 +12,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.AuthenticationException; // 이 부분 추가
-import toonpick.app.dto.CustomUserDetails;
-import toonpick.app.entity.RefreshToken;
-import toonpick.app.repository.RefreshTokenRepository;
 import toonpick.app.service.AuthService;
 
-import java.util.Date;
 import java.util.stream.Collectors;
 
 public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
 
-    public CustomLoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, AuthService authService) {
+    public CustomLoginFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, AuthService authService) {
         this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.authService = authService;
     }
 
@@ -51,15 +47,15 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
                 .collect(Collectors.joining());
 
         //토큰 생성
-        String access = jwtUtil.createAccessToken(username, role);
-        String refresh = jwtUtil.createRefreshToken(username, role);
+        String access = jwtTokenProvider.createAccessToken(username, role);
+        String refresh = jwtTokenProvider.createRefreshToken(username, role);
 
         //Refresh 토큰 저장
         authService.saveRefreshToken(username, refresh);
 
         //응답 설정
         response.setHeader("access", access);
-        response.addCookie(jwtUtil.createCookie("refresh", refresh));
+        response.addCookie(jwtTokenProvider.createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
     }
 
