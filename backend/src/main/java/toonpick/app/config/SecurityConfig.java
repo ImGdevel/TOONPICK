@@ -71,6 +71,7 @@ public class SecurityConfig {
 
                         configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
                         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                        configuration.setExposedHeaders(Collections.singletonList("access"));
 
                         return configuration;
                     }
@@ -87,7 +88,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
                         .requestMatchers("/", "/login", "/join", "/reissue").permitAll()  // '/join' 경로를 인증 없이 허용
+                        .requestMatchers("/hello").hasRole("USER")
                         .requestMatchers("/admin").hasRole("ADMIN")
+
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless 설정
                 .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)

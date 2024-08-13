@@ -44,7 +44,7 @@ public class ReissueController {
         if (refresh == null) {
 
             //response status code
-            return new ResponseEntity<>("token token null", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
         }
 
         //expired check
@@ -60,6 +60,7 @@ public class ReissueController {
         String category = jwtUtil.getCategory(refresh);
 
         if (!category.equals("refresh")) {
+            System.out.println("invalid token token");
             //response status code
             return new ResponseEntity<>("invalid token token", HttpStatus.BAD_REQUEST);
         }
@@ -77,15 +78,16 @@ public class ReissueController {
 
         //make new JWT
         String newAccess = jwtUtil.createAccessToken(username, role);
-        String newRefresh = jwtUtil.createRefreshToken(username, role);
+        //String newRefresh = jwtUtil.createRefreshToken(username, role);
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
-        refreshTokenRepository.deleteByToken(refresh);
-        addRefreshEntity(username, newRefresh, 86400000L);
+        //refreshTokenRepository.deleteByToken(refresh);
+        //addRefreshEntity(username, newRefresh, 86400000L);
 
         //response
         response.setHeader("access", newAccess);
-        response.addCookie(jwtUtil.createCookie("refresh", newRefresh));
+        //response.addCookie(jwtUtil.createCookie("refresh", newRefresh));
+
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
