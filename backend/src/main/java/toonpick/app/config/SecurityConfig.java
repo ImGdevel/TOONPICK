@@ -24,6 +24,7 @@ import toonpick.app.repository.RefreshTokenRepository;
 import toonpick.app.jwt.JwtUtil;
 import toonpick.app.jwt.CustomLoginFilter;
 import toonpick.app.oauth2.CustomSuccessHandler;
+import toonpick.app.service.AuthService;
 import toonpick.app.service.OAuth2UserService;
 
 import java.util.Collections;
@@ -37,13 +38,15 @@ public class SecurityConfig {
     private final OAuth2UserService oAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AuthService authService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil, OAuth2UserService oAuth2UserService, CustomSuccessHandler customSuccessHandler, RefreshTokenRepository refreshTokenRepository) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil, OAuth2UserService oAuth2UserService, CustomSuccessHandler customSuccessHandler, RefreshTokenRepository refreshTokenRepository, AuthService authService) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.oAuth2UserService = oAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.authService = authService;
     }
 
     @Bean
@@ -92,7 +95,7 @@ public class SecurityConfig {
 
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless 설정
-                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, authService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class)
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);

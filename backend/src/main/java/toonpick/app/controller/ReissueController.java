@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import toonpick.app.entity.RefreshToken;
 import toonpick.app.jwt.JwtUtil;
 import toonpick.app.repository.RefreshTokenRepository;
+import toonpick.app.service.AuthService;
 
 import java.util.Date;
 
@@ -20,11 +21,11 @@ import java.util.Date;
 public class ReissueController {
 
     private final JwtUtil jwtUtil;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final AuthService authService;
 
-    public ReissueController(JwtUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {
+    public ReissueController(JwtUtil jwtUtil, AuthService authService) {
         this.jwtUtil = jwtUtil;
-        this.refreshTokenRepository = refreshTokenRepository;
+        this.authService = authService;
     }
 
     @PostMapping("/reissue")
@@ -65,19 +66,18 @@ public class ReissueController {
             return new ResponseEntity<>("invalid token token", HttpStatus.BAD_REQUEST);
         }
 
-        //DB에 저장되어 있는지 확인
-        Boolean isExist = refreshTokenRepository.existsByToken(refresh);
-        if (!isExist) {
-
-            //response body
-            return new ResponseEntity<>("invalid token token", HttpStatus.BAD_REQUEST);
+        try{
+            String newAccess =  authService.refreshAccessToken(refresh);
+            response.setHeader("access", newAccess);
+        }
+        catch (RuntimeException e){
+            if(e.toString().equals("Invalid refresh token")){
+                return new ResponseEntity<>("invalid token token", HttpStatus.BAD_REQUEST);
+            }
         }
 
-        String username = jwtUtil.getUsername(refresh);
-        String role = jwtUtil.getRole(refresh);
-
         //make new JWT
-        String newAccess = jwtUtil.createAccessToken(username, role);
+
         //String newRefresh = jwtUtil.createRefreshToken(username, role);
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
@@ -85,25 +85,11 @@ public class ReissueController {
         //addRefreshEntity(username, newRefresh, 86400000L);
 
         //response
-        response.setHeader("access", newAccess);
+
         //response.addCookie(jwtUtil.createCookie("refresh", newRefresh));
 
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-    private void addRefreshEntity(String username, String refresh, Long expiredMs) {
-
-        Date date = new Date(System.currentTimeMillis() + expiredMs);
-
-        RefreshToken refreshToken = RefreshToken
-                .builder()
-                .username(username)
-                .token(refresh)
-                .expiration(date.toString())
-                .build();
-
-        refreshTokenRepository.save(refreshToken);
-    }
 }

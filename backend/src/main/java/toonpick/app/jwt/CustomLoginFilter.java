@@ -15,6 +15,7 @@ import org.springframework.security.core.AuthenticationException; // 이 부분 
 import toonpick.app.dto.CustomUserDetails;
 import toonpick.app.entity.RefreshToken;
 import toonpick.app.repository.RefreshTokenRepository;
+import toonpick.app.service.AuthService;
 
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -23,12 +24,12 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final AuthService authService;
 
-    public CustomLoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {
+    public CustomLoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, AuthService authService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.refreshTokenRepository = refreshTokenRepository;
+        this.authService = authService;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         String refresh = jwtUtil.createRefreshToken(username, role);
 
         //Refresh 토큰 저장
-        addRefreshEntity(username, refresh, 86400000L);
+        authService.saveRefreshToken(username, refresh);
 
         //응답 설정
         response.setHeader("access", access);
@@ -76,17 +77,4 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         return cookie;
     }
 
-    private void addRefreshEntity(String username, String refresh, Long expiredMs) {
-
-        Date date = new Date(System.currentTimeMillis() + expiredMs);
-
-        RefreshToken refreshToken = RefreshToken
-                .builder()
-                .username(username)
-                .token(refresh)
-                .expiration(date.toString())
-                .build();
-
-        refreshTokenRepository.save(refreshToken);
-    }
 }
