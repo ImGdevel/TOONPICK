@@ -1,10 +1,10 @@
 package toonpick.app.jwt;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,18 +12,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.AuthenticationException; // 이 부분 추가
-import toonpick.app.dto.CustomUserDetails;
+import toonpick.app.service.AuthService;
 
 import java.util.stream.Collectors;
 
-public class LoginFilter extends UsernamePasswordAuthenticationFilter {
+public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JWTUtils jwtUtils;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtils jwtUtils) {
+    public CustomLoginFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, AuthService authService) {
         this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.authService = authService;
     }
 
     @Override
@@ -39,14 +41,22 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        String username = customUserDetails.getUsername();
-        String role = customUserDetails.getAuthorities().stream()
+        String username = authentication.getName();
+        String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
-        String token = jwtUtils.createJwt(username, role, 60 * 60 * 10L);
-        response.addCookie(createCookie("Authorization", token));
+        //토큰 생성
+        String access = jwtTokenProvider.createAccessToken(username, role);
+        String refresh = jwtTokenProvider.createRefreshToken(username, role);
+
+        //Refresh 토큰 저장
+        authService.saveRefreshToken(username, refresh);
+
+        //응답 설정
+        response.setHeader("access", access);
+        response.addCookie(jwtTokenProvider.createCookie("refresh", refresh));
+        response.setStatus(HttpStatus.OK.value());
     }
 
     @Override
@@ -62,4 +72,5 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         cookie.setPath("/");
         return cookie;
     }
+
 }

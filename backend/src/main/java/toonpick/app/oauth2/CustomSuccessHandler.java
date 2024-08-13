@@ -9,18 +9,23 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import toonpick.app.dto.CustomOAuth2User;
-import toonpick.app.jwt.JWTUtils;
+import toonpick.app.entity.RefreshToken;
+import toonpick.app.jwt.JwtTokenProvider;
+import toonpick.app.repository.RefreshTokenRepository;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 
 @Component
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JWTUtils jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public CustomSuccessHandler(JWTUtils jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    public CustomSuccessHandler(JwtTokenProvider jwtTokenProvider, RefreshTokenRepository refreshTokenRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -31,9 +36,27 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String role = authorities.stream().findFirst().map(GrantedAuthority::getAuthority).orElse("");
 
-        String token = jwtUtil.createJwt(username, role, 60 * 60 * 60L);
-        response.addCookie(createCookie("Authorization", token));
-        response.sendRedirect("http://localhost:3000/");
+        String token = jwtTokenProvider.createRefreshToken(username, role);
+
+        addRefreshEntity(username, token, 86400000L);
+        //response.addCookie(createCookie("Authorization", token));
+        response.addCookie(createCookie("refresh", token));
+
+        response.sendRedirect("http://localhost:3000/refresh");
+    }
+
+    private void addRefreshEntity(String username, String refresh, Long expiredMs) {
+
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        RefreshToken refreshToken = RefreshToken
+                .builder()
+                .username(username)
+                .token(refresh)
+                .expiration(date.toString())
+                .build();
+
+        refreshTokenRepository.save(refreshToken);
     }
 
     private Cookie createCookie(String key, String value) {
