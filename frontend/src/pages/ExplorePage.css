@@ -1,0 +1,43 @@
+.explore {
+    padding: 20px;
+  }
+  
+  .filter-row {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .filter-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .filter-group button {
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .filter-group button.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .genre-filter {
+    flex-wrap: wrap;
+  }
+  
+  .webtoon-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  
+  .webtoon-list p {
+    text-align: center;
+    padding: 20px;
+  }
+  
