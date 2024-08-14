@@ -1,6 +1,10 @@
+/* src/pages/WebtoonDetailPage.css */
+
 .webtoon-detail-page {
   padding: 20px;
-  width: 1440px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .webtoon-info {
@@ -85,4 +89,3 @@
   width: 100px;
   text-align: center;
 }
-  

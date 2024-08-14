@@ -1,7 +1,6 @@
 // src/pages/Home.js
 import React, { useState, useEffect} from 'react';
 import Carousel from '../components/Carousel';
-import SectionTitle from '../components/SectionTitle';
 import WebtoonList from '../components/WebtoonList';
 import { getWebtoons, getCarouselImages } from '../services/webtoonService';
 import { Link } from 'react-router-dom'; // Link 추가
@@ -28,7 +27,6 @@ const Home = () => {
 
   return (
     <div className="home container">
-      <SectionTitle title="TOONPICK" />
       <Carousel images={carouselImages} />
 
       <WebtoonList webtoons={webtoons} />
