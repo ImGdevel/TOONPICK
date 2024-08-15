@@ -18,8 +18,7 @@ import toonpick.app.jwt.*;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import toonpick.app.jwt.JwtTokenProvider;
-import toonpick.app.repository.RefreshTokenRepository;
-import toonpick.app.jwt.CustomLoginFilter;
+import toonpick.app.jwt.LoginAuthenticationFilter;
 import toonpick.app.oauth2.CustomSuccessHandler;
 import toonpick.app.service.AuthService;
 import toonpick.app.service.OAuth2UserService;
@@ -95,7 +94,7 @@ public class SecurityConfig {
 
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless 설정
-                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtTokenProvider, authService), LogoutFilter.class)
                 .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new JwtAuthorizationFilter(jwtTokenProvider), OAuth2LoginAuthenticationFilter.class);

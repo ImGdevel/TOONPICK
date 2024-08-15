@@ -16,13 +16,13 @@ import toonpick.app.service.AuthService;
 
 import java.util.stream.Collectors;
 
-public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
+public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
 
-    public CustomLoginFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, AuthService authService) {
+    public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, AuthService authService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authService = authService;
@@ -41,22 +41,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-        String username = authentication.getName();
-        String role = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining());
 
-        //토큰 생성
-        String access = jwtTokenProvider.createAccessToken(username, role);
-        String refresh = jwtTokenProvider.createRefreshToken(username, role);
-
-        //Refresh 토큰 저장
-        authService.saveRefreshToken(username, refresh);
-
-        //응답 설정
-        response.setHeader("access", access);
-        response.addCookie(jwtTokenProvider.createCookie("refresh", refresh));
-        response.setStatus(HttpStatus.OK.value());
     }
 
     @Override
