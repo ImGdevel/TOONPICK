@@ -1,7 +1,7 @@
 /* src/components/WebtoonItem.css */
 .webtoon-item {
-  width: 240px;
-  height: 360px;
+  width: 200px;
+  height: 300px;
   background-color: #333;
   color: white;
   display: flex;
@@ -13,7 +13,7 @@
 
 .webtoon-item img {
   width: 100%;
-  height: 240px;
+  height: 272px;
   object-fit: cover;
 }
 

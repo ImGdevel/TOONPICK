@@ -1,21 +1,26 @@
 /* src/styles.css */
 body {
-    background-color: #212121;
-    color: white;
-    margin: 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  .container {
-    width: 1440px;
-    margin: 0 auto;
-  }
-  
-  a {
-    color: white;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
+  background-color: #141414;
+  color: white;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none
+
+}
+
+.container {
+  width: 1200px;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

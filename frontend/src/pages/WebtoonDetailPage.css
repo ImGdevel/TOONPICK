@@ -1,0 +1,91 @@
+/* src/pages/WebtoonDetailPage.css */
+
+.webtoon-detail-page {
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.webtoon-info {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.webtoon-image img {
+  width: 460px;
+  height: 623px;
+  object-fit: cover;
+}
+
+.webtoon-details {
+  margin-left: 20px;
+  flex-grow: 1;
+}
+
+.buttons {
+  margin-bottom: 10px;
+}
+
+.bookmark-button, .heart-button {
+  margin-right: 10px;
+  padding: 8px 12px;
+  font-size: 16px;
+}
+
+.webtoon-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.webtoon-meta {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.extra-info {
+  height: 50px; /* 빈 공간 */
+}
+
+.webtoon-content {
+  height: 1000px;
+  margin-bottom: 30px;
+}
+
+.content-tabs button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.content-tabs .active {
+  background-color: #007bff;
+  color: white;
+}
+
+.content-body {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #414141;
+  height: 100%;
+}
+
+.similar-webtoons {
+  margin-top: 30px;
+}
+
+.similar-webtoons-list {
+  display: flex;
+  gap: 10px;
+}
+
+.similar-webtoon-item {
+  background-color: #e9ecef;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100px;
+  text-align: center;
+}
