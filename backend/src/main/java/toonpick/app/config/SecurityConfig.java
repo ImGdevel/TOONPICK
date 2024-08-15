@@ -39,9 +39,7 @@ public class SecurityConfig {
                           AuthService authService,
                           JwtTokenProvider jwtTokenProvider,
                           OAuth2UserService oAuth2UserService,
-                          CustomSuccessHandler customSuccessHandler,
-                          LoginSuccessHandler loginSuccessHandler,
-                          LoginFailureHandler loginFailureHandler
+                          CustomSuccessHandler customSuccessHandler
                           ) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.authService = authService;
@@ -83,10 +81,7 @@ public class SecurityConfig {
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .formLogin(form -> form
-                        .successHandler(new LoginSuccessHandler(jwtTokenProvider, authService)) // 로그인 성공 시 사용할 SuccessHandler 등록
-                        .failureHandler(new LoginFailureHandler()) // 로그인 실패 시 사용할 FailureHandler 등록
-                )
+                .formLogin(AbstractHttpConfigurer::disable)
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
