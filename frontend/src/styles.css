@@ -1,9 +1,14 @@
 /* src/styles.css */
 body {
-  background-color: #212121;
+  background-color: #141414;
   color: white;
   margin: 0 auto;
   font-family: Arial, sans-serif;
+
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none
 
 }
 

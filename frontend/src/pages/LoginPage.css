@@ -1,64 +1,74 @@
 /* src/components/LoginPage.css */
 .login-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #212121;
-  }
-  
-  .login-box {
-    background-color: #333;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    text-align: center;
-  }
-  
-  .login-box h2, .login-box h3 {
-    color: white;
-  }
-  
-  .login-box input {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  .login-box .login-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #555;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  .login-box .login-button:hover {
-    background-color: #777;
-  }
-  
-  .social-buttons {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-  }
-  
-  .social-button {
-    padding: 10px 20px;
-    background-color: #555;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .social-button:hover {
-    background-color: #777;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+
+.login-box {
+  background-color: #2c2c2c; /* 더 어두운 배경색 */
+  width: 300px;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.login-box h1, .login-box h2 {
+  color: white;
+  margin: 0px auto;
+  margin-bottom: 20px;
+}
+
+.login-box input {
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  background-color: #444; /* 회색 배경 */
+  color: white; /* 흰색 텍스트 */
+  border: none;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.login-box .login-button {
+  width: 80%;
+  padding: 10px;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.login-box .login-button:hover {
+  background-color: #777;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: space-around; 
+  margin-top: 20px;
+  width: 100%; 
+}
+
+.social-button {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 50%; /* 원형 버튼 */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.social-button:hover {
+  background-color: #777;
+}

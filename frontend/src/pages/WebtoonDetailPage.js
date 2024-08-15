@@ -6,7 +6,7 @@ import './WebtoonDetailPage.css';
 
 const WebtoonDetailPage = () => {
   const { id } = useParams();
-  const [webtoon, setWebtoon] = useState(null);
+  const [webtoon, setWebtoon] = useState("null");
   const [activeTab, setActiveTab] = useState('info');
 
   const handleTabChange = (tab) => {
@@ -22,7 +22,7 @@ const WebtoonDetailPage = () => {
     fetchWebtoon();
   }, [id]);
 
-  //if (!webtoon) return <div>Loading...</div>;
+  if (!webtoon) return <div>Loading...</div>;
 
   return (
     <div className="webtoon-detail-page">
