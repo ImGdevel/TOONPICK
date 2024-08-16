@@ -22,7 +22,7 @@ const WebtoonDetailPage = () => {
     fetchWebtoon();
   }, [id]);
 
-  if (!webtoon) return <div>Loading...</div>;
+  if (!webtoon) return <div></div>;
 
   return (
     <div className="webtoon-detail-page">

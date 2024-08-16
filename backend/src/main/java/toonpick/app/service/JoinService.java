@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.dto.JoinDTO;
+import toonpick.app.dto.JoinRequestDTO;
 import toonpick.app.entity.User;
 import toonpick.app.repository.UserRepository;
 
@@ -23,15 +23,15 @@ public class JoinService {
     }
 
     @Transactional
-    public void createUser(JoinDTO joinDTO) {
-        if (userRepository.existsByUsername(joinDTO.getUsername())) {
-            throw new IllegalArgumentException("Genre with name " + joinDTO.getUsername() + " already exists.");
+    public void createUser(JoinRequestDTO joinRequestDTO) {
+        if (userRepository.existsByUsername(joinRequestDTO.getUsername())) {
+            throw new IllegalArgumentException("Genre with name " + joinRequestDTO.getUsername() + " already exists.");
         }
 
         User user = new User();
         user.update(
-                joinDTO.getUsername(),
-                bCryptPasswordEncoder.encode(joinDTO.getPassword()),
+                joinRequestDTO.getUsername(),
+                bCryptPasswordEncoder.encode(joinRequestDTO.getPassword()),
                 "ROLE_USER"
         );
         user = userRepository.save(user);

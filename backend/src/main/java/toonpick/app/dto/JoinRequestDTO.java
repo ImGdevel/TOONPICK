@@ -1,9 +1,11 @@
 package toonpick.app.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class JoinDTO {
+@Builder
+public class JoinRequestDTO {
     private String username;
     private String password;
 }
