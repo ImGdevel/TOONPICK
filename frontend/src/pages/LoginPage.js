@@ -1,26 +1,31 @@
 // src/pages/LoginPage.js
+
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaGoogle, FaTwitter, FaApple } from 'react-icons/fa'; // 아이콘 추가
+import { FaGoogle } from 'react-icons/fa';
 import { AuthService } from '../services/AuthService';
 import { AuthContext } from '../context/AuthContext';
 import './LoginPage.css';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // useContext는 컴포넌트 내부에서 사용되어야 함
+  const { login } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
   const handleLogin = async () => {
-    const result = await AuthService.login(username, password, login); // login 함수 사용
+    const result = await AuthService.login(username, password, login);
 
     if (result.success) {
-      navigate('/'); // 로그인 성공 시 홈으로 이동
+      navigate('/');
     } else {
       setError(result.message || 'Login failed. Please try again.');
     }
+  };
+
+  const handleSocialLogin = (provider) => {
+    AuthService.socialLogin(provider);
   };
 
   return (
@@ -45,14 +50,11 @@ const LoginPage = () => {
         </button>
         {error && <p className="error-message">{error}</p>}
         <div className="social-buttons">
-          <button className="social-button">
-            <FaGoogle />
-          </button>
-          <button className="social-button">
-            <FaTwitter />
-          </button>
-          <button className="social-button">
-            <FaApple />
+          <button
+            className="social-button"
+            onClick={() => handleSocialLogin('google')}
+          >
+            <FaGoogle /> Google 로그인
           </button>
         </div>
       </div>

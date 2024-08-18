@@ -2,6 +2,7 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { AuthService } from '../services/AuthService';
 import './Header.css';
 
 const Header = () => {
@@ -20,9 +21,12 @@ const Header = () => {
     navigate('/mypage');
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
+  const handleLogout = async () => {
+    const result = await AuthService.logout();
+    if (result.success) {
+      logout();
+      navigate('/');
+    }
   };
 
   return (
