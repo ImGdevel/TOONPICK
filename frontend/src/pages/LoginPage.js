@@ -1,18 +1,20 @@
 // src/pages/LoginPage.js
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaGoogle, FaTwitter, FaApple } from 'react-icons/fa'; // 아이콘 추가
 import { AuthService } from '../services/AuthService';
+import { AuthContext } from '../context/AuthContext';
 import './LoginPage.css';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // useContext는 컴포넌트 내부에서 사용되어야 함
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
   const handleLogin = async () => {
-    const result = await AuthService.login(username, password);
+    const result = await AuthService.login(username, password, login); // login 함수 사용
 
     if (result.success) {
       navigate('/'); // 로그인 성공 시 홈으로 이동

@@ -8,23 +8,28 @@ import SignupPage from './pages/SignupPage';
 import Recommendation from './pages/Recommendation';
 import WebtoonDetailPage from './pages/WebtoonDetailPage';
 import ExplorePage from './pages/ExplorePage';
+import MyPage from './pages/MyPage';
+import { AuthProvider } from './context/AuthContext';
 
 const App = () => (
-  <Router>
-    <Header />
-    <main>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/recommendation" element={<Recommendation />} />
-        <Route path="/webtoon/:id" element={<WebtoonDetailPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/explore" element={<ExplorePage />} />
-        <Route path="/webtoon/:id" element={<WebtoonDetailPage />} />
-      </Routes>
-    </main>
+  <AuthProvider>
+    <Router>
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/recommendation" element={<Recommendation />} />
+          <Route path="/webtoon/:id" element={<WebtoonDetailPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/explore" element={<ExplorePage />} />
+          <Route path="/webtoon/:id" element={<WebtoonDetailPage />} />
+          <Route path="/mypage" element={<MyPage />} />
+        </Routes>
+      </main>
 
-  </Router>
+    </Router>
+  </AuthProvider>
 );
 
 export default App;

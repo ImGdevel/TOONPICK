@@ -1,0 +1,27 @@
+.mypage-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .mypage-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  
+  .username {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .mypage-content {
+    margin-top: 20px;
+    /* 하단 내용 추가 예정 */
+  }

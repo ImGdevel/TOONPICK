@@ -1,29 +1,29 @@
 // src/services/AuthService.js
 export const AuthService = {
-    login: async (username, password) => {
-      try {
-        const response = await fetch('http://localhost:8080/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, password }),
-          credentials: 'include', // 쿠키 포함
-        });
+  login: async (username, password, loginCallback) => {
+    try {
+      const response = await fetch('http://localhost:8080/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+        credentials: 'include',
+      });
   
-        if (response.ok) {
-          const accessToken = response.headers.get('access');
-          // Access Token 저장 (로컬 스토리지 또는 상태 관리)
-          localStorage.setItem('accessToken', accessToken);
-          return { success: true };
-        } else {
-          const errorData = await response.json();
-          return { success: false, message: errorData.message || 'Login failed' };
-        }
-      } catch (error) {
-        return { success: false, message: error.message };
+      if (response.ok) {
+        const accessToken = response.headers.get('access');
+        localStorage.setItem('accessToken', accessToken);
+        if (loginCallback) loginCallback(); // 로그인 상태 업데이트
+        return { success: true };
+      } else {
+        const errorData = await response.json();
+        return { success: false, message: errorData.message || 'Login failed' };
       }
-    },
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  },
   
     logout: () => {
       localStorage.removeItem('accessToken');
