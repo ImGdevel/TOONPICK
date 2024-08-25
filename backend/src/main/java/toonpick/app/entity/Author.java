@@ -19,12 +19,20 @@ public class Author {
     @Column(unique = true)
     private String name;
 
+    private String role;
+
+    private String link;
+
     @Builder
-    public Author(String name) {
+    public Author(String name, String role, String link) {
         this.name = name;
+        this.role = role;
+        this.link = link;
     }
 
-    public void update(String name) {
+    public void update(String name, String role, String link) {
         this.name = name;
+        this.role = role;
+        this.link = link;
     }
 }
