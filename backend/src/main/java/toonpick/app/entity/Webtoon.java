@@ -24,9 +24,9 @@ public class Webtoon {
 
     private String title;
 
-    private float averageRating;
+    private String thumbnailUrl;
 
-    private float platformRating;
+    private String url;
 
     @Column(length = 5000)
     private String description;
@@ -38,9 +38,11 @@ public class Webtoon {
     @Enumerated(EnumType.STRING)
     private DayOfWeek serializationDay;
 
-    private String thumbnailUrl; // 추가된 필드
-    private String url;          // 추가된 필드
-    private String ageRating;    // 추가된 필드
+    private float averageRating;
+
+    private float platformRating;
+
+    private String ageRating;
 
     @ManyToMany
     @JoinTable(

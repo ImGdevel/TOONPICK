@@ -10,6 +10,9 @@ import toonpick.app.dto.AuthorDTO;
 import toonpick.app.dto.GenreDTO;
 import toonpick.app.dto.WebtoonDTO;
 import toonpick.app.dto.WebtoonRequestDTO;
+import toonpick.app.service.AuthService;
+import toonpick.app.service.AuthorService;
+import toonpick.app.service.GenreService;
 import toonpick.app.service.WebtoonService;
 
 import java.time.DayOfWeek;
@@ -22,10 +25,17 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/webtoon-request")
-@RequiredArgsConstructor
 public class DataRequestController {
 
     private final WebtoonService webtoonService;
+    private final AuthorService authorService;
+    private final GenreService genreService;
+
+    public DataRequestController(WebtoonService webtoonService, AuthorService authorService, GenreService genreService){
+        this.webtoonService = webtoonService;
+        this.authorService = authorService;
+        this.genreService = genreService;
+    }
 
     @PostMapping
     public ResponseEntity<List<WebtoonDTO>> createWebtoons(@RequestBody List<WebtoonRequestDTO> webtoonRequests) {
@@ -36,8 +46,6 @@ public class DataRequestController {
 
         return ResponseEntity.ok(createdWebtoons);
     }
-
-
 
     private static final Map<String, DayOfWeek> DAY_OF_WEEK_MAP = Map.of(
             "일", DayOfWeek.SUNDAY,
@@ -57,24 +65,26 @@ public class DataRequestController {
                         .role(authorRequest.getRole())
                         .link(authorRequest.getLink())
                         .build())
+                .map(authorService::findOrCreateAuthor)
                 .collect(Collectors.toSet());
 
         // Genres DTO 변환
         Set<GenreDTO> genreDTOs = request.getGenres().stream()
                 .map(genreName -> GenreDTO.builder().name(genreName).build())
+                .map(genreService::findOrCreateGenre)
                 .collect(Collectors.toSet());
 
         // DayOfWeek 변환
-        DayOfWeek dayOfWeek = DAY_OF_WEEK_MAP.getOrDefault(request.getDay(), DayOfWeek.MONDAY); // 기본값 설정
+        DayOfWeek dayOfWeek = DAY_OF_WEEK_MAP.getOrDefault(request.getDay(), DayOfWeek.MONDAY);
 
         // Webtoon DTO 생성
         return WebtoonDTO.builder()
                 .title(request.getTitle())
-                .averageRating(Float.parseFloat(request.getRating()))
-                .platformRating(Float.parseFloat(request.getRating())) // 예시로 동일하게 처리
+                .averageRating(0)
+                .platformRating(Float.parseFloat(request.getRating()))
                 .description(request.getStory())
                 .episodeCount(request.getEpisodeCount())
-                .serializationStartDate(LocalDate.now()) // 현재 날짜 사용
+                .serializationStartDate(LocalDate.now())
                 .serializationDay(dayOfWeek)
                 .thumbnailUrl(request.getThumbnailUrl())
                 .url(request.getUrl())

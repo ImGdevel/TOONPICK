@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +37,18 @@ public class AuthorService {
         return authorMapper.authorToAuthorDto(author);
     }
 
+    @Transactional(readOnly = true)
+    public AuthorDTO getAuthorByName(String name) {
+        Author author = authorRepository.findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found with name: " + name));
+        return authorMapper.authorToAuthorDto(author);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<AuthorDTO> findAuthorByName(String name) {
+        return authorRepository.findByName(name).map(authorMapper::authorToAuthorDto);
+    }
+
     @Transactional
     public AuthorDTO createAuthor(AuthorDTO authorDTO) {
         if (authorRepository.existsByName(authorDTO.getName())) {
@@ -45,6 +58,17 @@ public class AuthorService {
         Author author = authorMapper.authorDtoToAuthor(authorDTO);
         author = authorRepository.save(author);
         return authorMapper.authorToAuthorDto(author);
+    }
+
+    @Transactional
+    public AuthorDTO findOrCreateAuthor(AuthorDTO authorDTO) {
+        return authorRepository.findByName(authorDTO.getName())
+                .map(authorMapper::authorToAuthorDto)
+                .orElseGet(() -> {
+                    Author author = authorMapper.authorDtoToAuthor(authorDTO);
+                    author = authorRepository.save(author);
+                    return authorMapper.authorToAuthorDto(author);
+                });
     }
 
     @Transactional
