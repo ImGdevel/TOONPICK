@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
-import { getFilteredWebtoons } from '../services/webtoonService'
+import { getFilteredWebtoons, getWebtoonByDayOfWeek } from '../services/webtoonService';
 import './ExplorePage.css';
 
 const ExplorePage = () => {
@@ -14,8 +14,19 @@ const ExplorePage = () => {
   useEffect(() => {
     const fetchWebtoons = async () => {
       setLoading(true);
-      const newWebtoons = await getFilteredWebtoons({ statusFilter, dayFilter, genreFilter, page });
-      setWebtoons((prevWebtoons) => [...prevWebtoons, ...newWebtoons]);
+
+      // 요일 필터가 특정 요일일 때 getWebtoonByDayOfWeek 함수 호출
+      if (dayFilter !== '전체' && dayFilter !== '매일' && dayFilter !== '열흘') {
+        const response = await getWebtoonByDayOfWeek(dayFilterToEnum(dayFilter));
+        if (response.success) {
+          setWebtoons(response.data); // 가져온 웹툰 데이터로 업데이트
+        }
+      } else {
+        // 기본 필터로 필터된 웹툰을 가져옴
+        const newWebtoons = await getFilteredWebtoons({ statusFilter, dayFilter, genreFilter, page });
+        setWebtoons((prevWebtoons) => [...prevWebtoons, ...newWebtoons]);
+      }
+
       setLoading(false);
     };
 
@@ -41,6 +52,20 @@ const ExplorePage = () => {
     );
   };
 
+  // 요일을 Enum 형태로 매핑
+  const dayFilterToEnum = (day) => {
+    const dayEnum = {
+      '월': 'MONDAY',
+      '화': 'TUESDAY',
+      '수': 'WEDNESDAY',
+      '목': 'THURSDAY',
+      '금': 'FRIDAY',
+      '토': 'SATURDAY',
+      '일': 'SUNDAY'
+    };
+    return dayEnum[day];
+  };
+
   return (
     <div className="explore">
       <div className="filter-row">
@@ -56,7 +81,9 @@ const ExplorePage = () => {
       <div className="filter-row">
         <div className="filter-group">
           {['월', '화', '수', '목', '금', '토', '일', '매일', '열흘'].map((day) => (
-            <button key={day} onClick={() => setDayFilter(day)}>{day}</button>
+            <button key={day} onClick={() => day !== '매일' && day !== '열흘' && setDayFilter(day)}>
+              {day}
+            </button>
           ))}
         </div>
       </div>
@@ -64,11 +91,14 @@ const ExplorePage = () => {
       <div className="filter-row">
         <div className="filter-group genre-filter">
           {['판타지', '액션', '드라마', '무협', '개그', '일상', '미스테리', '스포츠'].map((genre) => (
-            <button key={genre} onClick={() => toggleGenreFilter(genre)} className={genreFilter.includes(genre) ? 'active' : ''}>
+            <button
+              key={genre}
+              onClick={() => toggleGenreFilter(genre)}
+              className={genreFilter.includes(genre) ? 'active' : ''}
+            >
               {genre}
             </button>
           ))}
-          {/* 추가 장르 버튼 */}
         </div>
       </div>
 

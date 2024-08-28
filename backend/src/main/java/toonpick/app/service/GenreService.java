@@ -1,6 +1,7 @@
 package toonpick.app.service;
 
 import toonpick.app.dto.GenreDTO;
+import toonpick.app.entity.Author;
 import toonpick.app.entity.Genre;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.GenreMapper;
@@ -36,6 +37,8 @@ public class GenreService {
         return genreMapper.genreToGenreDto(genre);
     }
 
+
+
     @Transactional
     public GenreDTO createGenre(GenreDTO genreDTO) {
         if (genreRepository.existsByName(genreDTO.getName())) {
@@ -48,12 +51,14 @@ public class GenreService {
     }
 
     @Transactional
-    public GenreDTO updateGenre(Long id, GenreDTO genreDTO) {
-        Genre existingGenre = genreRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Genre not found with id: " + id));
-        existingGenre.update(genreDTO.getName());
-        existingGenre = genreRepository.save(existingGenre);
-        return genreMapper.genreToGenreDto(existingGenre);
+    public GenreDTO findOrCreateGenre(GenreDTO genreDTO){
+        return genreRepository.findByName(genreDTO.getName())
+                .map(genreMapper::genreToGenreDto)
+                .orElseGet(() -> {
+                    Genre genre = genreMapper.genreDtoToGenre(genreDTO);
+                    genre = genreRepository.save(genre);
+                    return genreMapper.genreToGenreDto(genre);
+                });
     }
 
     @Transactional

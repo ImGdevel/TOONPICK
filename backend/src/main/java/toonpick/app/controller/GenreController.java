@@ -30,12 +30,6 @@ public class GenreController {
         return new ResponseEntity<>(genreDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<GenreDTO> updateGenre(@PathVariable Long id, @RequestBody GenreDTO genreDTO) {
-        GenreDTO updatedGenre = genreService.updateGenre(id, genreDTO);
-        return new ResponseEntity<>(updatedGenre, HttpStatus.OK);
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
         genreService.deleteGenre(id);

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 @RestController
@@ -51,6 +52,12 @@ public class WebtoonController {
     @GetMapping("/genre/{genreName}")
     public ResponseEntity<List<WebtoonDTO>> getWebtoonsByGenreName(@PathVariable String genreName) {
         List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByGenreName(genreName);
+        return new ResponseEntity<>(webtoons, HttpStatus.OK);
+    }
+
+    @GetMapping("/day-of-week/{dayOfWeek}")
+    public ResponseEntity<List<WebtoonDTO>> getWebtoonsByDayOfWeek(@PathVariable DayOfWeek dayOfWeek) {
+        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByDayOfWeek(dayOfWeek);
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
 }
