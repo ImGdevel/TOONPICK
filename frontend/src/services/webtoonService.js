@@ -26,6 +26,26 @@ export const getCarouselImages = async () => {
   ];
 };
 
+// 요일에 맞춰 웹툰 데이터를 불러옴
+export const getWebtoonByDayOfWeek = async (dayOfWeek) => {
+  try {
+    const response = await fetch(`http://localhost:8080/api/webtoons/day-of-week/${dayOfWeek}`, {
+      method: 'GET',
+      credentials: 'include', // 쿠키 포함
+    });
+
+    if (response.ok) {
+      const webtoons = await response.json(); // 응답 데이터를 JSON으로 변환
+      return { success: true, data: webtoons }; // 가져온 데이터를 반환
+    } else {
+      return { success: false, message: 'Failed to fetch webtoons' };
+    }
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+};
+
+
 export const getWebtoonById = async (id) => {
   // 특정 웹툰 데이터를 불러오는 로직
   const allWebtoons = await getWebtoons();
