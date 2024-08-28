@@ -38,25 +38,26 @@ public class WebtoonService {
 
     @Transactional
     public WebtoonDTO createWebtoon(WebtoonDTO webtoonDTO) {
-        Webtoon webtoon = webtoonMapper.webtoonDtoToWebtoon(webtoonDTO);
-
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(
                 webtoonDTO.getAuthors().stream().map(AuthorDTO::getId).collect(Collectors.toSet())));
 
         Set<Genre> genres = new HashSet<>(genreRepository.findAllById(
                 webtoonDTO.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet())));
 
-        webtoon.update(
-                webtoonDTO.getTitle(),
-                webtoonDTO.getAverageRating(),
-                webtoonDTO.getPlatformRating(),
-                webtoonDTO.getDescription(),
-                webtoonDTO.getEpisodeCount(),
-                webtoonDTO.getSerializationStartDate(),
-                webtoonDTO.getSerializationDay(),
-                authors,
-                genres
-        );
+        Webtoon webtoon = Webtoon.builder()
+                .title(webtoonDTO.getTitle())
+                .averageRating(webtoonDTO.getAverageRating())
+                .platformRating(webtoonDTO.getPlatformRating())
+                .description(webtoonDTO.getDescription())
+                .episodeCount(webtoonDTO.getEpisodeCount())
+                .serializationStartDate(webtoonDTO.getSerializationStartDate())
+                .serializationDay(webtoonDTO.getSerializationDay())
+                .thumbnailUrl(webtoonDTO.getThumbnailUrl())
+                .url(webtoonDTO.getUrl())
+                .ageRating(webtoonDTO.getAgeRating())
+                .authors(authors)
+                .genres(genres)
+                .build();
 
         webtoon = webtoonRepository.save(webtoon);
         return webtoonMapper.webtoonToWebtoonDto(webtoon);
@@ -81,6 +82,9 @@ public class WebtoonService {
                 webtoonDTO.getEpisodeCount(),
                 webtoonDTO.getSerializationStartDate(),
                 webtoonDTO.getSerializationDay(),
+                webtoonDTO.getThumbnailUrl(),
+                webtoonDTO.getUrl(),
+                webtoonDTO.getAgeRating(),
                 authors,
                 genres
         );

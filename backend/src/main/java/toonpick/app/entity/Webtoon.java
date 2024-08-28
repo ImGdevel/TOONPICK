@@ -28,6 +28,7 @@ public class Webtoon {
 
     private float platformRating;
 
+    @Column(length = 5000)
     private String description;
 
     private int episodeCount;
@@ -37,6 +38,9 @@ public class Webtoon {
     @Enumerated(EnumType.STRING)
     private DayOfWeek serializationDay;
 
+    private String thumbnailUrl; // 추가된 필드
+    private String url;          // 추가된 필드
+    private String ageRating;    // 추가된 필드
 
     @ManyToMany
     @JoinTable(
@@ -58,7 +62,7 @@ public class Webtoon {
     private Set<Review> reviews = new HashSet<>();
 
     @Builder
-    public Webtoon(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, DayOfWeek serializationDay, Set<Author> authors, Set<Genre> genres) {
+    public Webtoon(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, DayOfWeek serializationDay, String thumbnailUrl, String url, String ageRating, Set<Author> authors, Set<Genre> genres) {
         this.title = title;
         this.averageRating = averageRating;
         this.platformRating = platformRating;
@@ -66,11 +70,14 @@ public class Webtoon {
         this.episodeCount = episodeCount;
         this.serializationStartDate = serializationStartDate;
         this.serializationDay = serializationDay;
+        this.thumbnailUrl = thumbnailUrl;
+        this.url = url;
+        this.ageRating = ageRating;
         this.authors = authors != null ? authors : new HashSet<>();
         this.genres = genres != null ? genres : new HashSet<>();
     }
 
-    public void update(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, DayOfWeek serializationDay, Set<Author> authors, Set<Genre> genres) {
+    public void update(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, DayOfWeek serializationDay, String thumbnailUrl, String url, String ageRating, Set<Author> authors, Set<Genre> genres) {
         this.title = title;
         this.averageRating = averageRating;
         this.platformRating = platformRating;
@@ -78,6 +85,9 @@ public class Webtoon {
         this.episodeCount = episodeCount;
         this.serializationStartDate = serializationStartDate;
         this.serializationDay = serializationDay;
+        this.thumbnailUrl = thumbnailUrl;
+        this.url = url;
+        this.ageRating = ageRating;
         this.authors = authors != null ? authors : new HashSet<>();
         this.genres = genres != null ? genres : new HashSet<>();
     }

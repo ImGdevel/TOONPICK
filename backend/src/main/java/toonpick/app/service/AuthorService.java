@@ -51,7 +51,11 @@ public class AuthorService {
     public AuthorDTO updateAuthor(Long id, AuthorDTO authorDTO) {
         Author existingAuthor = authorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));
-        existingAuthor.update(authorDTO.getName());
+        existingAuthor.update(
+                authorDTO.getName(),
+                authorDTO.getRole(),
+                authorDTO.getLink()
+                );
         existingAuthor = authorRepository.save(existingAuthor);
         return authorMapper.authorToAuthorDto(existingAuthor);
     }
