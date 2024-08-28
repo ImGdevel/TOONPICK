@@ -28,6 +28,7 @@ public class Webtoon {
 
     private String url;
 
+
     @Column(length = 3000)
     private String description;
 
@@ -64,6 +65,7 @@ public class Webtoon {
     private Set<Review> reviews = new HashSet<>();
 
     @Builder
+
     public Webtoon(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, DayOfWeek week, String thumbnailUrl, String url, String ageRating, Set<Author> authors, Set<Genre> genres) {
         this.title = title;
         this.averageRating = averageRating;
