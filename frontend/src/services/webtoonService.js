@@ -1,20 +1,33 @@
 // src/services/webtoonService.js
-const WEBTOONS = [
-    { id: 1, title: '웹툰 1', author: '작가 1', rating: 4.5, imageUrl: '/images/webtoon1.jpg' },
-    { id: 2, title: '웹툰 2', author: '작가 2', rating: 4.0, imageUrl: '/images/webtoon2.jpg' },
-    { id: 3, title: '웹툰 3', author: '작가 3', rating: 3.5, imageUrl: '/images/webtoon3.jpg' },
-    // 더 많은 웹툰 데이터...
-  ];
   
-// src/services/webtoonService.js
+// 모든 웹툰 데이터를 불러오는 함수
 export const getWebtoons = async () => {
-  // API 호출 로직 (모든 웹툰 데이터를 불러오는 부분)
-  // 여기에 실제 API 호출 코드가 들어갈 수 있습니다.
-  return [
-    { id: 1, title: '웹툰1', status: '연재중', day: '월', genres: ['판타지', '액션'] },
-    { id: 2, title: '웹툰2', status: '완결', day: '화', genres: ['드라마', '일상'] },
-    // ...더 많은 데이터
-  ];
+  try {
+    const response = await fetch('/api/webtoons');
+    if (!response.ok) {
+      throw new Error('Failed to fetch webtoons');
+    }
+    const data = await response.json();
+    return { success: true, data: data };
+  } catch (error) {
+    console.error('Error fetching webtoons:', error);
+    return [];
+  }
+};
+
+// 특정 웹툰 데이터를 불러오는 함수
+export const getWebtoonById = async (id) => {
+  try {
+    const response = await fetch(`http://localhost:8080/api/webtoons/${id}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch webtoon by ID');
+    }
+    const data = await response.json();
+    return { success: true, data: data };
+  } catch (error) {
+    console.error('Error fetching webtoon by ID:', error);
+    return null;
+  }
 };
 
 export const getCarouselImages = async () => {
@@ -46,11 +59,6 @@ export const getWebtoonByDayOfWeek = async (dayOfWeek) => {
 };
 
 
-export const getWebtoonById = async (id) => {
-  // 특정 웹툰 데이터를 불러오는 로직
-  const allWebtoons = await getWebtoons();
-  return allWebtoons.find((webtoon) => webtoon.id === id);
-};
 
 // 오류 수정: getFilteredWebtoons 함수 내보내기 추가
 export const getFilteredWebtoons = async ({ statusFilter, dayFilter, genreFilter, page }) => {
