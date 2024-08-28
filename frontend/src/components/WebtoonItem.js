@@ -10,13 +10,24 @@ const WebtoonItem = ({ webtoon }) => {
     navigate(`/webtoon/${webtoon.id}`);
   };
 
+  // 저자 목록을 쉼표로 구분된 문자열로 변환
+  const authors = webtoon.authors ? Array.from(webtoon.authors).map(author => author.name).join(', ') : 'Unknown Author';
+
+  // 평점을 안전하게 처리하고 기본값을 제공
+  const averageRating = webtoon.averageRating !== undefined ? webtoon.averageRating.toFixed(1) : 'N/A';
+
+  // 제목이 30자를 넘으면 "..."으로 처리
+  const truncatedTitle = webtoon.title.length > 30 ? `${webtoon.title.substring(0, 30)}...` : webtoon.title;
+
   return (
     <div className="webtoon-item" onClick={handleClick}>
-      <img src={webtoon.imageUrl} alt={webtoon.title} />
+      <div className="thumbnail-container">
+        <img src={webtoon.thumbnailUrl} alt={webtoon.title} className="thumbnail-image" />
+      </div>
       <div className="webtoon-info">
-        <h3>{webtoon.title}</h3>
-        <p>{webtoon.author}</p>
-        <p>Rating: {webtoon.rating}</p>
+        <span className="webtoon-title">{truncatedTitle}</span>
+        <span className="webtoon-author">{authors}</span>
+        <span className="webtoon-rating">Rating: {averageRating}</span>
       </div>
     </div>
   );
