@@ -10,6 +10,7 @@ import toonpick.app.repository.WebtoonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ public class WebtoonService {
                 .description(webtoonDTO.getDescription())
                 .episodeCount(webtoonDTO.getEpisodeCount())
                 .serializationStartDate(webtoonDTO.getSerializationStartDate())
-                .serializationDay(webtoonDTO.getSerializationDay())
+                .week(webtoonDTO.getWeek())
                 .thumbnailUrl(webtoonDTO.getThumbnailUrl())
                 .url(webtoonDTO.getUrl())
                 .ageRating(webtoonDTO.getAgeRating())
@@ -81,7 +82,7 @@ public class WebtoonService {
                 webtoonDTO.getDescription(),
                 webtoonDTO.getEpisodeCount(),
                 webtoonDTO.getSerializationStartDate(),
-                webtoonDTO.getSerializationDay(),
+                webtoonDTO.getWeek(),
                 webtoonDTO.getThumbnailUrl(),
                 webtoonDTO.getUrl(),
                 webtoonDTO.getAgeRating(),
@@ -115,6 +116,15 @@ public class WebtoonService {
                 .map(webtoonMapper::webtoonToWebtoonDto)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<WebtoonDTO> getWebtoonsByDayOfWeek(DayOfWeek dayOfWeek) {
+        List<Webtoon> webtoons = webtoonRepository.findByWeek(dayOfWeek);
+        return webtoons.stream()
+                .map(webtoonMapper::webtoonToWebtoonDto)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getWebtoonsByGenreName(String genreName) {

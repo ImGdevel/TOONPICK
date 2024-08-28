@@ -28,7 +28,7 @@ public class Webtoon {
 
     private String url;
 
-    @Column(length = 5000)
+    @Column(length = 3000)
     private String description;
 
     private int episodeCount;
@@ -36,7 +36,7 @@ public class Webtoon {
     private LocalDate serializationStartDate;
 
     @Enumerated(EnumType.STRING)
-    private DayOfWeek serializationDay;
+    private DayOfWeek week;
 
     private float averageRating;
 
@@ -64,14 +64,14 @@ public class Webtoon {
     private Set<Review> reviews = new HashSet<>();
 
     @Builder
-    public Webtoon(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, DayOfWeek serializationDay, String thumbnailUrl, String url, String ageRating, Set<Author> authors, Set<Genre> genres) {
+    public Webtoon(String title, float averageRating, float platformRating, String description, int episodeCount, LocalDate serializationStartDate, DayOfWeek week, String thumbnailUrl, String url, String ageRating, Set<Author> authors, Set<Genre> genres) {
         this.title = title;
         this.averageRating = averageRating;
         this.platformRating = platformRating;
         this.description = description;
         this.episodeCount = episodeCount;
         this.serializationStartDate = serializationStartDate;
-        this.serializationDay = serializationDay;
+        this.week = week;
         this.thumbnailUrl = thumbnailUrl;
         this.url = url;
         this.ageRating = ageRating;
@@ -86,7 +86,7 @@ public class Webtoon {
         this.description = description;
         this.episodeCount = episodeCount;
         this.serializationStartDate = serializationStartDate;
-        this.serializationDay = serializationDay;
+        this.week = serializationDay;
         this.thumbnailUrl = thumbnailUrl;
         this.url = url;
         this.ageRating = ageRating;

@@ -10,7 +10,6 @@ import toonpick.app.dto.AuthorDTO;
 import toonpick.app.dto.GenreDTO;
 import toonpick.app.dto.WebtoonDTO;
 import toonpick.app.dto.WebtoonRequestDTO;
-import toonpick.app.service.AuthService;
 import toonpick.app.service.AuthorService;
 import toonpick.app.service.GenreService;
 import toonpick.app.service.WebtoonService;
@@ -46,6 +45,8 @@ public class DataRequestController {
 
         return ResponseEntity.ok(createdWebtoons);
     }
+
+
 
     private static final Map<String, DayOfWeek> DAY_OF_WEEK_MAP = Map.of(
             "일", DayOfWeek.SUNDAY,
@@ -84,8 +85,8 @@ public class DataRequestController {
                 .platformRating(Float.parseFloat(request.getRating()))
                 .description(request.getStory())
                 .episodeCount(request.getEpisodeCount())
-                .serializationStartDate(LocalDate.now())
-                .serializationDay(dayOfWeek)
+                .serializationStartDate(LocalDate.now()) // 현재 날짜 사용
+                .week(dayOfWeek)
                 .thumbnailUrl(request.getThumbnailUrl())
                 .url(request.getUrl())
                 .ageRating(request.getAgeRating())

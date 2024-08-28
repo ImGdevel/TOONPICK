@@ -18,7 +18,7 @@ public class WebtoonDTO {
     private String description;
     private int episodeCount;
     private LocalDate serializationStartDate;
-    private DayOfWeek serializationDay;
+    private DayOfWeek week;
     private Set<AuthorDTO> authors;
     private Set<GenreDTO> genres;
     private String thumbnailUrl;
