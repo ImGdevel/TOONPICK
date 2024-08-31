@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- src/main/resources/logback-spring.xml-->
+<!-- src/main/resources/logback-spring.xml -->
 <configuration>
     <property name="LOG_PATH" value="./logs" />
 
-    <!-- Appender -->
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- Define color conversion rule -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+
+    <!-- Console Appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
         </filter>
         <encoder>
-            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%thread] %logger %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(%-5level) %cyan([%-10thread]) %magenta(%-40logger{5}) : %msg%n</pattern>
         </encoder>
     </appender>
 
+    <!-- File Appender -->
     <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
@@ -20,18 +24,17 @@
         <file>${LOG_PATH}/info.log</file>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/info_${type}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/info_%d{yyyy-MM-dd}.gz</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%thread] %logger %msg%n</pattern>
+            <pattern>%d[{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%-10thread] %logger : %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!--TRACE > DEBUG > INFO > WARN > ERROR > OFF -->
     <!-- Root Logger -->
     <root level="INFO">
-        <appender-ref ref="console" />
+        <appender-ref ref="STDOUT" />
         <appender-ref ref="INFO_LOG" />
     </root>
 </configuration>
