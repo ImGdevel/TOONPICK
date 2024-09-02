@@ -11,6 +11,7 @@ import ExplorePage from './pages/ExplorePage';
 import MyPage from './pages/MyPage';
 import { AuthProvider } from './context/AuthContext';
 import SocialLoginCallbackPage from './pages/SocialLoginCallbackPage';
+import ErrorPage from './components/ErrorPage';
 
 const App = () => (
   <AuthProvider>
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/webtoon/:id" element={<WebtoonDetailPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/refresh" element={<SocialLoginCallbackPage />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </main>
 

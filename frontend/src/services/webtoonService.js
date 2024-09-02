@@ -1,5 +1,5 @@
 // src/services/webtoonService.js
-  
+
 // 모든 웹툰 데이터를 불러오는 함수
 export const getWebtoons = async () => {
   try {

@@ -1,4 +1,5 @@
 // src/services/AuthService.js
+
 export const AuthService = {
   login: async (username, password, loginCallback) => {
     try {
@@ -54,10 +55,11 @@ export const AuthService = {
         localStorage.removeItem('accessToken'); // Access Token 삭제
         return { success: true };
       } else {
-        return { success: false, message: 'Failed to log out' };
+        const errorMessage = await response.text();
+        return { success: false, message: `Failed to log out: ${errorMessage}` };
       }
     } catch (error) {
-      return { success: false, message: error.message };
+      return { success: false, message: `Network error: ${error.message}` };
     }
   },
 

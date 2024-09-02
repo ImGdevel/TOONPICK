@@ -9,6 +9,10 @@
   margin: 0 auto;
 }
 
+.header-title h1 {
+  cursor: pointer; /* 클릭 가능한 포인터 커서로 설정 */
+}
+
 .auth-buttons button {
   margin-left: 10px;
   padding: 10px 20px;

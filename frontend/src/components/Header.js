@@ -21,18 +21,24 @@ const Header = () => {
     navigate('/mypage');
   };
 
+  const handleHome = () => {
+    navigate('/');
+  };
+
   const handleLogout = async () => {
     const result = await AuthService.logout();
     if (result.success) {
-      logout();
+      logout(); 
       navigate('/');
+    } else {
+      navigate('/error');
     }
   };
 
   return (
     <header>
       <div className="header-title">
-        <h1>TOONPICK</h1>
+        <h1 onClick={handleHome}>TOONPICK</h1>
         <div className="auth-buttons">
           {isLoggedIn ? (
             <>
