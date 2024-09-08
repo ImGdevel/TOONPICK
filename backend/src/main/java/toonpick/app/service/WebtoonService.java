@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -135,6 +136,25 @@ public class WebtoonService {
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getWebtoonsByGenreName(String genreName) {
         List<Webtoon> webtoons = webtoonRepository.findByGenres_Name(genreName);
+        return webtoons.stream()
+                .map(webtoonMapper::webtoonToWebtoonDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<WebtoonDTO> getWebtoonsByStatus(String status) {
+        List<Webtoon> webtoons = webtoonRepository.findByStatus(status);
+        return webtoons.stream()
+                .map(webtoonMapper::webtoonToWebtoonDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<WebtoonDTO> getSeriesOfWebtoonsByDayOfWeek(DayOfWeek dayOfWeek) {
+        List<String> statuses = Arrays.asList("연재", "휴재");
+
+        List<Webtoon> webtoons = webtoonRepository.findWebtoonsByWeekAndStatusIn(dayOfWeek, statuses);
+
         return webtoons.stream()
                 .map(webtoonMapper::webtoonToWebtoonDto)
                 .collect(Collectors.toList());

@@ -57,9 +57,20 @@ public class WebtoonController {
 
     @GetMapping("/day-of-week/{dayOfWeek}")
     public ResponseEntity<List<WebtoonDTO>> getWebtoonsByDayOfWeek(@PathVariable DayOfWeek dayOfWeek) {
-
         List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByDayOfWeek(dayOfWeek);
-        System.out.println(webtoons.size());
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<WebtoonDTO>> getWebtoonsByStatus(@PathVariable String status) {
+        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByStatus(status);
+        return new ResponseEntity<>(webtoons, HttpStatus.OK);
+    }
+
+    @GetMapping("/series/{dayOfWeek}")
+    public ResponseEntity<List<WebtoonDTO>> getSeriesOfWebtoonsByDayOfWeek(@PathVariable DayOfWeek dayOfWeek) {
+        List<WebtoonDTO> webtoons = webtoonService.getSeriesOfWebtoonsByDayOfWeek(dayOfWeek);
+        return new ResponseEntity<>(webtoons, HttpStatus.OK);
+    }
+
 }
