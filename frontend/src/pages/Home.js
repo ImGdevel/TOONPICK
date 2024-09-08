@@ -4,7 +4,7 @@ import Carousel from '../components/Carousel';
 import WebtoonList from '../components/WebtoonList';
 import { getWebtoons, getCarouselImages } from '../services/webtoonService';
 import { Link } from 'react-router-dom'; // Link 추가
-import './Home.css';
+import './Home.module.css';
 
 const Home = () => {
   const [webtoons, setWebtoons] = useState([]);
