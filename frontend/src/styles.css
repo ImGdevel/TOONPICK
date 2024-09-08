@@ -1,16 +1,13 @@
 /* src/styles.css */
 body {
-  background-color: #141414;
+  background-color: #161616;
   color: white;
   margin: 0 auto;
   font-family: Arial, sans-serif;
-
-
-}
-
-.container {
   width: 1200px;
 }
+
+
 
 a {
   color: white;
