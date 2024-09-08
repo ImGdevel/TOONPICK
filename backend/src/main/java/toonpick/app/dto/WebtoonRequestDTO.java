@@ -8,9 +8,11 @@ import java.util.List;
 public class WebtoonRequestDTO {
 
     private Long id;
-    private Long uniqueId;
+    private String uniqueId;
+    private String platform;
     private String title;
     private String day;
+    private String status;
     private String rating;
     private String thumbnailUrl;
     private String story;
@@ -19,7 +21,6 @@ public class WebtoonRequestDTO {
     private List<AuthorRequest> authors;
     private List<String> genres;
     private int episodeCount;
-
 
     @Data
     public static class AuthorRequest {

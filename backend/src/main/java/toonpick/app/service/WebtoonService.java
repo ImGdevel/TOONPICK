@@ -47,11 +47,14 @@ public class WebtoonService {
 
         Webtoon webtoon = Webtoon.builder()
                 .title(webtoonDTO.getTitle())
+                .platform(webtoonDTO.getPlatform())
+                .platformId(webtoonDTO.getPlatformId())
                 .averageRating(webtoonDTO.getAverageRating())
                 .platformRating(webtoonDTO.getPlatformRating())
                 .description(webtoonDTO.getDescription())
                 .episodeCount(webtoonDTO.getEpisodeCount())
                 .serializationStartDate(webtoonDTO.getSerializationStartDate())
+                .status(webtoonDTO.getStatus())
                 .week(webtoonDTO.getWeek())
                 .thumbnailUrl(webtoonDTO.getThumbnailUrl())
                 .url(webtoonDTO.getUrl())
@@ -77,11 +80,14 @@ public class WebtoonService {
 
         existingWebtoon.update(
                 webtoonDTO.getTitle(),
+                webtoonDTO.getPlatform(),
+                webtoonDTO.getPlatformId(),
                 webtoonDTO.getAverageRating(),
                 webtoonDTO.getPlatformRating(),
                 webtoonDTO.getDescription(),
                 webtoonDTO.getEpisodeCount(),
                 webtoonDTO.getSerializationStartDate(),
+                webtoonDTO.getStatus(),
                 webtoonDTO.getWeek(),
                 webtoonDTO.getThumbnailUrl(),
                 webtoonDTO.getUrl(),

@@ -82,6 +82,9 @@ public class DataRequestController {
         // Webtoon DTO 생성
         return WebtoonDTO.builder()
                 .title(request.getTitle())
+                .platform(request.getPlatform())
+                .platformId(request.getUniqueId())
+                .status(request.getStatus())
                 .averageRating(0)
                 .platformRating(Float.parseFloat(request.getRating()))
                 .description(request.getStory())

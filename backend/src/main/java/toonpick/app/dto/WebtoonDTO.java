@@ -13,11 +13,14 @@ import java.util.Set;
 public class WebtoonDTO {
     private Long id;
     private String title;
+    private String platform;
+    private String platformId;
     private float averageRating;
     private float platformRating;
     private String description;
     private int episodeCount;
     private LocalDate serializationStartDate;
+    private String status;
     private DayOfWeek week;
     private Set<AuthorDTO> authors;
     private Set<GenreDTO> genres;

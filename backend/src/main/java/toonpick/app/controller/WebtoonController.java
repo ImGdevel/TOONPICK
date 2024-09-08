@@ -57,7 +57,9 @@ public class WebtoonController {
 
     @GetMapping("/day-of-week/{dayOfWeek}")
     public ResponseEntity<List<WebtoonDTO>> getWebtoonsByDayOfWeek(@PathVariable DayOfWeek dayOfWeek) {
+
         List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByDayOfWeek(dayOfWeek);
+        System.out.println(webtoons.size());
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
 }
