@@ -1,7 +1,6 @@
 // src/pages/NewWebtoonsPage.js
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
-import { getFilteredWebtoons } from '../services/webtoonService';
 import './NewWebtoonsPage.module.css';
 
 const NewWebtoonsPage = () => {
@@ -12,8 +11,7 @@ const NewWebtoonsPage = () => {
   useEffect(() => {
     const fetchNewWebtoons = async () => {
       setLoading(true);
-      const response = await getFilteredWebtoons({ statusFilter: '신작', dayFilter: '전체', genreFilter: [], page });
-      setWebtoons((prevWebtoons) => [...prevWebtoons, ...response]);
+
       setLoading(false);
     };
 

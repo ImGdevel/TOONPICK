@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
-import { getFilteredWebtoons, getWebtoonByDayOfWeek } from '../services/webtoonService';
+import { getWebtoonByDayOfWeek } from '../services/webtoonService';
 import './ExplorePage.css';
 
 const ExplorePage = () => {
@@ -23,9 +23,7 @@ const ExplorePage = () => {
           setWebtoons(response.data); // 가져온 웹툰 데이터로 업데이트
         }
       } else {
-        // 기본 필터로 필터된 웹툰을 가져옴
-        const newWebtoons = await getFilteredWebtoons({ statusFilter, dayFilter, genreFilter, page });
-        setWebtoons((prevWebtoons) => [...prevWebtoons, ...newWebtoons]);
+
       }
 
       setLoading(false);

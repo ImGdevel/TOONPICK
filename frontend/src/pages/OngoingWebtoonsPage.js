@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
-import { getWebtoonsByDayOfWeek } from '../services/webtoonService';
+import { getWebtoonsByDayOfWeek, getWebtoons } from '../services/webtoonService';
 import './OngoingWebtoonsPage.module.css';
 
 const OngoingWebtoonsPage = () => {
@@ -23,7 +23,12 @@ const OngoingWebtoonsPage = () => {
           setWebtoons([]);
         }
       } else {
-        setWebtoons([]); // 기본적으로 필터가 없으면 빈 리스트로 설정
+        const response = await getWebtoons();
+        if (response.success) {
+          setWebtoons(response.data);
+        } else {
+          setWebtoons([]);
+        }
       }
 
       setLoading(false); // 로딩 끝

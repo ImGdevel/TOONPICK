@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
-import { getFilteredWebtoons } from '../services/webtoonService';
 
 const CompletedWebtoonsPage = () => {
   const [webtoons, setWebtoons] = useState([]);
@@ -10,8 +9,7 @@ const CompletedWebtoonsPage = () => {
   useEffect(() => {
     const fetchWebtoons = async () => {
       setLoading(true);
-      const newWebtoons = await getFilteredWebtoons({ statusFilter: '완결', dayFilter: '전체', genreFilter: [], page });
-      setWebtoons((prevWebtoons) => [...prevWebtoons, ...newWebtoons]);
+
       setLoading(false);
     };
 

@@ -12,8 +12,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchWebtoons = async () => {
-      const webtoonData = await getWebtoons();
-      setWebtoons(webtoonData);
+
     };
 
     const fetchCarouselImages = async () => {

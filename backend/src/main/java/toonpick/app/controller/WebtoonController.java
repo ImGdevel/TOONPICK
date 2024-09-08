@@ -73,4 +73,10 @@ public class WebtoonController {
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
 
+    @GetMapping("/series-all")
+    public ResponseEntity<List<WebtoonDTO>> getSeriesOfWebtoons() {
+        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByStatus("연재");
+        return new ResponseEntity<>(webtoons, HttpStatus.OK);
+    }
+
 }

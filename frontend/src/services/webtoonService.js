@@ -3,7 +3,7 @@
 // 모든 웹툰 데이터를 불러오는 함수
 export const getWebtoons = async () => {
   try {
-    const response = await fetch('/api/webtoons');
+    const response = await fetch('http://localhost:8080/api/webtoons/series-all');
     if (!response.ok) {
       throw new Error('Failed to fetch webtoons');
     }
@@ -30,10 +30,11 @@ export const getWebtoonById = async (id) => {
   }
 };
 
+
 // 특정 요일의 웹툰 데이터를 불러오는 함수
 export const getWebtoonsByDayOfWeek = async (dayOfWeek) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/series/${dayOfWeek}`);
+    const response = await fetch(`http://localhost:8080/api/webtoons/series/${dayOfWeek}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch webtoons for day: ${dayOfWeek}`);
     }
@@ -88,23 +89,3 @@ export const getWebtoonByDayOfWeek = async (dayOfWeek) => {
 };
 
 
-
-// 오류 수정: getFilteredWebtoons 함수 내보내기 추가
-export const getFilteredWebtoons = async ({ statusFilter, dayFilter, genreFilter, page }) => {
-  const allWebtoons = await getWebtoons();
-
-  // 필터 적용 로직
-  const filteredWebtoons = allWebtoons.filter((webtoon) => {
-    return (
-      (statusFilter === '전체' || webtoon.status === statusFilter) &&
-      (dayFilter === '전체' || webtoon.day === dayFilter) &&
-      (genreFilter.length === 0 || genreFilter.some((genre) => webtoon.genres.includes(genre)))
-    );
-  });
-
-  // 페이지네이션 로직
-  const startIndex = (page - 1) * 15;
-  const endIndex = startIndex + 15;
-
-  return filteredWebtoons.slice(startIndex, endIndex);
-};
