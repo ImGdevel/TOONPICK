@@ -17,6 +17,7 @@ const ExplorePage = () => {
 
       // 요일 필터가 특정 요일일 때 getWebtoonByDayOfWeek 함수 호출
       if (dayFilter !== '전체' && dayFilter !== '매일' && dayFilter !== '열흘') {
+        console.log("why?");
         const response = await getWebtoonByDayOfWeek(dayFilterToEnum(dayFilter));
         if (response.success) {
           setWebtoons(response.data); // 가져온 웹툰 데이터로 업데이트

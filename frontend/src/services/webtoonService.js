@@ -39,9 +39,23 @@ export const getCarouselImages = async () => {
   ];
 };
 
+export const fetchWebtoonsByCategory = async (category) => {
+  try {
+    const response = await fetch(`/api/webtoons?category=${category}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch webtoons');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching webtoons:', error);
+    return [];
+  }
+};
+
 // 요일에 맞춰 웹툰 데이터를 불러옴
 export const getWebtoonByDayOfWeek = async (dayOfWeek) => {
   try {
+    console.log("call");
     const response = await fetch(`http://localhost:8080/api/webtoons/day-of-week/${dayOfWeek}`, {
       method: 'GET',
       credentials: 'include', // 쿠키 포함
