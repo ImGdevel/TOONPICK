@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
 import { getWebtoonByDayOfWeek } from '../services/webtoonService';
-import styles from './ExplorePage.module.css'; // CSS 모듈로 가져오기
+import styles from './ExplorePage.module.css';
 
 const ExplorePage = () => {
   const [statusFilter, setStatusFilter] = useState('전체');
@@ -52,7 +52,6 @@ const ExplorePage = () => {
     );
   };
 
-  // 요일을 Enum 형태로 매핑
   const dayFilterToEnum = (day) => {
     const dayEnum = {
       '월': 'MONDAY',

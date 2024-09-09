@@ -1,9 +1,9 @@
 // src/pages/SignupPage.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaGoogle, FaTwitter, FaApple } from 'react-icons/fa'; // 아이콘 추가
+import { FaGoogle, FaTwitter, FaApple } from 'react-icons/fa';
 import { AuthService } from '../services/AuthService';
-import styles from './SignupPage.module.css'; // CSS 모듈 가져오기
+import styles from './SignupPage.module.css';
 
 const SignupPage = () => {
   const navigate = useNavigate();

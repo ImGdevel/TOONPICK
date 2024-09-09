@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaGoogle } from 'react-icons/fa';
 import { AuthService } from '../services/AuthService';
 import { AuthContext } from '../context/AuthContext';
-import styles from './LoginPage.module.css'; // CSS 모듈로 가져오기
+import styles from './LoginPage.module.css';
 
 const LoginPage = () => {
   const navigate = useNavigate();

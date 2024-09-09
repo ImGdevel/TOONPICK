@@ -10,9 +10,9 @@ const RefreshPage = () => {
     const refreshAccessToken = async () => {
       const result = await AuthService.reissueAccessToken();
       if (result.success) {
-        navigate('/'); // 리프레시 성공 시 홈으로 이동
+        navigate('/');
       } else {
-        navigate('/login'); // 실패 시 로그인 페이지로 이동
+        navigate('/login'); 
       }
     };
 

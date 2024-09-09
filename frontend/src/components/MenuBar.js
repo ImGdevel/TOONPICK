@@ -1,7 +1,7 @@
 // src/components/MenuBar.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './MenuBar.module.css'; // Assuming you're using CSS Modules
+import styles from './MenuBar.module.css';
 
 const MenuBar = () => {
   const navigate = useNavigate();

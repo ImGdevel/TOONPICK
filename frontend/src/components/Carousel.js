@@ -1,6 +1,6 @@
 // src/components/Carousel.js
 import React, { useState } from 'react';
-import styles from './Carousel.module.css'; // CSS 모듈로 가져오기
+import styles from './Carousel.module.css';
 
 const Carousel = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);

@@ -1,8 +1,8 @@
 .webtoon-item {
-  width: 170px; /* Fixed width */
-  height: 300px; /* Fixed height */
+  width: 170px;
+  height: 300px;
   display: flex;
-  flex-direction: column; /* Align elements vertically */
+  flex-direction: column;
   align-items: center;
   padding: 10px;
   box-shadow: 0 12px 10px rgba(0, 0, 0, 0.1);
@@ -12,7 +12,7 @@
 
 .thumbnail-container {
   width: 100%;
-  height: 270px; /* Fixed height for the thumbnail */
+  height: 270px;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -28,14 +28,14 @@
 .webtoon-info {
   width: 100%;
   display: flex;
-  flex-direction: column; /* Align elements vertically */
+  flex-direction: column;
   align-items: center;
-  flex-grow: 1; /* Take remaining space */
+  flex-grow: 1;
   margin-top: 10px;
 }
 
 .webtoon-title {
-  font-size: 17px; /* Fixed font size */
+  font-size: 17px;
   line-height: 1.2;
   font-weight: bold;
   height: 2.6em;
@@ -48,22 +48,22 @@
 
 .webtoon-meta {
   display: flex;
-  justify-content: space-between; /* Space between items */
-  align-items: center; /* Align items vertically centered */
-  width: 100%; /* Stretch to full width */
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .webtoon-author {
   font-size: 12px;
   flex: 7;
-  overflow: hidden; /* Hide overflow text */
-  white-space: nowrap; /* Keep text on a single line */
-  text-overflow: ellipsis; /* Add ellipsis for overflow */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .webtoon-rating {
   font-size: 13px;
-  margin: 0px 5px; /* Add margin to separate from author */
-  flex: 3; /* 7:3 ratio for width */
-  text-align: right; /* Align text to the right */
+  margin: 0px 5px;
+  flex: 3;
+  text-align: right;
 }

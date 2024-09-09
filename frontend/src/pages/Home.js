@@ -3,7 +3,7 @@ import React, { useState, useEffect} from 'react';
 import Carousel from '../components/Carousel';
 import WebtoonList from '../components/WebtoonList';
 import { getWebtoons, getCarouselImages } from '../services/webtoonService';
-import { Link } from 'react-router-dom'; // Link 추가
+import { Link } from 'react-router-dom';
 import './Home.module.css';
 
 const Home = () => {

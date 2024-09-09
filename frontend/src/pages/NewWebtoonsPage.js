@@ -1,7 +1,7 @@
 // src/pages/NewWebtoonsPage.js
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
-import styles from './NewWebtoonsPage.module.css'; // CSS 모듈로 가져오기
+import styles from './NewWebtoonsPage.module.css'; 
 
 const NewWebtoonsPage = () => {
   const [webtoons, setWebtoons] = useState([]);

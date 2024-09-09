@@ -13,10 +13,10 @@ const SocialLoginCallbackPage = () => {
       const result = AuthService.handleSocialLoginCallback(login);
       console.log(result.success);
       if (result.success) {
-        navigate('/'); // 로그인 성공 시 홈으로 이동
+        navigate('/');
       } else {
         console.error(result.message);
-        navigate('/login'); // 실패 시 로그인 페이지로 이동
+        navigate('/login');
       }
     };
 

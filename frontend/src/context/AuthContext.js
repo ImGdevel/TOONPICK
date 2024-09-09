@@ -16,7 +16,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    console.log("do logout")
     AuthService.logout();
+    console.log("logout")
     setIsLoggedIn(false);
   };
 

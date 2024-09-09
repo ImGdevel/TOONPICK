@@ -1,7 +1,7 @@
 // src/components/WebtoonItem.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './WebtoonItem.module.css'; // CSS Module import
+import styles from './WebtoonItem.module.css';
 
 const WebtoonItem = ({ webtoon }) => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const WebtoonItem = ({ webtoon }) => {
         <span className={styles['webtoon-title']}>{truncatedTitle}</span>
         <div className={styles['webtoon-meta']}>
           <span className={styles['webtoon-author']}>{authors}</span>
-          <span className={styles['webtoon-rating']}>⭐ {averageRating}</span> {/* 별 모양 추가 */}
+          <span className={styles['webtoon-rating']}>⭐ {averageRating}</span>
         </div>
       </div>
     </div>
