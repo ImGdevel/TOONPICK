@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
 import { getWebtoonsByDayOfWeek, getWebtoons } from '../services/webtoonService';
-import './OngoingWebtoonsPage.module.css';
+import styles from './OngoingWebtoonsPage.module.css'; // CSS 모듈 가져오기
 
 const OngoingWebtoonsPage = () => {
   const [dayFilter, setDayFilter] = useState('전체'); // 요일 필터 상태
@@ -52,16 +52,16 @@ const OngoingWebtoonsPage = () => {
   };
 
   return (
-    <div className="ongoing-webtoons">
+    <div className={styles['ongoing-webtoons']}>
       <h1>연재 중 웹툰</h1>
-      <div className="filter-row">
-        <div className="filter-group">
+      <div className={styles['filter-row']}>
+        <div className={styles['filter-group']}>
           {/* 요일 필터 버튼 */}
           {['전체', '월', '화', '수', '목', '금', '토', '일'].map((day) => (
             <button
               key={day}
               onClick={() => setDayFilter(day)}
-              className={dayFilter === day ? 'active' : ''}
+              className={dayFilter === day ? styles['active'] : ''}
             >
               {day}
             </button>
@@ -70,7 +70,7 @@ const OngoingWebtoonsPage = () => {
       </div>
 
       {/* 웹툰 목록 */}
-      <div className="webtoon-list">
+      <div className={styles['webtoon-list']}>
         {webtoons.map((webtoon) => (
           <WebtoonItem key={webtoon.id} webtoon={webtoon} />
         ))}

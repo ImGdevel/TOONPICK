@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaGoogle } from 'react-icons/fa';
 import { AuthService } from '../services/AuthService';
 import { AuthContext } from '../context/AuthContext';
-import './LoginPage.css';
+import styles from './LoginPage.module.css'; // CSS 모듈로 가져오기
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -29,8 +29,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-box">
+    <div className={styles['login-page']}>
+      <div className={styles['login-box']}>
         <h1>TOONPICK</h1>
         <h3>로그인</h3>
         <input
@@ -45,13 +45,13 @@ const LoginPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button className="login-button" onClick={handleLogin}>
+        <button className={styles['login-button']} onClick={handleLogin}>
           로그인
         </button>
-        {error && <p className="error-message">{error}</p>}
-        <div className="social-buttons">
+        {error && <p className={styles['error-message']}>{error}</p>}
+        <div className={styles['social-buttons']}>
           <button
-            className="social-button"
+            className={styles['social-button']}
             onClick={() => handleSocialLogin('google')}
           >
             <FaGoogle /> Google 로그인

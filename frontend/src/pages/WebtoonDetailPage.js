@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getWebtoonById } from '../services/webtoonService';
-import './WebtoonDetailPage.css';
+import styles from './WebtoonDetailPage.module.css'; // CSS 모듈 가져오기
 
 const WebtoonDetailPage = () => {
   const { id } = useParams(); // URL에서 웹툰 ID를 가져옴
@@ -36,39 +36,39 @@ const WebtoonDetailPage = () => {
   if (!webtoon) return <div>Loading...</div>;
 
   return (
-    <div className="webtoon-detail-page">
+    <div className={styles['webtoon-detail-page']}>
       {/* 상단: 웹툰 기본 정보 */}
-      <div className="webtoon-info">
-        <div className="webtoon-image">
+      <div className={styles['webtoon-info']}>
+        <div className={styles['webtoon-image']}>
           <img src={webtoon.thumbnailUrl || 'https://via.placeholder.com/460x623'} alt={webtoon.title} />
         </div>
-        <div className="webtoon-details">
-          <div className="buttons">
-            <button className="bookmark-button">북마크</button>
-            <button className="heart-button">❤</button>
+        <div className={styles['webtoon-details']}>
+          <div className={styles['buttons']}>
+            <button className={styles['bookmark-button']}>북마크</button>
+            <button className={styles['heart-button']}>❤</button>
           </div>
-          <div className="webtoon-title">
+          <div className={styles['webtoon-title']}>
             {webtoon.title}
           </div>
-          <div className="webtoon-meta">
+          <div className={styles['webtoon-meta']}>
             {webtoon.authors.map((author) => author.name).join(', ')} | ★{webtoon.averageRating?.toFixed(1) || 'N/A'}
           </div>
-          <div className="extra-info">
+          <div className={styles['extra-info']}>
             {webtoon.description}
           </div>
         </div>
       </div>
 
       {/* 중단: 컨텐츠 */}
-      <div className="webtoon-content">
-        <div className="content-tabs">
-          <button onClick={() => handleTabChange('info')} className={activeTab === 'info' ? 'active' : ''}>정보</button>
-          <button onClick={() => handleTabChange('list')} className={activeTab === 'list' ? 'active' : ''}>연재 리스트</button>
-          <button onClick={() => handleTabChange('analysis')} className={activeTab === 'analysis' ? 'active' : ''}>분석</button>
-          <button onClick={() => handleTabChange('reviews')} className={activeTab === 'reviews' ? 'active' : ''}>평가 리스트</button>
+      <div className={styles['webtoon-content']}>
+        <div className={styles['content-tabs']}>
+          <button onClick={() => handleTabChange('info')} className={activeTab === 'info' ? styles['active'] : ''}>정보</button>
+          <button onClick={() => handleTabChange('list')} className={activeTab === 'list' ? styles['active'] : ''}>연재 리스트</button>
+          <button onClick={() => handleTabChange('analysis')} className={activeTab === 'analysis' ? styles['active'] : ''}>분석</button>
+          <button onClick={() => handleTabChange('reviews')} className={activeTab === 'reviews' ? styles['active'] : ''}>평가 리스트</button>
         </div>
         
-        <div className="content-body">
+        <div className={styles['content-body']}>
           {activeTab === 'info' && <div>{webtoon.description}</div>}
           {activeTab === 'list' && <div>연재 리스트 페이지</div>}
           {activeTab === 'analysis' && <div>분석 페이지</div>}
@@ -77,12 +77,12 @@ const WebtoonDetailPage = () => {
       </div>
 
       {/* 하단: 비슷한 웹툰 리스트 */}
-      <div className="similar-webtoons">
+      <div className={styles['similar-webtoons']}>
         <h3>비슷한 웹툰</h3>
-        <div className="similar-webtoons-list">
+        <div className={styles['similar-webtoons-list']}>
           {webtoon.similarWebtoons && webtoon.similarWebtoons.length > 0 ? (
             webtoon.similarWebtoons.map((similar) => (
-              <div key={similar.id} className="similar-webtoon-item">{similar.title}</div>
+              <div key={similar.id} className={styles['similar-webtoon-item']}>{similar.title}</div>
             ))
           ) : (
             <div>비슷한 웹툰이 없습니다.</div>

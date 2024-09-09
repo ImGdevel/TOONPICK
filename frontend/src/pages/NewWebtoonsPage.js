@@ -1,7 +1,7 @@
 // src/pages/NewWebtoonsPage.js
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
-import './NewWebtoonsPage.module.css';
+import styles from './NewWebtoonsPage.module.css'; // CSS 모듈로 가져오기
 
 const NewWebtoonsPage = () => {
   const [webtoons, setWebtoons] = useState([]);
@@ -11,6 +11,9 @@ const NewWebtoonsPage = () => {
   useEffect(() => {
     const fetchNewWebtoons = async () => {
       setLoading(true);
+      // 실제 웹툰 데이터를 불러오는 로직이 이곳에 추가되어야 합니다.
+      // 예: const response = await fetchNewWebtoonsFromAPI(page);
+      // setWebtoons(response.data);
 
       setLoading(false);
     };
@@ -30,9 +33,9 @@ const NewWebtoonsPage = () => {
   }, []);
 
   return (
-    <div className="new-webtoons">
+    <div className={styles['new-webtoons']}>
       <h1>신작 웹툰</h1>
-      <div className="webtoon-list">
+      <div className={styles['webtoon-list']}>
         {webtoons.map((webtoon) => (
           <WebtoonItem key={webtoon.id} webtoon={webtoon} />
         ))}

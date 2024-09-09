@@ -1,6 +1,6 @@
 // src/components/Carousel.js
 import React, { useState } from 'react';
-import './Carousel.css';
+import styles from './Carousel.module.css'; // CSS 모듈로 가져오기
 
 const Carousel = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -25,31 +25,34 @@ const Carousel = ({ images }) => {
   };
 
   return (
-    <div className="carousel">
-      <div className="carousel-inner" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+    <div className={styles.carousel}>
+      <div
+        className={styles['carousel-inner']}
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+      >
         {images.map((image, index) => (
-          <div key={index} className="carousel-item">
+          <div key={index} className={styles['carousel-item']}>
             <img
               src={image}
               alt={`Slide ${index}`}
               onLoad={() => handleImageLoad(index)}
               style={{ display: loadedImages.includes(index) ? 'block' : 'none' }}
             />
-            {!loadedImages.includes(index) && <div className="image-placeholder"></div>}
+            {!loadedImages.includes(index) && <div className={styles['image-placeholder']}></div>}
           </div>
         ))}
       </div>
-      <button className="carousel-control prev" onClick={prevSlide}>
+      <button className={`${styles['carousel-control']} ${styles.prev}`} onClick={prevSlide}>
         &#10094;
       </button>
-      <button className="carousel-control next" onClick={nextSlide}>
+      <button className={`${styles['carousel-control']} ${styles.next}`} onClick={nextSlide}>
         &#10095;
       </button>
-      <div className="carousel-indicators">
+      <div className={styles['carousel-indicators']}>
         {images.map((_, index) => (
           <button
             key={index}
-            className={`indicator ${index === currentIndex ? 'active' : ''}`}
+            className={`${styles.indicator} ${index === currentIndex ? styles.active : ''}`}
             onClick={() => goToSlide(index)}
           ></button>
         ))}

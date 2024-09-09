@@ -1,7 +1,7 @@
 // src/components/WebtoonList.js
 import React, { useState } from 'react';
 import WebtoonItem from './WebtoonItem';
-import './WebtoonList.css';
+import styles from './WebtoonList.module.css'; // CSS 모듈로 가져오기
 
 const WebtoonList = ({ webtoons }) => {
   const [startIndex, setStartIndex] = useState(0);
@@ -20,16 +20,16 @@ const WebtoonList = ({ webtoons }) => {
   const displayedWebtoons = webtoons.slice(startIndex, startIndex + itemsPerPage);
 
   return (
-    <div className="webtoon-list-container">
-      <button className="list-control prev" onClick={prevPage}>
+    <div className={styles['webtoon-list-container']}>
+      <button className={`${styles['list-control']} ${styles.prev}`} onClick={prevPage}>
         &#10094;
       </button>
-      <div className="webtoon-list">
+      <div className={styles['webtoon-list']}>
         {displayedWebtoons.map((webtoon) => (
           <WebtoonItem key={webtoon.id} webtoon={webtoon} />
         ))}
       </div>
-      <button className="list-control next" onClick={nextPage}>
+      <button className={`${styles['list-control']} ${styles.next}`} onClick={nextPage}>
         &#10095;
       </button>
     </div>

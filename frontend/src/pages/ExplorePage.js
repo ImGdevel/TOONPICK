@@ -1,7 +1,8 @@
+// src/components/ExplorePage.js
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
 import { getWebtoonByDayOfWeek } from '../services/webtoonService';
-import './ExplorePage.css';
+import styles from './ExplorePage.module.css'; // CSS 모듈로 가져오기
 
 const ExplorePage = () => {
   const [statusFilter, setStatusFilter] = useState('전체');
@@ -17,13 +18,13 @@ const ExplorePage = () => {
 
       // 요일 필터가 특정 요일일 때 getWebtoonByDayOfWeek 함수 호출
       if (dayFilter !== '전체' && dayFilter !== '매일' && dayFilter !== '열흘') {
-        console.log("why?");
         const response = await getWebtoonByDayOfWeek(dayFilterToEnum(dayFilter));
         if (response.success) {
           setWebtoons(response.data); // 가져온 웹툰 데이터로 업데이트
         }
       } else {
-
+        // 다른 조건 처리 로직이 있을 수 있습니다.
+        // 예를 들어, 다른 필터 조건에 맞는 API 호출 로직을 추가할 수 있습니다.
       }
 
       setLoading(false);
@@ -66,9 +67,9 @@ const ExplorePage = () => {
   };
 
   return (
-    <div className="explore">
-      <div className="filter-row">
-        <div className="filter-group">
+    <div className={styles.explore}>
+      <div className={styles['filter-row']}>
+        <div className={styles['filter-group']}>
           <button onClick={() => setStatusFilter('전체')}>전체</button>
           <button onClick={() => setStatusFilter('연재중')}>연재중</button>
           <button onClick={() => setStatusFilter('휴재')}>휴재</button>
@@ -77,8 +78,8 @@ const ExplorePage = () => {
         <input type="text" placeholder="검색" />
       </div>
 
-      <div className="filter-row">
-        <div className="filter-group">
+      <div className={styles['filter-row']}>
+        <div className={styles['filter-group']}>
           {['월', '화', '수', '목', '금', '토', '일', '매일', '열흘'].map((day) => (
             <button key={day} onClick={() => day !== '매일' && day !== '열흘' && setDayFilter(day)}>
               {day}
@@ -87,13 +88,13 @@ const ExplorePage = () => {
         </div>
       </div>
 
-      <div className="filter-row">
-        <div className="filter-group genre-filter">
+      <div className={styles['filter-row']}>
+        <div className={`${styles['filter-group']} ${styles['genre-filter']}`}>
           {['판타지', '액션', '드라마', '무협', '개그', '일상', '미스테리', '스포츠'].map((genre) => (
             <button
               key={genre}
               onClick={() => toggleGenreFilter(genre)}
-              className={genreFilter.includes(genre) ? 'active' : ''}
+              className={genreFilter.includes(genre) ? styles.active : ''}
             >
               {genre}
             </button>
@@ -101,7 +102,7 @@ const ExplorePage = () => {
         </div>
       </div>
 
-      <div className="webtoon-list">
+      <div className={styles['webtoon-list']}>
         {webtoons.map((webtoon) => (
           <WebtoonItem key={webtoon.id} webtoon={webtoon} />
         ))}
