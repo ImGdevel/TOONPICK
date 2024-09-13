@@ -30,6 +30,21 @@ export const getWebtoonById = async (id) => {
   }
 };
 
+export const getCompletedWebtoons = async (page) => {
+  const size = 60; // 한 번에 가져올 웹툰의 수를 50개로 설정
+
+  try {
+    const response = await fetch(`http://localhost:8080/api/webtoons/completed?page=${page}&size=${size}`);
+    if (!response.ok) {
+      throw new Error('완결된 웹툰을 가져오는 데 실패했습니다.');
+    }
+    const data = await response.json();
+    return { success: true, data: data };
+  } catch (error) {
+    console.error('완결된 웹툰을 가져오는 중 오류가 발생했습니다:', error);
+    return { success: false, data: [] };
+  }
+};
 
 // 특정 요일의 웹툰 데이터를 불러오는 함수
 export const getWebtoonsByDayOfWeek = async (dayOfWeek) => {
@@ -54,6 +69,7 @@ export const getCarouselImages = async () => {
     // ...더 많은 데이터
   ];
 };
+
 
 export const fetchWebtoonsByCategory = async (category) => {
   try {

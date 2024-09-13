@@ -1,6 +1,11 @@
 package toonpick.app.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import toonpick.app.dto.WebtoonDTO;
+import toonpick.app.entity.Webtoon;
 import toonpick.app.service.WebtoonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/webtoons")
@@ -76,6 +82,16 @@ public class WebtoonController {
     @GetMapping("/series-all")
     public ResponseEntity<List<WebtoonDTO>> getSeriesOfWebtoons() {
         List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByStatus("연재");
+        return new ResponseEntity<>(webtoons, HttpStatus.OK);
+    }
+
+    @GetMapping("/completed")
+    public ResponseEntity<List<WebtoonDTO>> getCompletedWebtoons(
+            @RequestParam(defaultValue = "0") int page, // 0부터 시작하도록 수정
+            @RequestParam(defaultValue = "60") int size) { // 기본 size를 50으로 변경
+
+        System.out.println("Requested Page: " + page); // 페이지 번호 확인 로그
+        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByStatus("완결", page, size);
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
 

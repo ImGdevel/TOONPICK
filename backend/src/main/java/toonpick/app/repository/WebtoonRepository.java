@@ -1,5 +1,7 @@
 package toonpick.app.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import toonpick.app.entity.Webtoon;
@@ -17,4 +19,6 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long> {
 
     @Query("SELECT w FROM Webtoon w WHERE w.week = :week AND w.status IN (:statuses)")
     List<Webtoon> findWebtoonsByWeekAndStatusIn(@Param("week") DayOfWeek week, @Param("statuses") List<String> statuses);
+
+    Page<Webtoon> findByStatus(String status, Pageable pageable);
 }

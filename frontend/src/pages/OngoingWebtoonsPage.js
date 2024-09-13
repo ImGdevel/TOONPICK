@@ -1,5 +1,4 @@
 // src/pages/OngoingWebtoonsPage.js
-
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
 import { getWebtoonsByDayOfWeek, getWebtoons } from '../services/webtoonService';

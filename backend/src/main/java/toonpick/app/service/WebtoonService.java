@@ -1,5 +1,9 @@
 package toonpick.app.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import toonpick.app.dto.AuthorDTO;
 import toonpick.app.dto.GenreDTO;
 import toonpick.app.dto.WebtoonDTO;
@@ -166,4 +170,16 @@ public class WebtoonService {
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
         webtoonRepository.delete(webtoon);
     }
+
+    @Transactional(readOnly = true)
+    public List<WebtoonDTO> getWebtoonsByStatus(String status, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "title")); // 페이지 번호 수정
+        Page<Webtoon> webtoonPage = webtoonRepository.findByStatus(status, pageable);
+
+        // Webtoon 엔티티를 WebtoonDTO로 변환하여 반환합니다.
+        return webtoonPage.stream()
+                .map(webtoonMapper::webtoonToWebtoonDto)
+                .collect(Collectors.toList());
+    }
+
 }
