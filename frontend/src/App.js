@@ -2,7 +2,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
-import MenuBar from './components/MenuBar';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -21,7 +20,6 @@ const App = () => (
   <AuthProvider>
     <Router>
       <Header />
-      <MenuBar />
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
