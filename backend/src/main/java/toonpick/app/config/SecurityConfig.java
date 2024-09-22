@@ -94,7 +94,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
 
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless 설정
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAt(new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtTokenProvider, authService), LogoutFilter.class)
                 .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)

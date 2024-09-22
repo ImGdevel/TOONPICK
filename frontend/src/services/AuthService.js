@@ -3,6 +3,9 @@
 export const AuthService = {
   login: async (username, password, loginCallback) => {
     try {
+
+      console.log( JSON.stringify({ username, password }));
+
       const response = await fetch('http://localhost:8080/login', {
         method: 'POST',
         headers: {
@@ -12,6 +15,8 @@ export const AuthService = {
         credentials: 'include',
       });
   
+
+
       if (response.ok) {
         const accessToken = response.headers.get('access');
         localStorage.setItem('accessToken', accessToken);
