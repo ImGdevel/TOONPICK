@@ -1,10 +1,13 @@
-// src/components/ProfileWidget.js
 import React from 'react';
 import styles from './ProfileWidget.module.css';
 
-const ProfileWidget = ({ userProfilePic, userName, userEmail, onNavigate, onLogout }) => {
+const ProfileWidget = ({ userProfilePic, userName, userEmail, onNavigate, onLogout, widgetPosition }) => {
   return (
-    <div className={styles['profile-widget']}>
+    <div
+      id="profileWidget"
+      className={`${styles['profile-widget']} ${styles['open']}`}
+      style={{ top: `${widgetPosition.top}px`, right: `${widgetPosition.right}px` }} // 전달받은 위치로 설정
+    >
       <img src={userProfilePic} alt="User Profile" className={styles['widget-profile-picture']} />
       <div className={styles['user-info']}>
         <p>{userName}</p>
