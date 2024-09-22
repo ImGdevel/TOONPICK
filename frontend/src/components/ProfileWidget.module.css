@@ -1,22 +1,22 @@
 .profile-widget {
-  position: fixed; /* 고정 위치 */
-  background-color: #333; /* 다크모드 */
+  position: fixed;
+  background-color: #333;
   color: white;
   border-radius: 8px;
   width: 200px;
   height: 400px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  z-index: 1000; /* 다른 요소보다 위에 나타남 */
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   padding: 10px;
-  transform: scale(0); /* 애니메이션 초기 상태 */
-  transform-origin: top right; /* 프로필 버튼에서 펼쳐짐 */
-  transition: transform 0.3s ease; /* 부드러운 애니메이션 */
+  transform: scale(0);
+  transform-origin: top right;
+  transition: transform 0.3s ease;
 }
 
 .profile-widget.open {
-  transform: scale(1); /* 애니메이션 적용 */
+  transform: scale(1);
 }
 
 .widget-profile-picture {
@@ -42,4 +42,20 @@
 
 .widget-button:hover {
   background-color: #777;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.search-input {
+  margin-right: 10px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background-color: black;
+  color: white;
+  width: 200px;
 }
