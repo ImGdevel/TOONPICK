@@ -1,0 +1,36 @@
+.profile-widget {
+    position: absolute;
+    top: 60px; /* Adjust based on your layout */
+    right: 20px; /* Adjust based on your layout */
+    background-color: #333; /* Dark background */
+    color: white; /* Light text color */
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Ensure it appears above other elements */
+  }
+  
+  .widget-profile-picture {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+  }
+  
+  .user-info {
+    margin: 10px 0;
+  }
+  
+  .widget-button {
+    background-color: #555; /* Dark button */
+    color: white; /* Light text */
+    border: none;
+    padding: 8px;
+    margin: 5px 0; /* Vertical spacing */
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .widget-button:hover {
+    background-color: #777; /* Lighter on hover */
+  }
+  
