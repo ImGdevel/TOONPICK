@@ -31,6 +31,33 @@ export const AuthService = {
     }
   },
 
+  signup: async(username, password, confirmPassword) => {
+    if (password !== confirmPassword) {
+      return { success: false, message: "Passwords do not match." };
+    }
+    try {
+      const response = await fetch("http://localhost:8080/join", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      if (response.ok) {
+        return { success: true };
+      } else {
+        const message = await response.text();
+        return { success: false, message };
+      }
+    } catch (error) {
+      return { success: false, message: "An error occurred. Please try again." };
+    }
+  },
+
   socialLogin: (provider) => {
     const loginUrl = `http://localhost:8080/oauth2/authorization/${provider}`;
     window.location.href = loginUrl;
