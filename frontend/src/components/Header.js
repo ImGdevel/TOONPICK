@@ -12,6 +12,7 @@ const Header = () => {
   const [widgetPosition, setWidgetPosition] = useState({ top: 0, right: 0 });
   const [isSearchInputVisible, setSearchInputVisible] = useState(false);
   const profileButtonRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   const handleLogout = async () => {
     logout();
@@ -29,17 +30,23 @@ const Header = () => {
     setProfileWidgetOpen((prev) => !prev);
   };
 
-  const toggleSearchInput = () => {
+  const toggleSearchInput = (event) => {
+    event.stopPropagation();
     setSearchInputVisible((prev) => !prev);
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        profileButtonRef.current &&
-        !profileButtonRef.current.contains(event.target)
-      ) {
+      const isProfileClick = profileButtonRef.current && profileButtonRef.current.contains(event.target);
+      const isSearchClick = searchInputRef.current && searchInputRef.current.contains(event.target);
+      
+      if (!isProfileClick && isSearchClick) {
         setProfileWidgetOpen(false);
+      } else if (!isSearchClick && isProfileClick) {
+        setSearchInputVisible(false);
+      } else if (!isProfileClick && !isSearchClick) {
+        setProfileWidgetOpen(false);
+        setSearchInputVisible(false);
       }
     };
 
@@ -67,6 +74,7 @@ const Header = () => {
           <div className={styles.searchContainer}>
             {isSearchInputVisible && (
               <input
+                ref={searchInputRef}
                 type="text"
                 placeholder="검색..."
                 className={styles.searchInput}
@@ -82,7 +90,7 @@ const Header = () => {
             </button>
 
             <button className={styles.iconButton}>
-              <FiBell className={styles.icon} color="white" size={24} /> 
+              <FiBell className={styles.icon} color="white" size={24} />
             </button>
           </div>
 
