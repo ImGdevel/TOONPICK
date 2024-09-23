@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -72,7 +71,7 @@ public class Webtoon {
     private Set<Genre> genres = new HashSet<>();
 
     @OneToMany(mappedBy = "webtoon")
-    private Set<Review> reviews = new HashSet<>();
+    private Set<UserRating> userRatings = new HashSet<>();
 
     @Builder
     public Webtoon(Long id, String title, String platform, String platformId, float averageRating, float platformRating, String description, String status, int episodeCount, LocalDate serializationStartDate, DayOfWeek week, String thumbnailUrl, String url, String ageRating, Set<Author> authors, Set<Genre> genres) {

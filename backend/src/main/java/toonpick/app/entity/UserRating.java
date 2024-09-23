@@ -12,17 +12,17 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "review")
-public class Review {
+public class UserRating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "webtoon_id")
     private Webtoon webtoon;
 
@@ -36,7 +36,7 @@ public class Review {
     private int likes;
 
     @Builder
-    public Review(User user, Webtoon webtoon, LocalDate reviewDate, float rating, String comment, int likes) {
+    public UserRating(User user, Webtoon webtoon, LocalDate reviewDate, float rating, String comment, int likes) {
         this.user = user;
         this.webtoon = webtoon;
         this.reviewDate = reviewDate;

@@ -1,20 +1,20 @@
 package toonpick.app.mapper;
 
-import toonpick.app.dto.ReviewDTO;
-import toonpick.app.entity.Review;
+import toonpick.app.dto.UserRatingDTO;
+import toonpick.app.entity.UserRating;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(uses = {UserMapper.class, WebtoonMapper.class})
-public interface ReviewMapper {
-    ReviewMapper INSTANCE = Mappers.getMapper(ReviewMapper.class);
+public interface UserRatingMapper {
+    UserRatingMapper INSTANCE = Mappers.getMapper(UserRatingMapper.class);
 
     @Mapping(source = "user", target = "user")
     @Mapping(source = "webtoon", target = "webtoon")
-    ReviewDTO reviewToReviewDto(Review review);
+    UserRatingDTO reviewToReviewDto(UserRating userRating);
 
     @Mapping(source = "user", target = "user")
     @Mapping(source = "webtoon", target = "webtoon")
-    Review reviewDtoToReview(ReviewDTO reviewDTO);
+    UserRating reviewDtoToReview(UserRatingDTO userRatingDTO);
 }

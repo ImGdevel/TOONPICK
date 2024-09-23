@@ -1,7 +1,6 @@
 package toonpick.app.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,19 +30,6 @@ public class User {
     private String profilePicture;
 
     private LocalDate accountCreationDate;
-
-    @OneToMany(mappedBy = "user")
-    private Set<InterestWebtoon> interestWebtoons = new HashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<InterestAuthor> interestAuthors = new HashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<InterestGenre> interestGenres = new HashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<Review> reviews = new HashSet<>();
-
 
 
     @Builder

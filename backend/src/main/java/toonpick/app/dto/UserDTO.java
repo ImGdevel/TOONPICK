@@ -19,9 +19,4 @@ public class UserDTO {
     private String role;
     private String profilePicture;
     private LocalDate accountCreationDate;
-    private Set<InterestWebtoonDTO> interestWebtoons;
-    private Set<InterestAuthorDTO> interestAuthors;
-    private Set<InterestGenreDTO> interestGenres;
-    private Set<ReviewDTO> reviews;
-
 }

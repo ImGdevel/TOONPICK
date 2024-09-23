@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReviewDTO {
+public class UserRatingDTO {
     private Long id;
     private UserDTO user;
     private WebtoonDTO webtoon;
