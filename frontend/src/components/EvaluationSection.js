@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import StarRating from './StarRating';
 import CommentList from './CommentList';
+import EvaluationModal from './EvaluationModal';
 import styles from './EvaluationSection.module.css';
 
 const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(userRating || 0);
   const [comment, setComment] = useState(userComment || '');
   const [comments, setComments] = useState([]);
@@ -26,7 +26,6 @@ const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }
     // 평가를 제출하는 로직
     console.log('User rating:', rating);
     console.log('User comment:', comment);
-    // 평가 후 모달 닫기 및 상태 초기화
     setIsModalOpen(false);
   };
 
@@ -72,24 +71,15 @@ const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }
       </div>
 
       {/* 평가 모달 */}
-      {isModalOpen && (
-        <>
-          <div className={styles['overlay']} onClick={closeModal} />
-          <div className={styles['modal']}>
-            <h3>웹툰 평가하기</h3>
-            <StarRating rating={rating} onRatingChange={handleRatingChange} />
-            <textarea
-              value={comment}
-              onChange={handleCommentChange}
-              placeholder="평가에 대한 코멘트를 남겨주세요."
-            />
-            <div className={styles['modal-buttons']}>
-              <button onClick={handleSubmit}>작성</button>
-              <button onClick={closeModal}>취소</button>
-            </div>
-          </div>
-        </>
-      )}
+      <EvaluationModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        rating={rating}
+        onRatingChange={handleRatingChange}
+        comment={comment}
+        onCommentChange={handleCommentChange}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 };
