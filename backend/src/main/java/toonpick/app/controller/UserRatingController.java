@@ -38,7 +38,6 @@ public class UserRatingController {
         return new ResponseEntity<>(userRating, HttpStatus.CREATED);
     }
 
-    // API to update a rating
     @PutMapping("/{ratingId}")
     public ResponseEntity<UserRating> updateUserRating(
             @PathVariable Long ratingId,
@@ -49,21 +48,18 @@ public class UserRatingController {
         return new ResponseEntity<>(updatedRating, HttpStatus.OK);
     }
 
-    // API to get all reviews for a specific webtoon
     @GetMapping("/webtoon/{webtoonId}")
     public ResponseEntity<List<UserRating>> getRatingsForWebtoon(@PathVariable Long webtoonId) {
         List<UserRating> ratings = userRatingService.getRatingsForWebtoon(webtoonId);
         return new ResponseEntity<>(ratings, HttpStatus.OK);
     }
 
-    // API to get all reviews made by a specific user
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<UserRating>> getRatingsByUser(@PathVariable Long userId) {
         List<UserRating> ratings = userRatingService.getRatingsByUser(userId);
         return new ResponseEntity<>(ratings, HttpStatus.OK);
     }
 
-    // API to delete a rating
     @DeleteMapping("/{ratingId}")
     public ResponseEntity<Void> deleteUserRating(@PathVariable Long ratingId) {
         userRatingService.deleteUserRating(ratingId);

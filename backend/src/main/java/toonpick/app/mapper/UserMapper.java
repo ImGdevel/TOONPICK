@@ -5,7 +5,7 @@ import toonpick.app.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = {InterestWebtoonMapper.class, InterestAuthorMapper.class, InterestGenreMapper.class, UserRatingMapper.class})
+@Mapper(componentModel = "spring")
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
