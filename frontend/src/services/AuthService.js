@@ -15,10 +15,9 @@ export const AuthService = {
         credentials: 'include',
       });
   
-
-
       if (response.ok) {
-        const accessToken = response.headers.get('access');
+        const authorizationHeader = response.headers.get('Authorization');
+        const accessToken = authorizationHeader ? authorizationHeader.split(' ')[1] : null;
         localStorage.setItem('accessToken', accessToken);
         if (loginCallback) loginCallback(); // 로그인 상태 업데이트
         return { success: true };
@@ -69,7 +68,7 @@ export const AuthService = {
     
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken);
-      if (loginCallback) loginCallback(); // 로그인 상태 업데이트
+      if (loginCallback) loginCallback();
       return { success: true };
     } else {
       return { success: false, message: 'No access token found in URL' };
@@ -80,11 +79,11 @@ export const AuthService = {
     try {
       const response = await fetch('http://localhost:8080/logout', {
         method: 'POST',
-        credentials: 'include', // 쿠키 포함
+        credentials: 'include',
       });
 
       if (response.ok) {
-        localStorage.removeItem('accessToken'); // Access Token 삭제
+        localStorage.removeItem('accessToken'); 
         return { success: true };
       } else {
         const errorMessage = await response.text();

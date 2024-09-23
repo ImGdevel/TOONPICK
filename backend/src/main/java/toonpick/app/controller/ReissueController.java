@@ -1,9 +1,12 @@
 package toonpick.app.controller;
 
+import com.sun.tools.jconsole.JConsoleContext;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,7 @@ public class ReissueController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
+    private static final Logger logger = LoggerFactory.getLogger(ReissueController.class);
 
     public ReissueController(JwtTokenProvider jwtTokenProvider, AuthService authService) {
         this.jwtTokenProvider = jwtTokenProvider;
@@ -39,8 +43,6 @@ public class ReissueController {
         }
 
         if (refresh == null) {
-
-            //response status code
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
         }
 
@@ -48,8 +50,6 @@ public class ReissueController {
         try {
             jwtTokenProvider.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-
-            //response status code
             return new ResponseEntity<>("token token expired", HttpStatus.BAD_REQUEST);
         }
 
@@ -57,14 +57,13 @@ public class ReissueController {
         String category = jwtTokenProvider.getCategory(refresh);
 
         if (!category.equals("refresh")) {
-            System.out.println("invalid token token");
-            //response status code
             return new ResponseEntity<>("invalid token token", HttpStatus.BAD_REQUEST);
         }
 
         try{
             String newAccess =  authService.refreshAccessToken(refresh);
-            response.setHeader("access", "Bearer " + newAccess);
+            response.setHeader("Authorization", "Bearer " + newAccess);
+            logger.info("issusing refresh token: {}", newAccess);
         }
         catch (RuntimeException e){
             if(e.toString().equals("Invalid refresh token")){

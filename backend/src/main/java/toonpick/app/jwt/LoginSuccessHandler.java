@@ -45,7 +45,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         authService.saveRefreshToken(username, refresh);
 
         //응답 설정
-        response.setHeader("access", "Bearer " + access);
+        response.setHeader("Authorization", "Bearer " + access);
         response.addCookie(jwtTokenProvider.createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
     }

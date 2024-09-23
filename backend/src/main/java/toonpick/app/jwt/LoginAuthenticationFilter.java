@@ -5,6 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -13,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.AuthenticationException; // 이 부분 추가
+import toonpick.app.controller.ReissueController;
 import toonpick.app.dto.LoginRequestDTO;
 import toonpick.app.service.AuthService;
 
@@ -24,6 +27,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger logger = LoggerFactory.getLogger(LoginAuthenticationFilter.class);
 
     public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, AuthService authService) {
         this.authenticationManager = authenticationManager;
@@ -48,40 +52,26 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-        System.out.println("Success!");
-
         String username = authentication.getName();
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
         Long userid = authService.getUserIdByUsername(username);
-
-        //토큰 생성
         String access = jwtTokenProvider.createAccessToken(userid, username, role);
         String refresh = jwtTokenProvider.createRefreshToken(userid, username, role);
 
-        //Refresh 토큰 저장
         authService.saveRefreshToken(username, refresh);
-
-        //응답 설정
-        response.setHeader("access","Bearer " + access);
+        response.setHeader("Authorization","Bearer " + access);
         response.addCookie(jwtTokenProvider.createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
+
+        logger.info("USER LOGIN SUCCESS (username-{}/token-{})", username, access);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    }
-
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60 * 60 * 10); // 쿠키 유효 기간 설정
-        cookie.setHttpOnly(true);
-        //cookie.setSecure(true);
-        cookie.setPath("/");
-        return cookie;
     }
 
 }
