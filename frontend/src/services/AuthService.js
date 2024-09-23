@@ -110,8 +110,9 @@ export const AuthService = {
       });
 
       if (response.ok) {
-        const newAccessToken = response.headers.get('access');
-        localStorage.setItem('accessToken', newAccessToken);
+        const authorizationHeader = response.headers.get('Authorization');
+        const accessToken = authorizationHeader ? authorizationHeader.split(' ')[1] : null;
+        localStorage.setItem('accessToken', accessToken);
         return { success: true };
       } else {
         return { success: false, message: 'Failed to refresh access token' };

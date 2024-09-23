@@ -1,6 +1,6 @@
 // src/services/webtoonService.js
 
-// 모든 웹툰 데이터를 불러오는 함수
+// 모든 웹툰 데이터
 export const getWebtoons = async () => {
   try {
     const response = await fetch('http://localhost:8080/api/webtoons/series-all');
@@ -15,7 +15,7 @@ export const getWebtoons = async () => {
   }
 };
 
-// 특정 웹툰 데이터를 불러오는 함수
+// 특정 웹툰 데이터
 export const getWebtoonById = async (id) => {
   try {
     const response = await fetch(`http://localhost:8080/api/webtoons/${id}`);
@@ -31,7 +31,7 @@ export const getWebtoonById = async (id) => {
 };
 
 export const getCompletedWebtoons = async (page) => {
-  const size = 60; // 한 번에 가져올 웹툰의 수를 50개로 설정
+  const size = 60;
 
   try {
     const response = await fetch(`http://localhost:8080/api/webtoons/completed?page=${page}&size=${size}`);
@@ -46,7 +46,7 @@ export const getCompletedWebtoons = async (page) => {
   }
 };
 
-// 특정 요일의 웹툰 데이터를 불러오는 함수
+// 특정 요일의 웹툰 데이터
 export const getWebtoonsByDayOfWeek = async (dayOfWeek) => {
   try {
     const response = await fetch(`http://localhost:8080/api/webtoons/series/${dayOfWeek}`);
@@ -62,11 +62,10 @@ export const getWebtoonsByDayOfWeek = async (dayOfWeek) => {
 };
 
 export const getCarouselImages = async () => {
-  // API 호출 로직 (캐러셀 이미지를 불러오는 부분)
   return [
     { id: 1, imageUrl: 'https://via.placeholder.com/800x400', title: 'Banner 1' },
     { id: 2, imageUrl: 'https://via.placeholder.com/800x400', title: 'Banner 2' },
-    // ...더 많은 데이터
+
   ];
 };
 
@@ -90,12 +89,12 @@ export const getWebtoonByDayOfWeek = async (dayOfWeek) => {
     console.log("call");
     const response = await fetch(`http://localhost:8080/api/webtoons/day-of-week/${dayOfWeek}`, {
       method: 'GET',
-      credentials: 'include', // 쿠키 포함
+      credentials: 'include',
     });
 
     if (response.ok) {
-      const webtoons = await response.json(); // 응답 데이터를 JSON으로 변환
-      return { success: true, data: webtoons }; // 가져온 데이터를 반환
+      const webtoons = await response.json();
+      return { success: true, data: webtoons };
     } else {
       return { success: false, message: 'Failed to fetch webtoons' };
     }
@@ -107,13 +106,13 @@ export const getWebtoonByDayOfWeek = async (dayOfWeek) => {
 
 // 관심 웹툰 추가
 export const addFavoriteWebtoon = async (webtoonId) => {
-  const token = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
+  const token = localStorage.getItem('accessToken'); 
   try {
     const response = await fetch(`http://localhost:8080/api/users/favorites/${webtoonId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // 토큰을 헤더에 추가
+        'Authorization': `Bearer ${token}`
       },
     });
     if (!response.ok) {
