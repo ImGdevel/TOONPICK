@@ -3,6 +3,7 @@ package toonpick.app.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +45,20 @@ public class JwtTokenProvider {
 
     public boolean isExpired(String token) {
         return getClaims(token).getExpiration().before(new Date());
+    }
+
+        // 토큰에서 userId 추출
+    public Long getUserId(String token) {
+        return getClaims(token).get("userId", Long.class);
+    }
+
+        // 요청 헤더에서 토큰 추출
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     // Access Token 생성

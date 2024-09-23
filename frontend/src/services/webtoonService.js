@@ -108,9 +108,8 @@ export const getWebtoonByDayOfWeek = async (dayOfWeek) => {
 // 관심 웹툰 추가
 export const addFavoriteWebtoon = async (webtoonId) => {
   const token = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
-  console.log(token)
   try {
-    const response = await fetch(`http://localhost:8080/api/users/me/favorites/${webtoonId}`, {
+    const response = await fetch(`http://localhost:8080/api/users/favorites/${webtoonId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -129,7 +128,7 @@ export const addFavoriteWebtoon = async (webtoonId) => {
 export const removeFavoriteWebtoon = async (webtoonId) => {
   const token = localStorage.getItem('accessToken');
   try {
-    const response = await fetch(`http://localhost:8080/api/users/me/favorites/${webtoonId}`, {
+    const response = await fetch(`http://localhost:8080/api/users/favorites/${webtoonId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -141,5 +140,26 @@ export const removeFavoriteWebtoon = async (webtoonId) => {
     }
   } catch (error) {
     console.error('Error removing favorite webtoon:', error);
+  }
+};
+
+// 관심 웹툰 목록 가져오기
+export const getFavoriteWebtoons = async () => {
+  const token = localStorage.getItem('accessToken');
+  try {
+    const response = await fetch(`http://localhost:8080/api/users/favorites`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch favorite webtoons');
+    }
+    const data = await response.json();
+    return data; // 즐겨찾기 웹툰 목록 반환
+  } catch (error) {
+    console.error('Error fetching favorite webtoons:', error);
   }
 };

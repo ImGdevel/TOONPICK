@@ -64,7 +64,7 @@ public class ReissueController {
 
         try{
             String newAccess =  authService.refreshAccessToken(refresh);
-            response.setHeader("access", newAccess);
+            response.setHeader("access", "Bearer " + newAccess);
         }
         catch (RuntimeException e){
             if(e.toString().equals("Invalid refresh token")){
