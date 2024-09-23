@@ -35,9 +35,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
+        Long userId = authService.getUserIdByUsername(username);
+
         //토큰 생성
-        String access = jwtTokenProvider.createAccessToken(username, role);
-        String refresh = jwtTokenProvider.createRefreshToken(username, role);
+        String access = jwtTokenProvider.createAccessToken(userId, username, role);
+        String refresh = jwtTokenProvider.createRefreshToken(userId, username, role);
 
         //Refresh 토큰 저장
         authService.saveRefreshToken(username, refresh);

@@ -55,9 +55,11 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
+        Long userid = authService.getUserIdByUsername(username);
+
         //토큰 생성
-        String access = jwtTokenProvider.createAccessToken(username, role);
-        String refresh = jwtTokenProvider.createRefreshToken(username, role);
+        String access = jwtTokenProvider.createAccessToken(userid, username, role);
+        String refresh = jwtTokenProvider.createRefreshToken(userid, username, role);
 
         //Refresh 토큰 저장
         authService.saveRefreshToken(username, refresh);

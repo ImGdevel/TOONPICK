@@ -9,6 +9,8 @@ import toonpick.app.dto.*;
 import toonpick.app.entity.User;
 import toonpick.app.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
@@ -19,14 +21,14 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     }
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException{
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         System.out.println(oAuth2User);
 
         String registrationID = userRequest.getClientRegistration().getRegistrationId();
 
         OAuth2Response oAuth2Response = null;
-        if(registrationID.equals("naver")){
+        if (registrationID.equals("naver")) {
             oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
 
         } else if (registrationID.equals("google")) {
@@ -35,32 +37,32 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        //리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만듬
-        String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
+        // 리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만듬
+        String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
 
-        User existData = userRepository.findByUsername(username);
+        Optional<User> existDataOptional = userRepository.findByUsername(username);
 
-        if (existData == null) {
-
+        if (existDataOptional.isEmpty()) {
             User user = new User();
-            user.update(username, "",  "ROLE_USER");
-            //user.setEmail(oAuth2Response.getEmail());
-            //user.setName(oAuth2Response.getName());
+            user.update(username, "", "ROLE_USER");
+            // user.setEmail(oAuth2Response.getEmail());
+            // user.setName(oAuth2Response.getName());
             userRepository.save(user);
+
             UserDTO userDTO = new UserDTO();
             userDTO.setUsername(username);
             userDTO.setRole("ROLE_USER");
 
             return new CustomOAuth2User(userDTO);
-        }
-        else {
+        } else {
+            User existData = existDataOptional.get();
             userRepository.save(existData);
+
             UserDTO userDTO = new UserDTO();
             userDTO.setUsername(existData.getUsername());
             userDTO.setRole(existData.getRole());
 
             return new CustomOAuth2User(userDTO);
         }
-
     }
 }

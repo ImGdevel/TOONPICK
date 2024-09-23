@@ -5,9 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.entity.Genre;
 import toonpick.app.entity.RefreshToken;
+import toonpick.app.entity.User;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.jwt.JwtTokenProvider;
 import toonpick.app.repository.RefreshTokenRepository;
+import toonpick.app.repository.UserRepository;
+import java.util.Optional;
 
 import java.util.Date;
 
@@ -15,11 +18,14 @@ import java.util.Date;
 @Service
 public class AuthService {
 
+    private final UserRepository userRepository;
+
     private final RefreshTokenRepository refreshTokenRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(RefreshTokenRepository refreshTokenRepository, JwtTokenProvider jwtTokenProvider){
+    public AuthService(UserRepository userRepository,RefreshTokenRepository refreshTokenRepository, JwtTokenProvider jwtTokenProvider){
+        this.userRepository = userRepository;
         this. refreshTokenRepository = refreshTokenRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -52,7 +58,9 @@ public class AuthService {
         String username = jwtTokenProvider.getUsername(refreshToken);
         String role = jwtTokenProvider.getRole(refreshToken);
 
-        return jwtTokenProvider.createAccessToken(username, role);
+        Long userid = getUserIdByUsername(username);
+
+        return jwtTokenProvider.createAccessToken(userid, username, role);
     }
 
     @Transactional
@@ -61,7 +69,8 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
         String username = jwtTokenProvider.getUsername(refreshToken);
         String role = jwtTokenProvider.getRole(refreshToken);
-        String token = jwtTokenProvider.createAccessToken(username, role);
+        Long userid = getUserIdByUsername(username);
+        String token = jwtTokenProvider.createAccessToken(userid, username, role);
         deleteRefreshToken(refreshToken);
         saveRefreshToken(username,token);
         return token;
@@ -73,5 +82,12 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
 
         refreshTokenRepository.deleteByToken(refreshToken);
+    }
+
+    @Transactional
+    public Long getUserIdByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+        return user.getId(); // Assuming 'getId()' returns the user ID
     }
 }

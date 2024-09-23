@@ -47,19 +47,19 @@ public class JwtTokenProvider {
     }
 
     // Access Token 생성
-    public String createAccessToken(String username, String role) {
-        return createToken("access" , username,role, accessTokenExpiration);
+    public String createAccessToken(Long userId, String username, String role) {
+        return createToken("access", userId, username, role,  accessTokenExpiration);
     }
 
     // Refresh Token 생성
-    public String createRefreshToken(String username, String role) {
-        return createToken( "refresh",username,role, refreshTokenExpiration);
+    public String createRefreshToken(Long userId, String username, String role) {
+        return createToken("refresh", userId, username, role,  refreshTokenExpiration);
     }
 
-    // 토큰 생성
-    private String createToken(String category, String username, String role, Long expirationTime) {
+    private String createToken(String category, Long userId, String username, String role,  Long expirationTime) {
         return Jwts.builder()
                 .claim("category", category)
+                .claim("userId", userId)
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -81,7 +81,7 @@ public class JwtTokenProvider {
     public Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
+        cookie.setMaxAge((int)refreshTokenExpiration);
         //cookie.setSecure(true);
         //cookie.setPath("/");
         cookie.setHttpOnly(true);
