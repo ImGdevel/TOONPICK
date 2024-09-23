@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getWebtoonById } from '../services/webtoonService';
+import EvaluationSection from '../components/EvaluationSection'; // 평가 섹션 컴포넌트 가져오기
 import styles from './WebtoonDetailPage.module.css'; // CSS 모듈 가져오기
 
 const WebtoonDetailPage = () => {
   const { id } = useParams(); // URL에서 웹툰 ID를 가져옴
   const [webtoon, setWebtoon] = useState(null); // 웹툰 데이터를 저장할 상태
-  const [activeTab, setActiveTab] = useState('info');
-
-  // 탭 변경 함수
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
 
   // 웹툰 데이터를 가져오는 비동기 함수
   useEffect(() => {
@@ -59,24 +54,16 @@ const WebtoonDetailPage = () => {
         </div>
       </div>
 
-      {/* 중단: 컨텐츠 */}
-      <div className={styles['webtoon-content']}>
-        <div className={styles['content-tabs']}>
-          <button onClick={() => handleTabChange('info')} className={activeTab === 'info' ? styles['active'] : ''}>정보</button>
-          <button onClick={() => handleTabChange('list')} className={activeTab === 'list' ? styles['active'] : ''}>연재 리스트</button>
-          <button onClick={() => handleTabChange('analysis')} className={activeTab === 'analysis' ? styles['active'] : ''}>분석</button>
-          <button onClick={() => handleTabChange('reviews')} className={activeTab === 'reviews' ? styles['active'] : ''}>평가 리스트</button>
-        </div>
-        
-        <div className={styles['content-body']}>
-          {activeTab === 'info' && <div>{webtoon.description}</div>}
-          {activeTab === 'list' && <div>연재 리스트 페이지</div>}
-          {activeTab === 'analysis' && <div>분석 페이지</div>}
-          {activeTab === 'reviews' && <div>평가 리스트 페이지</div>}
-        </div>
+      {/* 평가 섹션 */}
+      <EvaluationSection webtoonId={webtoon.id} />
+
+      {/* 웹툰 분석 섹션 (추후 추가 가능) */}
+      <div className={styles['webtoon-analysis']}>
+        <h2>웹툰 분석</h2>
+        {/* 분석 내용 추가 */}
       </div>
 
-      {/* 하단: 비슷한 웹툰 리스트 */}
+      {/* 비슷한 웹툰 추천 섹션 */}
       <div className={styles['similar-webtoons']}>
         <h3>비슷한 웹툰</h3>
         <div className={styles['similar-webtoons-list']}>

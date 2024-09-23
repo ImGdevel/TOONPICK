@@ -1,10 +1,11 @@
-/* src/pages/WebtoonDetailPage.css */
-
 .webtoon-detail-page {
-  padding: 20px;
   width: 100%;
-  max-width: 1200px;
+  padding: 50px;
+  max-width: 1000px;
   margin: 0 auto;
+  background-color: black;
+  border-radius: 2%;
+
 }
 
 .webtoon-info {
@@ -49,30 +50,23 @@
   height: 50px;
 }
 
-.webtoon-content {
-  height: 1000px;
+/* 평가 섹션 */
+.evaluation-section {
   margin-bottom: 30px;
-}
-
-.content-tabs button {
-  margin-right: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.content-tabs .active {
-  background-color: #007bff;
-  color: white;
-}
-
-.content-body {
-  margin-top: 20px;
   padding: 20px;
-  background-color: #414141;
-  height: 100%;
+  background-color: transparent;
+  border-radius: 8px;
 }
 
+/* 웹툰 분석 섹션 */
+.analysis-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: transparent;
+  border-radius: 8px;
+}
+
+/* 비슷한 웹툰 추천 섹션 */
 .similar-webtoons {
   margin-top: 30px;
 }
@@ -83,7 +77,7 @@
 }
 
 .similar-webtoon-item {
-  background-color: #e9ecef;
+  background-color: transparent;
   padding: 10px;
   border-radius: 5px;
   width: 100px;

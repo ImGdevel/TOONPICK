@@ -1,0 +1,21 @@
+/* components/StarRating.module.css */
+.star-rating {
+    display: flex;
+    align-items: center;
+  }
+  
+  .star {
+    cursor: pointer;
+    font-size: 2em; /* 기본 크기, scale에 따라 조절됨 */
+    color: gray; /* 비어있는 별 */
+  }
+  
+  .filled {
+    color: gold; /* 채워진 별 */
+  }
+  
+  .current-rating {
+    margin-left: 10px; /* 별과 현재 평점 간격 */
+    font-size: 1em; /* 평점 글자 크기 */
+  }
+  
