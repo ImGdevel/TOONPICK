@@ -52,4 +52,12 @@ public class UserFavoriteWebtoonController {
         List<WebtoonDTO> favoriteWebtoons = userFavoriteWebtoonService.getFavoriteWebtoons(userId);
         return ResponseEntity.ok(favoriteWebtoons);
     }
+
+    @GetMapping("/{webtoonId}/is-favorite")
+    public ResponseEntity<Boolean> isFavoriteWebtoon(@PathVariable Long webtoonId, HttpServletRequest request) {
+        Long userId = extractUserIdFromToken(request); // Parse userId from token
+        boolean isFavorite = userFavoriteWebtoonService.isFavoriteWebtoon(userId, webtoonId);
+        return ResponseEntity.ok(isFavorite);
+    }
+
 }

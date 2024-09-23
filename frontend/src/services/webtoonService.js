@@ -162,3 +162,21 @@ export const getFavoriteWebtoons = async () => {
     console.error('Error fetching favorite webtoons:', error);
   }
 };
+
+export const isFavoriteWebtoon = async (webtoonId) => {
+  const token = localStorage.getItem('accessToken');
+  try {
+    const response = await fetch(`http://localhost:8080/api/users/favorites/${webtoonId}/is-favorite`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to check favorite status');
+    }
+    return await response.json(); // true 또는 false 반환
+  } catch (error) {
+    console.error('Error checking favorite webtoon:', error);
+  }
+};

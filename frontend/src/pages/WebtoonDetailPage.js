@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getWebtoonById, addFavoriteWebtoon, removeFavoriteWebtoon } from '../services/webtoonService'; // 관심 웹툰 관련 서비스 추가
+import { getWebtoonById, addFavoriteWebtoon, removeFavoriteWebtoon, isFavoriteWebtoon } from '../services/webtoonService'; // 관심 웹툰 관련 서비스 추가
 import EvaluationSection from '../components/EvaluationSection';
 import styles from './WebtoonDetailPage.module.css';
 
@@ -9,14 +9,17 @@ const WebtoonDetailPage = () => {
   const [webtoon, setWebtoon] = useState(null); // 웹툰 데이터 상태
   const [isFavorite, setIsFavorite] = useState(false); // 관심 웹툰 여부
 
-  // 웹툰 데이터 가져오기
   useEffect(() => {
     const fetchWebtoon = async () => {
       try {
         const response = await getWebtoonById(id);
         if (response.success) {
           setWebtoon(response.data);
-          setIsFavorite(response.data.isFavorite); // 웹툰이 관심 목록에 있는지 확인
+          setIsFavorite(response.data.isFavorite); // 기존 코드
+  
+          // 즐겨찾기 상태 확인
+          const favoriteStatus = await isFavoriteWebtoon(id);
+          setIsFavorite(favoriteStatus);
         } else {
           console.error('Failed to fetch webtoon data');
         }
@@ -24,19 +27,20 @@ const WebtoonDetailPage = () => {
         console.error('Error fetching webtoon data:', error);
       }
     };
-
+  
     fetchWebtoon();
   }, [id]);
+  
 
   // 관심 웹툰 추가/삭제 요청
   const handleFavoriteClick = async () => {
     try {
       if (isFavorite) {
-        await removeFavoriteWebtoon(id); // 관심 웹툰 삭제 요청
+        await removeFavoriteWebtoon(id);
       } else {
-        await addFavoriteWebtoon(id); // 관심 웹툰 추가 요청
+        await addFavoriteWebtoon(id);
       }
-      setIsFavorite(!isFavorite); // 상태 업데이트
+      setIsFavorite(!isFavorite); 
     } catch (error) {
       console.error('Failed to update favorite status:', error);
     }

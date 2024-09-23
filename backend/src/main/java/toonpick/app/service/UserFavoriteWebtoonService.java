@@ -70,4 +70,13 @@ public class UserFavoriteWebtoonService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public boolean isFavoriteWebtoon(Long userId, Long webtoonId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        // 즐겨찾기 웹툰을 찾고 존재 여부 반환
+        return favoriteRepository.findByUserIdAndWebtoonId(userId, webtoonId).isPresent();
+    }
+
 }
