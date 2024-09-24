@@ -1,7 +1,7 @@
 // src/components/MyPage.js
 import React, { useState, useEffect } from 'react';
-import { getUserProfile } from '../services/UserService'; // UserService 가져오기
-import styles from './MyPage.module.css'; // CSS 모듈로 가져오기
+import { getUserProfile } from '../services/UserService';
+import styles from './MyPage.module.css'; 
 
 const MyPage = () => {
   const [userProfile, setUserProfile] = useState(null);

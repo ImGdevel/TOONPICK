@@ -1,11 +1,11 @@
 // src/components/WebtoonList.js
 import React, { useState } from 'react';
 import WebtoonItem from './WebtoonItem';
-import styles from './WebtoonList.module.css'; // CSS 모듈로 가져오기
+import styles from './WebtoonList.module.css';
 
 const WebtoonList = ({ webtoons }) => {
   const [startIndex, setStartIndex] = useState(0);
-  const itemsPerPage = 6; // 한 페이지에 표시할 아이템 수
+  const itemsPerPage = 6; 
 
   const nextPage = () => {
     setStartIndex((prevIndex) => (prevIndex + itemsPerPage) % webtoons.length);

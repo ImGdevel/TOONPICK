@@ -46,7 +46,7 @@ function StarRating({ rating, onRatingChange }) {
 
   const handleStarClick = () => {
     setScoreFixed(score);
-    onRatingChange(score); // 평가 변경 시 부모에게 알림
+    onRatingChange(score);
   };
 
   const handleStarLeave = () => {
@@ -59,7 +59,6 @@ function StarRating({ rating, onRatingChange }) {
         .fill(0)
         .map((_, idx) => (
           <StarDiv key={idx}>
-            {/* 반만 채워진 별 */}
             {score - Math.floor(score) === 0.5 && Math.floor(score) === idx ? (
               <FaStarHalfAlt size={32} color="gold" />
             ) : idx + 1 > score ? (

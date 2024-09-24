@@ -5,12 +5,12 @@ import { getCompletedWebtoons } from '../services/webtoonService';
 
 const CompletedWebtoonsPage = () => {
   const [webtoons, setWebtoons] = useState([]);
-  const [page, setPage] = useState(0); // 페이지는 0부터 시작
+  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    console.log(`Fetching page: ${page}`); // 페이지 번호 확인 로그
+    console.log(`Fetching page: ${page}`);
     const fetchWebtoons = async () => {
       setLoading(true);
   
@@ -44,7 +44,7 @@ const CompletedWebtoonsPage = () => {
   const handleScroll = () => {
     if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
       if (!loading && hasMore) {
-        setPage((prevPage) => prevPage + 1); // 다음 페이지 로드
+        setPage((prevPage) => prevPage + 1);
       }
     }
   };

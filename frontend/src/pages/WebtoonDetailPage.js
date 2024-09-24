@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getWebtoonById, addFavoriteWebtoon, removeFavoriteWebtoon, isFavoriteWebtoon } from '../services/webtoonService'; // 관심 웹툰 관련 서비스 추가
+import { getWebtoonById, addFavoriteWebtoon, removeFavoriteWebtoon, isFavoriteWebtoon } from '../services/webtoonService';
 import EvaluationSection from '../components/EvaluationSection';
 import styles from './WebtoonDetailPage.module.css';
 
 const WebtoonDetailPage = () => {
-  const { id } = useParams(); // 웹툰 ID
-  const [webtoon, setWebtoon] = useState(null); // 웹툰 데이터 상태
-  const [isFavorite, setIsFavorite] = useState(false); // 관심 웹툰 여부
+  const { id } = useParams(); 
+  const [webtoon, setWebtoon] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const fetchWebtoon = async () => {
@@ -15,9 +15,8 @@ const WebtoonDetailPage = () => {
         const response = await getWebtoonById(id);
         if (response.success) {
           setWebtoon(response.data);
-          setIsFavorite(response.data.isFavorite); // 기존 코드
+          setIsFavorite(response.data.isFavorite); 
   
-          // 즐겨찾기 상태 확인
           const favoriteStatus = await isFavoriteWebtoon(id);
           setIsFavorite(favoriteStatus);
         } else {
@@ -32,7 +31,6 @@ const WebtoonDetailPage = () => {
   }, [id]);
   
 
-  // 관심 웹툰 추가/삭제 요청
   const handleFavoriteClick = async () => {
     try {
       if (isFavorite) {
@@ -46,7 +44,6 @@ const WebtoonDetailPage = () => {
     }
   };
 
-  // 로딩 중 처리
   if (!webtoon) return <div>Loading...</div>;
 
   return (

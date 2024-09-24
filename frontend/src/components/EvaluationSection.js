@@ -23,9 +23,6 @@ const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }
   };
 
   const handleSubmit = () => {
-    // 평가를 제출하는 로직
-    console.log('User rating:', rating);
-    console.log('User comment:', comment);
     setIsModalOpen(false);
   };
 
