@@ -55,7 +55,7 @@ const CompletedWebtoonsPage = () => {
   }, [loading, hasMore]);
 
   return (
-    <div className={styles.explore}>
+    <div className={styles['completed-webtoons']}>
       <h1>완결된 웹툰</h1>
       <div className={styles['webtoon-list']}>
         {webtoons.map((webtoon, index) => (
