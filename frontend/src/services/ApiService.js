@@ -16,12 +16,14 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const accessToken = AuthService.getAccessToken();
+    console.log("put in access token!")
     if (config.authRequired && accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;
   },
   (error) => {
+    console.log("fail reject")
     return Promise.reject(error);
   }
 );
@@ -29,13 +31,17 @@ api.interceptors.request.use(
 // 응답 인터셉터
 api.interceptors.response.use(
   (response) => {
+    console.log("response")
     return response;
   },
   async (error) => {
     const originalRequest = error.config;
+
+    console.log("response fail!")
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
+        console.log("request?")
         const response = await api.post('/reissue', { withCredentials: true });
         const newAccessToken = response.data.accessToken;
 

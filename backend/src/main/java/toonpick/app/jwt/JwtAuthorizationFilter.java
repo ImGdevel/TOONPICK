@@ -43,6 +43,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
+        logger.info("Inner Access token");
         try {
             // 토큰 만료 확인
             if (jwtTokenProvider.isExpired(accessToken)) {
@@ -50,7 +51,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 sendErrorResponse(response, "access token expired", HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
-
+            logger.warn("Access token is Not expired");
             // 토큰의 카테고리 확인
             String category = jwtTokenProvider.getCategory(accessToken);
             if (category == null || !category.equals("access")) {
