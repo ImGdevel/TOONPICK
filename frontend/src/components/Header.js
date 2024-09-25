@@ -4,7 +4,6 @@ import { AuthContext } from '../context/AuthContext';
 import ProfileWidget from './ProfileWidget';
 import styles from './Header.module.css';
 import { FiSearch, FiBell } from 'react-icons/fi';
-import { getUserProfile } from '../services/UserService';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,25 +11,8 @@ const Header = () => {
   const [isProfileWidgetOpen, setProfileWidgetOpen] = useState(false);
   const [widgetPosition, setWidgetPosition] = useState({ top: 0, right: 0 });
   const [isSearchInputVisible, setSearchInputVisible] = useState(false);
-  const [userProfile, setUserProfile] = useState(null); 
   const profileButtonRef = useRef(null);
   const searchInputRef = useRef(null);
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (isLoggedIn) {
-        const result = await getUserProfile();
-        console.log("user?:", userProfile)
-        if (result.success) {
-          setUserProfile(result.data);
-        } else {
-          console.error(result.message);
-        }
-      }
-    };
-
-    fetchUserProfile();
-  }, [isLoggedIn]);
 
   const handleLogout = async () => {
     logout();
@@ -121,13 +103,13 @@ const Header = () => {
                   onClick={toggleProfileWidget}
                   className={styles.profileButton}
                 >
-                  <img src={userProfile?.profilePic || "https://via.placeholder.com/40"} alt="User Profile" className={styles.profilePicture} />
+                  <img src="https://via.placeholder.com/40" alt="User Profile" className={styles.profilePicture} />
                 </button>
-                {isProfileWidgetOpen && userProfile && (
+                {isProfileWidgetOpen && (
                   <ProfileWidget
-                    userProfilePic={userProfile.profilePic || "https://via.placeholder.com/40"}
-                    userName={userProfile.username || "사용자 이름"}
-                    userEmail={userProfile.email || "email@example.com"}
+                    userProfilePic="https://via.placeholder.com/40"
+                    userName="사용자 이름"
+                    userEmail="email@example.com"
                     onNavigate={navigate}
                     onLogout={handleLogout}
                     widgetPosition={widgetPosition}
