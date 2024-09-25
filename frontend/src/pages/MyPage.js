@@ -9,6 +9,7 @@ const MyPage = () => {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
+      console.log("call getUserProfile!");
       const response = await getUserProfile();
       if (response.success) {
         setUserProfile(response.data);

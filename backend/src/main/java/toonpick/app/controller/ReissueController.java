@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import toonpick.app.jwt.JwtTokenProvider;
 import toonpick.app.service.AuthService;
 
+import java.util.Date;
+
 @Controller
 @ResponseBody
 public class ReissueController {
@@ -31,60 +33,62 @@ public class ReissueController {
     @PostMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
-        //get token token
-        String refresh = null;
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-
-            if (cookie.getName().equals("refresh")) {
-
-                refresh = cookie.getValue();
-            }
+        // 쿠키에서 refresh token 가져오기
+        String refreshToken = getRefreshTokenFromCookies(request);
+        if (refreshToken == null) {
+            return new ResponseEntity<>("Refresh token is null", HttpStatus.BAD_REQUEST);
         }
 
-        if (refresh == null) {
-            return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
+        // Refresh 토큰 만료 여부 확인
+        if (jwtTokenProvider.isExpired(refreshToken)) {
+            return new ResponseEntity<>("Refresh token expired", HttpStatus.BAD_REQUEST);
         }
 
-        //expired check
+        // Refresh 토큰인지 확인 (카테고리 확인)
+        if (!"refresh".equals(jwtTokenProvider.getCategory(refreshToken))) {
+            return new ResponseEntity<>("Invalid token category", HttpStatus.BAD_REQUEST);
+        }
+
         try {
-            jwtTokenProvider.isExpired(refresh);
-        } catch (ExpiredJwtException e) {
-            return new ResponseEntity<>("token token expired", HttpStatus.BAD_REQUEST);
-        }
+            // 새로운 Access 토큰 발급
+            String newAccessToken = authService.refreshAccessToken(refreshToken);
+            response.setHeader("Authorization", "Bearer " + newAccessToken);
+            logger.info("Issued new access token: {}", newAccessToken);
 
-        // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
-        String category = jwtTokenProvider.getCategory(refresh);
-
-        if (!category.equals("refresh")) {
-            return new ResponseEntity<>("invalid token token", HttpStatus.BAD_REQUEST);
-        }
-
-        try{
-            String newAccess =  authService.refreshAccessToken(refresh);
-            response.setHeader("Authorization", "Bearer " + newAccess);
-            logger.info("issusing refresh token: {}", newAccess);
-        }
-        catch (RuntimeException e){
-            if(e.toString().equals("Invalid refresh token")){
-                return new ResponseEntity<>("invalid token token", HttpStatus.BAD_REQUEST);
+            // Refresh 토큰 만료 시간 확인 후 갱신 필요 시 새 토큰 발급
+            if (isRefreshTokenAboutToExpire(refreshToken)) {
+                String newRefreshToken = authService.refreshRefreshToken(refreshToken);
+                Cookie newRefreshCookie = jwtTokenProvider.createCookie("refresh", newRefreshToken);
+                response.addCookie(newRefreshCookie);
+                logger.info("Issued new refresh token: {}", newRefreshToken);
             }
+
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        //make new JWT
-
-        //String newRefresh = jwtTokenProvider.createRefreshToken(username, role);
-
-        //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
-        //refreshTokenRepository.deleteByToken(refresh);
-        //addRefreshEntity(username, newRefresh, 86400000L);
-
-        //response
-
-        //response.addCookie(jwtTokenProvider.createCookie("refresh", newRefresh));
-
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 쿠키에서 refresh token 추출
+    private String getRefreshTokenFromCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refresh".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    // Refresh 토큰이 만료 임박했는지 확인
+    private boolean isRefreshTokenAboutToExpire(String refreshToken) {
+        Date expirationDate = jwtTokenProvider.getExpiration(refreshToken);
+        long remainingTime = expirationDate.getTime() - System.currentTimeMillis();
+        long oneDayInMillis = 24 * 60 * 60 * 1000;
+
+        return remainingTime < oneDayInMillis;
+    }
 }

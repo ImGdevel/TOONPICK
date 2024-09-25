@@ -1,6 +1,7 @@
 package toonpick.app.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ public class JwtTokenProvider {
 
     private final long refreshTokenExpiration;
 
-    public JwtTokenProvider(@Value("${spring.jwt.secret}")String secret,
+    public JwtTokenProvider(@Value("${spring.jwt.secret}") String secret,
                             @Value("${spring.jwt.access-token-expiration}") long accessTokenExpiration,
                             @Value("${spring.jwt.refresh-token-expiration}") long refreshTokenExpiration) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
@@ -44,15 +45,26 @@ public class JwtTokenProvider {
     }
 
     public boolean isExpired(String token) {
-        return getClaims(token).getExpiration().before(new Date());
+        try {
+            return getClaims(token).getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-        // 토큰에서 userId 추출
+    // 토큰 만료 시간 반환
+    public Date getExpiration(String token) {
+        return getClaims(token).getExpiration();
+    }
+
+    // 토큰에서 userId 추출
     public Long getUserId(String token) {
         return getClaims(token).get("userId", Long.class);
     }
 
-        // 요청 헤더에서 토큰 추출
+    // 요청 헤더에서 토큰 추출
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
@@ -63,15 +75,15 @@ public class JwtTokenProvider {
 
     // Access Token 생성
     public String createAccessToken(Long userId, String username, String role) {
-        return createToken("access", userId, username, role,  accessTokenExpiration);
+        return createToken("access", userId, username, role, accessTokenExpiration);
     }
 
     // Refresh Token 생성
     public String createRefreshToken(Long userId, String username, String role) {
-        return createToken("refresh", userId, username, role,  refreshTokenExpiration);
+        return createToken("refresh", userId, username, role, refreshTokenExpiration);
     }
 
-    private String createToken(String category, Long userId, String username, String role,  Long expirationTime) {
+    private String createToken(String category, Long userId, String username, String role, Long expirationTime) {
         return Jwts.builder()
                 .claim("category", category)
                 .claim("userId", userId)
@@ -94,14 +106,12 @@ public class JwtTokenProvider {
 
     // 쿠키 생성 메서드
     public Cookie createCookie(String key, String value) {
-
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge((int)refreshTokenExpiration);
+        cookie.setMaxAge((int) refreshTokenExpiration);
         //cookie.setSecure(true);
-        //cookie.setPath("/");
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
 
         return cookie;
     }
-
 }

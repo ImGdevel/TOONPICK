@@ -43,7 +43,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        logger.info("Inner Access token");
+        logger.info("Inner Access token:" + accessToken);
         try {
             // 토큰 만료 확인
             if (jwtTokenProvider.isExpired(accessToken)) {
