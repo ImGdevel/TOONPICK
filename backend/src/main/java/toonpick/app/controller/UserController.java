@@ -30,9 +30,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<UserDTO> getUserProfile(HttpServletRequest request) {
-        System.out.println(request);
         Long userId = extractUserIdFromToken(request);
-        System.out.println(userId);
         UserDTO userDTO = userService.getUserById(userId);
         return ResponseEntity.ok(userDTO);
     }

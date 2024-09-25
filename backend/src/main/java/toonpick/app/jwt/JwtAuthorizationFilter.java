@@ -18,6 +18,8 @@ import toonpick.app.entity.User;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
@@ -30,60 +32,68 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        logger.info("Access valid");
         String accessToken = request.getHeader("Authorization");
 
         if (accessToken != null && accessToken.startsWith("Bearer ")) {
             accessToken = accessToken.substring(7).trim();
-            logger.info("Extracted Access Token: " + accessToken);
-        } else {
-            logger.warn("Bearer token not found or malformed");
         }
 
         if (accessToken == null || accessToken.isEmpty()) {
-            logger.warn("No Access Token found");
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
+            // 토큰 만료 확인
             if (jwtTokenProvider.isExpired(accessToken)) {
                 logger.warn("Access token expired");
-                sendErrorResponse(response, "access token expired");
+                sendErrorResponse(response, "access token expired", HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
+
+            // 토큰의 카테고리 확인
             String category = jwtTokenProvider.getCategory(accessToken);
             if (category == null || !category.equals("access")) {
                 logger.warn("Invalid access token category");
-                sendErrorResponse(response, "invalid access token");
+                sendErrorResponse(response, "invalid access token", HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
+
+            // 토큰에서 사용자 정보 추출 및 인증
             String username = jwtTokenProvider.getUsername(accessToken);
             String role = jwtTokenProvider.getRole(accessToken);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = createUserDetails(username, role);
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
+                        userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
                 logger.info("Authentication successful for user: " + username);
             }
         } catch (Exception e) {
             logger.error("Exception occurred while parsing JWT token", e);
-            sendErrorResponse(response, "invalid access token");
+            sendErrorResponse(response, "invalid access token", HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         filterChain.doFilter(request, response);
     }
 
-    private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    // 에러 응답을 JSON 형식으로 보내는 메서드
+    private void sendErrorResponse(HttpServletResponse response, String message, int status) throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("error", message);
+
         PrintWriter writer = response.getWriter();
-        writer.print(message);
+        writer.write(new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(responseBody));
+        writer.flush();
     }
 
-
+    // CustomUserDetails 생성
     private UserDetails createUserDetails(String username, String role) {
         User user = new User();
         user.update(username, "dummyPassword", role); // 패스워드는 더미 값으로 설정

@@ -20,7 +20,7 @@ const Header = () => {
     const fetchUserProfile = async () => {
       if (isLoggedIn) {
         const result = await getUserProfile();
-        console.log(result)
+        console.log("user?:", userProfile)
         if (result.success) {
           setUserProfile(result.data);
         } else {

@@ -1,59 +1,33 @@
 // src/services/AuthService.js
+import api from './ApiService';
 
 export const AuthService = {
   login: async (username, password, loginCallback) => {
     try {
-
-      console.log( JSON.stringify({ username, password }));
-
-      const response = await fetch('http://localhost:8080/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-        credentials: 'include',
-      });
-  
-      if (response.ok) {
-        const authorizationHeader = response.headers.get('Authorization');
-        const accessToken = authorizationHeader ? authorizationHeader.split(' ')[1] : null;
+      const response = await api.post('/login', { username, password }, { authRequired: false });
+      const accessToken = response.headers['authorization'] ? response.headers['authorization'].split(' ')[1] : null;
+      if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
-        if (loginCallback) loginCallback(); // 로그인 상태 업데이트
+        if (loginCallback) loginCallback();
         return { success: true };
       } else {
-        const errorData = await response.json();
-        return { success: false, message: errorData.message || 'Login failed' };
+        return { success: false, message: 'Login failed' };
       }
     } catch (error) {
       return { success: false, message: error.message };
     }
   },
 
-  signup: async(username, password, confirmPassword) => {
+  signup: async (username, password, confirmPassword) => {
     if (password !== confirmPassword) {
-      return { success: false, message: "Passwords do not match." };
+      return { success: false, message: 'Passwords do not match.' };
     }
     try {
-      const response = await fetch("http://localhost:8080/join", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      });
-
-      if (response.ok) {
-        return { success: true };
-      } else {
-        const message = await response.text();
-        return { success: false, message };
-      }
+      const response = await api.post('/join', { username, password }, { authRequired: false });
+      console.log(response);
+      return { success: true };
     } catch (error) {
-      return { success: false, message: "An error occurred. Please try again." };
+      return { success: false, message: error.message };
     }
   },
 
@@ -65,7 +39,6 @@ export const AuthService = {
   handleSocialLoginCallback: (loginCallback) => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get('accessToken');
-    
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken);
       if (loginCallback) loginCallback();
@@ -77,20 +50,11 @@ export const AuthService = {
 
   logout: async () => {
     try {
-      const response = await fetch('http://localhost:8080/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        localStorage.removeItem('accessToken'); 
-        return { success: true };
-      } else {
-        const errorMessage = await response.text();
-        return { success: false, message: `Failed to log out: ${errorMessage}` };
-      }
+      await api.post('/logout', null, { authRequired: true });
+      localStorage.removeItem('accessToken');
+      return { success: true };
     } catch (error) {
-      return { success: false, message: `Network error: ${error.message}` };
+      return { success: false, message: error.message };
     }
   },
 
@@ -99,34 +63,8 @@ export const AuthService = {
   },
 
   isLoggedIn: () => {
+    console.log("login?,", !!localStorage.getItem('accessToken'));
     return !!localStorage.getItem('accessToken');
   },
 
-  reissueAccessToken: async () => {
-    try {
-      const response = await fetch('http://localhost:8080/reissue', {
-        method: 'POST',
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        const authorizationHeader = response.headers.get('Authorization');
-        const accessToken = authorizationHeader ? authorizationHeader.split(' ')[1] : null;
-        localStorage.setItem('accessToken', accessToken);
-        return { success: true };
-      } else {
-        return { success: false, message: 'Failed to refresh access token' };
-      }
-    } catch (error) {
-      return { success: false, message: error.message };
-    }
-  },
 };
-
-window.addEventListener('load', async () => {
-  const result = await AuthService.reissueAccessToken();
-  console.log("Refresh")
-  if (!result.success) {
-    console.log(result.message);
-  }
-});

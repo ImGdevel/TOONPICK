@@ -1,7 +1,7 @@
 // src/components/ExplorePage.js
 import React, { useState, useEffect } from 'react';
 import WebtoonItem from '../components/WebtoonItem';
-import { getWebtoonByDayOfWeek } from '../services/webtoonService';
+import { getWebtoonsByDayOfWeek } from '../services/webtoonService';
 import styles from './ExplorePage.module.css';
 
 const ExplorePage = () => {
@@ -18,7 +18,7 @@ const ExplorePage = () => {
 
       // 요일 필터가 특정 요일일 때 getWebtoonByDayOfWeek 함수 호출
       if (dayFilter !== '전체' && dayFilter !== '매일' && dayFilter !== '열흘') {
-        const response = await getWebtoonByDayOfWeek(dayFilterToEnum(dayFilter));
+        const response = await getWebtoonsByDayOfWeek(dayFilterToEnum(dayFilter));
         if (response.success) {
           setWebtoons(response.data); // 가져온 웹툰 데이터로 업데이트
         }
