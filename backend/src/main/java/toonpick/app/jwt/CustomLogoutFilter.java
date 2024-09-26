@@ -41,37 +41,27 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         // 쿠키에서 refresh token 추출
-        String refresh = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("refresh")) {
-                    refresh = cookie.getValue();
-                    break;
-                }
-            }
-        }
-
+        String refreshToken = getRefreshTokenFromCookies(request);
         // 토큰이 없을 경우
-        if (refresh == null) {
+        if (refreshToken == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         // 토큰 만료 확인
-        if (jwtTokenProvider.isExpired(refresh)) {
+        if (jwtTokenProvider.isExpired(refreshToken)) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
-        if (!jwtTokenProvider.getCategory(refresh).equals("refresh")) {
+        if (!jwtTokenProvider.getCategory(refreshToken).equals("refresh")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         try {
             // Refresh 토큰 DB에서 제거
-            authService.deleteRefreshToken(refresh);
+            authService.deleteRefreshToken(refreshToken);
 
             // Refresh 토큰 Cookie 값 0
             Cookie cookie = new Cookie("refresh", null);
@@ -84,6 +74,19 @@ public class CustomLogoutFilter extends GenericFilterBean {
         } catch (RuntimeException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    // 쿠키에서 refresh token 추출
+    private String getRefreshTokenFromCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refresh".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 
 }

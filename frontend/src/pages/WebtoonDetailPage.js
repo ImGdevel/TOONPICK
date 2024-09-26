@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getWebtoonById, addFavoriteWebtoon, removeFavoriteWebtoon, isFavoriteWebtoon } from '../services/webtoonService';
+import { getWebtoonById } from '../services/webtoonService';
+import { addFavoriteWebtoon, removeFavoriteWebtoon, isFavoriteWebtoon } from '../services/UserService'
 import EvaluationSection from '../components/EvaluationSection';
 import styles from './WebtoonDetailPage.module.css';
 

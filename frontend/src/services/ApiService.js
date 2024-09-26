@@ -31,8 +31,6 @@ api.interceptors.request.use(
   }
 );
 
-
-
 // Axios 응답 인터셉터 설정
 api.interceptors.response.use(
   (response) => response,
@@ -76,13 +74,10 @@ const handleTokenExpiration = async (originalRequest) => {
       : null;
 
     if (newAccessToken) {
-      // 새 액세스 토큰 저장
       localStorage.setItem('accessToken', newAccessToken);
 
-      // 원래 요청에 새로운 토큰 설정
+      // 원래 요청 제전송
       originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-
-      // 원래 요청 재전송
       return api(originalRequest);
     } else {
       throw new Error('토큰 재발급 실패');
