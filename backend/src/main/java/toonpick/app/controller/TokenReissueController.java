@@ -1,7 +1,5 @@
 package toonpick.app.controller;
 
-import com.sun.tools.jconsole.JConsoleContext;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,13 +17,13 @@ import java.util.Date;
 
 @Controller
 @ResponseBody
-public class ReissueController {
+public class TokenReissueController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
-    private static final Logger logger = LoggerFactory.getLogger(ReissueController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
 
-    public ReissueController(JwtTokenProvider jwtTokenProvider, AuthService authService) {
+    public TokenReissueController(JwtTokenProvider jwtTokenProvider, AuthService authService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.authService = authService;
     }

@@ -1,14 +1,17 @@
 // src/services/AuthService.js
+import AuthToken from './AuthToken';
 import api from './ApiService';
 
 export const AuthService = {
   login: async (username, password, loginCallback) => {
     try {
       const response = await api.post('/login', { username, password }, { authRequired: false });
-      const accessToken = response.headers['authorization'] ? response.headers['authorization'].split(' ')[1] : null;
+      const accessToken = AuthToken.extractAccessTokenFromHeader(response.headers);
+
       if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
+        AuthToken.setAccessToken(accessToken);
         if (loginCallback) loginCallback();
+        console.log("login")
         return { success: true };
       } else {
         return { success: false, message: 'Login failed' };
@@ -31,6 +34,28 @@ export const AuthService = {
     }
   },
 
+  logout: async () => {
+    try {
+      await api.post('/logout', null, { authRequired: true });
+      AuthToken.clearAccessToken();
+      return { success: true };
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  },
+  
+  isLoggedIn: () => {
+    const accessToken = AuthToken.getAccessToken();
+    if (!accessToken) {
+      console.log("AccessToken is not available.");
+      return false;
+    }
+
+    const isValid = !AuthToken.isAccessTokenExpired(accessToken);
+    console.log("Login status:", isValid);
+    return isValid;
+  },
+
   socialLogin: (provider) => {
     const loginUrl = `http://localhost:8080/oauth2/authorization/${provider}`;
     window.location.href = loginUrl;
@@ -48,23 +73,6 @@ export const AuthService = {
     }
   },
 
-  logout: async () => {
-    try {
-      await api.post('/logout', null, { authRequired: true });
-      localStorage.removeItem('accessToken');
-      return { success: true };
-    } catch (error) {
-      return { success: false, message: error.message };
-    }
-  },
-
-  getAccessToken: () => {
-    return localStorage.getItem('accessToken');
-  },
-
-  isLoggedIn: () => {
-    console.log("login?,", !!localStorage.getItem('accessToken'));
-    return !!localStorage.getItem('accessToken');
-  },
-
 };
+
+export default AuthService;

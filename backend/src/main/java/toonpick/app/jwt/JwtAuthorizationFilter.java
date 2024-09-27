@@ -1,6 +1,5 @@
 package toonpick.app.jwt;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import toonpick.app.controller.ReissueController;
+import toonpick.app.controller.TokenReissueController;
 import toonpick.app.dto.CustomUserDetails;
 import toonpick.app.entity.User;
 
@@ -24,7 +23,7 @@ import java.util.Map;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private static final Logger logger = LoggerFactory.getLogger(ReissueController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
 
     public JwtAuthorizationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;

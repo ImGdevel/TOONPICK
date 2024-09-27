@@ -26,9 +26,7 @@ public class UserFavoriteWebtoonController {
 
     // Method to extract userId from the AccessToken
     private Long extractUserIdFromToken(HttpServletRequest request) {
-        System.out.println("request:" + request);
         String token = jwtTokenProvider.resolveToken(request); // Extracts token from request header
-        System.out.println("Access Token:" + token);
         return jwtTokenProvider.getUserId(token); // Extract userId from token
     }
 
