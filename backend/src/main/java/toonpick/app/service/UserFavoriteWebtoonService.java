@@ -61,10 +61,8 @@ public class UserFavoriteWebtoonService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
-        // Fetch favorite webtoons for the user
         List<Webtoon> favoriteWebtoons = favoriteRepository.findByUser(user);
 
-        // Map Webtoon entities to WebtoonDTOs
         return favoriteWebtoons.stream()
                 .map(webtoonMapper::webtoonToWebtoonDto)
                 .collect(Collectors.toList());
@@ -75,7 +73,6 @@ public class UserFavoriteWebtoonService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
-        // 즐겨찾기 웹툰을 찾고 존재 여부 반환
         return favoriteRepository.findByUserIdAndWebtoonId(userId, webtoonId).isPresent();
     }
 

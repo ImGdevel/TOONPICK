@@ -26,34 +26,34 @@ public class UserFavoriteWebtoonController {
 
     // Method to extract userId from the AccessToken
     private Long extractUserIdFromToken(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request); // Extracts token from request header
-        return jwtTokenProvider.getUserId(token); // Extract userId from token
+        String token = jwtTokenProvider.resolveToken(request);
+        return jwtTokenProvider.getUserId(token);
     }
 
     @PostMapping("/{webtoonId}")
     public ResponseEntity<Void> addFavoriteWebtoon(@PathVariable Long webtoonId, HttpServletRequest request) {
-        Long userId = extractUserIdFromToken(request); // Parse userId from token
+        Long userId = extractUserIdFromToken(request);
         userFavoriteWebtoonService.addFavoriteWebtoon(userId, webtoonId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{webtoonId}")
     public ResponseEntity<Void> removeFavoriteWebtoon(@PathVariable Long webtoonId, HttpServletRequest request) {
-        Long userId = extractUserIdFromToken(request); // Parse userId from token
+        Long userId = extractUserIdFromToken(request);
         userFavoriteWebtoonService.removeFavoriteWebtoon(userId, webtoonId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
     public ResponseEntity<List<WebtoonDTO>> getFavoriteWebtoons(HttpServletRequest request) {
-        Long userId = extractUserIdFromToken(request); // Parse userId from token
+        Long userId = extractUserIdFromToken(request);
         List<WebtoonDTO> favoriteWebtoons = userFavoriteWebtoonService.getFavoriteWebtoons(userId);
         return ResponseEntity.ok(favoriteWebtoons);
     }
 
     @GetMapping("/{webtoonId}/is-favorite")
     public ResponseEntity<Boolean> isFavoriteWebtoon(@PathVariable Long webtoonId, HttpServletRequest request) {
-        Long userId = extractUserIdFromToken(request); // Parse userId from token
+        Long userId = extractUserIdFromToken(request);
         boolean isFavorite = userFavoriteWebtoonService.isFavoriteWebtoon(userId, webtoonId);
         return ResponseEntity.ok(isFavorite);
     }
