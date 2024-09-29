@@ -9,25 +9,14 @@ const Header = () => {
   const navigate = useNavigate();
   const { isLoggedIn, logout } = useContext(AuthContext);
   const [isProfileWidgetOpen, setProfileWidgetOpen] = useState(false);
-  const [widgetPosition, setWidgetPosition] = useState({ top: 0, right: 0 });
   const [isSearchInputVisible, setSearchInputVisible] = useState(false);
   const profileButtonRef = useRef(null);
+  const profileWidgetRef = useRef(null);
   const searchInputRef = useRef(null);
 
   const handleLogout = async () => {
     logout();
     navigate('/');
-  };
-
-  const toggleProfileWidget = () => {
-    if (!isProfileWidgetOpen) {
-      const buttonRect = profileButtonRef.current.getBoundingClientRect();
-      setWidgetPosition({
-        top: buttonRect.bottom,
-        right: window.innerWidth - buttonRect.right,
-      });
-    }
-    setProfileWidgetOpen((prev) => !prev);
   };
 
   const toggleSearchInput = (event) => {
@@ -39,13 +28,13 @@ const Header = () => {
     const handleClickOutside = (event) => {
       const isProfileClick = profileButtonRef.current && profileButtonRef.current.contains(event.target);
       const isSearchClick = searchInputRef.current && searchInputRef.current.contains(event.target);
-      
-      if (!isProfileClick && isSearchClick) {
+      const isProfileWidgetClick = profileWidgetRef.current && profileWidgetRef.current.contains(event.target);
+
+      if (!isProfileClick && !isProfileWidgetClick) {
         setProfileWidgetOpen(false);
-      } else if (!isSearchClick && isProfileClick) {
-        setSearchInputVisible(false);
-      } else if (!isProfileClick && !isSearchClick) {
-        setProfileWidgetOpen(false);
+      }
+
+      if (!isSearchClick) {
         setSearchInputVisible(false);
       }
     };
@@ -55,6 +44,14 @@ const Header = () => {
       window.removeEventListener('click', handleClickOutside);
     };
   }, []);
+
+  const handleMouseEnterProfile = () => {
+    setProfileWidgetOpen(true);
+  };
+
+  const handleMouseLeaveProfile = () => {
+    setProfileWidgetOpen(false);
+  };
 
   return (
     <header className={styles.header}>
@@ -94,27 +91,29 @@ const Header = () => {
             </button>
           </div>
 
-          <div className={styles.profileContainer}>
+          <div
+            className={styles.profileContainer}
+            onMouseEnter={handleMouseEnterProfile}
+            onMouseLeave={handleMouseLeaveProfile}
+          >
             {isLoggedIn ? (
               <>
                 <button
                   id="profileToggle"
                   ref={profileButtonRef}
-                  onClick={toggleProfileWidget}
                   className={styles.profileButton}
                 >
                   <img src="https://via.placeholder.com/40" alt="User Profile" className={styles.profilePicture} />
                 </button>
-                {isProfileWidgetOpen && (
-                  <ProfileWidget
-                    userProfilePic="https://via.placeholder.com/40"
-                    userName="사용자 이름"
-                    userEmail="email@example.com"
-                    onNavigate={navigate}
-                    onLogout={handleLogout}
-                    widgetPosition={widgetPosition}
-                  />
-                )}
+                <ProfileWidget
+                  userProfilePic="https://via.placeholder.com/40"
+                  userName="사용자 이름"
+                  userEmail="email@example.com"
+                  onNavigate={navigate}
+                  onLogout={handleLogout}
+                  isWidgetOpen={isProfileWidgetOpen}
+                  setProfileWidgetOpen={setProfileWidgetOpen}
+                />
               </>
             ) : (
               <button onClick={() => navigate('/login')} className={styles.loginButton}>Login</button>

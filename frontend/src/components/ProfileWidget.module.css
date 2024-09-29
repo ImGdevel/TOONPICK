@@ -1,22 +1,28 @@
 .profile-widget {
-  position: fixed;
+  position: absolute;
   background-color: #333;
   color: white;
   border-radius: 8px;
   width: 200px;
-  height: 400px;
+  height: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   display: flex;
   flex-direction: column;
   padding: 10px;
-  transform: scale(0);
+  top: 41px;
+  left: -165px;
+  transform: scale(0); 
   transform-origin: top right;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease; 
+  opacity: 0; 
+  visibility: hidden; 
 }
 
 .profile-widget.open {
-  transform: scale(1);
+  transform: scale(1); 
+  opacity: 1;
+  visibility: visible;
 }
 
 .widget-profile-picture {
@@ -42,20 +48,4 @@
 
 .widget-button:hover {
   background-color: #777;
-}
-
-.icon-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.search-input {
-  margin-right: 10px;
-  padding: 5px;
-  border-radius: 4px;
-  border: 1px solid #555;
-  background-color: black;
-  color: white;
-  width: 200px;
 }

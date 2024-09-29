@@ -73,6 +73,7 @@
 .profileContainer {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .profileButton {
