@@ -1,6 +1,5 @@
 package toonpick.app.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +9,9 @@ import toonpick.app.dto.AuthorDTO;
 import toonpick.app.dto.GenreDTO;
 import toonpick.app.dto.WebtoonDTO;
 import toonpick.app.dto.WebtoonRequestDTO;
+import toonpick.app.entity.enums.AgeRating;
+import toonpick.app.entity.enums.Platform;
+import toonpick.app.entity.enums.SerializationStatus;
 import toonpick.app.service.AuthorService;
 import toonpick.app.service.GenreService;
 import toonpick.app.service.WebtoonService;
@@ -21,17 +23,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 @RestController
 @RequestMapping("/api/webtoon-request")
-
 public class DataRequestController {
 
     private final WebtoonService webtoonService;
     private final AuthorService authorService;
     private final GenreService genreService;
 
-    public DataRequestController(WebtoonService webtoonService, AuthorService authorService, GenreService genreService){
+    public DataRequestController(WebtoonService webtoonService, AuthorService authorService, GenreService genreService) {
         this.webtoonService = webtoonService;
         this.authorService = authorService;
         this.genreService = genreService;
@@ -47,8 +47,7 @@ public class DataRequestController {
         return ResponseEntity.ok(createdWebtoons);
     }
 
-
-
+    // 요일 변환 맵
     private static final Map<String, DayOfWeek> DAY_OF_WEEK_MAP = Map.of(
             "일", DayOfWeek.SUNDAY,
             "월", DayOfWeek.MONDAY,
@@ -58,6 +57,34 @@ public class DataRequestController {
             "금", DayOfWeek.FRIDAY,
             "토", DayOfWeek.SATURDAY
     );
+
+    private SerializationStatus mapToSerializationStatus(String status) {
+        try {
+            return SerializationStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private Platform mapToPlatform(String platform) {
+        try {
+            return Platform.valueOf(platform.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private AgeRating mapToAgeRating(String ageRating) {
+        try {
+            // 숫자로 들어온 경우 처리
+            if (ageRating.matches("\\d+")) {
+                return AgeRating.valueOf("AGE_" + ageRating);
+            }
+            return AgeRating.valueOf(ageRating.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return AgeRating.ALL;
+        }
+    }
 
     private WebtoonDTO convertToWebtoonDTO(WebtoonRequestDTO request) {
         // Authors DTO 변환
@@ -82,18 +109,19 @@ public class DataRequestController {
         // Webtoon DTO 생성
         return WebtoonDTO.builder()
                 .title(request.getTitle())
-                .platform(request.getPlatform())
+                .platform(mapToPlatform(request.getPlatform())) // 플랫폼 매핑
                 .platformId(request.getUniqueId())
-                .status(request.getStatus())
-                .averageRating(0)
-                .platformRating(Float.parseFloat(request.getRating()))
+                .averageRating(0) // 기본 평균 평점 설정
+                .platformRating(Float.parseFloat(request.getRating())) // 플랫폼 평점
                 .description(request.getStory())
-                .episodeCount(request.getEpisodeCount())
+                .episodeCount(request.getEpisodeCount() != 0 ? request.getEpisodeCount() : 1) // 기본값 설정
                 .serializationStartDate(LocalDate.now()) // 현재 날짜 사용
+                .lastUpdatedDate(LocalDate.now()) // 최신 업데이트 날짜 설정
+                .serializationStatus(mapToSerializationStatus(request.getStatus())) // 연재 상태 매핑
                 .week(dayOfWeek)
                 .thumbnailUrl(request.getThumbnailUrl())
                 .url(request.getUrl())
-                .ageRating(request.getAgeRating())
+                .ageRating(mapToAgeRating(request.getAgeRating())) // 연령대 매핑
                 .authors(authorDTOs)
                 .genres(genreDTOs)
                 .build();

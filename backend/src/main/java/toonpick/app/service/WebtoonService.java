@@ -1,46 +1,40 @@
 package toonpick.app.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.AuthorDTO;
 import toonpick.app.dto.GenreDTO;
 import toonpick.app.dto.WebtoonDTO;
-import toonpick.app.entity.Webtoon;
-import toonpick.app.exception.ResourceNotFoundException;
-import toonpick.app.mapper.WebtoonMapper;
-import toonpick.app.repository.WebtoonRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import toonpick.app.dto.WebtoonFilterDTO;
 import toonpick.app.entity.Author;
 import toonpick.app.entity.Genre;
+import toonpick.app.entity.Webtoon;
+import toonpick.app.entity.enums.SerializationStatus;
+import toonpick.app.exception.ResourceNotFoundException;
+import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.AuthorRepository;
 import toonpick.app.repository.GenreRepository;
+import toonpick.app.repository.WebtoonRepository;
 
+import java.time.DayOfWeek;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class WebtoonService {
 
     private final WebtoonRepository webtoonRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
     private final WebtoonMapper webtoonMapper;
-
-    public WebtoonService(WebtoonRepository webtoonRepository, AuthorRepository authorRepository, GenreRepository genreRepository, WebtoonMapper webtoonMapper) {
-        this.webtoonRepository = webtoonRepository;
-        this.authorRepository = authorRepository;
-        this.genreRepository = genreRepository;
-        this.webtoonMapper = webtoonMapper;
-    }
 
     @Transactional
     public WebtoonDTO createWebtoon(WebtoonDTO webtoonDTO) {
@@ -59,7 +53,7 @@ public class WebtoonService {
                 .description(webtoonDTO.getDescription())
                 .episodeCount(webtoonDTO.getEpisodeCount())
                 .serializationStartDate(webtoonDTO.getSerializationStartDate())
-                .status(webtoonDTO.getStatus())
+                .serializationStatus(webtoonDTO.getSerializationStatus())
                 .week(webtoonDTO.getWeek())
                 .thumbnailUrl(webtoonDTO.getThumbnailUrl())
                 .url(webtoonDTO.getUrl())
@@ -92,7 +86,8 @@ public class WebtoonService {
                 webtoonDTO.getDescription(),
                 webtoonDTO.getEpisodeCount(),
                 webtoonDTO.getSerializationStartDate(),
-                webtoonDTO.getStatus(),
+                webtoonDTO.getLastUpdatedDate(),
+                webtoonDTO.getSerializationStatus(),
                 webtoonDTO.getWeek(),
                 webtoonDTO.getThumbnailUrl(),
                 webtoonDTO.getUrl(),
@@ -136,7 +131,6 @@ public class WebtoonService {
                 .collect(Collectors.toList());
     }
 
-
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getWebtoonsByGenreName(String genreName) {
         List<Webtoon> webtoons = webtoonRepository.findByGenres_Name(genreName);
@@ -146,8 +140,8 @@ public class WebtoonService {
     }
 
     @Transactional(readOnly = true)
-    public List<WebtoonDTO> getWebtoonsByStatus(String status) {
-        List<Webtoon> webtoons = webtoonRepository.findByStatus(status);
+    public List<WebtoonDTO> getWebtoonsBySerializationStatus(SerializationStatus status) {
+        List<Webtoon> webtoons = webtoonRepository.findBySerializationStatus(status);
         return webtoons.stream()
                 .map(webtoonMapper::webtoonToWebtoonDto)
                 .collect(Collectors.toList());
@@ -155,9 +149,19 @@ public class WebtoonService {
 
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getSeriesOfWebtoonsByDayOfWeek(DayOfWeek dayOfWeek) {
-        List<String> statuses = Arrays.asList("연재", "휴재");
+        List<SerializationStatus> statuses = List.of(
+                SerializationStatus.연재,
+               SerializationStatus.휴재
+        );
 
-        List<Webtoon> webtoons = webtoonRepository.findWebtoonsByWeekAndStatusIn(dayOfWeek, statuses);
+        List<Webtoon> webtoons = webtoonRepository.findWebtoonsByFilter(
+                WebtoonFilterDTO.builder()
+                        .week(dayOfWeek)
+                        .serializationStatus(SerializationStatus.연재)
+                        .build()
+        ).stream()
+                .filter(w -> statuses.contains(w.getSerializationStatus()))
+                .collect(Collectors.toList());
 
         return webtoons.stream()
                 .map(webtoonMapper::webtoonToWebtoonDto)
@@ -172,11 +176,28 @@ public class WebtoonService {
     }
 
     @Transactional(readOnly = true)
-    public List<WebtoonDTO> getWebtoonsByStatus(String status, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "title")); // 페이지 번호 수정
-        Page<Webtoon> webtoonPage = webtoonRepository.findByStatus(status, pageable);
+    public List<WebtoonDTO> getWebtoonsBySerializationStatus(SerializationStatus status, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "title"));
+        Page<Webtoon> webtoonPage = webtoonRepository.findBySerializationStatus(status, pageable);
 
-        // Webtoon 엔티티를 WebtoonDTO로 변환하여 반환합니다.
+        return webtoonPage.stream()
+                .map(webtoonMapper::webtoonToWebtoonDto)
+                .collect(Collectors.toList());
+    }
+
+    // 필터링 메서드 추가
+    @Transactional(readOnly = true)
+    public List<WebtoonDTO> filterWebtoons(WebtoonFilterDTO filter) {
+        List<Webtoon> webtoons = webtoonRepository.findWebtoonsByFilter(filter);
+        return webtoons.stream()
+                .map(webtoonMapper::webtoonToWebtoonDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<WebtoonDTO> filterWebtoonsOptions(WebtoonFilterDTO filter, int page, int size, String sortBy, String sortDir) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortBy);
+        Page<Webtoon> webtoonPage = webtoonRepository.findWebtoonsByFilterOptions(filter, pageable);
         return webtoonPage.stream()
                 .map(webtoonMapper::webtoonToWebtoonDto)
                 .collect(Collectors.toList());

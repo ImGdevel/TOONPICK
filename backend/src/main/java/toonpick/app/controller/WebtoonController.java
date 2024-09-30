@@ -1,29 +1,26 @@
 package toonpick.app.controller;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import toonpick.app.dto.WebtoonDTO;
-import toonpick.app.entity.Webtoon;
-import toonpick.app.service.WebtoonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import toonpick.app.dto.WebtoonDTO;
+import toonpick.app.dto.WebtoonFilterDTO;
+import toonpick.app.entity.enums.Platform;
+import toonpick.app.entity.enums.SerializationStatus;
+import toonpick.app.entity.enums.AgeRating;
+import toonpick.app.service.WebtoonService;
 
 import java.time.DayOfWeek;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/webtoons")
+@RequiredArgsConstructor
 public class WebtoonController {
 
     private final WebtoonService webtoonService;
-
-    public WebtoonController(WebtoonService webtoonService) {
-        this.webtoonService = webtoonService;
-    }
 
     @PostMapping
     public ResponseEntity<WebtoonDTO> createWebtoon(@RequestBody WebtoonDTO webtoonDTO) {
@@ -43,33 +40,13 @@ public class WebtoonController {
         return new ResponseEntity<>(updatedWebtoon, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWebtoon(@PathVariable Long id) {
-        webtoonService.deleteWebtoon(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping("/author/{authorName}")
-    public ResponseEntity<List<WebtoonDTO>> getWebtoonsByAuthorName(@PathVariable String authorName) {
-        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByAuthorName(authorName);
-        return new ResponseEntity<>(webtoons, HttpStatus.OK);
-    }
-
-    @GetMapping("/genre/{genreName}")
-    public ResponseEntity<List<WebtoonDTO>> getWebtoonsByGenreName(@PathVariable String genreName) {
-        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByGenreName(genreName);
-        return new ResponseEntity<>(webtoons, HttpStatus.OK);
-    }
-
-    @GetMapping("/day-of-week/{dayOfWeek}")
-    public ResponseEntity<List<WebtoonDTO>> getWebtoonsByDayOfWeek(@PathVariable DayOfWeek dayOfWeek) {
-        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByDayOfWeek(dayOfWeek);
-        return new ResponseEntity<>(webtoons, HttpStatus.OK);
-    }
-
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<WebtoonDTO>> getWebtoonsByStatus(@PathVariable String status) {
-        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByStatus(status);
+    @GetMapping("/series")
+    public ResponseEntity<List<WebtoonDTO>> getSeriesOfWebtoons() {
+        List<WebtoonDTO> webtoons = webtoonService.filterWebtoons(
+                WebtoonFilterDTO.builder()
+                        .serializationStatus(SerializationStatus.연재)
+                        .build()
+        );
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
 
@@ -79,19 +56,63 @@ public class WebtoonController {
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
 
-    @GetMapping("/series-all")
-    public ResponseEntity<List<WebtoonDTO>> getSeriesOfWebtoons() {
-        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByStatus("연재");
+    @GetMapping("/completed")
+    public ResponseEntity<List<WebtoonDTO>> getCompletedWebtoons(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "60") int size) {
+
+        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsBySerializationStatus(SerializationStatus.완결, page, size);
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
 
-    @GetMapping("/completed")
-    public ResponseEntity<List<WebtoonDTO>> getCompletedWebtoons(
-            @RequestParam(defaultValue = "0") int page, // 0부터 시작하도록 수정
-            @RequestParam(defaultValue = "60") int size) { // 기본 size를 50으로 변경
 
-        System.out.println("Requested Page: " + page); // 페이지 번호 확인 로그
-        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsByStatus("완결", page, size);
+
+    // 범용 필터링 메서드
+    @GetMapping("/filter")
+    public ResponseEntity<List<WebtoonDTO>> filterWebtoons(
+            @RequestParam(required = false) Platform platform,
+            @RequestParam(required = false) SerializationStatus serializationStatus,
+            @RequestParam(required = false) AgeRating ageRating,
+            @RequestParam(required = false) DayOfWeek week,
+            @RequestParam(required = false) Set<String> genres,
+            @RequestParam(required = false) Set<String> authors
+    ) {
+        WebtoonFilterDTO filter = WebtoonFilterDTO.builder()
+                .platform(platform)
+                .serializationStatus(serializationStatus)
+                .ageRating(ageRating)
+                .week(week)
+                .genres(genres)
+                .authors(authors)
+                .build();
+
+        List<WebtoonDTO> webtoons = webtoonService.filterWebtoons(filter);
+        return new ResponseEntity<>(webtoons, HttpStatus.OK);
+    }
+
+    @GetMapping("/filter/options")
+    public ResponseEntity<List<WebtoonDTO>> filterWebtoonsOptions(
+            @RequestParam(required = false) Platform platform,
+            @RequestParam(required = false) SerializationStatus serializationStatus,
+            @RequestParam(required = false) AgeRating ageRating,
+            @RequestParam(required = false) DayOfWeek week,
+            @RequestParam(required = false) Set<String> genres,
+            @RequestParam(required = false) Set<String> authors,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        WebtoonFilterDTO filter = WebtoonFilterDTO.builder()
+                .platform(platform)
+                .serializationStatus(serializationStatus)
+                .ageRating(ageRating)
+                .week(week)
+                .genres(genres)
+                .authors(authors)
+                .build();
+
+        List<WebtoonDTO> webtoons = webtoonService.filterWebtoonsOptions(filter, page, size, sortBy, sortDir);
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
 

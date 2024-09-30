@@ -1,14 +1,25 @@
 // src/services/webtoonService.js
 import api from './ApiService';
 
-// 모든 웹툰 데이터
+// 연재 중인 모든 웹툰 데이터
 export const getWebtoons = async () => {
   try {
-    const response = await api.get('/api/webtoons/series-all', { authRequired: false });
+    const response = await api.get('/api/webtoons/series', { authRequired: false });
     return { success: true, data: response.data };
   } catch (error) {
     console.error('Error fetching webtoons:', error);
     return [];
+  }
+};
+
+// 특정 요일의 웹툰 데이터
+export const getWebtoonsByDayOfWeek = async (dayOfWeek) => {
+  try {
+    const response = await api.get(`/api/webtoons/series/${dayOfWeek}`, { authRequired: false });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error(`Error fetching webtoons for day: ${dayOfWeek}`, error);
+    return { success: false, error: error.message };
   }
 };
 
@@ -37,16 +48,7 @@ export const getCompletedWebtoons = async (page) => {
 };
 
 
-// 특정 요일의 웹툰 데이터
-export const getWebtoonsByDayOfWeek = async (dayOfWeek) => {
-  try {
-    const response = await api.get(`/api/webtoons/series/${dayOfWeek}`, { authRequired: false });
-    return { success: true, data: response.data };
-  } catch (error) {
-    console.error(`Error fetching webtoons for day: ${dayOfWeek}`, error);
-    return { success: false, error: error.message };
-  }
-};
+
 
 // 
 export const getCarouselImages = async () => {
