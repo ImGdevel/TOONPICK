@@ -29,6 +29,8 @@ public class User {
 
     private String role;
 
+    private Boolean isAdultVerified;
+
     private String profilePicture;
 
     private LocalDate accountCreationDate;

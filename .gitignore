@@ -63,3 +63,4 @@ out/
 ### Log ###
 logs/info.log
 backend/src/main/resources/.env
+backend/src/main/resources/application-API-KEY.yml
