@@ -13,7 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.core.AuthenticationException; // 이 부분 추가
+import org.springframework.security.core.AuthenticationException;
 import toonpick.app.dto.LoginRequestDTO;
 import toonpick.app.service.AuthService;
 

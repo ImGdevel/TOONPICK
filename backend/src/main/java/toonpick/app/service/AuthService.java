@@ -3,14 +3,11 @@ package toonpick.app.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.entity.Genre;
 import toonpick.app.entity.RefreshToken;
 import toonpick.app.entity.User;
-import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.jwt.JwtTokenProvider;
 import toonpick.app.repository.RefreshTokenRepository;
 import toonpick.app.repository.UserRepository;
-import java.util.Optional;
 
 import java.util.Date;
 
@@ -55,10 +52,9 @@ public class AuthService {
             throw new RuntimeException("Refresh token is expired");
         }
 
+        Long userid = jwtTokenProvider.getUserId(refreshToken);
         String username = jwtTokenProvider.getUsername(refreshToken);
         String role = jwtTokenProvider.getRole(refreshToken);
-
-        Long userid = getUserIdByUsername(username);
 
         return jwtTokenProvider.createAccessToken(userid, username, role);
     }
@@ -67,13 +63,21 @@ public class AuthService {
     public String refreshRefreshToken(String refreshToken) {
         RefreshToken storedToken = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+
+        if (jwtTokenProvider.isExpired(refreshToken)) {
+            throw new RuntimeException("Refresh token is expired");
+        }
+
+        Long userid = jwtTokenProvider.getUserId(refreshToken);
         String username = jwtTokenProvider.getUsername(refreshToken);
         String role = jwtTokenProvider.getRole(refreshToken);
-        Long userid = getUserIdByUsername(username);
-        String token = jwtTokenProvider.createAccessToken(userid, username, role);
+
+        String newRefreshToken = jwtTokenProvider.createAccessToken(userid, username, role);
+
         deleteRefreshToken(refreshToken);
-        saveRefreshToken(username,token);
-        return token;
+        saveRefreshToken(username,newRefreshToken);
+
+        return newRefreshToken;
     }
 
     @Transactional
@@ -88,6 +92,6 @@ public class AuthService {
     public Long getUserIdByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
-        return user.getId(); // Assuming 'getId()' returns the user ID
+        return user.getId();
     }
 }

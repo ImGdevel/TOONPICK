@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +28,7 @@ public class RecommendationList {
     private Long id;
 
     @NotNull
-    private String theme;  // 추천 주제 예: 로맨스, 판타지 등
+    private String theme;
 
     private String description;
 

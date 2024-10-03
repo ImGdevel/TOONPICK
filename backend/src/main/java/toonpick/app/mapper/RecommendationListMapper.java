@@ -3,7 +3,6 @@ package toonpick.app.mapper;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import toonpick.app.dto.RecommendationListDTO;
 import toonpick.app.entity.RecommendationList;

@@ -27,7 +27,5 @@ public class MetaDBConfig {
     public PlatformTransactionManager metaTransactionManager() {
         return new DataSourceTransactionManager(metaDBSource());
     }
-
-
-
+    
 }

@@ -1,6 +1,5 @@
 package toonpick.app.controller;
 
-import com.sun.tools.jconsole.JConsoleContext;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
