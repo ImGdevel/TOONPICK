@@ -10,9 +10,10 @@ const SocialLoginCallbackPage = () => {
 
   useEffect(() => {
     const handleCallback = async () => {
-      const result = AuthService.handleSocialLoginCallback(login);
+      const result = await AuthService.handleSocialLoginCallback(login);
       console.log(result.success);
       if (result.success) {
+        console.log("direct home");
         navigate('/');
       } else {
         console.error(result.message);

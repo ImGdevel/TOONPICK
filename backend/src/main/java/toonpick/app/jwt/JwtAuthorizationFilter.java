@@ -23,6 +23,7 @@ import java.util.Map;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+
     private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
 
     public JwtAuthorizationFilter(JwtTokenProvider jwtTokenProvider) {
@@ -31,12 +32,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // Access 토큰 인증/인가
         String accessToken = request.getHeader("Authorization");
 
         if (accessToken != null && accessToken.startsWith("Bearer ")) {
             accessToken = accessToken.substring(7).trim();
         }
-
+        // Access 토큰 존재 여부 체크, 없다면 다음 필터체인으로
         if (accessToken == null || accessToken.isEmpty()) {
             filterChain.doFilter(request, response);
             return;
@@ -94,7 +96,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     // CustomUserDetails 생성
     private UserDetails createUserDetails(String username, String role) {
         User user = new User();
-        user.update(username, "dummyPassword", role); // 패스워드는 더미 값으로 설정
+        user.update(username, "dummyPassword", role);
         return new CustomUserDetails(user);
     }
 }

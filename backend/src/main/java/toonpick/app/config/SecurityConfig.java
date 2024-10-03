@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import toonpick.app.jwt.JwtTokenProvider;
 import toonpick.app.jwt.LoginAuthenticationFilter;
-import toonpick.app.oauth2.CustomSuccessHandler;
+import toonpick.app.jwt.CustomOAuth2SuccessHandler;
 import toonpick.app.service.AuthService;
 import toonpick.app.service.OAuth2UserService;
 
@@ -33,20 +33,20 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtTokenProvider jwtTokenProvider;
     private final OAuth2UserService oAuth2UserService;
-    private final CustomSuccessHandler customSuccessHandler;
+    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
     private final AuthService authService;
 
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
                           AuthService authService,
                           JwtTokenProvider jwtTokenProvider,
                           OAuth2UserService oAuth2UserService,
-                          CustomSuccessHandler customSuccessHandler
+                          CustomOAuth2SuccessHandler customOAuth2SuccessHandler
                           ) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.authService = authService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.oAuth2UserService = oAuth2UserService;
-        this.customSuccessHandler = customSuccessHandler;
+        this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
     }
 
     @Bean
@@ -81,7 +81,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .successHandler(customSuccessHandler))
+                        .successHandler(customOAuth2SuccessHandler))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/*").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()

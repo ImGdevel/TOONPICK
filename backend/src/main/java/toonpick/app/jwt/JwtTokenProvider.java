@@ -35,15 +35,27 @@ public class JwtTokenProvider {
         return getClaims(token).get("category", String.class);
     }
 
+    // 토큰에서 사용자 Id 추출
+    public Long getUserId(String token) {
+        return getClaims(token).get("userId", Long.class);
+    }
+
     // 토큰에서 사용자 이름 추출
     public String getUsername(String token) {
         return getClaims(token).get("username", String.class);
     }
 
+    // 사용자 권한 추출
     public String getRole(String token) {
         return getClaims(token).get("role", String.class);
     }
 
+    // 토큰 만료 시간 반환
+    public Date getExpiration(String token) {
+        return getClaims(token).getExpiration();
+    }
+
+    // 토큰 인증 만료 여부 체크
     public boolean isExpired(String token) {
         try {
             return getClaims(token).getExpiration().before(new Date());
@@ -52,16 +64,6 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    // 토큰 만료 시간 반환
-    public Date getExpiration(String token) {
-        return getClaims(token).getExpiration();
-    }
-
-    // 토큰에서 userId 추출
-    public Long getUserId(String token) {
-        return getClaims(token).get("userId", Long.class);
     }
 
     // 요청 헤더에서 토큰 추출
@@ -83,6 +85,27 @@ public class JwtTokenProvider {
         return createToken("refresh", userId, username, role, refreshTokenExpiration);
     }
 
+    // 쿠키 생성 메서드
+    public Cookie createCookie(String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge((int) refreshTokenExpiration);
+        //cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+
+        return cookie;
+    }
+
+    // 검증/확인을 위한 추출 메서드
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    // 토큰 생성
     private String createToken(String category, Long userId, String username, String role, Long expirationTime) {
         return Jwts.builder()
                 .claim("category", category)
@@ -95,23 +118,4 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // 검증/확인을 위한 추출 메서드
-    private Claims getClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }
-
-    // 쿠키 생성 메서드
-    public Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge((int) refreshTokenExpiration);
-        //cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        return cookie;
-    }
 }

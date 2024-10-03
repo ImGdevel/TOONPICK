@@ -61,9 +61,10 @@ export const AuthService = {
     window.location.href = loginUrl;
   },
 
-  handleSocialLoginCallback: (loginCallback) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const accessToken = urlParams.get('accessToken');
+  handleSocialLoginCallback: async (loginCallback) => {
+    console.log("callback, and access token issue")
+    const accessToken = await AuthToken.refreshAccessToken();
+    
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken);
       if (loginCallback) loginCallback();

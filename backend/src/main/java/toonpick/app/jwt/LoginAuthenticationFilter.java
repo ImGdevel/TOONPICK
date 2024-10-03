@@ -56,15 +56,15 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
                 .collect(Collectors.joining());
 
         Long userid = authService.getUserIdByUsername(username);
-        String access = jwtTokenProvider.createAccessToken(userid, username, role);
-        String refresh = jwtTokenProvider.createRefreshToken(userid, username, role);
+        String accessToken = jwtTokenProvider.createAccessToken(userid, username, role);
+        String refreshToken = jwtTokenProvider.createRefreshToken(userid, username, role);
 
-        authService.saveRefreshToken(username, refresh);
-        response.setHeader("Authorization","Bearer " + access);
-        response.addCookie(jwtTokenProvider.createCookie("refresh", refresh));
+        authService.saveRefreshToken(username, refreshToken);
+        response.setHeader("Authorization","Bearer " + accessToken);
+        response.addCookie(jwtTokenProvider.createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
 
-        logger.info("USER LOGIN SUCCESS (username-{}/token-{})", username, access);
+        logger.info("USER LOGIN SUCCESS (username-{}/token-{})", username, accessToken);
     }
 
     @Override
