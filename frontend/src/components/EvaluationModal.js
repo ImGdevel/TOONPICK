@@ -10,7 +10,7 @@ const EvaluationModal = ({ isOpen, onClose, rating, onRatingChange, comment, onC
       <div className={styles['overlay']} onClick={onClose} />
       <div className={styles['modal']}>
         <h3>웹툰 평가하기</h3>
-        <StarRating rating={rating} onRatingChange={onRatingChange} />
+        <StarRating rating={rating} interactive={true} onRatingChange={onRatingChange}/>
         <textarea
           value={comment}
           onChange={onCommentChange}

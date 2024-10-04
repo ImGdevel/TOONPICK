@@ -1,85 +1,60 @@
-import React, { useState } from "react";
-import { FaStar, FaStarHalfAlt } from "react-icons/fa";
-import styled from "styled-components";
+import React, { useState } from 'react';
+import styles from './StarRating.module.css';
+import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
 
-const RowBox = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const StarDiv = styled.div`
-  position: relative;
-  cursor: pointer;
-  margin-right: 5px;
-  display: flex;
-  align-items: center;
-`;
-
-const HalfStarOverlay = styled.div`
-  position: absolute;
-  width: 50%;
-  height: 100%;
-  top: 0;
-  z-index: 1;
-`;
-
-const Left = styled(HalfStarOverlay)`
-  left: 0;
-`;
-
-const Right = styled(HalfStarOverlay)`
-  right: 0;
-`;
-
-const RatingDisplay = styled.span`
-  margin-left: 10px;
-  font-size: 18px;
-  color: black;
-`;
-
-function StarRating({ rating, onRatingChange }) {
+function StarRating({ rating, interactive = false, onRatingChange = null, textColor = 'black', starSize = 24 }) {
   const [score, setScore] = useState(rating);
   const [scoreFixed, setScoreFixed] = useState(rating);
 
-  const handleLeftHalfEnter = (idx) => setScore(idx + 0.5);
-  const handleRightHalfEnter = (idx) => setScore(idx + 1);
+  const handleLeftHalfEnter = (idx) => interactive && setScore(idx + 0.5);
+  const handleRightHalfEnter = (idx) => interactive && setScore(idx + 1);
 
   const handleStarClick = () => {
-    setScoreFixed(score);
-    onRatingChange(score);
+    if (interactive && onRatingChange) {
+      setScoreFixed(score);
+      onRatingChange(score);
+    }
   };
 
   const handleStarLeave = () => {
-    setScore(scoreFixed);
+    if (interactive) {
+      setScore(scoreFixed);
+    }
   };
 
   return (
-    <RowBox>
+    <div className={styles.rowBox}>
       {Array(5)
         .fill(0)
         .map((_, idx) => (
-          <StarDiv key={idx}>
+          <div key={idx} className={styles.starDiv}>
             {score - Math.floor(score) === 0.5 && Math.floor(score) === idx ? (
-              <FaStarHalfAlt size={32} color="gold" />
+              <FaStarHalfAlt size={starSize} color="gold" />
             ) : idx + 1 > score ? (
-              <FaStar size={32} color="lightGray" />
+              <FaStar size={starSize} color="lightGray" />
             ) : (
-              <FaStar size={32} color="gold" />
+              <FaStar size={starSize} color="gold" />
             )}
-            <Left
+            <div
+              className={`${styles.halfStarOverlay} ${styles.left}`}
               onMouseEnter={() => handleLeftHalfEnter(idx)}
               onMouseLeave={handleStarLeave}
               onClick={handleStarClick}
+              style={{ pointerEvents: interactive ? 'auto' : 'none' }} // Disable events if not interactive
             />
-            <Right
+            <div
+              className={`${styles.halfStarOverlay} ${styles.right}`}
               onMouseEnter={() => handleRightHalfEnter(idx)}
               onMouseLeave={handleStarLeave}
               onClick={handleStarClick}
+              style={{ pointerEvents: interactive ? 'auto' : 'none' }} // Disable events if not interactive
             />
-          </StarDiv>
+          </div>
         ))}
-      <RatingDisplay>{score.toFixed(1)}</RatingDisplay>
-    </RowBox>
+      <span className={styles.ratingDisplay} style={{ color: textColor }}>
+        {score.toFixed(1)}
+      </span>
+    </div>
   );
 }
 

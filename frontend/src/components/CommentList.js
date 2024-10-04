@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CommentList.module.css';
 import ReportModal from './ReportModal';
+import StarRating from './StarRating'; // Import StarRating
 
 const CommentList = ({ comments }) => {
   // 좋아요 상태를 각 댓글별로 관리
@@ -61,9 +62,8 @@ const CommentList = ({ comments }) => {
                 <span className={styles['comment-author']}>{comment.author}</span>
                 <span className={styles['comment-date']}>{comment.date}</span>
               </div>
-              <span className={styles['comment-rating']}>
-                ★{comment.rating} / 5
-              </span>
+              {/* 별점 부분을 StarRating으로 대체 */}
+              <StarRating rating={comment.rating} interactive={false} />
             </div>
 
             {/* 섹션 2: 좋아요 버튼, 신고 버튼 */}
