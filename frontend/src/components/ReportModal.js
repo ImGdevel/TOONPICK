@@ -25,7 +25,6 @@ const ReportModal = ({ commentId, onClose }) => {
       alert('기타 사유를 작성해주세요.');
       return;
     }
-    
     alert('신고가 완료되었습니다.');
     onClose();
   };
@@ -49,20 +48,21 @@ const ReportModal = ({ commentId, onClose }) => {
         </div>
         
         {selectedReason === 7 && (
-          <div>
+          <div className={styles['custom-reason-container']}>
             <label htmlFor="customReason">기타 사유 입력</label>
             <textarea
               id="customReason"
               value={customReason}
               onChange={handleCustomReasonChange}
               rows={4}
+              className={styles['custom-reason-textarea']}
             />
           </div>
         )}
         
         <div className={styles['modal-actions']}>
-          <button onClick={handleSubmit}>제출</button>
-          <button onClick={onClose}>취소</button>
+          <button className={styles['cancel-button']} onClick={onClose}>취소</button>
+          <button className={styles['submit-button']} onClick={handleSubmit}>신고</button>
         </div>
       </div>
     </div>

@@ -1,56 +1,83 @@
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  .modal-content {
-    background: #2c2c2c;
-    color: #e0e0e0;
-    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background: #2a2a2a;
     border-radius: 8px;
+    padding: 20px;
     width: 400px;
-  }
-  
-  .modal-content h2 {
-    margin-bottom: 20px;
-    font-size: 20px;
-    color: #ff3b30;
-  }
-  
-  .modal-content select,
-  .modal-content textarea {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #3c3c3c;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     color: #e0e0e0;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  .modal-actions {
-    margin-top: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 3px;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+textarea {
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    resize: none;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.modal-actions {
     display: flex;
-    justify-content: space-between;
-  }
-  
-  .modal-actions button {
-    padding: 10px 20px;
-    background-color: #007aff;
-    color: #fff;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.cancel-button {
+    background: gray;
+    color: white;
     border: none;
+    padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
-  }
-  
-  .modal-actions button:last-child {
-    background-color: #ff3b30;
-  }
-  
+    margin-right: 10px;
+    transition: background 0.3s;
+}
+
+.cancel-button:hover {
+    background: darkgray;
+}
+
+.submit-button {
+    background: red;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit-button:hover {
+    background: darkred;
+}
