@@ -34,6 +34,7 @@
 .comment-info {
   display: flex;
   flex-direction: column;
+  margin-right: 20px;
 }
 
 .comment-author {
@@ -46,35 +47,45 @@
   color: #888;
 }
 
-.comment-rating {
-  margin-left: 20px;
-  color: #ffcc00;
-}
-
 .comment-right {
   display: flex;
   align-items: center;
 }
 
-.like-button,
-.report-button {
+.like-button {
   background-color: transparent;
   border: none;
+  color: gray;
   cursor: pointer;
-  font-size: 12px;
-  margin-left: 10px;
-}
-
-.like-button {
-  color: #007aff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease, font-weight 0.3s ease;
+  margin-right: 8px;
 }
 
 .like-button.liked {
-  color: #ff0000;
+  color: blue;
+  font-weight: bold;
+}
+
+.like-count {
+  color: gray;
+  font-size: 16px;
+  margin-right: 8px;
 }
 
 .report-button {
-  color: #ff3b30;
+  background-color: transparent;
+  border: none;
+  color: gray;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.report-button:hover {
+  color: red;
 }
 
 .comment-text {

@@ -40,14 +40,14 @@ function StarRating({ rating, interactive = false, onRatingChange = null, textCo
               onMouseEnter={() => handleLeftHalfEnter(idx)}
               onMouseLeave={handleStarLeave}
               onClick={handleStarClick}
-              style={{ pointerEvents: interactive ? 'auto' : 'none' }} // Disable events if not interactive
+              style={{ pointerEvents: interactive ? 'auto' : 'none' }}
             />
             <div
               className={`${styles.halfStarOverlay} ${styles.right}`}
               onMouseEnter={() => handleRightHalfEnter(idx)}
               onMouseLeave={handleStarLeave}
               onClick={handleStarClick}
-              style={{ pointerEvents: interactive ? 'auto' : 'none' }} // Disable events if not interactive
+              style={{ pointerEvents: interactive ? 'auto' : 'none' }}
             />
           </div>
         ))}

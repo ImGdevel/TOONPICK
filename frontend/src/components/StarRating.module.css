@@ -1,7 +1,7 @@
 .rowBox {
     display: flex;
     align-items: center;
-    user-select: none; /* Prevent text selection */
+    user-select: none;
 }
 
 .starDiv {
@@ -18,7 +18,7 @@
     height: 100%;
     top: 0;
     z-index: 1;
-    pointer-events: none; /* Disable pointer events by default */
+    pointer-events: none;
 }
 
 .left {
@@ -31,11 +31,6 @@
 
 .ratingDisplay {
     margin-left: 10px;
-    font-size: 1.125rem; /* Responsive text size */
-    transition: color 0.3s ease; /* Optional: Smooth transition for color change */
-}
-
-.starDiv:hover {
-    transform: scale(1.1); /* Slightly increase size on hover */
-    transition: transform 0.2s ease;
+    font-size: 1.125rem;
+    transition: color 0.3s ease;
 }
