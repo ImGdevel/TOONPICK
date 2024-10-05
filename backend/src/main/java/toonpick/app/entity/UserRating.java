@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "review")
+@Table(name = "user_rating")
 public class UserRating {
 
     @Id
@@ -26,8 +26,7 @@ public class UserRating {
     @JoinColumn(name = "webtoon_id")
     private Webtoon webtoon;
 
-    private LocalDate reviewDate;
-
+    @Column(nullable = false)
     private float rating;
 
     @Column(length = 1000)
@@ -35,20 +34,26 @@ public class UserRating {
 
     private int likes;
 
+    private LocalDate modifyDate;
+
     @Builder
-    public UserRating(User user, Webtoon webtoon, LocalDate reviewDate, float rating, String comment, int likes) {
+    public UserRating(User user, Webtoon webtoon, float rating, String comment, int likes, LocalDate modifyDate) {
         this.user = user;
         this.webtoon = webtoon;
-        this.reviewDate = reviewDate;
         this.rating = rating;
         this.comment = comment;
         this.likes = likes;
+        this.modifyDate = modifyDate;
     }
 
-    public void update(LocalDate reviewDate, float rating, String comment, int likes) {
-        this.reviewDate = reviewDate;
+    public void update(float rating, String comment, LocalDate modifyDate) {
         this.rating = rating;
         this.comment = comment;
+        this.modifyDate = modifyDate;
+    }
+
+    // 좋아요 수 업데이트 메서드
+    public void updateLikes(int likes) {
         this.likes = likes;
     }
 }

@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import toonpick.app.entity.UserRating;
+import toonpick.app.dto.UserRatingDTO;
 import toonpick.app.service.UserRatingService;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
+
 @RestController
-@RequestMapping("/ratings")
+@RequestMapping("/api/user-ratings")
 public class UserRatingController {
 
     private final UserRatingService userRatingService;
@@ -29,40 +32,60 @@ public class UserRatingController {
 
     // API to create a new rating with comment
     @PostMapping
-    public ResponseEntity<UserRating> createUserRating(
+    public ResponseEntity<UserRatingDTO> createUserRating(
             @RequestParam Long userId,
             @RequestParam Long webtoonId,
             @RequestParam float rating,
             @RequestParam String comment) {
-        UserRating userRating = userRatingService.createUserRating(userId, webtoonId, rating, comment);
-        return new ResponseEntity<>(userRating, HttpStatus.CREATED);
+
+        UserRatingDTO userRatingDTO = userRatingService.createUserRating(userId, webtoonId, rating, comment);
+        return ResponseEntity.ok(userRatingDTO);
     }
 
     @PutMapping("/{ratingId}")
-    public ResponseEntity<UserRating> updateUserRating(
+    public ResponseEntity<UserRatingDTO> updateUserRating(
             @PathVariable Long ratingId,
             @RequestParam float rating,
             @RequestParam String comment,
             @RequestParam int likes) {
-        UserRating updatedRating = userRatingService.updateUserRating(ratingId, rating, comment, likes);
-        return new ResponseEntity<>(updatedRating, HttpStatus.OK);
+
+        UserRatingDTO updatedUserRatingDTO = userRatingService.updateUserRating(ratingId, rating, comment, likes);
+        return ResponseEntity.ok(updatedUserRatingDTO);
+    }
+
+    @GetMapping("/webtoon/{webtoonId}/likes")
+    public ResponseEntity<Page<UserRatingDTO>> getRatingsByLikes(
+            @PathVariable Long webtoonId,
+            @RequestParam int page) {
+
+        Page<UserRatingDTO> userRatings = userRatingService.getRatingsByLikes(webtoonId, page);
+        return ResponseEntity.ok(userRatings);
+    }
+
+    @GetMapping("/webtoon/{webtoonId}/latest")
+    public ResponseEntity<Page<UserRatingDTO>> getRatingsByLatest(
+            @PathVariable Long webtoonId,
+            @RequestParam int page) {
+
+        Page<UserRatingDTO> userRatings = userRatingService.getRatingsByLatest(webtoonId, page);
+        return ResponseEntity.ok(userRatings);
     }
 
     @GetMapping("/webtoon/{webtoonId}")
-    public ResponseEntity<List<UserRating>> getRatingsForWebtoon(@PathVariable Long webtoonId) {
-        List<UserRating> ratings = userRatingService.getRatingsForWebtoon(webtoonId);
-        return new ResponseEntity<>(ratings, HttpStatus.OK);
+    public ResponseEntity<List<UserRatingDTO>> getRatingsForWebtoonAll(@PathVariable Long webtoonId) {
+        List<UserRatingDTO> userRatings = userRatingService.getRatingsForWebtoonAll(webtoonId);
+        return ResponseEntity.ok(userRatings);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UserRating>> getRatingsByUser(@PathVariable Long userId) {
-        List<UserRating> ratings = userRatingService.getRatingsByUser(userId);
-        return new ResponseEntity<>(ratings, HttpStatus.OK);
+    public ResponseEntity<List<UserRatingDTO>> getRatingsByUser(@PathVariable Long userId) {
+        List<UserRatingDTO> userRatings = userRatingService.getRatingsByUser(userId);
+        return ResponseEntity.ok(userRatings);
     }
 
     @DeleteMapping("/{ratingId}")
     public ResponseEntity<Void> deleteUserRating(@PathVariable Long ratingId) {
         userRatingService.deleteUserRating(ratingId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import toonpick.app.entity.User;
+import toonpick.app.entity.Webtoon;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -13,11 +16,12 @@ import java.time.LocalDate;
 @Builder
 public class UserRatingDTO {
     private Long id;
-    private UserDTO user;
-    private WebtoonDTO webtoon;
-    private LocalDate reviewDate;
-    private float rating;
     private String comment;
-    private int likes;
+    private Integer rating;
+    private User user;
+    private Webtoon webtoon;
+    private int likeCount;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }
