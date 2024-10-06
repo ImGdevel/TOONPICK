@@ -1,8 +1,9 @@
 package toonpick.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,13 +12,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import toonpick.app.dto.CustomUserDetails;
 import toonpick.app.dto.UserRatingDTO;
 import toonpick.app.service.UserRatingService;
 
 import java.util.List;
-
-import org.springframework.data.domain.Page;
-
 
 @RestController
 @RequestMapping("/api/user-ratings")
@@ -33,10 +32,13 @@ public class UserRatingController {
     // API to create a new rating with comment
     @PostMapping
     public ResponseEntity<UserRatingDTO> createUserRating(
-            @RequestParam Long userId,
             @RequestParam Long webtoonId,
             @RequestParam float rating,
-            @RequestParam String comment) {
+            @RequestParam String comment,
+            Authentication authentication) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUserId();
 
         UserRatingDTO userRatingDTO = userRatingService.createUserRating(userId, webtoonId, rating, comment);
         return ResponseEntity.ok(userRatingDTO);
@@ -77,8 +79,11 @@ public class UserRatingController {
         return ResponseEntity.ok(userRatings);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UserRatingDTO>> getRatingsByUser(@PathVariable Long userId) {
+    @GetMapping("/user")
+    public ResponseEntity<List<UserRatingDTO>> getRatingsByUser(Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUserId();
+
         List<UserRatingDTO> userRatings = userRatingService.getRatingsByUser(userId);
         return ResponseEntity.ok(userRatings);
     }
