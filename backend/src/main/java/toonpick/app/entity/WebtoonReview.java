@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user_rating")
-public class UserRating {
+public class WebtoonReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class UserRating {
     private LocalDate modifyDate;
 
     @Builder
-    public UserRating(User user, Webtoon webtoon, float rating, String comment, int likes, LocalDate modifyDate) {
+    public WebtoonReview(User user, Webtoon webtoon, float rating, String comment, int likes, LocalDate modifyDate) {
         this.user = user;
         this.webtoon = webtoon;
         this.rating = rating;
@@ -52,7 +52,6 @@ public class UserRating {
         this.modifyDate = modifyDate;
     }
 
-    // 좋아요 수 업데이트 메서드
     public void updateLikes(int likes) {
         this.likes = likes;
     }

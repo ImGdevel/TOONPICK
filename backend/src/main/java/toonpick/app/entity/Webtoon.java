@@ -92,7 +92,7 @@ public class Webtoon {
     private Set<Genre> genres = new HashSet<>();
 
     @OneToMany(mappedBy = "webtoon", fetch = FetchType.LAZY)
-    private Set<UserRating> userRatings = new HashSet<>();
+    private Set<WebtoonReview> userRatings = new HashSet<>();
 
     @Builder
     public Webtoon(Long id, String title, Platform platform, String platformId, float averageRating, float platformRating, String description, SerializationStatus serializationStatus, int episodeCount, LocalDate serializationStartDate, LocalDate lastUpdatedDate, DayOfWeek week, String thumbnailUrl, String url, AgeRating ageRating, Set<Author> authors, Set<Genre> genres) {

@@ -13,25 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.dto.CustomUserDetails;
-import toonpick.app.dto.UserRatingDTO;
-import toonpick.app.service.UserRatingService;
+import toonpick.app.dto.WebtoonReviewDTO;
+import toonpick.app.service.WebtoonReviewService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/user-ratings")
-public class UserRatingController {
+public class WebtoonReviewController {
 
-    private final UserRatingService userRatingService;
+    private final WebtoonReviewService webtoonReviewService;
 
     @Autowired
-    public UserRatingController(UserRatingService userRatingService) {
-        this.userRatingService = userRatingService;
+    public WebtoonReviewController(WebtoonReviewService webtoonReviewService) {
+        this.webtoonReviewService = webtoonReviewService;
     }
 
     // API to create a new rating with comment
     @PostMapping
-    public ResponseEntity<UserRatingDTO> createUserRating(
+    public ResponseEntity<WebtoonReviewDTO> createUserRating(
             @RequestParam Long webtoonId,
             @RequestParam float rating,
             @RequestParam String comment,
@@ -40,57 +40,57 @@ public class UserRatingController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long userId = userDetails.getUserId();
 
-        UserRatingDTO userRatingDTO = userRatingService.createUserRating(userId, webtoonId, rating, comment);
-        return ResponseEntity.ok(userRatingDTO);
+        WebtoonReviewDTO webtoonReviewDTO = webtoonReviewService.createUserRating(userId, webtoonId, rating, comment);
+        return ResponseEntity.ok(webtoonReviewDTO);
     }
 
     @PutMapping("/{ratingId}")
-    public ResponseEntity<UserRatingDTO> updateUserRating(
+    public ResponseEntity<WebtoonReviewDTO> updateUserRating(
             @PathVariable Long ratingId,
             @RequestParam float rating,
             @RequestParam String comment,
             @RequestParam int likes) {
 
-        UserRatingDTO updatedUserRatingDTO = userRatingService.updateUserRating(ratingId, rating, comment, likes);
-        return ResponseEntity.ok(updatedUserRatingDTO);
+        WebtoonReviewDTO updatedWebtoonReviewDTO = webtoonReviewService.updateUserRating(ratingId, rating, comment, likes);
+        return ResponseEntity.ok(updatedWebtoonReviewDTO);
     }
 
     @GetMapping("/webtoon/{webtoonId}/likes")
-    public ResponseEntity<Page<UserRatingDTO>> getRatingsByLikes(
+    public ResponseEntity<Page<WebtoonReviewDTO>> getRatingsByLikes(
             @PathVariable Long webtoonId,
             @RequestParam int page) {
 
-        Page<UserRatingDTO> userRatings = userRatingService.getRatingsByLikes(webtoonId, page);
+        Page<WebtoonReviewDTO> userRatings = webtoonReviewService.getRatingsByLikes(webtoonId, page);
         return ResponseEntity.ok(userRatings);
     }
 
     @GetMapping("/webtoon/{webtoonId}/latest")
-    public ResponseEntity<Page<UserRatingDTO>> getRatingsByLatest(
+    public ResponseEntity<Page<WebtoonReviewDTO>> getRatingsByLatest(
             @PathVariable Long webtoonId,
             @RequestParam int page) {
 
-        Page<UserRatingDTO> userRatings = userRatingService.getRatingsByLatest(webtoonId, page);
+        Page<WebtoonReviewDTO> userRatings = webtoonReviewService.getRatingsByLatest(webtoonId, page);
         return ResponseEntity.ok(userRatings);
     }
 
     @GetMapping("/webtoon/{webtoonId}")
-    public ResponseEntity<List<UserRatingDTO>> getRatingsForWebtoonAll(@PathVariable Long webtoonId) {
-        List<UserRatingDTO> userRatings = userRatingService.getRatingsForWebtoonAll(webtoonId);
+    public ResponseEntity<List<WebtoonReviewDTO>> getRatingsForWebtoonAll(@PathVariable Long webtoonId) {
+        List<WebtoonReviewDTO> userRatings = webtoonReviewService.getRatingsForWebtoonAll(webtoonId);
         return ResponseEntity.ok(userRatings);
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<UserRatingDTO>> getRatingsByUser(Authentication authentication) {
+    public ResponseEntity<List<WebtoonReviewDTO>> getRatingsByUser(Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long userId = userDetails.getUserId();
 
-        List<UserRatingDTO> userRatings = userRatingService.getRatingsByUser(userId);
+        List<WebtoonReviewDTO> userRatings = webtoonReviewService.getRatingsByUser(userId);
         return ResponseEntity.ok(userRatings);
     }
 
     @DeleteMapping("/{ratingId}")
     public ResponseEntity<Void> deleteUserRating(@PathVariable Long ratingId) {
-        userRatingService.deleteUserRating(ratingId);
+        webtoonReviewService.deleteUserRating(ratingId);
         return ResponseEntity.noContent().build();
     }
 }
