@@ -1,11 +1,12 @@
 // src/components/CommentList.js
+
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './CommentList.module.css';
 import ReportModal from './ReportModal';
 import StarRating from './StarRating';
 import { FaThumbsUp } from 'react-icons/fa';
-import { toggleLikeForReview, reportWebtoonReview } from '../services/webtoonReviewService'; // API 함수 임포트
+import { toggleLikeForReview, reportWebtoonReview } from '../services/webtoonReviewService';
 
 const CommentList = ({ comments }) => {
   const [commentStatus, setCommentStatus] = useState([]);
@@ -26,19 +27,16 @@ const CommentList = ({ comments }) => {
     const commentId = comments[index].id;
     const currentLikedStatus = commentStatus[index].liked;
 
-    // API 호출하여 좋아요 토글
     const response = await toggleLikeForReview(commentId);
-
     if (response.success) {
       setCommentStatus((prevStatus) => {
         const updatedStatus = [...prevStatus];
         updatedStatus[index].liked = !currentLikedStatus;
-        updatedStatus[index].likes = response.data.likes; // 서버에서 반환된 최신 좋아요 수로 업데이트
+        updatedStatus[index].likes = response.data.likes;
         return updatedStatus;
       });
     } else {
-      console.error('좋아요 토글 실패:', response.error);
-      // 사용자에게 오류 알림 (예: 토스트 메시지)
+      console.error('Failed to toggle like:', response.error);
     }
   };
 
@@ -55,23 +53,15 @@ const CommentList = ({ comments }) => {
 
   const handleReportSubmit = async () => {
     if (!reportReason.trim()) {
-      // 사용자에게 신고 이유를 입력하도록 알림
       return;
     }
 
-    const reportData = {
-      reason: reportReason,
-    };
-
+    const reportData = { reason: reportReason };
     const response = await reportWebtoonReview(reportCommentId, reportData);
-
     if (response.success) {
-      // 사용자에게 신고가 접수되었음을 알림
       closeReportModal();
-      // 필요 시, 신고된 댓글을 목록에서 제거하거나 표시 변경
     } else {
-      console.error('리뷰 신고 실패:', response.error);
-      // 사용자에게 오류 알림
+      console.error('Failed to report review:', response.error);
     }
   };
 
@@ -86,17 +76,16 @@ const CommentList = ({ comments }) => {
           <div className={styles['comment-header']}>
             <div className={styles['comment-left']}>
               <img
-                src={comment.profileImage}
-                alt={`${comment.author} profile`}
+                src={comment.userId.profilePicture}
+                alt={`${comment.userId.nickname} profile`}
                 className={styles['comment-profile']}
               />
               <div className={styles['comment-info']}>
-                <span className={styles['comment-author']}>{comment.author}</span>
-                <span className={styles['comment-date']}>{comment.date}</span>
+                <span className={styles['comment-author']}>{comment.userId.nickname}</span>
+                <span className={styles['comment-date']}>{new Date(comment.createdDate).toLocaleDateString()}</span>
               </div>
               <StarRating rating={comment.rating} interactive={false} textColor="white" />
             </div>
-
             <div className={styles['comment-right']}>
               <button
                 className={`${styles['like-button']} ${commentStatus[index]?.liked ? styles['liked'] : ''}`}
@@ -104,19 +93,14 @@ const CommentList = ({ comments }) => {
               >
                 <FaThumbsUp /> {commentStatus[index]?.likes || 0}
               </button>
-              <button
-                className={styles['report-button']}
-                onClick={() => handleReportClick(comment.id)}
-              >
+              <button className={styles['report-button']} onClick={() => handleReportClick(comment.id)}>
                 신고
               </button>
             </div>
           </div>
-
-          <div className={styles['comment-text']}>{comment.text}</div>
+          <div className={styles['comment-text']}>{comment.comment}</div>
         </div>
       ))}
-
       {isReportModalOpen && (
         <ReportModal
           commentId={reportCommentId}
@@ -134,12 +118,18 @@ CommentList.propTypes = {
   comments: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
-      author: PropTypes.string.isRequired,
-      profileImage: PropTypes.string.isRequired,
+      webtoonId: PropTypes.number.isRequired,
+      userId: PropTypes.shape({
+        username: PropTypes.string.isRequired,
+        nickname: PropTypes.string.isRequired,
+        role: PropTypes.string.isRequired,
+        profilePicture: PropTypes.string.isRequired,
+      }).isRequired,
       rating: PropTypes.number.isRequired,
-      text: PropTypes.string.isRequired,
+      comment: PropTypes.string.isRequired,
       likes: PropTypes.number.isRequired,
-      date: PropTypes.string.isRequired,
+      createdDate: PropTypes.string.isRequired,
+      modifiedDate: PropTypes.string,
     })
   ).isRequired,
 };

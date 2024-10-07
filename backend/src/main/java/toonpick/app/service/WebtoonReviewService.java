@@ -39,10 +39,10 @@ public class WebtoonReviewService {
     private final WebtoonReviewMapper webtoonReviewMapper = WebtoonReviewMapper.INSTANCE;
 
 
-    public WebtoonReviewDTO createReview(WebtoonReviewCreateDTO reviewCreateDTO, Long userId) {
+    public WebtoonReviewDTO createReview(WebtoonReviewCreateDTO reviewCreateDTO, Long webtoonId, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
-        Webtoon webtoon = webtoonRepository.findById(reviewCreateDTO.getWebtoonId())
+        Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException("웹툰을 찾을 수 없습니다."));
 
         WebtoonReview review = WebtoonReview.builder()

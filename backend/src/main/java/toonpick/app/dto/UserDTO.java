@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Builder
 public class UserDTO {
     private String username;
+    private String nickname;
     private String role;
     private String profilePicture;
-    private LocalDate accountCreationDate;
 }

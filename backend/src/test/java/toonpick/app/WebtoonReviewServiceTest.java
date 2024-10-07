@@ -136,7 +136,6 @@ public class WebtoonReviewServiceTest {
         Long userId = 1L;
         Long webtoonId = 1L;
         WebtoonReviewCreateDTO reviewCreateDTO = WebtoonReviewCreateDTO.builder()
-                .userId(userId)
                 .webtoonId(webtoonId)
                 .rating(4.5f)
                 .comment("Great webtoon!")

@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 @Builder
 public class WebtoonReviewDTO {
     private Long id;
-    private Long userId;
     private Long webtoonId;
+    private UserDTO userId;
     private float rating;
     private String comment;
     private int likes;

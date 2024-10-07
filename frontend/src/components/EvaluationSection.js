@@ -14,13 +14,11 @@ const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }
   useEffect(() => {
     const fetchReviews = async () => {
       const response = await getReviewsByWebtoon(webtoonId);
-      console.log('getReviewsByWebtoon response:', response); // 디버깅용 로그
+      console.log('getReviewsByWebtoon response:', response, response.data); // 디버깅용 로그
       if (response.success) {
-        // response.data가 리뷰 배열인지 확인 후 설정
-        if (Array.isArray(response.data)) {
-          setComments(response.data);
-        } else if (response.data.reviews) {
-          setComments(response.data.reviews);
+        if (response.data && Array.isArray(response.data.content)) {
+          // response.data.content가 리뷰 배열인지 확인 후 설정
+          setComments(response.data.content);
         } else {
           setComments([]); // 예상치 못한 구조일 경우 빈 배열로 설정
           console.warn('Unexpected response structure:', response.data);
@@ -32,6 +30,8 @@ const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }
     };
     fetchReviews();
   }, [webtoonId]);
+
+
 
   // 별점 변경 처리
   const handleRatingChange = (newRating) => {
@@ -45,12 +45,7 @@ const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }
 
   // 제출 처리: 서버에 평가 및 코멘트 전송
   const handleSubmit = async () => {
-    const reviewData = {
-      webtoonId,
-      rating,
-      comment,
-    };
-    const response = await createWebtoonReview(webtoonId, reviewData);
+    const response = await createWebtoonReview(webtoonId, rating, comment);
     if (response.success) {
       setComments((prevComments) => [response.data, ...prevComments]); // 새로운 리뷰를 추가
       setIsModalOpen(false); // 모달 닫기

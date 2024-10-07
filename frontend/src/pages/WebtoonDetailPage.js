@@ -1,4 +1,3 @@
-// src/components/WebtoonDetailPage.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getWebtoonById } from '../services/webtoonService';
@@ -7,7 +6,7 @@ import EvaluationSection from '../components/EvaluationSection';
 import styles from './WebtoonDetailPage.module.css';
 
 const WebtoonDetailPage = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [webtoon, setWebtoon] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -17,7 +16,7 @@ const WebtoonDetailPage = () => {
         const response = await getWebtoonById(id);
         if (response.success) {
           setWebtoon(response.data);
-          setIsFavorite(response.data.isFavorite); 
+          setIsFavorite(response.data.isFavorite);
           
           const favoriteStatus = await isFavoriteWebtoon(id);
           setIsFavorite(favoriteStatus);
@@ -28,7 +27,7 @@ const WebtoonDetailPage = () => {
         console.error('Error fetching webtoon data:', error);
       }
     };
-  
+
     fetchWebtoon();
   }, [id]);
 

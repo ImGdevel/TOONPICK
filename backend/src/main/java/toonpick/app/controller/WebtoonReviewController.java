@@ -27,7 +27,7 @@ public class WebtoonReviewController {
             Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long userId = userDetails.getUserId();
-        WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO, userId);
+        WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO,webtoonId, userId);
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
     }
 
