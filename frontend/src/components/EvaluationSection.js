@@ -1,7 +1,9 @@
+// src/components/EvaluationSection.js
 import React, { useState, useEffect } from 'react';
 import CommentList from './CommentList';
 import EvaluationModal from './EvaluationModal';
 import styles from './EvaluationSection.module.css';
+import { getReviewsByWebtoon, createWebtoonReview } from '../services/webtoonReviewService';
 
 const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,50 +12,52 @@ const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    // 웹툰 ID를 기반으로 더미 코멘트 및 평가 데이터를 설정
-    const dummyComments = [
-      {
-        id: 1,
-        author: '유저1',
-        profileImage: 'https://via.placeholder.com/40', // 대체 이미지 URL
-        rating: 4.5,
-        text: '정말 재미있어요! 다음 회차가 기대됩니다.',
-        likes: 12,
-        date: '2024-10-01',
-      },
-      {
-        id: 2,
-        author: '유저2',
-        profileImage: 'https://via.placeholder.com/40',
-        rating: 3.0,
-        text: '스토리는 나쁘지 않지만, 작화가 아쉽네요.',
-        likes: 5,
-        date: '2024-09-30',
-      },
-      {
-        id: 3,
-        author: '유저3',
-        profileImage: 'https://via.placeholder.com/40',
-        rating: 5.0,
-        text: '완벽한 웹툰! 추천합니다.',
-        likes: 20,
-        date: '2024-09-28',
-      },
-    ];
-
-    setComments(dummyComments); // 더미 데이터를 설정
+    const fetchReviews = async () => {
+      const response = await getReviewsByWebtoon(webtoonId);
+      console.log('getReviewsByWebtoon response:', response); // 디버깅용 로그
+      if (response.success) {
+        // response.data가 리뷰 배열인지 확인 후 설정
+        if (Array.isArray(response.data)) {
+          setComments(response.data);
+        } else if (response.data.reviews) {
+          setComments(response.data.reviews);
+        } else {
+          setComments([]); // 예상치 못한 구조일 경우 빈 배열로 설정
+          console.warn('Unexpected response structure:', response.data);
+        }
+      } else {
+        console.error('리뷰 가져오기 오류:', response.error);
+        setComments([]); // 오류 발생 시 빈 배열로 설정
+      }
+    };
+    fetchReviews();
   }, [webtoonId]);
 
+  // 별점 변경 처리
   const handleRatingChange = (newRating) => {
     setRating(newRating);
   };
 
+  // 코멘트 변경 처리
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
 
-  const handleSubmit = () => {
-    setIsModalOpen(false);
+  // 제출 처리: 서버에 평가 및 코멘트 전송
+  const handleSubmit = async () => {
+    const reviewData = {
+      webtoonId,
+      rating,
+      comment,
+    };
+    const response = await createWebtoonReview(webtoonId, reviewData);
+    if (response.success) {
+      setComments((prevComments) => [response.data, ...prevComments]); // 새로운 리뷰를 추가
+      setIsModalOpen(false); // 모달 닫기
+    } else {
+      console.error('리뷰 생성 실패:', response.error);
+      // 사용자에게 오류 알림 (예: 토스트 메시지)
+    }
   };
 
   const openModal = () => {

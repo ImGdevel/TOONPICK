@@ -32,7 +32,7 @@ spring:
 
   jwt:
     secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalqwdosqmsqsjnqdosdqcs
-    access-token-expiration: 18000
+    access-token-expiration: 1800000
     refresh-token-expiration: 259200000
 
   security:

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user_rating")
+@Table(name = "webtoon_review")
 public class WebtoonReview extends BaseTimeEntity {
 
     @Id

@@ -4,7 +4,7 @@ import api from './ApiService';
 // 웹툰 리뷰 생성
 export const createWebtoonReview = async (webtoonId, reviewData) => {
   try {
-    const response = await api.post(`/api/webtoon/${webtoonId}/reviews`, reviewData);
+    const response = await api.post(`/api/webtoon/${webtoonId}/reviews`, reviewData, { authRequired: true });
     return { success: true, data: response.data };
   } catch (error) {
     console.error('리뷰 생성 중 오류 발생:', error);
@@ -26,7 +26,7 @@ export const getWebtoonReviewById = async (reviewId) => {
 // 리뷰 수정
 export const updateWebtoonReview = async (reviewId, reviewData) => {
   try {
-    const response = await api.put(`/api/webtoon/reviews/${reviewId}`, reviewData);
+    const response = await api.put(`/api/webtoon/reviews/${reviewId}`, reviewData, { authRequired: true });
     return { success: true, data: response.data };
   } catch (error) {
     console.error('리뷰 수정 중 오류 발생:', error);
@@ -48,7 +48,7 @@ export const deleteWebtoonReview = async (reviewId) => {
 // 리뷰에 좋아요 토글
 export const toggleLikeForReview = async (reviewId) => {
   try {
-    const response = await api.post(`/api/webtoon/reviews/${reviewId}/like`);
+    const response = await api.post(`/api/webtoon/reviews/${reviewId}/like`, { authRequired: true });
     return { success: true, data: response.data };
   } catch (error) {
     console.error('리뷰 좋아요 토글 중 오류 발생:', error);
@@ -70,10 +70,22 @@ export const getReviewsByWebtoon = async (webtoonId, sortBy = 'latest', page = 0
 // 특정 웹툰에 대한 사용자 리뷰 가져오기
 export const getUserReviewForWebtoon = async (webtoonId) => {
   try {
-    const response = await api.get(`/api/webtoon/${webtoonId}/users`);
+    const response = await api.get(`/api/webtoon/${webtoonId}/users`, { authRequired: true });
     return { success: true, data: response.data };
   } catch (error) {
     console.error('사용자 리뷰 가져오기 중 오류 발생:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+
+// 리뷰 신고
+export const reportWebtoonReview = async (reviewId, reportData) => {
+  try {
+    const response = await api.post(`/api/webtoon/reviews/${reviewId}/report`, reportData);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('리뷰 신고 중 오류 발생:', error);
     return { success: false, error: error.message };
   }
 };

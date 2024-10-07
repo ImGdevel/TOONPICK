@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class WebtoonReviewCreateDTO {
-    private Long userId;
     private Long webtoonId;
     private float rating;
     private String comment;

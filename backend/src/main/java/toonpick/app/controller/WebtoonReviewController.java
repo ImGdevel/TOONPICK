@@ -23,9 +23,11 @@ public class WebtoonReviewController {
     @PostMapping
     public ResponseEntity<WebtoonReviewDTO> createReview(
             @PathVariable Long webtoonId,
-            @RequestBody WebtoonReviewCreateDTO reviewCreateDTO) {
-        reviewCreateDTO.setWebtoonId(webtoonId);
-        WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO);
+            @RequestBody WebtoonReviewCreateDTO reviewCreateDTO,
+            Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUserId();
+        WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO, userId);
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
     }
 
