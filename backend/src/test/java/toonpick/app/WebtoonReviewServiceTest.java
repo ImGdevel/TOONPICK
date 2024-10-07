@@ -1,149 +1,183 @@
 package toonpick.app;
 
-import org.junit.jupiter.api.BeforeEach;
+import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.BeforeEach;
+import toonpick.app.dto.WebtoonReviewCreateDTO;
 import toonpick.app.dto.WebtoonReviewDTO;
 import toonpick.app.entity.User;
-import toonpick.app.entity.WebtoonReview;
 import toonpick.app.entity.Webtoon;
-import toonpick.app.mapper.WebtoonReviewMapper;
-import toonpick.app.repository.WebtoonReviewRepository;
+import toonpick.app.entity.WebtoonReview;
+import toonpick.app.entity.enums.AgeRating;
+import toonpick.app.entity.enums.Platform;
+import toonpick.app.entity.enums.SerializationStatus;
+import toonpick.app.repository.ReviewLikeRepository;
 import toonpick.app.repository.UserRepository;
 import toonpick.app.repository.WebtoonRepository;
+import toonpick.app.repository.WebtoonReviewRepository;
 import toonpick.app.service.WebtoonReviewService;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-class WebtoonReviewServiceTest {
+public class WebtoonReviewServiceTest {
 
     @Mock
     private WebtoonReviewRepository webtoonReviewRepository;
+
+    @Mock
+    private ReviewLikeRepository reviewLikeRepository;
+
     @Mock
     private UserRepository userRepository;
+
     @Mock
     private WebtoonRepository webtoonRepository;
-    @Mock
-    private WebtoonReviewMapper userRatingMapper;
 
     @InjectMocks
     private WebtoonReviewService webtoonReviewService;
 
-    private User dummyUser1;
-    private User dummyUser2;
-    private Webtoon dummyWebtoon;
-    private WebtoonReview dummyRating1;
-    private WebtoonReview dummyRating2;
-
     @BeforeEach
-    void setUp() {
+    public void setup() {
         MockitoAnnotations.openMocks(this);
+    }
 
-        dummyUser1 = User.builder().username("user1").build();
-        dummyUser2 = User.builder().username("user2").build();
-        dummyWebtoon = Webtoon.builder().title("Dummy Webtoon").build();
-
-        dummyRating1 = WebtoonReview.builder()
-                .user(dummyUser1)
-                .webtoon(dummyWebtoon)
+    @Test
+    public void testCreateReview_Success() {
+        // Given
+        Long userId = 1L;
+        Long webtoonId = 1L;
+        WebtoonReviewCreateDTO reviewCreateDTO = WebtoonReviewCreateDTO.builder()
+                .userId(userId)
+                .webtoonId(webtoonId)
                 .rating(4.5f)
-                .comment("Great!")
-                .likes(10)
-                .modifyDate(LocalDate.now())
+                .comment("Great webtoon!")
                 .build();
 
-        dummyRating2 = WebtoonReview.builder()
-                .user(dummyUser2)
-                .webtoon(dummyWebtoon)
-                .rating(5.0f)
-                .comment("Amazing!")
-                .likes(15)
-                .modifyDate(LocalDate.now())
+        User user = User.builder()
+                .username("testuser")
+                .profilePicture("profile.jpg")
+                .accountCreationDate(LocalDate.now())
                 .build();
+
+        Webtoon webtoon = Webtoon.builder()
+                .id(webtoonId)
+                .title("Test Webtoon")
+                .platform(Platform.NAVER)
+                .platformId("naver123")
+                .averageRating(4.5f)
+                .platformRating(4.7f)
+                .description("A great webtoon.")
+                .serializationStatus(SerializationStatus.연재)
+                .episodeCount(10)
+                .serializationStartDate(LocalDate.now().minusDays(30))
+                .lastUpdatedDate(LocalDate.now())
+                .week(DayOfWeek.MONDAY)
+                .thumbnailUrl("thumbnail.jpg")
+                .url("http://webtoon.com")
+                .ageRating(AgeRating.AGE_12)
+                .build();
+
+        WebtoonReview savedReview = WebtoonReview.builder()
+                .user(user)
+                .webtoon(webtoon)
+                .rating(4.5f)
+                .comment("Great webtoon!")
+                .likes(0)
+                .build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(webtoonRepository.findById(webtoonId)).thenReturn(Optional.of(webtoon));
+        when(webtoonReviewRepository.save(any(WebtoonReview.class))).thenReturn(savedReview);
+
+        // When
+        WebtoonReviewDTO result = webtoonReviewService.createReview(reviewCreateDTO);
+
+        // Then
+        assertThat(result).isNotNull(); // Check if the result is not null
+        assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getUserId()).isEqualTo(userId);
+        assertThat(result.getWebtoonId()).isEqualTo(webtoonId);
+        assertThat(result.getLikes()).isEqualTo(0);
+        verify(webtoonReviewRepository, times(1)).save(any(WebtoonReview.class));
     }
 
-    // 1. 하나의 더미 웹툰에 대하여 더미 유저 여러명이 웹툰 평가를 작성하는 테스트
+        @Test
+    public void testCreateReview_UserNotFound() {
+        // Given
+        Long userId = 1L;
+        Long webtoonId = 1L;
+        WebtoonReviewCreateDTO reviewCreateDTO = WebtoonReviewCreateDTO.builder()
+                .userId(userId)
+                .webtoonId(webtoonId)
+                .rating(4.5f)
+                .comment("Great webtoon!")
+                .build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // When
+        Throwable thrown = catchThrowable(() -> webtoonReviewService.createReview(reviewCreateDTO));
+
+        // Then
+        assertThat(thrown).isInstanceOf(RuntimeException.class).hasMessageContaining("User not found");
+        verify(webtoonReviewRepository, never()).save(any());
+    }
+
     @Test
-    void createMultipleRatingsForWebtoon() {
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(dummyUser1));
-        when(webtoonRepository.findById(anyLong())).thenReturn(Optional.of(dummyWebtoon));
-        when(webtoonReviewRepository.save(any(WebtoonReview.class))).thenReturn(dummyRating1);
+    public void testCreateReview_WebtoonNotFound() {
+        // Given
+        Long userId = 1L;
+        Long webtoonId = 1L;
+        WebtoonReviewCreateDTO reviewCreateDTO = WebtoonReviewCreateDTO.builder()
+                .userId(userId)
+                .webtoonId(webtoonId)
+                .rating(4.5f)
+                .comment("Great webtoon!")
+                .build();
 
-        WebtoonReviewDTO ratingDTO = webtoonReviewService.createUserRating(1L, 1L, 4.5f, "Great!");
-        assertEquals("Great!", ratingDTO.getComment());
+        User user = User.builder().username("testuser").build();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(webtoonRepository.findById(webtoonId)).thenReturn(Optional.empty());
 
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(dummyUser2));
-        when(webtoonReviewRepository.save(any(WebtoonReview.class))).thenReturn(dummyRating2);
+        // When
+        Throwable thrown = catchThrowable(() -> webtoonReviewService.createReview(reviewCreateDTO));
 
-        WebtoonReviewDTO ratingDTO2 = webtoonReviewService.createUserRating(2L, 1L, 5.0f, "Amazing!");
-        assertEquals("Amazing!", ratingDTO2.getComment());
+        // Then
+        assertThat(thrown).isInstanceOf(RuntimeException.class).hasMessageContaining("Webtoon not found");
+        verify(webtoonReviewRepository, never()).save(any());
     }
 
-    // 2. 동시에 여러명이 작성하기도 하는 테스트
     @Test
-    void concurrentRatingSubmission() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(dummyUser1));
-        when(userRepository.findById(2L)).thenReturn(Optional.of(dummyUser2));
-        when(webtoonRepository.findById(anyLong())).thenReturn(Optional.of(dummyWebtoon));
-        when(webtoonReviewRepository.save(any(WebtoonReview.class))).thenReturn(dummyRating1).thenReturn(dummyRating2);
+    public void testCreateReview_InvalidRating() {
+        // Given
+        Long userId = 1L;
+        Long webtoonId = 1L;
+        WebtoonReviewCreateDTO reviewCreateDTO = WebtoonReviewCreateDTO.builder()
+                .userId(userId)
+                .webtoonId(webtoonId)
+                .rating(6.0f) // 유효하지 않은 평점
+                .comment("Great webtoon!")
+                .build();
 
-        Runnable user1Task = () -> webtoonReviewService.createUserRating(1L, 1L, 4.5f, "Good!");
-        Runnable user2Task = () -> webtoonReviewService.createUserRating(2L, 1L, 5.0f, "Excellent!");
+        User user = User.builder().username("testuser").build();
+        Webtoon webtoon = Webtoon.builder().id(webtoonId).build();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(webtoonRepository.findById(webtoonId)).thenReturn(Optional.of(webtoon));
 
-        Thread user1Thread = new Thread(user1Task);
-        Thread user2Thread = new Thread(user2Task);
+        // When
+        Throwable thrown = catchThrowable(() -> webtoonReviewService.createReview(reviewCreateDTO));
 
-        user1Thread.start();
-        user2Thread.start();
-
-        assertDoesNotThrow(() -> {
-            user1Thread.join();
-            user2Thread.join();
-        });
+        // Then
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Invalid rating");
+        verify(webtoonReviewRepository, never()).save(any());
     }
 
-    /*
-    // 3. 작성하고 업로드 하는 도중 누군가 최신순 웹툰 코멘트를 요청하는 테스트
-    @Test
-    void fetchLatestCommentsWhileSubmitting() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(dummyUser1));
-        when(webtoonRepository.findById(anyLong())).thenReturn(Optional.of(dummyWebtoon));
-        when(webtoonReviewRepository.save(any(WebtoonReview.class))).thenReturn(dummyRating1);
-
-        Pageable pageable = PageRequest.of(0, 20);
-        Page<WebtoonReview> ratingPage = mock(Page.class);
-        when(webtoonReviewRepository.findByWebtoonIdOrderByModifyDateDesc(1L, pageable)).thenReturn(ratingPage);
-
-        webtoonReviewService.createUserRating(1L, 1L, 4.5f, "Good!");
-        webtoonReviewService.getRatingsByLatest(1L, 0);
-
-        verify(webtoonReviewRepository).findByWebtoonIdOrderByModifyDateDesc(1L, pageable);
-    }
-    */
-
-
-    // 4. likes 테스트를 위한 추가 메서드 구현 및 테스트
-    @Test
-    void testLikeFeature() {
-        when(webtoonReviewRepository.findById(1L)).thenReturn(Optional.of(dummyRating1));
-        webtoonReviewService.updateLikes(1L, 12);
-        assertEquals(12, dummyRating1.getLikes());
-    }
-
-    // 5. 여러명의 유저가 likes 증가 및 감소 테스트
-    @Test
-    void multipleUsersIncreaseDecreaseLikes() {
-        when(webtoonReviewRepository.findById(1L)).thenReturn(Optional.of(dummyRating1));
-        webtoonReviewService.updateLikes(1L, 12);  // 유저 1이 좋아요를 12로 증가
-        assertEquals(12, dummyRating1.getLikes());
-
-        webtoonReviewService.updateLikes(1L, 8);   // 유저 2가 좋아요를 8로 감소
-        assertEquals(8, dummyRating1.getLikes());
-    }
+    // 추가적인 테스트 케이스 작성...
 }

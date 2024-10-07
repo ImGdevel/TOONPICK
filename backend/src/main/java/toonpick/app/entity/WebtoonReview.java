@@ -6,13 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user_rating")
-public class WebtoonReview {
+public class WebtoonReview extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,25 +33,31 @@ public class WebtoonReview {
 
     private int likes;
 
-    private LocalDate modifyDate;
+    @Version
+    private int version; // 버전 필드 추가
 
     @Builder
-    public WebtoonReview(User user, Webtoon webtoon, float rating, String comment, int likes, LocalDate modifyDate) {
+    public WebtoonReview(User user, Webtoon webtoon, float rating, String comment, int likes) {
         this.user = user;
         this.webtoon = webtoon;
         this.rating = rating;
         this.comment = comment;
         this.likes = likes;
-        this.modifyDate = modifyDate;
     }
 
-    public void update(float rating, String comment, LocalDate modifyDate) {
+
+    public void update(float rating, String comment){
         this.rating = rating;
         this.comment = comment;
-        this.modifyDate = modifyDate;
     }
 
-    public void updateLikes(int likes) {
-        this.likes = likes;
+    public void increaseLikes() {
+        this.likes++;
+    }
+
+    public void decreaseLikes() {
+        if (this.likes > 0) {
+            this.likes--;
+        }
     }
 }

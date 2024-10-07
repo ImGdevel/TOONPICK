@@ -15,30 +15,11 @@ import toonpick.app.repository.WebtoonRepository;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import toonpick.app.dto.RecommendationListDTO;
-import toonpick.app.entity.RecommendationList;
-import toonpick.app.entity.Webtoon;
-import toonpick.app.mapper.RecommendationListMapper;
-import toonpick.app.repository.WebtoonRepository;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 public class RecommendationListMapperTest {
 
