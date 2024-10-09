@@ -11,6 +11,7 @@ import toonpick.app.dto.WebtoonReviewCreateDTO;
 import toonpick.app.dto.WebtoonReviewDTO;
 import toonpick.app.service.WebtoonReviewService;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -52,15 +53,20 @@ public class WebtoonReviewController {
     }
 
     @PostMapping("/{reviewId}/like")
-    public ResponseEntity<WebtoonReviewDTO> toggleLike(
+    public ResponseEntity<Boolean> toggleLike(
             @PathVariable Long reviewId,
             Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long userId = userDetails.getUserId();
 
-        WebtoonReviewDTO updatedReview = webtoonReviewService.toggleLike(userId, reviewId);
-        return ResponseEntity.ok(updatedReview);
+        Boolean liked = webtoonReviewService.toggleLike(userId, reviewId);
+        if (liked != null) {
+            return ResponseEntity.ok(liked);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
 
     @GetMapping
     public ResponseEntity<PagedResponseDTO<WebtoonReviewDTO>> getReviewsByWebtoon(
@@ -84,4 +90,16 @@ public class WebtoonReviewController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @GetMapping("/liked-reviews")
+    public ResponseEntity<List<Long>> getLikedReviews(
+            @PathVariable Long webtoonId,
+            Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUserId();
+
+        List<Long> likedReviewIds = webtoonReviewService.getLikedReviewIds(userId, webtoonId);
+        return ResponseEntity.ok(likedReviewIds);
+    }
+
 }

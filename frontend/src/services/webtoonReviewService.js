@@ -56,16 +56,28 @@ export const deleteWebtoonReview = async (webtoonId, reviewId) => {
   }
 };
 
-// 리뷰에 좋아요 토글
+// webtoonReviewService.js
 export const toggleLikeForReview = async (webtoonId, reviewId) => {
   try {
     const response = await api.post(`/api/webtoon/${webtoonId}/reviews/${reviewId}/like`, null, { authRequired: true });
     return { success: true, data: response.data };
   } catch (error) {
     console.error('리뷰 좋아요 토글 중 오류 발생:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.response?.data || error.message };
   }
 };
+
+// 새로 추가: 좋아요 상태 조회
+export const getLikedReviews = async (webtoonId) => {
+  try {
+    const response = await api.get(`/api/webtoon/${webtoonId}/reviews/liked-reviews`, { authRequired: true });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('좋아요 상태 조회 중 오류 발생:', error);
+    return { success: false, error: error.response?.data || error.message };
+  }
+};
+
 
 // 특정 웹툰의 리뷰 목록 가져오기
 export const getReviewsByWebtoon = async (webtoonId, sortBy = 'latest', page = 0, size = 20) => {

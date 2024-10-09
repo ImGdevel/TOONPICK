@@ -1,12 +1,15 @@
 package toonpick.app.service;
 
 import jakarta.persistence.OptimisticLockException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.PagedResponseDTO;
 import toonpick.app.dto.WebtoonReviewCreateDTO;
@@ -38,12 +41,11 @@ public class WebtoonReviewService {
 
     private final WebtoonReviewMapper webtoonReviewMapper = WebtoonReviewMapper.INSTANCE;
 
-
     public WebtoonReviewDTO createReview(WebtoonReviewCreateDTO reviewCreateDTO, Long webtoonId, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
-                .orElseThrow(() -> new ResourceNotFoundException("웹툰을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
 
         WebtoonReview review = WebtoonReview.builder()
                 .user(user)
@@ -61,14 +63,14 @@ public class WebtoonReviewService {
     @Transactional(readOnly = true)
     public WebtoonReviewDTO getReview(Long reviewId) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException("리뷰를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
         return webtoonReviewMapper.toDTO(review);
     }
 
     public WebtoonReviewDTO updateReview(Long reviewId, WebtoonReviewCreateDTO reviewCreateDTO) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException("리뷰를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
         review.update(reviewCreateDTO.getRating(), reviewCreateDTO.getComment());
 
         WebtoonReview updatedReview = webtoonReviewRepository.save(review);
@@ -76,45 +78,60 @@ public class WebtoonReviewService {
         return webtoonReviewMapper.toDTO(updatedReview);
     }
 
-
     public void deleteReview(Long reviewId) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException("리뷰를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
         webtoonReviewRepository.delete(review);
     }
 
-
-    public WebtoonReviewDTO toggleLike(Long userId, Long reviewId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
-        WebtoonReview review = webtoonReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException("리뷰를 찾을 수 없습니다."));
-
-        Optional<ReviewLike> existingLike = reviewLikeRepository.findByUserAndReview(user, review);
-
-        if (existingLike.isPresent()) {
-            reviewLikeRepository.delete(existingLike.get());
-            review.decreaseLikes();
-        } else {
-            reviewLikeRepository.save(new ReviewLike(user, review));
-            review.increaseLikes();
-        }
-
-        // 동시성 문제 방지를 위해 Optimistic Locking 적용
+    @Transactional
+    public Boolean toggleLike(Long userId, Long reviewId) {
         try {
-            WebtoonReview updatedReview = webtoonReviewRepository.save(review);
-            return webtoonReviewMapper.toDTO(updatedReview);
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            WebtoonReview review = webtoonReviewRepository.findById(reviewId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
+
+            Optional<ReviewLike> existingLike = reviewLikeRepository.findByUserAndReview(user, review);
+
+            boolean liked;
+
+            if (existingLike.isPresent()) {
+                reviewLikeRepository.delete(existingLike.get());
+                webtoonReviewRepository.decrementLikes(reviewId);
+                liked = false;
+            } else {
+                reviewLikeRepository.save(new ReviewLike(user, review));
+                webtoonReviewRepository.incrementLikes(reviewId);
+                liked = true;
+            }
+
+            return liked;
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("An issue occurred while processing the like", e);
         } catch (OptimisticLockException e) {
-            throw new OptimisticLockException("좋아요 처리 중 동시성 문제가 발생했습니다.");
+            throw new OptimisticLockingFailureException("A concurrency issue occurred while processing the like", e);
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<Long> getLikedReviewIds(Long userId, Long webtoonId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Webtoon webtoon = webtoonRepository.findById(webtoonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
+
+        List<ReviewLike> likes = reviewLikeRepository.findByUserAndWebtoon(user, webtoon);
+        return likes.stream()
+                .map(like -> like.getReview().getId())
+                .collect(Collectors.toList());
+    }
 
     @Transactional(readOnly = true)
     public PagedResponseDTO<WebtoonReviewDTO> getReviewsByWebtoon(
             Long webtoonId, String sortBy, int page, int size) {
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
-                .orElseThrow(() -> new ResourceNotFoundException("웹툰을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
 
         Sort sort;
         if ("best".equalsIgnoreCase(sortBy)) {
@@ -140,16 +157,14 @@ public class WebtoonReviewService {
                 .build();
     }
 
-
     @Transactional(readOnly = true)
     public Optional<WebtoonReviewDTO> getUserReviewForWebtoon(Long userId, Long webtoonId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
-                .orElseThrow(() -> new ResourceNotFoundException("웹툰을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
 
-        Optional<WebtoonReview> reviewOpt = webtoonReviewRepository.findByUserAndWebtoon(user, webtoon);
+        Optional<WebtoonReview> reviewOpt = webtoonReviewRepository.findWebtoonReviewByUserAndWebtoon(user, webtoon);
         return reviewOpt.map(webtoonReviewMapper::toDTO);
     }
-
 }

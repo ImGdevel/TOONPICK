@@ -17,11 +17,11 @@ public class WebtoonReview extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "webtoon_id")
     private Webtoon webtoon;
 
@@ -34,7 +34,7 @@ public class WebtoonReview extends BaseTimeEntity {
     private int likes;
 
     @Version
-    private int version; // 버전 필드 추가
+    private int version;
 
     @Builder
     public WebtoonReview(User user, Webtoon webtoon, float rating, String comment, int likes) {

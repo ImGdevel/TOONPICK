@@ -17,15 +17,15 @@ const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }
       console.log('getReviewsByWebtoon response:', response, response.data); // 디버깅용 로그
       if (response.success) {
         if (response.data && Array.isArray(response.data.content)) {
-          // response.data.content가 리뷰 배열인지 확인 후 설정
+
           setComments(response.data.content);
         } else {
-          setComments([]); // 예상치 못한 구조일 경우 빈 배열로 설정
+          setComments([]); 
           console.warn('Unexpected response structure:', response.data);
         }
       } else {
         console.error('리뷰 가져오기 오류:', response.error);
-        setComments([]); // 오류 발생 시 빈 배열로 설정
+        setComments([]); 
       }
     };
     fetchReviews();
@@ -93,7 +93,10 @@ const EvaluationSection = ({ webtoonId, averageRating, userRating, userComment }
       {/* 다른 사람들의 코멘트 */}
       <div className={styles['comment-section']}>
         <h3>다른 사람들의 평가</h3>
-        <CommentList comments={comments} />
+        <CommentList 
+          webtoonId={webtoonId}
+          comments={comments} 
+        />
       </div>
 
       {/* 평가 모달 */}

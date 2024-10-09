@@ -1,42 +1,57 @@
-// src/components/CommentList.js
-
-import React, { useState, useEffect } from 'react';
+// CommentList.jsx
+import React, { useState, useEffect, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import styles from './CommentList.module.css';
 import ReportModal from './ReportModal';
 import StarRating from './StarRating';
 import { FaThumbsUp } from 'react-icons/fa';
-import { toggleLikeForReview, reportWebtoonReview } from '../services/webtoonReviewService';
+import { toggleLikeForReview, reportWebtoonReview, getLikedReviews } from '../services/webtoonReviewService';
 
-const CommentList = ({ comments }) => {
+const CommentList = ({ webtoonId, comments }) => {
   const [commentStatus, setCommentStatus] = useState([]);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [reportCommentId, setReportCommentId] = useState(null);
   const [reportReason, setReportReason] = useState('');
 
   useEffect(() => {
-    setCommentStatus(
-      comments.map((comment) => ({
-        likes: typeof comment.likes === 'number' && !isNaN(comment.likes) ? comment.likes : 0,
-        liked: false,
-      }))
-    );
-  }, [comments]);
+    const initializeCommentStatus = async () => {
+      const likedResponse = await getLikedReviews(webtoonId);
+      if (likedResponse.success) {
+        const likedReviewIds = likedResponse.data;
+        setCommentStatus(
+          comments.map((comment) => ({
+            likes: typeof comment.likes === 'number' && !isNaN(comment.likes) ? comment.likes : 0,
+            liked: likedReviewIds.includes(comment.id),
+          }))
+        );
+      } else {
+        setCommentStatus(
+          comments.map((comment) => ({
+            likes: typeof comment.likes === 'number' && !isNaN(comment.likes) ? comment.likes : 0,
+            liked: false,
+          }))
+        );
+      }
+    };
+
+    initializeCommentStatus();
+  }, [webtoonId, comments]);
 
   const handleLikeClick = async (index) => {
     const commentId = comments[index].id;
-    const currentLikedStatus = commentStatus[index].liked;
 
-    const response = await toggleLikeForReview(commentId);
+    const response = await toggleLikeForReview(webtoonId, commentId);
     if (response.success) {
+      console.log(response.data)
       setCommentStatus((prevStatus) => {
         const updatedStatus = [...prevStatus];
-        updatedStatus[index].liked = !currentLikedStatus;
-        updatedStatus[index].likes = response.data.likes;
+        updatedStatus[index].liked = response.data;
+        updatedStatus[index].likes += response.data ? 1 : -1;
         return updatedStatus;
       });
     } else {
       console.error('Failed to toggle like:', response.error);
+      // 필요 시, 사용자에게 오류 메시지 표시
     }
   };
 
@@ -62,6 +77,7 @@ const CommentList = ({ comments }) => {
       closeReportModal();
     } else {
       console.error('Failed to report review:', response.error);
+      // 필요 시, 사용자에게 오류 메시지 표시
     }
   };
 
@@ -115,6 +131,7 @@ const CommentList = ({ comments }) => {
 };
 
 CommentList.propTypes = {
+  webtoonId: PropTypes.number.isRequired, // 추가: webtoonId 필요
   comments: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
