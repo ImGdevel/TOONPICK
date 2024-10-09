@@ -85,7 +85,7 @@ public class WebtoonReviewService {
     }
 
     @Transactional
-    public Boolean toggleLike(Long userId, Long reviewId) {
+    public synchronized Boolean toggleLike(Long userId, Long reviewId) {
         try {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -109,10 +109,9 @@ public class WebtoonReviewService {
             return liked;
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException("An issue occurred while processing the like", e);
-        } catch (OptimisticLockException e) {
-            throw new OptimisticLockingFailureException("A concurrency issue occurred while processing the like", e);
         }
     }
+
 
     @Transactional(readOnly = true)
     public List<Long> getLikedReviewIds(Long userId, Long webtoonId) {

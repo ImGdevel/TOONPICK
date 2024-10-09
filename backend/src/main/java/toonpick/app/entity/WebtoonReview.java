@@ -33,9 +33,6 @@ public class WebtoonReview extends BaseTimeEntity {
 
     private int likes;
 
-    @Version
-    private int version;
-
     @Builder
     public WebtoonReview(User user, Webtoon webtoon, float rating, String comment, int likes) {
         this.user = user;
