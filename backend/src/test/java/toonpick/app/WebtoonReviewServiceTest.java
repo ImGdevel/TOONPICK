@@ -59,7 +59,6 @@ public class WebtoonReviewServiceTest {
                 .platform(Platform.NAVER)
                 .platformId("naver-123-" + System.currentTimeMillis())
                 .averageRating(4.5f)
-                .platformRating(4.6f)
                 .description("Test webtoon description")
                 .serializationStatus(SerializationStatus.연재)
                 .episodeCount(10)

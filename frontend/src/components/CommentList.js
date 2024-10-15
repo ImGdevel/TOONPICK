@@ -131,7 +131,7 @@ const CommentList = ({ webtoonId, comments }) => {
 };
 
 CommentList.propTypes = {
-  webtoonId: PropTypes.number.isRequired, // 추가: webtoonId 필요
+  webtoonId: PropTypes.number.isRequired,
   comments: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,

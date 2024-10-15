@@ -49,7 +49,6 @@ public class WebtoonService {
                 .platform(webtoonDTO.getPlatform())
                 .platformId(webtoonDTO.getPlatformId())
                 .averageRating(webtoonDTO.getAverageRating())
-                .platformRating(webtoonDTO.getPlatformRating())
                 .description(webtoonDTO.getDescription())
                 .episodeCount(webtoonDTO.getEpisodeCount())
                 .serializationStartDate(webtoonDTO.getSerializationStartDate())
@@ -80,9 +79,7 @@ public class WebtoonService {
         existingWebtoon.update(
                 webtoonDTO.getTitle(),
                 webtoonDTO.getPlatform(),
-                webtoonDTO.getPlatformId(),
                 webtoonDTO.getAverageRating(),
-                webtoonDTO.getPlatformRating(),
                 webtoonDTO.getDescription(),
                 webtoonDTO.getEpisodeCount(),
                 webtoonDTO.getSerializationStartDate(),
@@ -201,6 +198,11 @@ public class WebtoonService {
         return webtoonPage.stream()
                 .map(webtoonMapper::webtoonToWebtoonDto)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void addRating(Long webtoonId, float newRating) {
+        webtoonRepository.updateRating(webtoonId, newRating);
     }
 
 }

@@ -1,15 +1,12 @@
 package toonpick.app.service;
 
-import jakarta.persistence.OptimisticLockException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.PagedResponseDTO;
 import toonpick.app.dto.WebtoonReviewCreateDTO;
@@ -56,6 +53,8 @@ public class WebtoonReviewService {
                 .build();
 
         WebtoonReview savedReview = webtoonReviewRepository.save(review);
+
+        webtoonRepository.updateAverageRating(webtoonId);
 
         return webtoonReviewMapper.toDTO(savedReview);
     }
