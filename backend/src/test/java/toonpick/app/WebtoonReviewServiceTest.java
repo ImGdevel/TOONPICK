@@ -20,6 +20,7 @@ import toonpick.app.service.WebtoonReviewService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -58,7 +59,7 @@ public class WebtoonReviewServiceTest {
                 .title("Test Webtoon")
                 .platform(Platform.NAVER)
                 .platformId("naver-123-" + System.currentTimeMillis())
-                .averageRating(4.5f)
+                .averageRating(0f)
                 .description("Test webtoon description")
                 .serializationStatus(SerializationStatus.연재)
                 .episodeCount(10)
@@ -170,4 +171,57 @@ public class WebtoonReviewServiceTest {
         WebtoonReview updatedReview = webtoonReviewRepository.findById(reviewDTO.getId()).orElseThrow();
         System.out.println("최종 좋아요 수: " + updatedReview.getLikes());
     }
+
+    @Test
+    public void testMultipleUsersReviewAverageRating() {
+        // 리뷰 작성자 X, Y, Z 생성
+        User userX = userRepository.save(User.builder()
+                .username("userX")
+                .profilePicture("defaultX.png")
+                .accountCreationDate(LocalDate.now())
+                .build());
+
+        User userY = userRepository.save(User.builder()
+                .username("userY")
+                .profilePicture("defaultY.png")
+                .accountCreationDate(LocalDate.now())
+                .build());
+
+        User userZ = userRepository.save(User.builder()
+                .username("userZ")
+                .profilePicture("defaultZ.png")
+                .accountCreationDate(LocalDate.now())
+                .build());
+
+        // X의 리뷰 생성 및 웹툰 평균 평점 확인
+        WebtoonReviewCreateDTO reviewX = WebtoonReviewCreateDTO.builder()
+                .rating(5.0f)
+                .comment("Review by X")
+                .build();
+        webtoonReviewService.createReview(reviewX, testWebtoon.getId(), userX.getId());
+        Webtoon updatedWebtoonX = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
+        System.out.println("평균 평점 after X's review: " + updatedWebtoonX.getAverageRating());
+
+        // Y의 리뷰 생성 및 웹툰 평균 평점 확인
+        WebtoonReviewCreateDTO reviewY = WebtoonReviewCreateDTO.builder()
+                .rating(4.0f)
+                .comment("Review by Y")
+                .build();
+        webtoonReviewService.createReview(reviewY, testWebtoon.getId(), userY.getId());
+        Webtoon updatedWebtoonY = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
+        System.out.println("평균 평점 after Y's review: " + updatedWebtoonY.getAverageRating());
+
+        // Z의 리뷰 생성 및 웹툰 평균 평점 확인
+        WebtoonReviewCreateDTO reviewZ = WebtoonReviewCreateDTO.builder()
+                .rating(1.0f)
+                .comment("Review by Z")
+                .build();
+        webtoonReviewService.createReview(reviewZ, testWebtoon.getId(), userZ.getId());
+        Webtoon updatedWebtoonZ = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
+        System.out.println("평균 평점 after Z's review: " + updatedWebtoonZ.getAverageRating());
+
+        // 최종 검증
+        assertEquals(3.33f, updatedWebtoonZ.getAverageRating(), 0.01);
+    }
+
 }

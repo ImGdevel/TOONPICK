@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.dto.WebtoonFilterDTO;
 import toonpick.app.entity.Webtoon;
 import toonpick.app.entity.enums.SerializationStatus;
 
@@ -27,17 +26,19 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
     @Transactional
     @Query("UPDATE Webtoon w SET w.ratingSum = w.ratingSum + :newRating, " +
            "w.ratingCount = w.ratingCount + 1, " +
-           "w.averageRating = (w.ratingSum + :newRating) / (w.ratingCount + 1) " +
+           "w.averageRating = w.ratingSum / w.ratingCount " +
            "WHERE w.id = :webtoonId")
     void addReview(@Param("webtoonId") Long webtoonId, @Param("newRating") float newRating);
+
 
     @Modifying
     @Transactional
     @Query("UPDATE Webtoon w SET w.ratingSum = w.ratingSum - :oldRating, " +
            "w.ratingCount = w.ratingCount - 1, " +
-           "w.averageRating = (w.ratingCount = 0) ? 0 : w.ratingSum / w.ratingCount " +
+           "w.averageRating = CASE WHEN w.ratingCount = 0 THEN 0 ELSE w.ratingSum / w.ratingCount END " +
            "WHERE w.id = :webtoonId")
     void removeReview(@Param("webtoonId") Long webtoonId, @Param("oldRating") float oldRating);
+
 
     @Modifying
     @Transactional
@@ -45,12 +46,5 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
            "w.averageRating = w.ratingSum / w.ratingCount " +
            "WHERE w.id = :webtoonId")
     void updateReview(@Param("webtoonId") Long webtoonId, @Param("oldRating") float oldRating, @Param("newRating") float newRating);
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE Webtoon w SET w.averageRating = (SELECT COALESCE(AVG(r.rating), 0) FROM WebtoonReview r WHERE r.webtoon.id = :webtoonId) WHERE w.id = :webtoonId")
-    void updateAverageRating(@Param("webtoonId") Long webtoonId);
-
-
 
 }

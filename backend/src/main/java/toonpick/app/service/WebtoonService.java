@@ -200,9 +200,4 @@ public class WebtoonService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void addRating(Long webtoonId, float newRating) {
-        webtoonRepository.updateRating(webtoonId, newRating);
-    }
-
 }

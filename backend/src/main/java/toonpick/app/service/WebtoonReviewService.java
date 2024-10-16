@@ -22,6 +22,7 @@ import toonpick.app.repository.UserRepository;
 import toonpick.app.repository.WebtoonRepository;
 import toonpick.app.repository.WebtoonReviewRepository;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,7 +55,9 @@ public class WebtoonReviewService {
 
         WebtoonReview savedReview = webtoonReviewRepository.save(review);
 
-        webtoonRepository.updateAverageRating(webtoonId);
+        webtoonRepository.addReview(webtoon.getId(), reviewCreateDTO.getRating());
+
+
 
         return webtoonReviewMapper.toDTO(savedReview);
     }
@@ -70,9 +73,11 @@ public class WebtoonReviewService {
     public WebtoonReviewDTO updateReview(Long reviewId, WebtoonReviewCreateDTO reviewCreateDTO) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
+        float oldRating = review.getRating();
         review.update(reviewCreateDTO.getRating(), reviewCreateDTO.getComment());
 
         WebtoonReview updatedReview = webtoonReviewRepository.save(review);
+        webtoonRepository.updateReview(review.getWebtoon().getId(), oldRating, reviewCreateDTO.getRating());
 
         return webtoonReviewMapper.toDTO(updatedReview);
     }
@@ -80,6 +85,8 @@ public class WebtoonReviewService {
     public void deleteReview(Long reviewId) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
+        webtoonRepository.removeReview(review.getWebtoon().getId(), review.getRating());
+
         webtoonReviewRepository.delete(review);
     }
 
