@@ -36,6 +36,7 @@ public class WebtoonService {
     private final GenreRepository genreRepository;
     private final WebtoonMapper webtoonMapper;
 
+    // 웹툰 추가
     @Transactional
     public WebtoonDTO createWebtoon(WebtoonDTO webtoonDTO) {
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(
@@ -65,6 +66,7 @@ public class WebtoonService {
         return webtoonMapper.webtoonToWebtoonDto(webtoon);
     }
 
+    // 웹툰 정보 업데이트
     @Transactional
     public WebtoonDTO updateWebtoon(Long id, WebtoonDTO webtoonDTO) {
         Webtoon existingWebtoon = webtoonRepository.findById(id)
@@ -97,6 +99,7 @@ public class WebtoonService {
         return webtoonMapper.webtoonToWebtoonDto(existingWebtoon);
     }
 
+    // 특정 웹툰 가져오기
     @Transactional(readOnly = true)
     public WebtoonDTO getWebtoon(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
@@ -104,6 +107,7 @@ public class WebtoonService {
         return webtoonMapper.webtoonToWebtoonDto(webtoon);
     }
 
+    // 모든 웹툰 가져오기 (안씀)
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getAllWebtoons() {
         List<Webtoon> webtoons = webtoonRepository.findAll();
@@ -112,6 +116,7 @@ public class WebtoonService {
                 .collect(Collectors.toList());
     }
 
+    // 특정 작가의 웹툰 가져오기
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getWebtoonsByAuthorName(String authorName) {
         List<Webtoon> webtoons = webtoonRepository.findByAuthors_Name(authorName);
@@ -120,14 +125,7 @@ public class WebtoonService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<WebtoonDTO> getWebtoonsByDayOfWeek(DayOfWeek dayOfWeek) {
-        List<Webtoon> webtoons = webtoonRepository.findByWeek(dayOfWeek);
-        return webtoons.stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
-                .collect(Collectors.toList());
-    }
-
+    //장르에 따라 웹툰 가져오기
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getWebtoonsByGenreName(String genreName) {
         List<Webtoon> webtoons = webtoonRepository.findByGenres_Name(genreName);
@@ -136,14 +134,8 @@ public class WebtoonService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<WebtoonDTO> getWebtoonsBySerializationStatus(SerializationStatus status) {
-        List<Webtoon> webtoons = webtoonRepository.findBySerializationStatus(status);
-        return webtoons.stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
-                .collect(Collectors.toList());
-    }
 
+    // 요일에 맞춘 웹툰 가져오기
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getSeriesOfWebtoonsByDayOfWeek(DayOfWeek dayOfWeek) {
         List<SerializationStatus> statuses = List.of(
@@ -165,6 +157,7 @@ public class WebtoonService {
                 .collect(Collectors.toList());
     }
 
+    // 웹툰 삭제
     @Transactional
     public void deleteWebtoon(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
@@ -172,6 +165,7 @@ public class WebtoonService {
         webtoonRepository.delete(webtoon);
     }
 
+    // 연재 상황에 따른 웹툰 가져오기
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getWebtoonsBySerializationStatus(SerializationStatus status, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "title"));
@@ -182,7 +176,7 @@ public class WebtoonService {
                 .collect(Collectors.toList());
     }
 
-    // 필터링 메서드 추가
+    // WebtoonFilterDTO에 맞춘 웹툰 가져오기
     @Transactional(readOnly = true)
     public List<WebtoonDTO> filterWebtoons(WebtoonFilterDTO filter) {
         List<Webtoon> webtoons = webtoonRepository.findWebtoonsByFilter(filter);
@@ -191,6 +185,7 @@ public class WebtoonService {
                 .collect(Collectors.toList());
     }
 
+    // 필터 옵션에 따라 웹툰 가져오기
     @Transactional(readOnly = true)
     public List<WebtoonDTO> filterWebtoonsOptions(WebtoonFilterDTO filter, int page, int size, String sortBy, String sortDir) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortBy);
