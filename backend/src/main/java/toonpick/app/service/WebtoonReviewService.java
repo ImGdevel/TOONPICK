@@ -109,11 +109,15 @@ public class WebtoonReviewService {
             boolean liked;
 
             if (existingLike.isPresent()) {
+                // 좋아요 취소
                 reviewLikeRepository.delete(existingLike.get());
                 liked = false;
+                updateLikeCountAsync(reviewId, false);
             } else {
+                // 좋아요 추가
                 reviewLikeRepository.save(new ReviewLike(user, review));
                 liked = true;
+                updateLikeCountAsync(reviewId, true);
             }
 
             updateLikeCountAsync(reviewId);
@@ -129,13 +133,13 @@ public class WebtoonReviewService {
     }
 
     @Async
-    public CompletableFuture<Void> updateLikeCountAsync(Long reviewId) {
+    public CompletableFuture<Void> updateLikeCountAsync(Long reviewId, boolean up) {
         try {
-            WebtoonReview review = webtoonReviewRepository.findById(reviewId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
-
-            // Review Count 갱신 (구현 필요)
-            webtoonReviewRepository.save(review);
+            if(up){
+                webtoonReviewRepository.incrementLikes(reviewId);
+            }else{
+                webtoonReviewRepository.decrementLikes(reviewId);
+            }
         } catch (Exception e) {
             throw new RuntimeException("Error updating like count asynchronously", e);
         }

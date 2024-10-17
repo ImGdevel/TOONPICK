@@ -48,13 +48,4 @@ public class WebtoonReview extends BaseTimeEntity {
         this.comment = comment;
     }
 
-    public void increaseLikes() {
-        this.likes++;
-    }
-
-    public void decreaseLikes() {
-        if (this.likes > 0) {
-            this.likes--;
-        }
-    }
 }
