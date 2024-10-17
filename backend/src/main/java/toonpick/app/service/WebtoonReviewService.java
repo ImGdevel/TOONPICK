@@ -57,8 +57,6 @@ public class WebtoonReviewService {
 
         webtoonRepository.addReview(webtoon.getId(), reviewCreateDTO.getRating());
 
-
-
         return webtoonReviewMapper.toDTO(savedReview);
     }
 

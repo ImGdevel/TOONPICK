@@ -1,4 +1,4 @@
-package toonpick.app;
+package toonpick.app.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,6 @@ import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.repository.UserRepository;
 import toonpick.app.repository.WebtoonRepository;
 import toonpick.app.repository.WebtoonReviewRepository;
-import toonpick.app.service.WebtoonReviewService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -174,7 +173,6 @@ public class WebtoonReviewServiceTest {
 
     @Test
     public void testMultipleUsersReviewAverageRating() {
-        // 리뷰 작성자 X, Y, Z 생성
         User userX = userRepository.save(User.builder()
                 .username("userX")
                 .profilePicture("defaultX.png")
@@ -220,7 +218,6 @@ public class WebtoonReviewServiceTest {
         Webtoon updatedWebtoonZ = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
         System.out.println("평균 평점 after Z's review: " + updatedWebtoonZ.getAverageRating());
 
-        // 최종 검증
         assertEquals(3.33f, updatedWebtoonZ.getAverageRating(), 0.01);
     }
 
