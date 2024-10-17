@@ -1,5 +1,6 @@
 package toonpick.app.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +125,7 @@ public class WebtoonReviewServiceTest {
     }
 
     @Test
-    public void testMultipleUsersLikeReview() {
+    public void testMultipleUsersLikeReview() throws InterruptedException {
         User user2 = userRepository.save(User.builder()
                 .username("user2")
                 .profilePicture("default2.png")
@@ -140,6 +141,9 @@ public class WebtoonReviewServiceTest {
 
         webtoonReviewService.toggleLike(testUser.getId(), reviewDTO.getId());
         webtoonReviewService.toggleLike(user2.getId(), reviewDTO.getId());
+
+
+        Thread.sleep(10); // 비동기적 업데이트 됨을 고려
 
         WebtoonReview updatedReview = webtoonReviewRepository.findById(reviewDTO.getId()).orElseThrow();
         assertEquals(2, updatedReview.getLikes());
@@ -173,7 +177,7 @@ public class WebtoonReviewServiceTest {
         thread2.join();
 
         WebtoonReview updatedReview = webtoonReviewRepository.findById(reviewDTO.getId()).orElseThrow();
-        System.out.println("최종 좋아요 수: " + updatedReview.getLikes());
+        assertEquals(0, updatedReview.getLikes());
     }
 
     @Test
@@ -196,7 +200,6 @@ public class WebtoonReviewServiceTest {
                 .accountCreationDate(LocalDate.now())
                 .build());
 
-        // X의 리뷰 생성 및 웹툰 평균 평점 확인
         WebtoonReviewCreateDTO reviewX = WebtoonReviewCreateDTO.builder()
                 .rating(5.0f)
                 .comment("Review by X")
@@ -205,7 +208,6 @@ public class WebtoonReviewServiceTest {
         Webtoon updatedWebtoonX = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
         System.out.println("평균 평점 after X's review: " + updatedWebtoonX.getAverageRating());
 
-        // Y의 리뷰 생성 및 웹툰 평균 평점 확인
         WebtoonReviewCreateDTO reviewY = WebtoonReviewCreateDTO.builder()
                 .rating(4.0f)
                 .comment("Review by Y")
@@ -214,7 +216,6 @@ public class WebtoonReviewServiceTest {
         Webtoon updatedWebtoonY = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
         System.out.println("평균 평점 after Y's review: " + updatedWebtoonY.getAverageRating());
 
-        // Z의 리뷰 생성 및 웹툰 평균 평점 확인
         WebtoonReviewCreateDTO reviewZ = WebtoonReviewCreateDTO.builder()
                 .rating(1.0f)
                 .comment("Review by Z")
