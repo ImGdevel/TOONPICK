@@ -11,8 +11,11 @@ import toonpick.app.dto.WebtoonReviewCreateDTO;
 import toonpick.app.dto.WebtoonReviewDTO;
 import toonpick.app.service.WebtoonReviewService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/webtoon/{webtoonId}/reviews")
@@ -53,18 +56,19 @@ public class WebtoonReviewController {
     }
 
     @PostMapping("/{reviewId}/like")
-    public ResponseEntity<Boolean> toggleLike(
+    public ResponseEntity<Map<String, Object>> toggleLike(
             @PathVariable Long reviewId,
             Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long userId = userDetails.getUserId();
 
-        Boolean liked = webtoonReviewService.toggleLike(userId, reviewId);
-        if (liked != null) {
-            return ResponseEntity.ok(liked);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        CompletableFuture<Boolean> likeResult = webtoonReviewService.toggleLike(userId, reviewId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("liked", likeResult.join());
+
+        return ResponseEntity.ok(response);
     }
 
 

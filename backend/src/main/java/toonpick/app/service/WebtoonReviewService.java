@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import toonpick.app.repository.WebtoonReviewRepository;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +41,7 @@ public class WebtoonReviewService {
 
     private final WebtoonReviewMapper webtoonReviewMapper = WebtoonReviewMapper.INSTANCE;
 
+    // 리뷰 추가
     public WebtoonReviewDTO createReview(WebtoonReviewCreateDTO reviewCreateDTO, Long webtoonId, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -60,6 +63,7 @@ public class WebtoonReviewService {
         return webtoonReviewMapper.toDTO(savedReview);
     }
 
+    // 리뷰 가져오기
     @Transactional(readOnly = true)
     public WebtoonReviewDTO getReview(Long reviewId) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
@@ -68,6 +72,7 @@ public class WebtoonReviewService {
         return webtoonReviewMapper.toDTO(review);
     }
 
+    // 리뷰 업데이트
     public WebtoonReviewDTO updateReview(Long reviewId, WebtoonReviewCreateDTO reviewCreateDTO) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
@@ -80,6 +85,7 @@ public class WebtoonReviewService {
         return webtoonReviewMapper.toDTO(updatedReview);
     }
 
+    // 리뷰 삭제
     public void deleteReview(Long reviewId) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
@@ -88,8 +94,10 @@ public class WebtoonReviewService {
         webtoonReviewRepository.delete(review);
     }
 
+    // 레뷰 체크
     @Transactional
-    public synchronized Boolean toggleLike(Long userId, Long reviewId) {
+    @Async
+    public CompletableFuture<Boolean> toggleLike(Long userId, Long reviewId) {
         try {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -102,21 +110,40 @@ public class WebtoonReviewService {
 
             if (existingLike.isPresent()) {
                 reviewLikeRepository.delete(existingLike.get());
-                webtoonReviewRepository.decrementLikes(reviewId);
                 liked = false;
             } else {
                 reviewLikeRepository.save(new ReviewLike(user, review));
-                webtoonReviewRepository.incrementLikes(reviewId);
                 liked = true;
             }
 
-            return liked;
+            updateLikeCountAsync(reviewId);
+
+            return CompletableFuture.completedFuture(liked);
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException("Review or User not found: " + e.getMessage());
         } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("An issue occurred while processing the like", e);
+            throw new RuntimeException("Database integrity issue while processing like", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error: ", e);
         }
     }
 
+    @Async
+    public CompletableFuture<Void> updateLikeCountAsync(Long reviewId) {
+        try {
+            WebtoonReview review = webtoonReviewRepository.findById(reviewId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
+            // Review Count 갱신 (구현 필요)
+            webtoonReviewRepository.save(review);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating like count asynchronously", e);
+        }
+
+        return CompletableFuture.completedFuture(null);
+    }
+
+    // 특정 웹툰
     @Transactional(readOnly = true)
     public List<Long> getLikedReviewIds(Long userId, Long webtoonId) {
         User user = userRepository.findById(userId)
@@ -130,6 +157,7 @@ public class WebtoonReviewService {
                 .collect(Collectors.toList());
     }
 
+    // 특정 웹툰의 리뷰들 을 가져옴
     @Transactional(readOnly = true)
     public PagedResponseDTO<WebtoonReviewDTO> getReviewsByWebtoon(
             Long webtoonId, String sortBy, int page, int size) {
@@ -160,6 +188,7 @@ public class WebtoonReviewService {
                 .build();
     }
 
+    // 어떤 유저가 특정 웹툰에 작성한 리뷰 가져옴
     @Transactional(readOnly = true)
     public Optional<WebtoonReviewDTO> getUserReviewForWebtoon(Long userId, Long webtoonId) {
         User user = userRepository.findById(userId)

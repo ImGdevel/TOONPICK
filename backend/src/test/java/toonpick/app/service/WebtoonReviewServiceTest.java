@@ -20,6 +20,7 @@ import toonpick.app.repository.WebtoonReviewRepository;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -94,10 +95,14 @@ public class WebtoonReviewServiceTest {
 
         WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testUser.getId());
 
-        Boolean liked = webtoonReviewService.toggleLike(testUser.getId(), reviewDTO.getId());
+        // 첫 번째 좋아요 클릭
+        CompletableFuture<Boolean> likedFuture = webtoonReviewService.toggleLike(testUser.getId(), reviewDTO.getId());
+        Boolean liked = likedFuture.join();
         assertTrue(liked);
 
-        liked = webtoonReviewService.toggleLike(testUser.getId(), reviewDTO.getId());
+        // 두 번째 좋아요 클릭 (취소)
+        likedFuture = webtoonReviewService.toggleLike(testUser.getId(), reviewDTO.getId());
+        liked = likedFuture.join();
         assertFalse(liked);
     }
 
@@ -137,7 +142,7 @@ public class WebtoonReviewServiceTest {
         webtoonReviewService.toggleLike(user2.getId(), reviewDTO.getId());
 
         WebtoonReview updatedReview = webtoonReviewRepository.findById(reviewDTO.getId()).orElseThrow();
-        assertEquals(2, updatedReview.getLikes());  // 두 명이 좋아요 눌렀으니 2
+        assertEquals(2, updatedReview.getLikes());
     }
 
     @Test
