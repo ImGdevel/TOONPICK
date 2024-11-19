@@ -120,8 +120,6 @@ public class WebtoonReviewService {
                 updateLikeCountAsync(reviewId, true);
             }
 
-            updateLikeCountAsync(reviewId);
-
             return CompletableFuture.completedFuture(liked);
         } catch (ResourceNotFoundException e) {
             throw new ResourceNotFoundException("Review or User not found: " + e.getMessage());
