@@ -14,9 +14,9 @@ public class AsyncConfig {
     @Bean(name = "likeUpdateExecutor")
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);    // 기본 쓰레드
-        executor.setMaxPoolSize(10);    // 최대 쓰레드
-        executor.setQueueCapacity(25);  // 큐의 큐기
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(25);
         executor.setThreadNamePrefix("async-");
         executor.initialize();
         return executor;
