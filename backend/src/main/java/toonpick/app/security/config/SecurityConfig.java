@@ -21,8 +21,10 @@ import toonpick.app.security.filter.CustomLogoutFilter;
 import toonpick.app.security.filter.JwtAuthorizationFilter;
 import toonpick.app.security.filter.LoginAuthenticationFilter;
 import toonpick.app.security.handler.CustomOAuth2SuccessHandler;
+import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.service.AuthService;
 import toonpick.app.service.OAuth2UserService;
+import toonpick.app.util.ErrorResponseSender;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,7 +63,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public ErrorResponseSender errorResponseSender() {
+        return new ErrorResponseSender();
+    }
+
+    @Bean
+    public JwtTokenValidator jwtTokenValidator() {
+        return new JwtTokenValidator(jwtTokenProvider);
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, ErrorResponseSender errorResponseSender, JwtTokenValidator jwtTokenValidator) throws Exception {
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
                     @Override
@@ -92,10 +104,18 @@ public class SecurityConfig {
 
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterAt(new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CustomLogoutFilter(jwtTokenProvider, authService), LogoutFilter.class)
-                .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JwtAuthorizationFilter(jwtTokenProvider), OAuth2LoginAuthenticationFilter.class);
+                .addFilterAt(
+                        new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, authService),
+                        UsernamePasswordAuthenticationFilter.class
+                )
+                .addFilterBefore(
+                        new CustomLogoutFilter(jwtTokenProvider, authService),
+                        LogoutFilter.class
+                )
+                .addFilterAfter(
+                        new JwtAuthorizationFilter(jwtTokenValidator, errorResponseSender),
+                        OAuth2LoginAuthenticationFilter.class
+                );
 
         return http.build();
     }

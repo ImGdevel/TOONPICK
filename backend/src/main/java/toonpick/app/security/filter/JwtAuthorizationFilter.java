@@ -1,6 +1,5 @@
 package toonpick.app.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,83 +11,51 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import toonpick.app.controller.TokenReissueController;
-import toonpick.app.dto.CustomUserDetails;
-import toonpick.app.security.jwt.JwtTokenProvider;
+import toonpick.app.security.jwt.JwtTokenValidator;
+import toonpick.app.util.ErrorResponseSender;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenValidator jwtTokenValidator;
+    private final ErrorResponseSender errorResponseSender;
 
-    private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
-    public JwtAuthorizationFilter(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public JwtAuthorizationFilter(JwtTokenValidator jwtTokenValidator, ErrorResponseSender errorResponseSender) {
+        this.jwtTokenValidator = jwtTokenValidator;
+        this.errorResponseSender = errorResponseSender;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = request.getHeader("Authorization");
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-        if (accessToken != null && accessToken.startsWith("Bearer ")) {
-            accessToken = accessToken.substring(7).trim();
-        }
+        String accessToken = jwtTokenValidator.extractToken(request.getHeader("Authorization"));
 
-        if (accessToken == null || accessToken.isEmpty()) {
+        if (accessToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
-                logger.warn("Access token expired");
-                sendErrorResponse(response, "access token expired", HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
+            jwtTokenValidator.validateToken(accessToken);
 
-            String category = jwtTokenProvider.getCategory(accessToken);
-            if (category == null || !category.equals("access")) {
-                logger.warn("Invalid access token category");
-                sendErrorResponse(response, "invalid access token", HttpServletResponse.SC_BAD_REQUEST);
-                return;
-            }
-
-            Long userId = jwtTokenProvider.getUserId(accessToken);
-            String username = jwtTokenProvider.getUsername(accessToken);
-            String role = jwtTokenProvider.getRole(accessToken);
-
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = (UserDetails) new CustomUserDetails(userId,username, "dummyPassword" ,role);
+            UserDetails userDetails = jwtTokenValidator.getUserDetails(accessToken);
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                logger.info("Authentication successful for user: " + username + " (ID: " + userId + ")");
+                logger.info("Authentication successful for user: {}", userDetails.getUsername());
             }
         } catch (Exception e) {
-            logger.error("Exception occurred while parsing JWT token", e);
-            sendErrorResponse(response, "invalid access token", HttpServletResponse.SC_BAD_REQUEST);
+            logger.warn("Authentication failed: {}", e.getMessage());
+            errorResponseSender.sendErrorResponse(response, e.getMessage(), HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private void sendErrorResponse(HttpServletResponse response, String message, int status) throws IOException {
-        response.setStatus(status);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("error", message);
-
-        PrintWriter writer = response.getWriter();
-        writer.write(new ObjectMapper().writeValueAsString(responseBody));
-        writer.flush();
     }
 }
