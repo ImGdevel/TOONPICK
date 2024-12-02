@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import toonpick.app.jwt.JwtTokenProvider;
+import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.service.AuthService;
 
 import java.util.Date;

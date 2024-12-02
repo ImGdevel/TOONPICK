@@ -1,6 +1,5 @@
-package toonpick.app.jwt;
+package toonpick.app.security.filter;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -8,9 +7,8 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.antlr.v4.runtime.Token;
 import org.springframework.web.filter.GenericFilterBean;
-import toonpick.app.repository.RefreshTokenRepository;
+import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.service.AuthService;
 
 import java.io.IOException;

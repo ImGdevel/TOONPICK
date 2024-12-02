@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.dto.UserDTO;
-import toonpick.app.jwt.JwtTokenProvider;
+import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.service.UserService;
 
 @RestController

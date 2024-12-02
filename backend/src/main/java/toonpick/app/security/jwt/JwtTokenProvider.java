@@ -1,4 +1,4 @@
-package toonpick.app.jwt;
+package toonpick.app.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

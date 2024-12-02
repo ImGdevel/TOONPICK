@@ -1,4 +1,4 @@
-package toonpick.app.jwt;
+package toonpick.app.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 import toonpick.app.controller.TokenReissueController;
 import toonpick.app.dto.CustomUserDetails;
-import toonpick.app.entity.User;
+import toonpick.app.security.jwt.JwtTokenProvider;
 
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.entity.RefreshToken;
 import toonpick.app.entity.User;
-import toonpick.app.jwt.JwtTokenProvider;
+import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.repository.RefreshTokenRepository;
 import toonpick.app.repository.UserRepository;
 
