@@ -22,7 +22,7 @@ import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.security.filter.CustomLogoutFilter;
 import toonpick.app.security.filter.JwtAuthorizationFilter;
 import toonpick.app.security.filter.LoginAuthenticationFilter;
-import toonpick.app.security.handler.CustomOAuth2SuccessHandler;
+import toonpick.app.security.handler.OAuth2SuccessHandler;
 import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.service.AuthService;
 import toonpick.app.service.OAuth2UserService;
@@ -38,7 +38,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtTokenProvider jwtTokenProvider;
     private final OAuth2UserService oAuth2UserService;
-    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+    private final OAuth2SuccessHandler OAuth2SuccessHandler;
     private final AuthService authService;
 
     private final LoginSuccessHandler successHandler;
@@ -48,7 +48,7 @@ public class SecurityConfig {
                           AuthService authService,
                           JwtTokenProvider jwtTokenProvider,
                           OAuth2UserService oAuth2UserService,
-                          CustomOAuth2SuccessHandler customOAuth2SuccessHandler,
+                          OAuth2SuccessHandler OAuth2SuccessHandler,
                           LoginSuccessHandler successHandler,
                           LoginFailureHandler failureHandler
                           ) {
@@ -56,7 +56,7 @@ public class SecurityConfig {
         this.authService = authService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.oAuth2UserService = oAuth2UserService;
-        this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
+        this.OAuth2SuccessHandler = OAuth2SuccessHandler;
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
     }
@@ -103,7 +103,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .successHandler(customOAuth2SuccessHandler))
+                        .successHandler(OAuth2SuccessHandler))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/*").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()

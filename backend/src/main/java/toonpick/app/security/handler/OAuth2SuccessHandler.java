@@ -17,14 +17,14 @@ import java.io.IOException;
 import java.util.Collection;
 
 @Component
-public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomOAuth2SuccessHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
 
-    public CustomOAuth2SuccessHandler(JwtTokenProvider jwtTokenProvider, AuthService authService) {
+    public OAuth2SuccessHandler(JwtTokenProvider jwtTokenProvider, AuthService authService) {
         this.authService = authService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
