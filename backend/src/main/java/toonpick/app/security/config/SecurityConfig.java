@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import toonpick.app.security.handler.LoginFailureHandler;
 import toonpick.app.security.handler.LoginSuccessHandler;
+import toonpick.app.security.handler.LogoutHandler;
 import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.security.filter.CustomLogoutFilter;
 import toonpick.app.security.filter.JwtAuthorizationFilter;
@@ -43,6 +44,7 @@ public class SecurityConfig {
 
     private final LoginSuccessHandler successHandler;
     private final LoginFailureHandler failureHandler;
+    private final LogoutHandler logoutHandler;
 
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
                           AuthService authService,
@@ -50,7 +52,8 @@ public class SecurityConfig {
                           OAuth2UserService oAuth2UserService,
                           OAuth2SuccessHandler OAuth2SuccessHandler,
                           LoginSuccessHandler successHandler,
-                          LoginFailureHandler failureHandler
+                          LoginFailureHandler failureHandler,
+                          LogoutHandler logoutHandler
                           ) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.authService = authService;
@@ -59,6 +62,7 @@ public class SecurityConfig {
         this.OAuth2SuccessHandler = OAuth2SuccessHandler;
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
+        this.logoutHandler = logoutHandler;
     }
 
     @Bean
@@ -118,7 +122,7 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class
                 )
                 .addFilterBefore(
-                        new CustomLogoutFilter(jwtTokenProvider, authService),
+                        new CustomLogoutFilter(jwtTokenValidator, logoutHandler),
                         LogoutFilter.class
                 )
                 .addFilterAfter(
