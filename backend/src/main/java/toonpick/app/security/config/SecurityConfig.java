@@ -16,6 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import toonpick.app.security.handler.LoginFailureHandler;
+import toonpick.app.security.handler.LoginSuccessHandler;
 import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.security.filter.CustomLogoutFilter;
 import toonpick.app.security.filter.JwtAuthorizationFilter;
@@ -39,17 +41,24 @@ public class SecurityConfig {
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
     private final AuthService authService;
 
+    private final LoginSuccessHandler successHandler;
+    private final LoginFailureHandler failureHandler;
+
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
                           AuthService authService,
                           JwtTokenProvider jwtTokenProvider,
                           OAuth2UserService oAuth2UserService,
-                          CustomOAuth2SuccessHandler customOAuth2SuccessHandler
+                          CustomOAuth2SuccessHandler customOAuth2SuccessHandler,
+                          LoginSuccessHandler successHandler,
+                          LoginFailureHandler failureHandler
                           ) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.authService = authService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.oAuth2UserService = oAuth2UserService;
         this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
+        this.successHandler = successHandler;
+        this.failureHandler = failureHandler;
     }
 
     @Bean
@@ -105,7 +114,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAt(
-                        new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, authService),
+                        new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), successHandler, failureHandler),
                         UsernamePasswordAuthenticationFilter.class
                 )
                 .addFilterBefore(

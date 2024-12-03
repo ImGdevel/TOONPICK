@@ -4,34 +4,36 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.AuthenticationException;
-import toonpick.app.dto.LoginRequestDTO;
-import toonpick.app.security.jwt.JwtTokenProvider;
-import toonpick.app.service.AuthService;
 
-import java.util.stream.Collectors;
+import toonpick.app.dto.LoginRequestDTO;
+import toonpick.app.security.handler.LoginFailureHandler;
+import toonpick.app.security.handler.LoginSuccessHandler;
+
+import java.io.IOException;
+
 
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final AuthService authService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private static final Logger logger = LoggerFactory.getLogger(LoginAuthenticationFilter.class);
+    private final LoginSuccessHandler successHandler;
+    private final LoginFailureHandler failureHandler;
 
-    public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, AuthService authService) {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public LoginAuthenticationFilter(AuthenticationManager authenticationManager,
+                                     LoginSuccessHandler successHandler,
+                                     LoginFailureHandler failureHandler
+                                     ) {
         this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.authService = authService;
+        this.successHandler = successHandler;
+        this.failureHandler = failureHandler;
     }
 
     @Override
@@ -50,27 +52,13 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-        String username = authentication.getName();
-        String role = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining());
-
-        Long userid = authService.getUserIdByUsername(username);
-        String accessToken = jwtTokenProvider.createAccessToken(userid, username, role);
-        String refreshToken = jwtTokenProvider.createRefreshToken(userid, username, role);
-
-        authService.saveRefreshToken(username, refreshToken);
-        response.setHeader("Authorization","Bearer " + accessToken);
-        response.addCookie(jwtTokenProvider.createCookie("refresh", refreshToken));
-        response.setStatus(HttpStatus.OK.value());
-
-        logger.info("USER LOGIN SUCCESS (username-{}/token-{})", username, accessToken);
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
+        successHandler.onAuthenticationSuccess(request, response, authentication);
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+        failureHandler.onAuthenticationFailure(request, response, failed);
     }
 
 }
