@@ -1,6 +1,8 @@
 package toonpick.app.security.jwt;
 
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import toonpick.app.dto.CustomUserDetails;
 
@@ -12,19 +14,49 @@ public class JwtTokenValidator {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public String extractToken(String authorizationHeader) {
+    // Access Token 추출
+    public String extractAccessToken(String authorizationHeader) {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring(7).trim();
         }
         return null;
     }
 
-    public void validateToken(String token) {
+    // Access Token 검증
+    public void validateAccessToken(String token) {
         if (jwtTokenProvider.isExpired(token)) {
             throw new IllegalArgumentException("Access token expired");
         }
         if (!"access".equals(jwtTokenProvider.getCategory(token))) {
             throw new IllegalArgumentException("Invalid access token category");
+        }
+    }
+
+    // Refresh Token 추출
+    public String extractRefreshTokenFromCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refresh".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    // Refresh Token 검증
+    public void validateRefreshToken(String refreshToken) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new IllegalArgumentException("Refresh token is missing.");
+        }
+
+        if (jwtTokenProvider.isExpired(refreshToken)) {
+            throw new IllegalArgumentException("Refresh token expired.");
+        }
+
+        if (!"refresh".equals(jwtTokenProvider.getCategory(refreshToken))) {
+            throw new IllegalArgumentException("Invalid refresh token category.");
         }
     }
 
