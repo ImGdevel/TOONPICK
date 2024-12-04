@@ -1,5 +1,6 @@
 package toonpick.app.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,11 +14,13 @@ public class JoinController {
 
     private final JoinService joinService;
 
-    public JoinController(JoinService joinService) { this.joinService = joinService; }
+    public JoinController(JoinService joinService) {
+        this.joinService = joinService;
+    }
 
     @PostMapping("/join")
-    public String joinProcess(@RequestBody JoinRequestDTO joinRequestDTO){
+    public ResponseEntity<String> joinProcess(@RequestBody JoinRequestDTO joinRequestDTO) {
         joinService.createUser(joinRequestDTO);
-        return "ok";
+        return ResponseEntity.ok("User created successfully.");
     }
 }

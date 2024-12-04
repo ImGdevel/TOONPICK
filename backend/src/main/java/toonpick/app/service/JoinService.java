@@ -17,7 +17,7 @@ public class JoinService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public  JoinService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
+    public JoinService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -25,7 +25,9 @@ public class JoinService {
     @Transactional
     public void createUser(JoinRequestDTO joinRequestDTO) {
         if (userRepository.existsByUsername(joinRequestDTO.getUsername())) {
-            throw new IllegalArgumentException("Genre with name " + joinRequestDTO.getUsername() + " already exists.");
+            String errorMessage = "Username " + joinRequestDTO.getUsername() + " already exists.";
+            LOGGER.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
 
         User user = new User();
@@ -34,7 +36,8 @@ public class JoinService {
                 bCryptPasswordEncoder.encode(joinRequestDTO.getPassword()),
                 "ROLE_USER"
         );
-        user = userRepository.save(user);
+        userRepository.save(user);
 
+        LOGGER.info("User {} created successfully.", joinRequestDTO.getUsername());
     }
 }
