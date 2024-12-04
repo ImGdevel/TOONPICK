@@ -48,10 +48,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                logger.info("Authentication successful for user: {}", userDetails.getUsername());
+                logger.info("Authorization successful for user: {}", userDetails.getUsername());
             }
         } catch (Exception e) {
-            logger.warn("Authentication failed: {}", e.getMessage());
+            logger.warn("Authorization failed: {}", e.getMessage());
             errorResponseSender.sendErrorResponse(response, e.getMessage(), HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }

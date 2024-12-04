@@ -51,14 +51,14 @@ public class TokenReissueController {
             // 새로운 Access 토큰 발급
             String newAccessToken = authService.refreshAccessToken(refreshToken);
             response.setHeader("Authorization", "Bearer " + newAccessToken);
-            logger.info("Issued new access token: {}", newAccessToken);
+            logger.info("Issued new access token");
 
             // Refresh 토큰 만료 시간 확인 후 갱신 필요 시 새 토큰 발급
             if (isRefreshTokenAboutToExpire(refreshToken)) {
                 String newRefreshToken = authService.refreshRefreshToken(refreshToken);
                 Cookie newRefreshCookie = jwtTokenProvider.createCookie("refresh", newRefreshToken);
                 response.addCookie(newRefreshCookie);
-                logger.info("Issued new refresh token: {}", newRefreshToken);
+                logger.info("Issued new refresh token");
             }
 
         } catch (RuntimeException e) {

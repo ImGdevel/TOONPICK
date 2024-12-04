@@ -43,6 +43,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         response.addCookie(jwtTokenProvider.createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
 
-        logger.info("USER LOGIN SUCCESS (username-{}/token-{})", username, accessToken);
+        logger.info("USER LOGIN SUCCESS (username-{})", username);
     }
 }
