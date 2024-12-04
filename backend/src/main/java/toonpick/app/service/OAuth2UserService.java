@@ -43,10 +43,16 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         Optional<User> existDataOptional = userRepository.findByUsername(username);
 
         if (existDataOptional.isEmpty()) {
-            User user = new User();
-            user.update(username, "", "ROLE_USER");
-            // user.setEmail(oAuth2Response.getEmail());
-            // user.setName(oAuth2Response.getName());
+            User user = User.builder()
+                    .username(username)
+                    .password("")
+                    .email(oAuth2Response.getEmail())
+                    .nickname(oAuth2Response.getName())
+                    .profilePicture("default_profile_img.png")
+                    .isAdultVerified(false)
+                    .role("ROLE_USER")
+                    .build();
+
             userRepository.save(user);
 
             UserDTO userDTO = new UserDTO();

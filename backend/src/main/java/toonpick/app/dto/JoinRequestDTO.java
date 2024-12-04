@@ -7,5 +7,6 @@ import lombok.Data;
 @Builder
 public class JoinRequestDTO {
     private String username;
+    private String email;
     private String password;
 }
