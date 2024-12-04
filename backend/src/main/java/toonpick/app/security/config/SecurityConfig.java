@@ -37,18 +37,16 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenValidator jwtTokenValidator;
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler OAuth2SuccessHandler;
-    private final AuthService authService;
 
     private final LoginSuccessHandler successHandler;
     private final LoginFailureHandler failureHandler;
     private final LogoutHandler logoutHandler;
 
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-                          AuthService authService,
-                          JwtTokenProvider jwtTokenProvider,
+                          JwtTokenValidator jwtTokenValidator,
                           OAuth2UserService oAuth2UserService,
                           OAuth2SuccessHandler OAuth2SuccessHandler,
                           LoginSuccessHandler successHandler,
@@ -56,8 +54,7 @@ public class SecurityConfig {
                           LogoutHandler logoutHandler
                           ) {
         this.authenticationConfiguration = authenticationConfiguration;
-        this.authService = authService;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtTokenValidator = jwtTokenValidator;
         this.oAuth2UserService = oAuth2UserService;
         this.OAuth2SuccessHandler = OAuth2SuccessHandler;
         this.successHandler = successHandler;
@@ -81,12 +78,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtTokenValidator jwtTokenValidator() {
-        return new JwtTokenValidator(jwtTokenProvider);
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, ErrorResponseSender errorResponseSender, JwtTokenValidator jwtTokenValidator) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, ErrorResponseSender errorResponseSender) throws Exception {
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
                     @Override
@@ -132,5 +124,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 }
