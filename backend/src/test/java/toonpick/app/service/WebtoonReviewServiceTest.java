@@ -62,7 +62,7 @@ public class WebtoonReviewServiceTest {
                 .platformId("naver-123-" + System.currentTimeMillis())
                 .averageRating(0f)
                 .description("Test webtoon description")
-                .serializationStatus(SerializationStatus.연재)
+                .serializationStatus(SerializationStatus.ONGOING)
                 .episodeCount(10)
                 .serializationStartDate(LocalDate.now())
                 .lastUpdatedDate(LocalDate.now())
@@ -129,7 +129,6 @@ public class WebtoonReviewServiceTest {
         User user2 = userRepository.save(User.builder()
                 .username("user2")
                 .profilePicture("default2.png")
-                .accountCreationDate(LocalDate.now())
                 .build());
 
         WebtoonReviewCreateDTO reviewCreateDTO = WebtoonReviewCreateDTO.builder()

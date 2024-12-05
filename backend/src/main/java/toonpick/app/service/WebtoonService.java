@@ -139,14 +139,14 @@ public class WebtoonService {
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getSeriesOfWebtoonsByDayOfWeek(DayOfWeek dayOfWeek) {
         List<SerializationStatus> statuses = List.of(
-                SerializationStatus.연재,
-               SerializationStatus.휴재
+                SerializationStatus.ONGOING,
+               SerializationStatus.PAUSED
         );
 
         List<Webtoon> webtoons = webtoonRepository.findWebtoonsByFilter(
                 WebtoonFilterDTO.builder()
                         .week(dayOfWeek)
-                        .serializationStatus(SerializationStatus.연재)
+                        .serializationStatus(SerializationStatus.ONGOING)
                         .build()
         ).stream()
                 .filter(w -> statuses.contains(w.getSerializationStatus()))

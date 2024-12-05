@@ -44,7 +44,7 @@ public class WebtoonController {
     public ResponseEntity<List<WebtoonDTO>> getSeriesOfWebtoons() {
         List<WebtoonDTO> webtoons = webtoonService.filterWebtoons(
                 WebtoonFilterDTO.builder()
-                        .serializationStatus(SerializationStatus.연재)
+                        .serializationStatus(SerializationStatus.ONGOING)
                         .build()
         );
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
@@ -61,7 +61,7 @@ public class WebtoonController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "60") int size) {
 
-        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsBySerializationStatus(SerializationStatus.완결, page, size);
+        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsBySerializationStatus(SerializationStatus.COMPLETED, page, size);
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
 
