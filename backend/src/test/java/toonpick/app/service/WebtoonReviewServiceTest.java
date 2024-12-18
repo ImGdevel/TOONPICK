@@ -1,6 +1,5 @@
 package toonpick.app.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import toonpick.app.repository.WebtoonReviewRepository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,7 +51,6 @@ public class WebtoonReviewServiceTest {
         testUser = userRepository.save(User.builder()
                 .username("testUser" + System.currentTimeMillis())
                 .profilePicture("default.png")
-                .accountCreationDate(LocalDate.now())
                 .build());
 
         testWebtoon = webtoonRepository.save(Webtoon.builder()
@@ -153,7 +150,6 @@ public class WebtoonReviewServiceTest {
         User user2 = userRepository.save(User.builder()
                 .username("user2")
                 .profilePicture("default2.png")
-                .accountCreationDate(LocalDate.now())
                 .build());
 
         WebtoonReviewCreateDTO reviewCreateDTO = WebtoonReviewCreateDTO.builder()
@@ -184,19 +180,16 @@ public class WebtoonReviewServiceTest {
         User userX = userRepository.save(User.builder()
                 .username("userX")
                 .profilePicture("defaultX.png")
-                .accountCreationDate(LocalDate.now())
                 .build());
 
         User userY = userRepository.save(User.builder()
                 .username("userY")
                 .profilePicture("defaultY.png")
-                .accountCreationDate(LocalDate.now())
                 .build());
 
         User userZ = userRepository.save(User.builder()
                 .username("userZ")
                 .profilePicture("defaultZ.png")
-                .accountCreationDate(LocalDate.now())
                 .build());
 
         WebtoonReviewCreateDTO reviewX = WebtoonReviewCreateDTO.builder()
