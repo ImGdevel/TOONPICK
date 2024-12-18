@@ -45,13 +45,16 @@ public class SecurityConfig {
     private final LoginFailureHandler failureHandler;
     private final LogoutHandler logoutHandler;
 
+    private final ErrorResponseSender errorResponseSender;
+
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
                           JwtTokenValidator jwtTokenValidator,
                           OAuth2UserService oAuth2UserService,
                           OAuth2SuccessHandler OAuth2SuccessHandler,
                           LoginSuccessHandler successHandler,
                           LoginFailureHandler failureHandler,
-                          LogoutHandler logoutHandler
+                          LogoutHandler logoutHandler,
+                          ErrorResponseSender errorResponseSender
                           ) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtTokenValidator = jwtTokenValidator;
@@ -60,6 +63,7 @@ public class SecurityConfig {
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
         this.logoutHandler = logoutHandler;
+        this.errorResponseSender = errorResponseSender;
     }
 
     @Bean
@@ -73,12 +77,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public ErrorResponseSender errorResponseSender() {
-        return new ErrorResponseSender();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, ErrorResponseSender errorResponseSender) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
                     @Override

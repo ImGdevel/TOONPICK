@@ -3,11 +3,13 @@ package toonpick.app.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class ErrorResponseSender {
 
     public void sendErrorResponse(HttpServletResponse response, String message, int status) throws IOException {
