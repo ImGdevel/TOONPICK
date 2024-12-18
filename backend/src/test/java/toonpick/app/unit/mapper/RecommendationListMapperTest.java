@@ -1,4 +1,4 @@
-package toonpick.app.mapper;
+package toonpick.app.unit.mapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import toonpick.app.dto.RecommendationListDTO;
 import toonpick.app.entity.RecommendationList;
 import toonpick.app.entity.Webtoon;
+import toonpick.app.mapper.RecommendationListMapper;
 import toonpick.app.repository.WebtoonRepository;
 
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package toonpick.app.controller;
+package toonpick.app.unit.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import toonpick.app.controller.TokenReissueController;
 import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.service.AuthService;

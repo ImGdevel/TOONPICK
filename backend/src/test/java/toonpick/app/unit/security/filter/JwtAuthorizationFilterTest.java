@@ -1,4 +1,4 @@
-package toonpick.app.security.filter;
+package toonpick.app.unit.security.filter;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package toonpick.app.service;
+package toonpick.app.unit.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,7 @@ import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.repository.UserRepository;
 import toonpick.app.repository.WebtoonRepository;
 import toonpick.app.repository.WebtoonReviewRepository;
+import toonpick.app.service.WebtoonReviewService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

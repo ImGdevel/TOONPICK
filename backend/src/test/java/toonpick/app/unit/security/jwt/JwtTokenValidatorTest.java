@@ -1,4 +1,4 @@
-package toonpick.app.security.jwt;
+package toonpick.app.unit.security.jwt;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import toonpick.app.dto.CustomUserDetails;
+import toonpick.app.security.jwt.JwtTokenProvider;
+import toonpick.app.security.jwt.JwtTokenValidator;
 
 @SpringBootTest
 class JwtTokenValidatorTest {

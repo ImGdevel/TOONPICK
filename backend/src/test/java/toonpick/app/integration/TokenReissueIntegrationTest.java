@@ -1,4 +1,4 @@
-package toonpick.app.controller;
+package toonpick.app.integration;
 
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
