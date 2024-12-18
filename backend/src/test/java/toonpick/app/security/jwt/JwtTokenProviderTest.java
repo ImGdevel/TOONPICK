@@ -1,31 +1,120 @@
 package toonpick.app.security.jwt;
 
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 @SpringBootTest
 class JwtTokenProviderTest {
+
+    private final SecretKey secretKey;
+
+    public JwtTokenProviderTest(@Value("${spring.jwt.secret}") String secret) {
+        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+    }
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     @Test
+    @DisplayName("AccessToken 생성 및 유효성 검증")
     void testCreateAccessTokenAndValidate() {
-        // Given
         Long userId = 1L;
         String username = "testUser";
         String role = "USER";
 
-        // When
         String token = jwtTokenProvider.createAccessToken(userId, username, role);
 
-        // Then
         Assertions.assertNotNull(token);
         Assertions.assertEquals(userId, jwtTokenProvider.getUserId(token));
         Assertions.assertEquals(username, jwtTokenProvider.getUsername(token));
         Assertions.assertEquals(role, jwtTokenProvider.getRole(token));
         Assertions.assertFalse(jwtTokenProvider.isExpired(token));
+    }
+
+    @Test
+    @DisplayName("RefreshToken 생성 및 만료 임박 여부 확인")
+    void testIsRefreshTokenAboutToExpire() {
+        Long userId = 1L;
+        String username = "testUser";
+        String role = "USER";
+
+        String refreshToken = jwtTokenProvider.createRefreshToken(userId, username, role);
+
+        boolean isAboutToExpire = jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken);
+
+        Assertions.assertFalse(isAboutToExpire);
+    }
+
+    @Test
+    @DisplayName("만료된 토큰 검증")
+    void testIsExpiredToken() {
+        String expiredToken = Jwts.builder()
+                .expiration(new Date(System.currentTimeMillis() - 1000))
+                .signWith(secretKey)
+                .compact();
+
+        Assertions.assertTrue(jwtTokenProvider.isExpired(expiredToken));
+    }
+
+    @Test
+    @DisplayName("유효하지 않은 토큰 검증")
+    void testInvalidToken() {
+        String invalidToken = "invalid.token";
+
+        Assertions.assertThrows(Exception.class, () -> jwtTokenProvider.getCategory(invalidToken));
+    }
+
+    @Test
+    @DisplayName("토큰의 Claims에서 특정 값 추출")
+    void testGetClaims() {
+        Long userId = 1L;
+        String username = "testUser";
+        String role = "USER";
+
+        String token = jwtTokenProvider.createAccessToken(userId, username, role);
+
+        Assertions.assertEquals(userId, jwtTokenProvider.getUserId(token));
+        Assertions.assertEquals(username, jwtTokenProvider.getUsername(token));
+        Assertions.assertEquals(role, jwtTokenProvider.getRole(token));
+    }
+
+    @Test
+    @DisplayName("토큰에서 만료 시간 확인")
+    void testGetExpiration() {
+        Long userId = 1L;
+        String username = "testUser";
+        String role = "USER";
+
+        String token = jwtTokenProvider.createAccessToken(userId, username, role);
+
+        Date expiration = jwtTokenProvider.getExpiration(token);
+
+        Assertions.assertNotNull(expiration);
+        Assertions.assertTrue(expiration.after(new Date()));
+    }
+
+    @Test
+    @DisplayName("쿠키 생성 확인")
+    void testCreateCookie() {
+        String key = "refresh";
+        String value = "testValue";
+
+        Cookie cookie = jwtTokenProvider.createCookie(key, value);
+
+        Assertions.assertEquals(key, cookie.getName());
+        Assertions.assertEquals(value, cookie.getValue());
+        Assertions.assertTrue(cookie.isHttpOnly());
+        Assertions.assertEquals("/", cookie.getPath());
     }
 }
