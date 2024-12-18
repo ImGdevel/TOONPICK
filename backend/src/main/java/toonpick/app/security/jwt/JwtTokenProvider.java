@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -66,13 +65,12 @@ public class JwtTokenProvider {
         }
     }
 
-    // 요청 헤더에서 토큰 추출
-    public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+    // Refresh 토큰 만료 임박 여부 확인
+    public boolean isRefreshTokenAboutToExpire(String refreshToken) {
+        Date expirationDate = getExpiration(refreshToken);
+        long remainingTime = expirationDate.getTime() - System.currentTimeMillis();
+        long oneDayInMillis = 24 * 60 * 60 * 1000;
+        return remainingTime < oneDayInMillis;
     }
 
     // Access Token 생성

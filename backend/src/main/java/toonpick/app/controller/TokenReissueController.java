@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import toonpick.app.security.jwt.JwtTokenProvider;
+import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.service.AuthService;
 
 import java.util.Date;
@@ -21,72 +22,43 @@ public class TokenReissueController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
+    private final JwtTokenValidator jwtTokenValidator;
     private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
 
-    public TokenReissueController(JwtTokenProvider jwtTokenProvider, AuthService authService) {
+    public TokenReissueController(JwtTokenProvider jwtTokenProvider, AuthService authService, JwtTokenValidator jwtTokenValidator) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.authService = authService;
+        this.jwtTokenValidator = jwtTokenValidator;
     }
 
     @PostMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-
-        // 쿠키에서 refresh token 가져오기
-        String refreshToken = getRefreshTokenFromCookies(request);
-        if (refreshToken == null) {
-            return new ResponseEntity<>("Refresh token is null", HttpStatus.BAD_REQUEST);
-        }
-
-        // Refresh 토큰 만료 여부 확인
-        if (jwtTokenProvider.isExpired(refreshToken)) {
-            return new ResponseEntity<>("Refresh token expired", HttpStatus.BAD_REQUEST);
-        }
-
-        // Refresh 토큰인지 확인 (카테고리 확인)
-        if (!"refresh".equals(jwtTokenProvider.getCategory(refreshToken))) {
-            return new ResponseEntity<>("Invalid token category", HttpStatus.BAD_REQUEST);
-        }
-
         try {
+            // 쿠키에서 refresh token 추출 및 검증
+            String refreshToken = jwtTokenValidator.extractRefreshTokenFromCookies(request);
+            jwtTokenValidator.validateRefreshToken(refreshToken);
+
             // 새로운 Access 토큰 발급
             String newAccessToken = authService.refreshAccessToken(refreshToken);
             response.setHeader("Authorization", "Bearer " + newAccessToken);
             logger.info("Issued new access token");
 
-            // Refresh 토큰 만료 시간 확인 후 갱신 필요 시 새 토큰 발급
-            if (isRefreshTokenAboutToExpire(refreshToken)) {
+            // Refresh 토큰 갱신 필요 여부 확인 및 갱신
+            if (jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)) {
                 String newRefreshToken = authService.refreshRefreshToken(refreshToken);
                 Cookie newRefreshCookie = jwtTokenProvider.createCookie("refresh", newRefreshToken);
                 response.addCookie(newRefreshCookie);
                 logger.info("Issued new refresh token");
             }
 
-        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            logger.error("Token validation error: {}", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e) {
+            logger.error("Unexpected error: {}", e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // 쿠키에서 refresh token 추출
-    private String getRefreshTokenFromCookies(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("refresh".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
-    // Refresh 토큰이 만료 임박했는지 확인
-    private boolean isRefreshTokenAboutToExpire(String refreshToken) {
-        Date expirationDate = jwtTokenProvider.getExpiration(refreshToken);
-        long remainingTime = expirationDate.getTime() - System.currentTimeMillis();
-        long oneDayInMillis = 24 * 60 * 60 * 1000;
-
-        return remainingTime < oneDayInMillis;
-    }
 }
