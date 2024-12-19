@@ -24,6 +24,7 @@ public class WebtoonReviewController {
 
     private final WebtoonReviewService webtoonReviewService;
 
+    // 리뷰 작성
     @PostMapping
     public ResponseEntity<WebtoonReviewDTO> createReview(
             @PathVariable Long webtoonId,
@@ -35,12 +36,14 @@ public class WebtoonReviewController {
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
     }
 
+    // 리뷰 조회
     @GetMapping("/{reviewId}")
     public ResponseEntity<WebtoonReviewDTO> getReview(@PathVariable Long reviewId) {
         WebtoonReviewDTO reviewDTO = webtoonReviewService.getReview(reviewId);
         return reviewDTO != null ? ResponseEntity.ok(reviewDTO) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    // 리뷰 수정하기
     @PutMapping("/{reviewId}")
     public ResponseEntity<WebtoonReviewDTO> updateReview(
             @PathVariable Long reviewId,
@@ -49,12 +52,14 @@ public class WebtoonReviewController {
         return ResponseEntity.ok(updatedReview);
     }
 
+    // 리뷰 삭제
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
         webtoonReviewService.deleteReview(reviewId);
         return ResponseEntity.noContent().build();
     }
 
+    // 리뷰에 좋아요 토글
     @PostMapping("/{reviewId}/like")
     public ResponseEntity<Map<String, Object>> toggleLike(
             @PathVariable Long reviewId,
@@ -71,7 +76,7 @@ public class WebtoonReviewController {
         return ResponseEntity.ok(response);
     }
 
-
+    // 웹툰에 해당되는 리뷰들 가져오기 (페이지 조회)
     @GetMapping
     public ResponseEntity<PagedResponseDTO<WebtoonReviewDTO>> getReviewsByWebtoon(
             @PathVariable Long webtoonId,
@@ -82,6 +87,7 @@ public class WebtoonReviewController {
         return ResponseEntity.ok(pagedReviews);
     }
 
+    // User가 작성한
     @GetMapping("/users")
     public ResponseEntity<WebtoonReviewDTO> getUserReviewForWebtoon(
             @PathVariable Long webtoonId,
@@ -94,6 +100,7 @@ public class WebtoonReviewController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
 
     @GetMapping("/liked-reviews")
     public ResponseEntity<List<Long>> getLikedReviews(

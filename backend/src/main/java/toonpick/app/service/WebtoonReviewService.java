@@ -94,7 +94,7 @@ public class WebtoonReviewService {
         webtoonReviewRepository.delete(review);
     }
 
-    // 레뷰 체크
+    // 리뷰 체크
     @Transactional
     @Async
     public CompletableFuture<Boolean> toggleLike(Long userId, Long reviewId) {
@@ -145,7 +145,7 @@ public class WebtoonReviewService {
         return CompletableFuture.completedFuture(null);
     }
 
-    // 특정 웹툰
+    // User가 웹툰에 누른 웹툰 리스트 반환
     @Transactional(readOnly = true)
     public List<Long> getLikedReviewIds(Long userId, Long webtoonId) {
         User user = userRepository.findById(userId)
@@ -159,7 +159,7 @@ public class WebtoonReviewService {
                 .collect(Collectors.toList());
     }
 
-    // 특정 웹툰의 리뷰들 을 가져옴
+    // 특정 웹툰의 리뷰들을 가져온다 (정렬 기준)
     @Transactional(readOnly = true)
     public PagedResponseDTO<WebtoonReviewDTO> getReviewsByWebtoon(
             Long webtoonId, String sortBy, int page, int size) {
@@ -190,7 +190,7 @@ public class WebtoonReviewService {
                 .build();
     }
 
-    // 어떤 유저가 특정 웹툰에 작성한 리뷰 가져옴
+    // 어떤 유저가 특정 웹툰에 작성한 리뷰를 가져온다
     @Transactional(readOnly = true)
     public Optional<WebtoonReviewDTO> getUserReviewForWebtoon(Long userId, Long webtoonId) {
         User user = userRepository.findById(userId)
