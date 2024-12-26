@@ -1,11 +1,17 @@
 package toonpick.app.entity.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum SerializationStatus {
     ONGOING,
     PAUSED,
     COMPLETED;
 
     public static SerializationStatus fromKorean(String korean) {
+        if (korean == null || korean.isBlank()) {
+            throw new IllegalArgumentException("Korean status cannot be null or blank");
+        }
+
         switch (korean) {
             case "연재":
                 return ONGOING;

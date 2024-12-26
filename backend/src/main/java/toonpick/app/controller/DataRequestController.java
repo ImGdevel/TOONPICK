@@ -79,6 +79,14 @@ public class DataRequestController {
         }
     }
 
+    private SerializationStatus mapToSerializationStatus(String status) {
+        try {
+            return SerializationStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
     private WebtoonDTO convertToWebtoonDTO(WebtoonRequestDTO request) {
         // Authors DTO 변환
         Set<AuthorDTO> authorDTOs = request.getAuthors().stream()
@@ -110,7 +118,7 @@ public class DataRequestController {
                 .episodeCount(request.getEpisodeCount() != 0 ? request.getEpisodeCount() : 1) // 기본값 설정
                 .serializationStartDate(LocalDate.now()) // 현재 날짜 사용
                 .lastUpdatedDate(LocalDate.now()) // 최신 업데이트 날짜 설정
-                .serializationStatus(SerializationStatus.fromKorean(request.getStatus())) // 연재 상태 매핑
+                .serializationStatus(mapToSerializationStatus(request.getStatus())) // 연재 상태 매핑
                 .week(dayOfWeek)
                 .thumbnailUrl(request.getThumbnailUrl())
                 .url(request.getUrl())

@@ -11,6 +11,7 @@ import toonpick.app.dto.AuthorDTO;
 import toonpick.app.dto.GenreDTO;
 import toonpick.app.dto.WebtoonDTO;
 import toonpick.app.dto.WebtoonFilterDTO;
+import toonpick.app.dto.WebtoonUpdateRequestDTO;
 import toonpick.app.entity.Author;
 import toonpick.app.entity.Genre;
 import toonpick.app.entity.Webtoon;
@@ -97,6 +98,35 @@ public class WebtoonService {
 
         existingWebtoon = webtoonRepository.save(existingWebtoon);
         return webtoonMapper.webtoonToWebtoonDto(existingWebtoon);
+    }
+
+    // 정기적 업데이트
+    @Transactional
+    public void updateWebtoon(WebtoonUpdateRequestDTO request) {
+        Webtoon webtoon = webtoonRepository.findByPlatformId(request.getPlatformId())
+                .orElseThrow(() -> new RuntimeException("Webtoon not found with platformId: " + request.getPlatformId()));
+
+        Set<Author> authors = authorRepository.findByNameIn(request.getAuthors());
+        Set<Genre> genres = genreRepository.findByNameIn(request.getGenres());
+
+        webtoon.update(
+                webtoon.getTitle(),
+                webtoon.getPlatform(),
+                request.getPlatformRating() != null ? request.getPlatformRating() : webtoon.getAverageRating(),
+                request.getDescription(),
+                request.getEpisodeCount() != null ? request.getEpisodeCount() : webtoon.getEpisodeCount(),
+                webtoon.getSerializationStartDate(),
+                request.getLastUpdatedDate() != null ? request.getLastUpdatedDate() : webtoon.getLastUpdatedDate(),
+                request.getSerializationStatus(),
+                request.getWeek(),
+                request.getThumbnailUrl(),
+                request.getUrl(),
+                request.getAgeRating(),
+                authors,
+                genres
+        );
+
+        webtoonRepository.save(webtoon);
     }
 
     // 특정 웹툰 가져오기

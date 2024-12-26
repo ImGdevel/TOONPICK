@@ -12,8 +12,11 @@ import toonpick.app.entity.enums.SerializationStatus;
 
 import java.time.DayOfWeek;
 import java.util.List;
+import java.util.Optional;
 
 public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, WebtoonRepositoryCustom {
+   Optional<Webtoon> findByPlatformId(String platformId);
+
     List<Webtoon> findByAuthors_Name(String authorName);
     List<Webtoon> findByGenres_Name(String genreName);
 
