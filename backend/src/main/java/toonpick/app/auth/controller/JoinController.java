@@ -1,5 +1,6 @@
 package toonpick.app.auth.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,13 +11,10 @@ import toonpick.app.auth.service.JoinService;
 
 @Controller
 @ResponseBody
+@RequiredArgsConstructor
 public class JoinController {
 
     private final JoinService joinService;
-
-    public JoinController(JoinService joinService) {
-        this.joinService = joinService;
-    }
 
     @PostMapping("/join")
     public ResponseEntity<String> joinProcess(@RequestBody JoinRequest joinRequest) {

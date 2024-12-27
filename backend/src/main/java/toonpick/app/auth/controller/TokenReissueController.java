@@ -3,6 +3,7 @@ package toonpick.app.auth.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,18 +17,13 @@ import toonpick.app.auth.service.AuthService;
 
 @Controller
 @ResponseBody
+@RequiredArgsConstructor
 public class TokenReissueController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
     private final JwtTokenValidator jwtTokenValidator;
     private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
-
-    public TokenReissueController(JwtTokenProvider jwtTokenProvider, AuthService authService, JwtTokenValidator jwtTokenValidator) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.authService = authService;
-        this.jwtTokenValidator = jwtTokenValidator;
-    }
 
     @PostMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {

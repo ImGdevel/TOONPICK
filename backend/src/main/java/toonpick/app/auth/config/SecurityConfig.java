@@ -1,6 +1,7 @@
 package toonpick.app.auth.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -44,25 +46,6 @@ public class SecurityConfig {
     private final LogoutHandler logoutHandler;
 
     private final ErrorResponseSender errorResponseSender;
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-                          JwtTokenValidator jwtTokenValidator,
-                          OAuth2UserService oAuth2UserService,
-                          OAuth2SuccessHandler OAuth2SuccessHandler,
-                          LoginSuccessHandler successHandler,
-                          LoginFailureHandler failureHandler,
-                          LogoutHandler logoutHandler,
-                          ErrorResponseSender errorResponseSender
-                          ) {
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtTokenValidator = jwtTokenValidator;
-        this.oAuth2UserService = oAuth2UserService;
-        this.OAuth2SuccessHandler = OAuth2SuccessHandler;
-        this.successHandler = successHandler;
-        this.failureHandler = failureHandler;
-        this.logoutHandler = logoutHandler;
-        this.errorResponseSender = errorResponseSender;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
