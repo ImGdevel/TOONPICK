@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "review_like", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"user_id", "review_id"})
+    @UniqueConstraint(columnNames = {"member_id", "review_id"})
 })
 public class ReviewLike {
 
@@ -27,16 +27,16 @@ public class ReviewLike {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id", nullable = false)
     private WebtoonReview review;
 
     @Builder
-    public ReviewLike(User user, WebtoonReview review) {
-        this.user = user;
+    public ReviewLike(Member member, WebtoonReview review) {
+        this.member = member;
         this.review = review;
     }
 }

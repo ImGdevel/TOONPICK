@@ -4,10 +4,10 @@ package toonpick.app.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.entity.RefreshToken;
-import toonpick.app.entity.User;
+import toonpick.app.entity.Member;
 import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.repository.RefreshTokenRepository;
-import toonpick.app.repository.UserRepository;
+import toonpick.app.repository.MemberRepository;
 
 import java.util.Date;
 
@@ -15,14 +15,14 @@ import java.util.Date;
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(UserRepository userRepository,RefreshTokenRepository refreshTokenRepository, JwtTokenProvider jwtTokenProvider){
-        this.userRepository = userRepository;
+    public AuthService(MemberRepository memberRepository, RefreshTokenRepository refreshTokenRepository, JwtTokenProvider jwtTokenProvider){
+        this.memberRepository = memberRepository;
         this. refreshTokenRepository = refreshTokenRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -90,8 +90,8 @@ public class AuthService {
 
     @Transactional
     public Long getUserIdByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
-        return user.getId();
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Member not found with username: " + username));
+        return member.getId();
     }
 }

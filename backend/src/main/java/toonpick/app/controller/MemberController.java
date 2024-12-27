@@ -8,26 +8,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.dto.CustomUserDetails;
-import toonpick.app.dto.UserDTO;
-import toonpick.app.service.UserService;
+import toonpick.app.dto.MemberDTO;
+import toonpick.app.service.MemberService;
 
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<UserDTO> getUserProfile(HttpServletRequest request, Authentication authentication) {
+    public ResponseEntity<MemberDTO> getUserProfile(HttpServletRequest request, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long userId = userDetails.getUserId();
 
-        UserDTO userDTO = userService.getUserById(userId);
-        return ResponseEntity.ok(userDTO);
+        MemberDTO memberDTO = memberService.getUserById(userId);
+        return ResponseEntity.ok(memberDTO);
     }
 }

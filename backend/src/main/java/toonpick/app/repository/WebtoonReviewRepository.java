@@ -1,14 +1,12 @@
 package toonpick.app.repository;
 
-import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.entity.User;
+import toonpick.app.entity.Member;
 import toonpick.app.entity.Webtoon;
 import toonpick.app.entity.WebtoonReview;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,7 +20,7 @@ public interface WebtoonReviewRepository extends JpaRepository<WebtoonReview, Lo
 
     Page<WebtoonReview> findByWebtoon(Webtoon webtoon, Pageable pageable);
 
-    Optional<WebtoonReview> findWebtoonReviewByUserAndWebtoon(User user, Webtoon webtoon);
+    Optional<WebtoonReview> findWebtoonReviewByMemberAndWebtoon(Member member, Webtoon webtoon);
 
     @Transactional
     @Modifying

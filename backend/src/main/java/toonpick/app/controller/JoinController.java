@@ -20,7 +20,7 @@ public class JoinController {
 
     @PostMapping("/join")
     public ResponseEntity<String> joinProcess(@RequestBody JoinRequestDTO joinRequestDTO) {
-        joinService.createUser(joinRequestDTO);
-        return ResponseEntity.ok("User created successfully.");
+        joinService.createMember(joinRequestDTO);
+        return ResponseEntity.ok("Member created successfully.");
     }
 }

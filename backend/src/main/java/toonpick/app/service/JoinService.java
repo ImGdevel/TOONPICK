@@ -6,8 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.JoinRequestDTO;
-import toonpick.app.entity.User;
-import toonpick.app.repository.UserRepository;
+import toonpick.app.entity.Member;
+import toonpick.app.repository.MemberRepository;
 
 import java.util.Random;
 
@@ -16,23 +16,23 @@ public class JoinService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(JoinService.class);
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public JoinService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
+    public JoinService(MemberRepository memberRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.memberRepository = memberRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Transactional
-    public void createUser(JoinRequestDTO joinRequestDTO) {
-        if (userRepository.existsByUsername(joinRequestDTO.getUsername())) {
+    public void createMember(JoinRequestDTO joinRequestDTO) {
+        if (memberRepository.existsByUsername(joinRequestDTO.getUsername())) {
             String errorMessage = "Username " + joinRequestDTO.getUsername() + " already exists.";
             LOGGER.error(errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
 
-        User user = User.builder()
+        Member member = Member.builder()
                 .username(joinRequestDTO.getUsername())
                 .nickname(generateRandomNickname())
                 .password(bCryptPasswordEncoder.encode(joinRequestDTO.getPassword()))
@@ -42,9 +42,9 @@ public class JoinService {
                 .profilePicture("default_profile_img.png")
                 .build();
 
-        userRepository.save(user);
+        memberRepository.save(member);
 
-        LOGGER.info("User {} created successfully.", joinRequestDTO.getUsername());
+        LOGGER.info("Member {} created successfully.", joinRequestDTO.getUsername());
     }
 
     private String generateRandomNickname() {

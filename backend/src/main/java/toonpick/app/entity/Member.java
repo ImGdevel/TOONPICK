@@ -5,13 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "user")
-public class User extends BaseTimeEntity {
+@Table(name = "member")
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,8 +32,8 @@ public class User extends BaseTimeEntity {
     private String profilePicture;
 
     @Builder
-    public User(String username, String email, String password, String nickname, String role,
-                Boolean isAdultVerified, String profilePicture) {
+    public Member(String username, String email, String password, String nickname, String role,
+                  Boolean isAdultVerified, String profilePicture) {
         this.username = username;
         this.email = email;
         this.password = password;

@@ -3,9 +3,8 @@ package toonpick.app.dto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import toonpick.app.entity.User;
+import toonpick.app.entity.Member;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -21,11 +20,11 @@ public class CustomUserDetails implements UserDetails {
     private final boolean isCredentialsNonExpired;
     private final boolean isEnabled;
 
-    public CustomUserDetails(User user) {
-        this.userId = user.getId();
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.role = user.getRole();
+    public CustomUserDetails(Member member) {
+        this.userId = member.getId();
+        this.username = member.getUsername();
+        this.password = member.getPassword();
+        this.role = member.getRole();
         this.isAccountNonExpired = true;
         this.isAccountNonLocked = true;
         this.isCredentialsNonExpired = true;

@@ -3,13 +3,8 @@ package toonpick.app.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import toonpick.app.entity.User;
-import toonpick.app.entity.Webtoon;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,7 +14,7 @@ import java.time.LocalDateTime;
 public class WebtoonReviewDTO {
     private Long id;
     private Long webtoonId;
-    private UserDTO userId;
+    private MemberDTO memberId;
     private float rating;
     private String comment;
     private int likes;

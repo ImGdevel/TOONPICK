@@ -18,16 +18,16 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user_favorite_webtoon")
-public class UserFavoriteWebtoon {
+@Table(name = "member_favorite_webtoon")
+public class MemberFavoriteWebtoon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "webtoon_id")
@@ -36,8 +36,8 @@ public class UserFavoriteWebtoon {
     private LocalDateTime addedDate;
 
     @Builder
-    public UserFavoriteWebtoon(User user, Webtoon webtoon, LocalDateTime addedDate) {
-        this.user = user;
+    public MemberFavoriteWebtoon(Member member, Webtoon webtoon, LocalDateTime addedDate) {
+        this.member = member;
         this.webtoon = webtoon;
         this.addedDate = addedDate;
     }

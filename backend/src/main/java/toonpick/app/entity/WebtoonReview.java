@@ -18,8 +18,8 @@ public class WebtoonReview extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "webtoon_id")
@@ -34,8 +34,8 @@ public class WebtoonReview extends BaseTimeEntity {
     private int likes;
 
     @Builder
-    public WebtoonReview(User user, Webtoon webtoon, float rating, String comment, int likes) {
-        this.user = user;
+    public WebtoonReview(Member member, Webtoon webtoon, float rating, String comment, int likes) {
+        this.member = member;
         this.webtoon = webtoon;
         this.rating = rating;
         this.comment = comment;

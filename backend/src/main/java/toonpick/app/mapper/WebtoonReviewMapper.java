@@ -11,12 +11,12 @@ import toonpick.app.entity.WebtoonReview;
 public interface WebtoonReviewMapper {
     WebtoonReviewMapper INSTANCE = Mappers.getMapper(WebtoonReviewMapper.class);
 
-    @Mapping(source = "user.id", target = "userId.username")
-    @Mapping(source = "user.nickname", target = "userId.nickname")
-    @Mapping(source = "user.role", target = "userId.role")
-    @Mapping(source = "user.profilePicture", target = "userId.profilePicture")
+    @Mapping(source = "member.id", target = "memberId.username")
+    @Mapping(source = "member.nickname", target = "memberId.nickname")
+    @Mapping(source = "member.role", target = "memberId.role")
+    @Mapping(source = "member.profilePicture", target = "memberId.profilePicture")
     WebtoonReviewDTO toDTO(WebtoonReview review);
 
-    @Mapping(target = "user", ignore = true) // 사용자 정보를 별도로 처리
+    @Mapping(target = "member", ignore = true) // 사용자 정보를 별도로 처리
     WebtoonReview toEntity(WebtoonReviewCreateDTO reviewCreateDTO);
 }

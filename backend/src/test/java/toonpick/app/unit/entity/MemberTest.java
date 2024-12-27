@@ -2,17 +2,17 @@ package toonpick.app.unit.entity;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import toonpick.app.entity.User;
+import toonpick.app.entity.Member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class UserTest {
+class MemberTest {
 
     @Test
-    @DisplayName("User 엔티티 생성 및 초기 값 확인")
+    @DisplayName("Member 엔티티 생성 및 초기 값 확인")
     void testUserCreation() {
-        User user = User.builder()
+        Member member = Member.builder()
                 .username("testUser")
                 .email("test@example.com")
                 .password("password")
@@ -22,47 +22,47 @@ class UserTest {
                 .profilePicture("default_profile_img.png")
                 .build();
 
-        assertThat(user.getUsername()).isEqualTo("testUser");
-        assertThat(user.getEmail()).isEqualTo("test@example.com");
-        assertThat(user.getNickname()).isEqualTo("testNickname");
+        assertThat(member.getUsername()).isEqualTo("testUser");
+        assertThat(member.getEmail()).isEqualTo("test@example.com");
+        assertThat(member.getNickname()).isEqualTo("testNickname");
     }
 
     @Test
     @DisplayName("프로필 업데이트 테스트")
     void testUpdateProfile() {
-        User user = User.builder()
+        Member member = Member.builder()
                 .nickname("testNickname")
                 .profilePicture("default_profile_img.png")
                 .build();
 
-        user.updateProfile("newNickname", "newProfilePicture.png");
+        member.updateProfile("newNickname", "newProfilePicture.png");
 
-        assertThat(user.getNickname()).isEqualTo("newNickname");
-        assertThat(user.getProfilePicture()).isEqualTo("newProfilePicture.png");
+        assertThat(member.getNickname()).isEqualTo("newNickname");
+        assertThat(member.getProfilePicture()).isEqualTo("newProfilePicture.png");
     }
 
     @Test
     @DisplayName("비밀번호 변경 테스트")
     void testChangePassword() {
-        User user = User.builder()
+        Member member = Member.builder()
                 .password("oldPassword")
                 .build();
 
-        user.changePassword("newPassword");
+        member.changePassword("newPassword");
 
-        assertThat(user.getPassword()).isEqualTo("newPassword");
+        assertThat(member.getPassword()).isEqualTo("newPassword");
     }
 
     @Test
     @DisplayName("성인 인증 상태 변경 테스트")
     void testVerifyAdult() {
-        User user = User.builder()
+        Member member = Member.builder()
                 .isAdultVerified(false)
                 .build();
 
-        user.verifyAdult();
+        member.verifyAdult();
 
-        assertThat(user.getIsAdultVerified()).isTrue();
+        assertThat(member.getIsAdultVerified()).isTrue();
     }
 }
 

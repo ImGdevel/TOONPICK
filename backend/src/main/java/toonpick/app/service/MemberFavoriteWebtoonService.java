@@ -2,16 +2,14 @@ package toonpick.app.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.dto.RecommendationListDTO;
 import toonpick.app.dto.WebtoonDTO;
-import toonpick.app.entity.RecommendationList;
-import toonpick.app.entity.User;
-import toonpick.app.entity.UserFavoriteWebtoon;
+import toonpick.app.entity.Member;
+import toonpick.app.entity.MemberFavoriteWebtoon;
 import toonpick.app.entity.Webtoon;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
-import toonpick.app.repository.UserFavoriteWebtoonRepository;
-import toonpick.app.repository.UserRepository;
+import toonpick.app.repository.MemberFavoriteWebtoonRepository;
+import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.WebtoonRepository;
 
 import java.time.LocalDateTime;
@@ -19,29 +17,29 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserFavoriteWebtoonService {
+public class MemberFavoriteWebtoonService {
 
-    private final UserFavoriteWebtoonRepository favoriteRepository;
+    private final MemberFavoriteWebtoonRepository favoriteRepository;
     private final WebtoonRepository webtoonRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final WebtoonMapper webtoonMapper;
 
-    public UserFavoriteWebtoonService(UserFavoriteWebtoonRepository favoriteRepository, WebtoonRepository webtoonRepository, UserRepository userRepository, WebtoonMapper webtoonMapper) {
+    public MemberFavoriteWebtoonService(MemberFavoriteWebtoonRepository favoriteRepository, WebtoonRepository webtoonRepository, MemberRepository memberRepository, WebtoonMapper webtoonMapper) {
         this.favoriteRepository = favoriteRepository;
         this.webtoonRepository = webtoonRepository;
-        this.userRepository = userRepository;
+        this.memberRepository = memberRepository;
         this.webtoonMapper = webtoonMapper;
     }
 
     @Transactional
     public void addFavoriteWebtoon(Long userId, Long webtoonId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
 
-        UserFavoriteWebtoon favorite = UserFavoriteWebtoon.builder()
-                .user(user)
+        MemberFavoriteWebtoon favorite = MemberFavoriteWebtoon.builder()
+                .member(member)
                 .webtoon(webtoon)
                 .addedDate(LocalDateTime.now())
                 .build();
@@ -51,17 +49,17 @@ public class UserFavoriteWebtoonService {
 
     @Transactional
     public void removeFavoriteWebtoon(Long userId, Long webtoonId) {
-        UserFavoriteWebtoon favorite = favoriteRepository.findByUserIdAndWebtoonId(userId, webtoonId)
+        MemberFavoriteWebtoon favorite = favoriteRepository.findByMemberIdAndWebtoonId(userId, webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Favorite not found"));
         favoriteRepository.delete(favorite);
     }
 
     @Transactional(readOnly = true)
     public List<WebtoonDTO> getFavoriteWebtoons(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found with id: " + userId));
 
-        List<Webtoon> favoriteWebtoons = favoriteRepository.findByUser(user);
+        List<Webtoon> favoriteWebtoons = favoriteRepository.findByMember(member);
 
         return favoriteWebtoons.stream()
                 .map(webtoonMapper::webtoonToWebtoonDto)
@@ -70,10 +68,10 @@ public class UserFavoriteWebtoonService {
 
     @Transactional(readOnly = true)
     public boolean isFavoriteWebtoon(Long userId, Long webtoonId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found with id: " + userId));
 
-        return favoriteRepository.findByUserIdAndWebtoonId(userId, webtoonId).isPresent();
+        return favoriteRepository.findByMemberIdAndWebtoonId(userId, webtoonId).isPresent();
     }
 
 }

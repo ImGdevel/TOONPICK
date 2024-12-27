@@ -6,18 +6,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import toonpick.app.dto.CustomUserDetails;
 import toonpick.app.dto.WebtoonDTO;
-import toonpick.app.service.UserFavoriteWebtoonService;
+import toonpick.app.service.MemberFavoriteWebtoonService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/users/favorites")
-public class UserFavoriteWebtoonController {
+public class MemberFavoriteWebtoonController {
 
-    private final UserFavoriteWebtoonService userFavoriteWebtoonService;
+    private final MemberFavoriteWebtoonService userFavoriteWebtoonService;
 
     @Autowired
-    public UserFavoriteWebtoonController(UserFavoriteWebtoonService userFavoriteWebtoonService) {
+    public MemberFavoriteWebtoonController(MemberFavoriteWebtoonService userFavoriteWebtoonService) {
         this.userFavoriteWebtoonService = userFavoriteWebtoonService;
     }
 
