@@ -1,10 +1,10 @@
-package toonpick.app.service;
+package toonpick.app.auth.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import toonpick.app.dto.CustomUserDetails;
+import toonpick.app.auth.user.CustomUserDetails;
 import toonpick.app.entity.Member;
 import toonpick.app.repository.MemberRepository;
 

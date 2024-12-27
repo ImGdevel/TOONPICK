@@ -1,4 +1,4 @@
-package toonpick.app.dto;
+package toonpick.app.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class JoinRequestDTO {
+public class JoinRequest {
     private String username;
     private String email;
     private String password;

@@ -1,7 +1,6 @@
 
-package toonpick.app.security.filter;
+package toonpick.app.auth.filter;
 
-import com.nimbusds.openid.connect.sdk.validators.LogoutTokenValidator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -9,8 +8,8 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.GenericFilterBean;
-import toonpick.app.security.handler.LogoutHandler;
-import toonpick.app.security.jwt.JwtTokenValidator;
+import toonpick.app.auth.handler.LogoutHandler;
+import toonpick.app.auth.jwt.JwtTokenValidator;
 
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package toonpick.app.service;
+package toonpick.app.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -6,7 +6,11 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import toonpick.app.dto.*;
+import toonpick.app.auth.user.CustomOAuth2UserDetails;
+import toonpick.app.auth.dto.oauth2responseImpl.GoogleResponse;
+import toonpick.app.auth.dto.oauth2responseImpl.NaverResponse;
+import toonpick.app.auth.dto.OAuth2Response;
+import toonpick.app.dto.MemberDTO;
 import toonpick.app.entity.Member;
 import toonpick.app.mapper.MemberMapper;
 import toonpick.app.repository.MemberRepository;
@@ -33,7 +37,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         Member member = getOrCreateUser(oAuth2Response);
         MemberDTO memberDTO = memberMapper.userToUserDto(member);
 
-        return new CustomOAuth2User(memberDTO);
+        return new CustomOAuth2UserDetails(memberDTO);
     }
 
     // 서비스 제공자에 따른 OAuth2Response 생성

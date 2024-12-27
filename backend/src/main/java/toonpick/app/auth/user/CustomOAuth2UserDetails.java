@@ -1,23 +1,28 @@
-package toonpick.app.dto;
+package toonpick.app.auth.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import toonpick.app.dto.MemberDTO;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
-public class CustomOAuth2User implements OAuth2User {
+public class CustomOAuth2UserDetails implements OAuth2User {
 
     private final MemberDTO memberDTO;
 
-    public CustomOAuth2User(MemberDTO memberDTO){
+    public CustomOAuth2UserDetails(MemberDTO memberDTO){
         this.memberDTO = memberDTO;
     }
 
     @Override
     public Map<String, Object> getAttributes() {
-        return null;
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("username", memberDTO.getUsername());
+        attributes.put("role", memberDTO.getRole());
+        return attributes;
     }
 
     @Override

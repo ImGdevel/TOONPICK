@@ -8,9 +8,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import toonpick.app.security.jwt.JwtTokenProvider;
-import toonpick.app.security.jwt.JwtTokenValidator;
-import toonpick.app.service.AuthService;
+import toonpick.app.auth.jwt.JwtTokenProvider;
+import toonpick.app.auth.jwt.JwtTokenValidator;
+import toonpick.app.auth.service.AuthService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;

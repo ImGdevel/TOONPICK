@@ -1,8 +1,10 @@
-package toonpick.app.dto;
+package toonpick.app.auth.dto.oauth2responseImpl;
+
+import toonpick.app.auth.dto.OAuth2Response;
 
 import java.util.Map;
 
-public class NaverResponse implements OAuth2Response{
+public class NaverResponse implements OAuth2Response {
 
     private final Map<String, Object> attribute;
 

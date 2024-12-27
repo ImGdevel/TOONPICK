@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
-import toonpick.app.dto.CustomUserDetails;
+import toonpick.app.auth.user.CustomUserDetails;
 import toonpick.app.dto.PagedResponseDTO;
 import toonpick.app.dto.WebtoonReviewCreateDTO;
 import toonpick.app.dto.WebtoonReviewDTO;

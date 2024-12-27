@@ -1,4 +1,4 @@
-package toonpick.app.security.filter;
+package toonpick.app.auth.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -12,9 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.AuthenticationException;
 
-import toonpick.app.dto.LoginRequestDTO;
-import toonpick.app.security.handler.LoginFailureHandler;
-import toonpick.app.security.handler.LoginSuccessHandler;
+import toonpick.app.auth.dto.LoginRequest;
+import toonpick.app.auth.handler.LoginFailureHandler;
+import toonpick.app.auth.handler.LoginSuccessHandler;
 
 import java.io.IOException;
 
@@ -39,7 +39,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            LoginRequestDTO loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequestDTO.class);
+            LoginRequest loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
 
             String username = loginRequest.getUsername();
             String password = loginRequest.getPassword();

@@ -1,4 +1,4 @@
-package toonpick.app.security.config;
+package toonpick.app.auth.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
@@ -16,17 +16,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import toonpick.app.security.handler.LoginFailureHandler;
-import toonpick.app.security.handler.LoginSuccessHandler;
-import toonpick.app.security.handler.LogoutHandler;
-import toonpick.app.security.jwt.JwtTokenProvider;
-import toonpick.app.security.filter.CustomLogoutFilter;
-import toonpick.app.security.filter.JwtAuthorizationFilter;
-import toonpick.app.security.filter.LoginAuthenticationFilter;
-import toonpick.app.security.handler.OAuth2SuccessHandler;
-import toonpick.app.security.jwt.JwtTokenValidator;
-import toonpick.app.service.AuthService;
-import toonpick.app.service.OAuth2UserService;
+import toonpick.app.auth.handler.LoginFailureHandler;
+import toonpick.app.auth.handler.LoginSuccessHandler;
+import toonpick.app.auth.handler.LogoutHandler;
+import toonpick.app.auth.filter.CustomLogoutFilter;
+import toonpick.app.auth.filter.JwtAuthorizationFilter;
+import toonpick.app.auth.filter.LoginAuthenticationFilter;
+import toonpick.app.auth.handler.OAuth2SuccessHandler;
+import toonpick.app.auth.jwt.JwtTokenValidator;
+import toonpick.app.auth.service.OAuth2UserService;
 import toonpick.app.util.ErrorResponseSender;
 
 import java.util.Arrays;

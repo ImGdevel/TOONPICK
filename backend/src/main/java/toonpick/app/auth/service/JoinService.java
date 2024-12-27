@@ -1,11 +1,11 @@
-package toonpick.app.service;
+package toonpick.app.auth.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.dto.JoinRequestDTO;
+import toonpick.app.auth.dto.JoinRequest;
 import toonpick.app.entity.Member;
 import toonpick.app.repository.MemberRepository;
 
@@ -25,18 +25,18 @@ public class JoinService {
     }
 
     @Transactional
-    public void createMember(JoinRequestDTO joinRequestDTO) {
-        if (memberRepository.existsByUsername(joinRequestDTO.getUsername())) {
-            String errorMessage = "Username " + joinRequestDTO.getUsername() + " already exists.";
+    public void createMember(JoinRequest joinRequest) {
+        if (memberRepository.existsByUsername(joinRequest.getUsername())) {
+            String errorMessage = "Username " + joinRequest.getUsername() + " already exists.";
             LOGGER.error(errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
 
         Member member = Member.builder()
-                .username(joinRequestDTO.getUsername())
+                .username(joinRequest.getUsername())
                 .nickname(generateRandomNickname())
-                .password(bCryptPasswordEncoder.encode(joinRequestDTO.getPassword()))
-                .email(joinRequestDTO.getEmail())
+                .password(bCryptPasswordEncoder.encode(joinRequest.getPassword()))
+                .email(joinRequest.getEmail())
                 .role("ROLE_USER")
                 .isAdultVerified(false)
                 .profilePicture("default_profile_img.png")
@@ -44,7 +44,7 @@ public class JoinService {
 
         memberRepository.save(member);
 
-        LOGGER.info("Member {} created successfully.", joinRequestDTO.getUsername());
+        LOGGER.info("Member {} created successfully.", joinRequest.getUsername());
     }
 
     private String generateRandomNickname() {

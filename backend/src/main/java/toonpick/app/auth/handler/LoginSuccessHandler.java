@@ -1,4 +1,4 @@
-package toonpick.app.security.handler;
+package toonpick.app.auth.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,8 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import toonpick.app.security.jwt.JwtTokenProvider;
-import toonpick.app.service.AuthService;
+import toonpick.app.auth.jwt.JwtTokenProvider;
+import toonpick.app.auth.service.AuthService;
 
 import java.util.stream.Collectors;
 import java.io.IOException;

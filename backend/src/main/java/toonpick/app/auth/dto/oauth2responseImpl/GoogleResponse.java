@@ -1,9 +1,10 @@
-package toonpick.app.dto;
+package toonpick.app.auth.dto.oauth2responseImpl;
+
+import toonpick.app.auth.dto.OAuth2Response;
 
 import java.util.Map;
-import java.util.Objects;
 
-public class GoogleResponse implements OAuth2Response{
+public class GoogleResponse implements OAuth2Response {
 
     private final Map<String, Object> attribute;
 

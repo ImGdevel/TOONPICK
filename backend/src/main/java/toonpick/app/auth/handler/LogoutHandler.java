@@ -1,9 +1,9 @@
-package toonpick.app.security.handler;
+package toonpick.app.auth.handler;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
-import toonpick.app.service.AuthService;
+import toonpick.app.auth.service.AuthService;
 
 @Component
 public class LogoutHandler {

@@ -1,9 +1,9 @@
-package toonpick.app.dto;
+package toonpick.app.auth.dto;
 
 import lombok.Data;
 
 @Data
-public class LoginRequestDTO {
+public class LoginRequest {
     private String username;
     private String password;
 }

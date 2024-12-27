@@ -1,11 +1,11 @@
-package toonpick.app.security.jwt;
+package toonpick.app.auth.jwt;
 
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import toonpick.app.dto.CustomUserDetails;
+import toonpick.app.auth.user.CustomUserDetails;
 
 @Component
 public class JwtTokenValidator {

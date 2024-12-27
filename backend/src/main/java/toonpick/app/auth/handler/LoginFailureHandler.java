@@ -1,4 +1,4 @@
-package toonpick.app.security.handler;
+package toonpick.app.auth.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

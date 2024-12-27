@@ -1,4 +1,4 @@
-package toonpick.app.dto;
+package toonpick.app.auth.dto;
 
 public interface OAuth2Response {
 

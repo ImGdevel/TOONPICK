@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import toonpick.app.dto.CustomUserDetails;
+import toonpick.app.auth.user.CustomUserDetails;
 import toonpick.app.dto.WebtoonDTO;
 import toonpick.app.service.MemberFavoriteWebtoonService;
 

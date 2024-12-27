@@ -1,4 +1,4 @@
-package toonpick.app.controller;
+package toonpick.app.auth.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,11 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import toonpick.app.security.jwt.JwtTokenProvider;
-import toonpick.app.security.jwt.JwtTokenValidator;
-import toonpick.app.service.AuthService;
-
-import java.util.Date;
+import toonpick.app.auth.jwt.JwtTokenProvider;
+import toonpick.app.auth.jwt.JwtTokenValidator;
+import toonpick.app.auth.service.AuthService;
 
 @Controller
 @ResponseBody
