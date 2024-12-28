@@ -35,7 +35,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // 로그아웃 요청인지 확인
-        if (!"/logout".equals(httpRequest.getRequestURI()) && "POST".equalsIgnoreCase(httpRequest.getMethod())) {
+        if (!isLogoutRequest(httpRequest)) {
             chain.doFilter(request, response);
             return;
         }
@@ -51,5 +51,9 @@ public class CustomLogoutFilter extends GenericFilterBean {
         } catch (IllegalArgumentException e) {
             errorResponseSender.sendErrorResponse(httpResponse, "Invalid refresh token", HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    private boolean isLogoutRequest(HttpServletRequest request) {
+        return "/logout".equals(request.getRequestURI()) && "POST".equalsIgnoreCase(request.getMethod());
     }
 }

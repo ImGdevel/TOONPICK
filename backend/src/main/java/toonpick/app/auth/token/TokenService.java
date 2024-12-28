@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import toonpick.app.auth.controller.TokenReissueController;
 import toonpick.app.auth.jwt.JwtTokenValidator;
 import toonpick.app.auth.jwt.JwtTokenProvider;
 
@@ -50,6 +49,7 @@ public class TokenService {
 
         String newRefreshToken = jwtTokenProvider.createAccessToken(userid, username, role);
 
+        logger.info("renew Refresh");
         // Refresh Token 저장소에 갱신
         deleteRefreshToken(refreshToken);
         saveRefreshToken(username, newRefreshToken);
@@ -73,9 +73,9 @@ public class TokenService {
 
     public void deleteRefreshToken(String refreshToken) {
         refreshTokenRepository.findById(refreshToken)
-                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+                .orElseThrow(() -> new RuntimeException("Not found refresh token - Delete"));
 
-        refreshTokenRepository.deleteByToken(refreshToken);
+        refreshTokenRepository.deleteById(refreshToken);
     }
 
 }
