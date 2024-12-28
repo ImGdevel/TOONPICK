@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import toonpick.app.auth.jwt.JwtTokenProvider;
 import toonpick.app.auth.jwt.JwtTokenValidator;
-import toonpick.app.auth.service.TokenService;
+import toonpick.app.auth.token.TokenService;
 
 @Controller
 @ResponseBody

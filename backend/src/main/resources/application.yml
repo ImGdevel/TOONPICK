@@ -21,6 +21,13 @@ spring:
     username: root
     password: 1234
 
+  redis:
+    host: localhost
+    port: 6380
+    timeout: 10000ms
+    jedis:
+      enabled: false
+
   # jpa:
   #   hibernate:
   #     ddl-auto: create

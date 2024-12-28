@@ -10,7 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import toonpick.app.auth.jwt.JwtTokenProvider;
 import toonpick.app.auth.jwt.JwtTokenValidator;
-import toonpick.app.auth.service.TokenService;
+import toonpick.app.auth.token.TokenService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;

@@ -3,7 +3,7 @@ package toonpick.app.auth.handler;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
-import toonpick.app.auth.service.TokenService;
+import toonpick.app.auth.token.TokenService;
 
 @Component
 public class LogoutHandler {

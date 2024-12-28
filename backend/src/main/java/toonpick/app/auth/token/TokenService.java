@@ -1,12 +1,13 @@
-package toonpick.app.auth.service;
+package toonpick.app.auth.token;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import toonpick.app.auth.controller.TokenReissueController;
 import toonpick.app.auth.jwt.JwtTokenValidator;
-import toonpick.app.entity.RefreshToken;
 import toonpick.app.auth.jwt.JwtTokenProvider;
-import toonpick.app.repository.RefreshTokenRepository;
+
 import java.util.Date;
 
 
@@ -18,12 +19,12 @@ public class TokenService {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenValidator jwtTokenValidator;
 
-    // Access Token 갱신
-    @Transactional
+    private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
+
     public String renewAccessToken(String refreshToken) {
         // Refresh 토큰 유효 검증
-        refreshTokenRepository.findByToken(refreshToken)
-                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+        refreshTokenRepository.findById(refreshToken)
+                .orElseThrow(() -> new RuntimeException("Not found refresh token"));
         jwtTokenValidator.validateRefreshToken(refreshToken);
 
         // Access Token 재발급
@@ -36,12 +37,10 @@ public class TokenService {
         return newAccessToken;
     }
 
-    // Refresh Token 갱신
-    @Transactional
     public String renewRefreshToken(String refreshToken) {
         // Refresh 토큰 유효 검증
-        refreshTokenRepository.findByToken(refreshToken)
-                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+        refreshTokenRepository.findById(refreshToken)
+                .orElseThrow(() -> new RuntimeException("Not found refresh token"));
         jwtTokenValidator.validateRefreshToken(refreshToken);
 
         // Refresh 토큰 재발급
@@ -58,23 +57,22 @@ public class TokenService {
         return newRefreshToken;
     }
 
-    @Transactional
     public void saveRefreshToken(String username, String refresh) {
-        Date date = new Date(System.currentTimeMillis() + 86400000L);
-
+        Date expirationDate = jwtTokenProvider.getExpiration(refresh);
         RefreshToken refreshToken = RefreshToken
                 .builder()
-                .username(username)
                 .token(refresh)
-                .expiration(date.toString())
+                .username(username)
+                .expiration(expirationDate.toString())
                 .build();
 
         refreshTokenRepository.save(refreshToken);
+
+        logger.info("save refreshToken: " + refreshToken);
     }
 
-    @Transactional
     public void deleteRefreshToken(String refreshToken) {
-        RefreshToken storedToken = refreshTokenRepository.findByToken(refreshToken)
+        refreshTokenRepository.findById(refreshToken)
                 .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
 
         refreshTokenRepository.deleteByToken(refreshToken);

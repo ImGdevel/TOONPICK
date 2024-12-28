@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import toonpick.app.auth.user.CustomOAuth2UserDetails;
 import toonpick.app.auth.jwt.JwtTokenProvider;
-import toonpick.app.auth.service.TokenService;
+import toonpick.app.auth.token.TokenService;
 import toonpick.app.service.MemberService;
 
 import java.io.IOException;
