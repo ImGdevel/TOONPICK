@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import toonpick.app.auth.jwt.JwtTokenProvider;
 import toonpick.app.auth.jwt.JwtTokenValidator;
-import toonpick.app.auth.service.AuthService;
+import toonpick.app.auth.service.TokenService;
 
 @Controller
 @ResponseBody
@@ -21,7 +21,7 @@ import toonpick.app.auth.service.AuthService;
 public class TokenReissueController {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthService authService;
+    private final TokenService tokenService;
     private final JwtTokenValidator jwtTokenValidator;
     private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
 
@@ -33,13 +33,13 @@ public class TokenReissueController {
             jwtTokenValidator.validateRefreshToken(refreshToken);
 
             // 새로운 Access 토큰 발급
-            String newAccessToken = authService.refreshAccessToken(refreshToken);
+            String newAccessToken = tokenService.renewAccessToken(refreshToken);
             response.setHeader("Authorization", "Bearer " + newAccessToken);
             logger.info("Issued new access token");
 
             // Refresh 토큰 갱신 필요 여부 확인 및 갱신
             if (jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)) {
-                String newRefreshToken = authService.refreshRefreshToken(refreshToken);
+                String newRefreshToken = tokenService.renewRefreshToken(refreshToken);
                 Cookie newRefreshCookie = jwtTokenProvider.createCookie("refresh", newRefreshToken);
                 response.addCookie(newRefreshCookie);
                 logger.info("Issued new refresh token");

@@ -3,20 +3,20 @@ package toonpick.app.auth.handler;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
-import toonpick.app.auth.service.AuthService;
+import toonpick.app.auth.service.TokenService;
 
 @Component
 public class LogoutHandler {
 
-    private final AuthService authService;
+    private final TokenService tokenService;
 
-    public LogoutHandler(AuthService authService) {
-        this.authService = authService;
+    public LogoutHandler(TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
     public void handleLogout(String refreshToken, HttpServletResponse response) {
 
-        authService.deleteRefreshToken(refreshToken);
+        tokenService.deleteRefreshToken(refreshToken);
 
         Cookie cookie = new Cookie("refresh", null);
         cookie.setMaxAge(0);
