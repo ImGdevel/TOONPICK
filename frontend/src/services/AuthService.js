@@ -26,7 +26,13 @@ export const AuthService = {
       return { success: false, message: 'Passwords do not match.' };
     }
     try {
-      const response = await api.post('/join', { username, password }, { authRequired: false });
+      const joinFormat = {
+        "username" : username,
+        "email" : username,
+        "password" : password
+      }
+
+      const response = await api.post('/join', joinFormat, { authRequired: false });
       console.log(response);
       return { success: true };
     } catch (error) {
