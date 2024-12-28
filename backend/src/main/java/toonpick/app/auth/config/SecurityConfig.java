@@ -17,13 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import toonpick.app.auth.handler.LoginFailureHandler;
-import toonpick.app.auth.handler.LoginSuccessHandler;
-import toonpick.app.auth.handler.LogoutHandler;
-import toonpick.app.auth.filter.CustomLogoutFilter;
-import toonpick.app.auth.filter.JwtAuthorizationFilter;
-import toonpick.app.auth.filter.LoginAuthenticationFilter;
-import toonpick.app.auth.handler.OAuth2SuccessHandler;
+import toonpick.app.auth.handler.*;
+import toonpick.app.auth.filter.*;
 import toonpick.app.auth.jwt.JwtTokenValidator;
 import toonpick.app.auth.service.OAuth2UserService;
 import toonpick.app.util.ErrorResponseSender;
@@ -39,12 +34,10 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtTokenValidator jwtTokenValidator;
     private final OAuth2UserService oAuth2UserService;
-    private final OAuth2SuccessHandler OAuth2SuccessHandler;
-
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final LoginSuccessHandler successHandler;
     private final LoginFailureHandler failureHandler;
     private final LogoutHandler logoutHandler;
-
     private final ErrorResponseSender errorResponseSender;
 
     @Bean
@@ -60,41 +53,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                        CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setMaxAge(3600L);
-                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
-                        return configuration;
-                    }
-                }))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .successHandler(OAuth2SuccessHandler))
+                        .successHandler(oAuth2SuccessHandler))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/*").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
-                        .requestMatchers("/", "/login", "/join", "/reissue").permitAll()
+                        .requestMatchers("/", "/login", "/join", "/reissue", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
                         .requestMatchers("/hello").hasRole("USER")
-                        .requestMatchers("/admin").hasRole("ADMIN")
-
-                )
+                        .requestMatchers("/admin").hasRole("ADMIN"))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAt(
                         new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), successHandler, failureHandler),
                         UsernamePasswordAuthenticationFilter.class
                 )
                 .addFilterBefore(
-                        new CustomLogoutFilter(jwtTokenValidator, logoutHandler),
+                        new CustomLogoutFilter(jwtTokenValidator, logoutHandler, errorResponseSender),
                         LogoutFilter.class
                 )
                 .addFilterAfter(
@@ -103,5 +80,18 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    private CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            configuration.setAllowedHeaders(Collections.singletonList("*"));
+            configuration.setAllowCredentials(true);
+            configuration.setMaxAge(3600L);
+            configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
+            return configuration;
+        };
     }
 }
