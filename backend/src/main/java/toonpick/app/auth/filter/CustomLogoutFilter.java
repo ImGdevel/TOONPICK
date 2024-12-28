@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.GenericFilterBean;
 import toonpick.app.auth.handler.LogoutHandler;
 import toonpick.app.auth.jwt.JwtTokenValidator;
+import toonpick.app.util.ErrorResponseSender;
 
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
     private final JwtTokenValidator tokenValidator;
     private final LogoutHandler logoutHandler;
+    private final ErrorResponseSender errorResponseSender;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -47,7 +49,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
             logoutHandler.handleLogout(refreshToken, httpResponse);
 
         } catch (IllegalArgumentException e) {
-            httpResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            errorResponseSender.sendErrorResponse(httpResponse, "Invalid refresh token", HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }
