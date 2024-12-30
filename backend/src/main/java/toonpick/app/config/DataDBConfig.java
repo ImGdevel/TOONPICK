@@ -34,7 +34,7 @@ public class DataDBConfig {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
         em.setDataSource(dataDBSource());
-        em.setPackagesToScan(new String[]{"toonpick.app.entity"});
+        em.setPackagesToScan(new String[]{"toonpick.app"});
         em. setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         HashMap<String, Object> properties = new HashMap<>();
