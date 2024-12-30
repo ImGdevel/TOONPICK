@@ -1,4 +1,4 @@
-package toonpick.app.repository;
+package toonpick.app.review.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.member.entity.Member;
 import toonpick.app.webtoon.entity.Webtoon;
-import toonpick.app.entity.WebtoonReview;
+import toonpick.app.review.entity.WebtoonReview;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

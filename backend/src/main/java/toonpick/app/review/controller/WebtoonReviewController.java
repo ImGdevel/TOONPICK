@@ -1,4 +1,4 @@
-package toonpick.app.controller;
+package toonpick.app.review.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import toonpick.app.auth.user.CustomUserDetails;
 import toonpick.app.dto.PagedResponseDTO;
-import toonpick.app.dto.WebtoonReviewCreateDTO;
-import toonpick.app.dto.WebtoonReviewDTO;
-import toonpick.app.service.WebtoonReviewService;
+import toonpick.app.review.dto.WebtoonReviewCreateDTO;
+import toonpick.app.review.dto.WebtoonReviewDTO;
+import toonpick.app.review.service.WebtoonReviewService;
 
 import java.util.HashMap;
 import java.util.List;

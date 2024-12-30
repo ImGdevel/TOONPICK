@@ -1,4 +1,4 @@
-package toonpick.app.dto;
+package toonpick.app.review.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

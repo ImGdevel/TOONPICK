@@ -1,4 +1,4 @@
-package toonpick.app.entity;
+package toonpick.app.review.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

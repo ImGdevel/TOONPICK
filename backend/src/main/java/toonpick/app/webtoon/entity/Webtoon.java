@@ -19,7 +19,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import toonpick.app.entity.WebtoonReview;
+import toonpick.app.review.entity.WebtoonReview;
 import toonpick.app.entity.enums.AgeRating;
 import toonpick.app.entity.enums.Platform;
 import toonpick.app.entity.enums.SerializationStatus;
