@@ -75,3 +75,4 @@ logging:
   level:
     org:
       springframework: DEBUG
+      hibernate: DEBUG

@@ -68,7 +68,6 @@ public class TokenService {
 
         refreshTokenRepository.save(refreshToken);
 
-        logger.info("save refreshToken: " + refreshToken);
     }
 
     public void deleteRefreshToken(String refreshToken) {

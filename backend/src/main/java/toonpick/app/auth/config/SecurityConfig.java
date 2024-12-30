@@ -1,6 +1,5 @@
 package toonpick.app.auth.config;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,11 +59,13 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .successHandler(oAuth2SuccessHandler))
+                        .successHandler(oAuth2SuccessHandler)
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/join", "/reissue", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
                         .requestMatchers("/hello").hasRole("USER")
-                        .requestMatchers("/admin").hasRole("ADMIN"))
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAt(
                         new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), successHandler, failureHandler),
