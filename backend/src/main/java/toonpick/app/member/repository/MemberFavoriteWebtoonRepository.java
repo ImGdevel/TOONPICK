@@ -1,9 +1,9 @@
-package toonpick.app.repository;
+package toonpick.app.member.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import toonpick.app.entity.Member;
-import toonpick.app.entity.MemberFavoriteWebtoon;
+import toonpick.app.member.entity.Member;
+import toonpick.app.member.entity.MemberFavoriteWebtoon;
 import toonpick.app.webtoon.entity.Webtoon;
 
 import java.util.List;

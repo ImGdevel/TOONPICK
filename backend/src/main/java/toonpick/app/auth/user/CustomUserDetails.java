@@ -3,7 +3,7 @@ package toonpick.app.auth.user;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import toonpick.app.entity.Member;
+import toonpick.app.member.entity.Member;
 
 import java.util.Collection;
 import java.util.Collections;

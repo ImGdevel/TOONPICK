@@ -1,7 +1,7 @@
-package toonpick.app.mapper;
+package toonpick.app.member.mapper;
 
-import toonpick.app.dto.MemberDTO;
-import toonpick.app.entity.Member;
+import toonpick.app.member.dto.MemberDTO;
+import toonpick.app.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

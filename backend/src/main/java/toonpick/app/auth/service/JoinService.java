@@ -6,8 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.auth.dto.JoinRequest;
-import toonpick.app.entity.Member;
-import toonpick.app.repository.MemberRepository;
+import toonpick.app.member.entity.Member;
+import toonpick.app.member.repository.MemberRepository;
 
 import java.util.Random;
 

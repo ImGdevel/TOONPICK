@@ -1,9 +1,10 @@
-package toonpick.app.entity;
+package toonpick.app.member.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toonpick.app.entity.BaseTimeEntity;
 
 @Entity
 @Getter

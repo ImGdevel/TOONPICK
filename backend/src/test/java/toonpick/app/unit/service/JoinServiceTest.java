@@ -7,8 +7,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import toonpick.app.auth.dto.JoinRequest;
-import toonpick.app.entity.Member;
-import toonpick.app.repository.MemberRepository;
+import toonpick.app.member.entity.Member;
+import toonpick.app.member.repository.MemberRepository;
 import toonpick.app.auth.service.JoinService;
 
 import static org.mockito.Mockito.*;

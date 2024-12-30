@@ -1,13 +1,13 @@
-package toonpick.app.service;
+package toonpick.app.member.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.dto.MemberDTO;
-import toonpick.app.entity.Member;
-import toonpick.app.mapper.MemberMapper;
-import toonpick.app.repository.MemberRepository;
+import toonpick.app.member.dto.MemberDTO;
+import toonpick.app.member.entity.Member;
+import toonpick.app.member.mapper.MemberMapper;
+import toonpick.app.member.repository.MemberRepository;
 
 @Service
 public class MemberService {

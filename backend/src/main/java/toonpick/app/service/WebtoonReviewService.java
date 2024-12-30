@@ -13,13 +13,13 @@ import toonpick.app.dto.PagedResponseDTO;
 import toonpick.app.dto.WebtoonReviewCreateDTO;
 import toonpick.app.dto.WebtoonReviewDTO;
 import toonpick.app.entity.ReviewLike;
-import toonpick.app.entity.Member;
+import toonpick.app.member.entity.Member;
 import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.entity.WebtoonReview;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonReviewMapper;
 import toonpick.app.repository.ReviewLikeRepository;
-import toonpick.app.repository.MemberRepository;
+import toonpick.app.member.repository.MemberRepository;
 import toonpick.app.webtoon.repository.WebtoonRepository;
 import toonpick.app.repository.WebtoonReviewRepository;
 

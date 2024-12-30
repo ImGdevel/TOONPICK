@@ -1,4 +1,4 @@
-package toonpick.app.controller;
+package toonpick.app.member.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.auth.user.CustomUserDetails;
-import toonpick.app.dto.MemberDTO;
-import toonpick.app.service.MemberService;
+import toonpick.app.member.dto.MemberDTO;
+import toonpick.app.member.service.MemberService;
 
 @RestController
 @RequestMapping("/api/user")

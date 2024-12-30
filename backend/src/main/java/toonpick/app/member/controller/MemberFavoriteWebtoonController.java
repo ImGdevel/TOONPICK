@@ -1,4 +1,4 @@
-package toonpick.app.controller;
+package toonpick.app.member.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import toonpick.app.auth.user.CustomUserDetails;
 import toonpick.app.webtoon.dto.WebtoonDTO;
-import toonpick.app.service.MemberFavoriteWebtoonService;
+import toonpick.app.member.service.MemberFavoriteWebtoonService;
 
 import java.util.List;
 

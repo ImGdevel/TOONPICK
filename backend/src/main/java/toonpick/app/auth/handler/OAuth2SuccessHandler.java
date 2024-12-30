@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import toonpick.app.auth.user.CustomOAuth2UserDetails;
 import toonpick.app.auth.jwt.JwtTokenProvider;
 import toonpick.app.auth.token.TokenService;
-import toonpick.app.service.MemberService;
+import toonpick.app.member.service.MemberService;
 
 import java.io.IOException;
 import java.util.Collection;

@@ -5,8 +5,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import toonpick.app.auth.user.CustomUserDetails;
-import toonpick.app.entity.Member;
-import toonpick.app.repository.MemberRepository;
+import toonpick.app.member.entity.Member;
+import toonpick.app.member.repository.MemberRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
