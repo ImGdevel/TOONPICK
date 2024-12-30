@@ -8,9 +8,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import toonpick.app.dto.RecommendationListDTO;
 import toonpick.app.entity.RecommendationList;
-import toonpick.app.entity.Webtoon;
+import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.mapper.RecommendationListMapper;
-import toonpick.app.repository.WebtoonRepository;
+import toonpick.app.webtoon.repository.WebtoonRepository;
 
 import java.util.Arrays;
 import java.util.HashSet;

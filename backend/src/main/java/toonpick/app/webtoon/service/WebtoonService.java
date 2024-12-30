@@ -1,4 +1,4 @@
-package toonpick.app.service;
+package toonpick.app.webtoon.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -7,20 +7,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.dto.AuthorDTO;
-import toonpick.app.dto.GenreDTO;
-import toonpick.app.dto.WebtoonDTO;
-import toonpick.app.dto.WebtoonFilterDTO;
-import toonpick.app.dto.WebtoonUpdateRequestDTO;
-import toonpick.app.entity.Author;
-import toonpick.app.entity.Genre;
-import toonpick.app.entity.Webtoon;
+import toonpick.app.webtoon.dto.AuthorDTO;
+import toonpick.app.webtoon.dto.GenreDTO;
+import toonpick.app.webtoon.dto.WebtoonDTO;
+import toonpick.app.webtoon.dto.WebtoonFilterDTO;
+import toonpick.app.webtoon.dto.WebtoonUpdateRequestDTO;
+import toonpick.app.webtoon.entity.Author;
+import toonpick.app.webtoon.entity.Genre;
+import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.entity.enums.SerializationStatus;
 import toonpick.app.exception.ResourceNotFoundException;
-import toonpick.app.mapper.WebtoonMapper;
-import toonpick.app.repository.AuthorRepository;
-import toonpick.app.repository.GenreRepository;
-import toonpick.app.repository.WebtoonRepository;
+import toonpick.app.webtoon.mapper.WebtoonMapper;
+import toonpick.app.webtoon.repository.AuthorRepository;
+import toonpick.app.webtoon.repository.GenreRepository;
+import toonpick.app.webtoon.repository.WebtoonRepository;
 
 import java.time.DayOfWeek;
 import java.util.HashSet;

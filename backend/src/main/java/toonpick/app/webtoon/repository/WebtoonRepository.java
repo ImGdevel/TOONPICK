@@ -1,4 +1,4 @@
-package toonpick.app.repository;
+package toonpick.app.webtoon.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.entity.Webtoon;
+import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.entity.enums.SerializationStatus;
 
 import java.time.DayOfWeek;

@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import toonpick.app.entity.Member;
 import toonpick.app.entity.MemberFavoriteWebtoon;
-import toonpick.app.entity.Webtoon;
+import toonpick.app.webtoon.entity.Webtoon;
 
 import java.util.List;
 import java.util.Optional;

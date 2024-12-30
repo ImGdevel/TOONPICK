@@ -1,11 +1,10 @@
-package toonpick.app.service;
+package toonpick.app.webtoon.service;
 
-import toonpick.app.dto.GenreDTO;
-import toonpick.app.entity.Author;
-import toonpick.app.entity.Genre;
+import toonpick.app.webtoon.dto.GenreDTO;
+import toonpick.app.webtoon.entity.Genre;
 import toonpick.app.exception.ResourceNotFoundException;
-import toonpick.app.mapper.GenreMapper;
-import toonpick.app.repository.GenreRepository;
+import toonpick.app.webtoon.mapper.GenreMapper;
+import toonpick.app.webtoon.repository.GenreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

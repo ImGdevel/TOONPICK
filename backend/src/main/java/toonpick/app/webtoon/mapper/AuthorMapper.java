@@ -1,7 +1,7 @@
-package toonpick.app.mapper;
+package toonpick.app.webtoon.mapper;
 
-import toonpick.app.dto.AuthorDTO;
-import toonpick.app.entity.Author;
+import toonpick.app.webtoon.dto.AuthorDTO;
+import toonpick.app.webtoon.entity.Author;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

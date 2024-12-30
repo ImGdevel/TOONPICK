@@ -1,4 +1,4 @@
-package toonpick.app.entity;
+package toonpick.app.webtoon.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +19,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toonpick.app.entity.WebtoonReview;
 import toonpick.app.entity.enums.AgeRating;
 import toonpick.app.entity.enums.Platform;
 import toonpick.app.entity.enums.SerializationStatus;

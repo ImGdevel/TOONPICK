@@ -1,7 +1,7 @@
-package toonpick.app.controller;
+package toonpick.app.webtoon.controller;
 
-import toonpick.app.dto.AuthorDTO;
-import toonpick.app.service.AuthorService;
+import toonpick.app.webtoon.dto.AuthorDTO;
+import toonpick.app.webtoon.service.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

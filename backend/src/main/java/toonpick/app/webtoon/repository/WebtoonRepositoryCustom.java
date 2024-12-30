@@ -1,9 +1,9 @@
-package toonpick.app.repository;
+package toonpick.app.webtoon.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import toonpick.app.dto.WebtoonFilterDTO;
-import toonpick.app.entity.Webtoon;
+import toonpick.app.webtoon.dto.WebtoonFilterDTO;
+import toonpick.app.webtoon.entity.Webtoon;
 
 import java.util.List;
 

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.entity.Member;
-import toonpick.app.entity.Webtoon;
+import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.entity.WebtoonReview;
 import org.springframework.data.jpa.repository.JpaRepository;
 

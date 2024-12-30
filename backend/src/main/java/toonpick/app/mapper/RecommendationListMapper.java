@@ -6,8 +6,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import toonpick.app.dto.RecommendationListDTO;
 import toonpick.app.entity.RecommendationList;
-import toonpick.app.entity.Webtoon;
-import toonpick.app.repository.WebtoonRepository;
+import toonpick.app.webtoon.entity.Webtoon;
+import toonpick.app.webtoon.repository.WebtoonRepository;
 
 import java.util.HashSet;
 import java.util.List;

@@ -4,11 +4,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.RecommendationListDTO;
 import toonpick.app.entity.RecommendationList;
-import toonpick.app.entity.Webtoon;
+import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.RecommendationListMapper;
 import toonpick.app.repository.RecommendationListRepository;
-import toonpick.app.repository.WebtoonRepository;
+import toonpick.app.webtoon.repository.WebtoonRepository;
 
 import java.util.HashSet;
 import java.util.List;

@@ -2,15 +2,15 @@ package toonpick.app.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.dto.WebtoonDTO;
+import toonpick.app.webtoon.dto.WebtoonDTO;
 import toonpick.app.entity.Member;
 import toonpick.app.entity.MemberFavoriteWebtoon;
-import toonpick.app.entity.Webtoon;
+import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.exception.ResourceNotFoundException;
-import toonpick.app.mapper.WebtoonMapper;
+import toonpick.app.webtoon.mapper.WebtoonMapper;
 import toonpick.app.repository.MemberFavoriteWebtoonRepository;
 import toonpick.app.repository.MemberRepository;
-import toonpick.app.repository.WebtoonRepository;
+import toonpick.app.webtoon.repository.WebtoonRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

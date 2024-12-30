@@ -1,4 +1,4 @@
-package toonpick.app.repository;
+package toonpick.app.webtoon.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -7,17 +7,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import toonpick.app.dto.WebtoonFilterDTO;
+import toonpick.app.webtoon.dto.WebtoonFilterDTO;
 import toonpick.app.entity.QWebtoon;
-import toonpick.app.entity.Webtoon;
+import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.entity.enums.AgeRating;
 import toonpick.app.entity.enums.Platform;
 import toonpick.app.entity.enums.SerializationStatus;
 
 import java.util.List;
 import java.util.Set;
-
-import static com.querydsl.core.types.dsl.BooleanExpression.*;
 
 @RequiredArgsConstructor
 public class WebtoonRepositoryImpl implements WebtoonRepositoryCustom {

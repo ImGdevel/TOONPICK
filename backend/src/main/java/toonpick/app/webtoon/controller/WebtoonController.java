@@ -1,15 +1,15 @@
-package toonpick.app.controller;
+package toonpick.app.webtoon.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import toonpick.app.dto.WebtoonDTO;
-import toonpick.app.dto.WebtoonFilterDTO;
+import toonpick.app.webtoon.dto.WebtoonDTO;
+import toonpick.app.webtoon.dto.WebtoonFilterDTO;
 import toonpick.app.entity.enums.Platform;
 import toonpick.app.entity.enums.SerializationStatus;
 import toonpick.app.entity.enums.AgeRating;
-import toonpick.app.service.WebtoonService;
+import toonpick.app.webtoon.service.WebtoonService;
 
 import java.time.DayOfWeek;
 import java.util.List;

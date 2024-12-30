@@ -1,6 +1,6 @@
-package toonpick.app.repository;
+package toonpick.app.webtoon.repository;
 
-import toonpick.app.entity.Author;
+import toonpick.app.webtoon.entity.Author;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

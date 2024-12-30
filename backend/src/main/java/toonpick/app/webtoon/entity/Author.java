@@ -1,4 +1,4 @@
-package toonpick.app.entity;
+package toonpick.app.webtoon.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "genre")
-public class Genre {
+@Table(name = "author")
+public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,12 +19,20 @@ public class Genre {
     @Column(unique = true)
     private String name;
 
+    private String role;
+
+    private String link;
+
     @Builder
-    public Genre(String name) {
+    public Author(String name, String role, String link) {
         this.name = name;
+        this.role = role;
+        this.link = link;
     }
 
-    public void update(String name) {
+    public void update(String name, String role, String link) {
         this.name = name;
+        this.role = role;
+        this.link = link;
     }
 }

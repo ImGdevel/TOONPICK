@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toonpick.app.webtoon.entity.Webtoon;
 
 import java.util.HashSet;
 import java.util.Set;

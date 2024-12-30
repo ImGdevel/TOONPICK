@@ -1,4 +1,4 @@
-package toonpick.app.dto;
+package toonpick.app.webtoon.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,6 @@ import toonpick.app.entity.enums.SerializationStatus;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Data
