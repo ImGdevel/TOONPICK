@@ -1,4 +1,4 @@
-package toonpick.app.dto;
+package toonpick.app.webtoon.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

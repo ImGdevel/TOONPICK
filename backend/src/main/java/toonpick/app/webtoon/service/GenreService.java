@@ -2,7 +2,7 @@ package toonpick.app.webtoon.service;
 
 import toonpick.app.webtoon.dto.GenreDTO;
 import toonpick.app.webtoon.entity.Genre;
-import toonpick.app.exception.ResourceNotFoundException;
+import toonpick.app.util.exception.ResourceNotFoundException;
 import toonpick.app.webtoon.mapper.GenreMapper;
 import toonpick.app.webtoon.repository.GenreRepository;
 import org.springframework.stereotype.Service;

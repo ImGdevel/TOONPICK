@@ -1,9 +1,9 @@
 package toonpick.app.webtoon.dto;
 
 import lombok.*;
-import toonpick.app.entity.enums.AgeRating;
-import toonpick.app.entity.enums.Platform;
-import toonpick.app.entity.enums.SerializationStatus;
+import toonpick.app.webtoon.entity.enums.AgeRating;
+import toonpick.app.webtoon.entity.enums.Platform;
+import toonpick.app.webtoon.entity.enums.SerializationStatus;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

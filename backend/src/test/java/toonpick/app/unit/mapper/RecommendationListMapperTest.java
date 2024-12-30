@@ -6,7 +6,6 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import toonpick.app.entity.RecommendationList;
 import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.mapper.RecommendationListMapper;
 import toonpick.app.webtoon.repository.WebtoonRepository;

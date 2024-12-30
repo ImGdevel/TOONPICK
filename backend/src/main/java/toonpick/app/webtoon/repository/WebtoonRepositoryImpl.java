@@ -8,11 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import toonpick.app.webtoon.dto.WebtoonFilterDTO;
-import toonpick.app.entity.QWebtoon;
+import toonpick.app.webtoon.entity.QWebtoon;
 import toonpick.app.webtoon.entity.Webtoon;
-import toonpick.app.entity.enums.AgeRating;
-import toonpick.app.entity.enums.Platform;
-import toonpick.app.entity.enums.SerializationStatus;
+import toonpick.app.webtoon.entity.enums.AgeRating;
+import toonpick.app.webtoon.entity.enums.Platform;
+import toonpick.app.webtoon.entity.enums.SerializationStatus;
 
 import java.util.List;
 import java.util.Set;

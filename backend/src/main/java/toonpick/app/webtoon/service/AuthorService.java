@@ -2,7 +2,7 @@ package toonpick.app.webtoon.service;
 
 import toonpick.app.webtoon.dto.AuthorDTO;
 import toonpick.app.webtoon.entity.Author;
-import toonpick.app.exception.ResourceNotFoundException;
+import toonpick.app.util.exception.ResourceNotFoundException;
 import toonpick.app.webtoon.mapper.AuthorMapper;
 import toonpick.app.webtoon.repository.AuthorRepository;
 import org.springframework.stereotype.Service;

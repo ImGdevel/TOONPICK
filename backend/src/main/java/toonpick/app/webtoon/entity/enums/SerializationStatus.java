@@ -1,6 +1,4 @@
-package toonpick.app.entity.enums;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
+package toonpick.app.webtoon.entity.enums;
 
 public enum SerializationStatus {
     ONGOING,

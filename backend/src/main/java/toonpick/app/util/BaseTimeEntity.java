@@ -1,4 +1,4 @@
-package toonpick.app.entity;
+package toonpick.app.util;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

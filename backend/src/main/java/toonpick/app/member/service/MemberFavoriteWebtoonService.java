@@ -6,7 +6,7 @@ import toonpick.app.webtoon.dto.WebtoonDTO;
 import toonpick.app.member.entity.Member;
 import toonpick.app.member.entity.MemberFavoriteWebtoon;
 import toonpick.app.webtoon.entity.Webtoon;
-import toonpick.app.exception.ResourceNotFoundException;
+import toonpick.app.util.exception.ResourceNotFoundException;
 import toonpick.app.webtoon.mapper.WebtoonMapper;
 import toonpick.app.member.repository.MemberFavoriteWebtoonRepository;
 import toonpick.app.member.repository.MemberRepository;

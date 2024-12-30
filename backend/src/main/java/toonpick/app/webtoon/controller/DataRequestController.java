@@ -1,4 +1,4 @@
-package toonpick.app.controller;
+package toonpick.app.webtoon.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,9 +9,9 @@ import toonpick.app.webtoon.dto.AuthorDTO;
 import toonpick.app.webtoon.dto.GenreDTO;
 import toonpick.app.webtoon.dto.WebtoonDTO;
 import toonpick.app.webtoon.dto.WebtoonRequestDTO;
-import toonpick.app.entity.enums.AgeRating;
-import toonpick.app.entity.enums.Platform;
-import toonpick.app.entity.enums.SerializationStatus;
+import toonpick.app.webtoon.entity.enums.AgeRating;
+import toonpick.app.webtoon.entity.enums.Platform;
+import toonpick.app.webtoon.entity.enums.SerializationStatus;
 import toonpick.app.webtoon.service.AuthorService;
 import toonpick.app.webtoon.service.GenreService;
 import toonpick.app.webtoon.service.WebtoonService;

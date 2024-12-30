@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import toonpick.app.entity.BaseTimeEntity;
+import toonpick.app.util.BaseTimeEntity;
 import toonpick.app.member.entity.Member;
 import toonpick.app.webtoon.entity.Webtoon;
 

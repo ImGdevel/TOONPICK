@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toonpick.app.webtoon.dto.WebtoonDTO;
 import toonpick.app.webtoon.dto.WebtoonFilterDTO;
-import toonpick.app.entity.enums.Platform;
-import toonpick.app.entity.enums.SerializationStatus;
-import toonpick.app.entity.enums.AgeRating;
+import toonpick.app.webtoon.entity.enums.Platform;
+import toonpick.app.webtoon.entity.enums.SerializationStatus;
+import toonpick.app.webtoon.entity.enums.AgeRating;
 import toonpick.app.webtoon.service.WebtoonService;
 
 import java.time.DayOfWeek;
