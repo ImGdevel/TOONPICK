@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
-import toonpick.app.auth.user.CustomUserDetails;
+import toonpick.app.common.utils.AuthenticationUtil;
 import toonpick.app.webtoon.dto.PagedResponseDTO;
 import toonpick.app.review.dto.WebtoonReviewCreateDTO;
 import toonpick.app.review.dto.WebtoonReviewDTO;
@@ -23,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 public class WebtoonReviewController {
 
     private final WebtoonReviewService webtoonReviewService;
+    private final AuthenticationUtil authenticationUtil;
 
     // 리뷰 작성
     @PostMapping
@@ -30,8 +31,8 @@ public class WebtoonReviewController {
             @PathVariable Long webtoonId,
             @RequestBody WebtoonReviewCreateDTO reviewCreateDTO,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
+        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
+
         WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO, webtoonId, username);
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
     }
@@ -64,8 +65,7 @@ public class WebtoonReviewController {
     public ResponseEntity<Map<String, Object>> toggleLike(
             @PathVariable Long reviewId,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
+        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
 
         CompletableFuture<Boolean> likeResult = webtoonReviewService.toggleLike(username, reviewId);
 
@@ -92,8 +92,7 @@ public class WebtoonReviewController {
     public ResponseEntity<WebtoonReviewDTO> getUserReviewForWebtoon(
             @PathVariable Long webtoonId,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
+        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
 
         Optional<WebtoonReviewDTO> reviewOpt = webtoonReviewService.getUserReviewForWebtoon(username, webtoonId);
         return reviewOpt
@@ -106,8 +105,7 @@ public class WebtoonReviewController {
     public ResponseEntity<List<Long>> getLikedReviews(
             @PathVariable Long webtoonId,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
+        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
 
         List<Long> likedReviewIds = webtoonReviewService.getLikedReviewIds(username, webtoonId);
         return ResponseEntity.ok(likedReviewIds);
