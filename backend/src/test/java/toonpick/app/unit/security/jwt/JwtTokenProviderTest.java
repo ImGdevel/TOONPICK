@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import toonpick.app.security.jwt.JwtTokenProvider;
+import toonpick.app.auth.jwt.JwtTokenProvider;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -34,10 +34,9 @@ class JwtTokenProviderTest {
         String username = "testUser";
         String role = "USER";
 
-        String token = jwtTokenProvider.createAccessToken(userId, username, role);
+        String token = jwtTokenProvider.createAccessToken(username, role);
 
         Assertions.assertNotNull(token);
-        Assertions.assertEquals(userId, jwtTokenProvider.getUserId(token));
         Assertions.assertEquals(username, jwtTokenProvider.getUsername(token));
         Assertions.assertEquals(role, jwtTokenProvider.getRole(token));
         Assertions.assertFalse(jwtTokenProvider.isExpired(token));
@@ -50,7 +49,7 @@ class JwtTokenProviderTest {
         String username = "testUser";
         String role = "USER";
 
-        String refreshToken = jwtTokenProvider.createRefreshToken(userId, username, role);
+        String refreshToken = jwtTokenProvider.createRefreshToken(username, role);
 
         boolean isAboutToExpire = jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken);
 
@@ -83,9 +82,8 @@ class JwtTokenProviderTest {
         String username = "testUser";
         String role = "USER";
 
-        String token = jwtTokenProvider.createAccessToken(userId, username, role);
+        String token = jwtTokenProvider.createAccessToken(username, role);
 
-        Assertions.assertEquals(userId, jwtTokenProvider.getUserId(token));
         Assertions.assertEquals(username, jwtTokenProvider.getUsername(token));
         Assertions.assertEquals(role, jwtTokenProvider.getRole(token));
     }
@@ -93,11 +91,10 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("토큰에서 만료 시간 확인")
     void testGetExpiration() {
-        Long userId = 1L;
         String username = "testUser";
         String role = "USER";
 
-        String token = jwtTokenProvider.createAccessToken(userId, username, role);
+        String token = jwtTokenProvider.createAccessToken(username, role);
 
         Date expiration = jwtTokenProvider.getExpiration(token);
 

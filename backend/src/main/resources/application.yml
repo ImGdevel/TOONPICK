@@ -1,6 +1,11 @@
+server:
+  port: 8080
+
 spring:
   config:
     import: application-API-KEY.yml
+
+
 
   batch:
     job:
@@ -17,14 +22,16 @@ spring:
 
   datasource-data:
     driver-class-name: org.mariadb.jdbc.Driver
-    jdbc-url: jdbc:mariadb://localhost:3306/test?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    jdbc-url: jdbc:mariadb://localhost:3306/toonpick-service?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: root
     password: 1234
 
-  # jpa:
-  #   hibernate:
-  #     ddl-auto: create
-  #   show-sql: true
+  redis:
+    host: localhost
+    port: 6380
+    timeout: 10000ms
+    jedis:
+      enabled: false
 
   output:
     ansi:
@@ -68,3 +75,4 @@ logging:
   level:
     org:
       springframework: DEBUG
+      hibernate: DEBUG

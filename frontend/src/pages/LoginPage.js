@@ -56,6 +56,12 @@ const LoginPage = () => {
           >
             <FaGoogle /> Google 로그인
           </button>
+          <button
+            className={styles['social-button']}
+            onClick={() => handleSocialLogin('naver')}
+          >
+            Naver 로그인
+          </button>
         </div>
       </div>
     </div>

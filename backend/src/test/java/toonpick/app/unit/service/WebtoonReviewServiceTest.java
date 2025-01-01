@@ -5,18 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.dto.WebtoonReviewCreateDTO;
-import toonpick.app.dto.WebtoonReviewDTO;
-import toonpick.app.entity.User;
-import toonpick.app.entity.Webtoon;
-import toonpick.app.entity.WebtoonReview;
-import toonpick.app.entity.enums.Platform;
-import toonpick.app.entity.enums.SerializationStatus;
-import toonpick.app.exception.ResourceNotFoundException;
-import toonpick.app.repository.UserRepository;
-import toonpick.app.repository.WebtoonRepository;
-import toonpick.app.repository.WebtoonReviewRepository;
-import toonpick.app.service.WebtoonReviewService;
+import toonpick.app.review.dto.WebtoonReviewCreateDTO;
+import toonpick.app.review.dto.WebtoonReviewDTO;
+import toonpick.app.member.entity.Member;
+import toonpick.app.webtoon.entity.Webtoon;
+import toonpick.app.review.entity.WebtoonReview;
+import toonpick.app.webtoon.entity.enums.Platform;
+import toonpick.app.webtoon.entity.enums.SerializationStatus;
+import toonpick.app.util.exception.ResourceNotFoundException;
+import toonpick.app.member.repository.MemberRepository;
+import toonpick.app.webtoon.repository.WebtoonRepository;
+import toonpick.app.review.repository.WebtoonReviewRepository;
+import toonpick.app.review.service.WebtoonReviewService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -39,18 +39,19 @@ public class WebtoonReviewServiceTest {
     private WebtoonReviewRepository webtoonReviewRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
     private WebtoonRepository webtoonRepository;
 
-    private User testUser;
+    private Member testMember;
     private Webtoon testWebtoon;
 
     @BeforeEach
     public void setup() {
-        testUser = userRepository.save(User.builder()
-                .username("testUser" + System.currentTimeMillis())
+        testMember = memberRepository.save(Member.builder()
+                .username("testMember" + System.currentTimeMillis())
+                .email("testEmail" + System.currentTimeMillis())
                 .profilePicture("default.png")
                 .build());
 
@@ -77,7 +78,7 @@ public class WebtoonReviewServiceTest {
                 .comment("Great webtoon!")
                 .build();
 
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testUser.getId());
+        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testMember.getUsername());
         assertNotNull(reviewDTO);
         assertEquals("Great webtoon!", reviewDTO.getComment());
 
@@ -92,15 +93,15 @@ public class WebtoonReviewServiceTest {
                 .comment("Not bad")
                 .build();
 
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testUser.getId());
+        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testMember.getUsername());
 
         // 첫 번째 좋아요 클릭
-        CompletableFuture<Boolean> likedFuture = webtoonReviewService.toggleLike(testUser.getId(), reviewDTO.getId());
+        CompletableFuture<Boolean> likedFuture = webtoonReviewService.toggleLike(testMember.getUsername(), reviewDTO.getId());
         Boolean liked = likedFuture.join();
         assertTrue(liked);
 
         // 두 번째 좋아요 클릭 (취소)
-        likedFuture = webtoonReviewService.toggleLike(testUser.getId(), reviewDTO.getId());
+        likedFuture = webtoonReviewService.toggleLike(testMember.getUsername(), reviewDTO.getId());
         liked = likedFuture.join();
         assertFalse(liked);
     }
@@ -112,10 +113,10 @@ public class WebtoonReviewServiceTest {
                 .comment("Pretty good!")
                 .build();
 
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testUser.getId());
+        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testMember.getUsername());
 
         for (int i = 0; i < 10; i++) {
-            webtoonReviewService.toggleLike(testUser.getId(), reviewDTO.getId());
+            webtoonReviewService.toggleLike(testMember.getUsername(), reviewDTO.getId());
         }
 
         WebtoonReview updatedReview = webtoonReviewRepository.findById(reviewDTO.getId()).orElseThrow();
@@ -124,8 +125,9 @@ public class WebtoonReviewServiceTest {
 
     @Test
     public void testMultipleUsersLikeReview() throws InterruptedException {
-        User user2 = userRepository.save(User.builder()
-                .username("user2")
+        Member member2 = memberRepository.save(Member.builder()
+                .username("member2")
+                .email("email22")
                 .profilePicture("default2.png")
                 .build());
 
@@ -134,10 +136,10 @@ public class WebtoonReviewServiceTest {
                 .comment("Interesting!")
                 .build();
 
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testUser.getId());
+        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testMember.getUsername());
 
-        webtoonReviewService.toggleLike(testUser.getId(), reviewDTO.getId());
-        webtoonReviewService.toggleLike(user2.getId(), reviewDTO.getId());
+        webtoonReviewService.toggleLike(testMember.getUsername(), reviewDTO.getId());
+        webtoonReviewService.toggleLike(member2.getUsername(), reviewDTO.getId());
 
 
         Thread.sleep(10); // 비동기적 업데이트 됨을 고려
@@ -148,8 +150,9 @@ public class WebtoonReviewServiceTest {
 
     @Test
     public void testConcurrentLikeAndUnlike() throws InterruptedException {
-        User user2 = userRepository.save(User.builder()
-                .username("user2")
+        Member member2 = memberRepository.save(Member.builder()
+                .username("member2")
+                .email("email2")
                 .profilePicture("default2.png")
                 .build());
 
@@ -158,10 +161,10 @@ public class WebtoonReviewServiceTest {
                 .comment("Concurrent test review")
                 .build();
 
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testUser.getId());
+        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testMember.getUsername());
 
-        Runnable likeTask = () -> webtoonReviewService.toggleLike(testUser.getId(), reviewDTO.getId());
-        Runnable unlikeTask = () -> webtoonReviewService.toggleLike(user2.getId(), reviewDTO.getId());
+        Runnable likeTask = () -> webtoonReviewService.toggleLike(testMember.getUsername(), reviewDTO.getId());
+        Runnable unlikeTask = () -> webtoonReviewService.toggleLike(member2.getUsername(), reviewDTO.getId());
 
         Thread thread1 = new Thread(likeTask);
         Thread thread2 = new Thread(unlikeTask);
@@ -178,18 +181,21 @@ public class WebtoonReviewServiceTest {
 
     @Test
     public void testMultipleUsersReviewAverageRating() {
-        User userX = userRepository.save(User.builder()
-                .username("userX")
+        Member memberX = memberRepository.save(Member.builder()
+                .username("memberX")
+                .email("emailX")
                 .profilePicture("defaultX.png")
                 .build());
 
-        User userY = userRepository.save(User.builder()
-                .username("userY")
+        Member memberY = memberRepository.save(Member.builder()
+                .username("memberY")
+                .email("emailY")
                 .profilePicture("defaultY.png")
                 .build());
 
-        User userZ = userRepository.save(User.builder()
-                .username("userZ")
+        Member memberZ = memberRepository.save(Member.builder()
+                .username("memberZ")
+                .email("emailZ")
                 .profilePicture("defaultZ.png")
                 .build());
 
@@ -197,7 +203,7 @@ public class WebtoonReviewServiceTest {
                 .rating(5.0f)
                 .comment("Review by X")
                 .build();
-        webtoonReviewService.createReview(reviewX, testWebtoon.getId(), userX.getId());
+        webtoonReviewService.createReview(reviewX, testWebtoon.getId(), memberX.getUsername());
         Webtoon updatedWebtoonX = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
         System.out.println("평균 평점 after X's review: " + updatedWebtoonX.getAverageRating());
 
@@ -205,7 +211,7 @@ public class WebtoonReviewServiceTest {
                 .rating(4.0f)
                 .comment("Review by Y")
                 .build();
-        webtoonReviewService.createReview(reviewY, testWebtoon.getId(), userY.getId());
+        webtoonReviewService.createReview(reviewY, testWebtoon.getId(), memberY.getUsername());
         Webtoon updatedWebtoonY = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
         System.out.println("평균 평점 after Y's review: " + updatedWebtoonY.getAverageRating());
 
@@ -213,7 +219,7 @@ public class WebtoonReviewServiceTest {
                 .rating(1.0f)
                 .comment("Review by Z")
                 .build();
-        webtoonReviewService.createReview(reviewZ, testWebtoon.getId(), userZ.getId());
+        webtoonReviewService.createReview(reviewZ, testWebtoon.getId(), memberZ.getUsername());
         Webtoon updatedWebtoonZ = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
         System.out.println("평균 평점 after Z's review: " + updatedWebtoonZ.getAverageRating());
 

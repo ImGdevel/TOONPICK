@@ -6,7 +6,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import toonpick.app.security.jwt.JwtTokenProvider;
+import toonpick.app.auth.jwt.JwtTokenProvider;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -64,7 +64,6 @@ class JwtAuthorizationFilterTest {
         String validToken = "Bearer validToken";
         given(jwtTokenProvider.isExpired(anyString())).willReturn(false);
         given(jwtTokenProvider.getCategory(anyString())).willReturn("access");
-        given(jwtTokenProvider.getUserId(anyString())).willReturn(123L);
         given(jwtTokenProvider.getUsername(anyString())).willReturn("testUser");
         given(jwtTokenProvider.getRole(anyString())).willReturn("ROLE_USER");
 

@@ -6,10 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import toonpick.app.dto.JoinRequestDTO;
-import toonpick.app.entity.User;
-import toonpick.app.repository.UserRepository;
-import toonpick.app.service.JoinService;
+import toonpick.app.auth.dto.JoinRequest;
+import toonpick.app.member.entity.Member;
+import toonpick.app.member.repository.MemberRepository;
+import toonpick.app.auth.service.JoinService;
 
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class JoinServiceTest {
 
     @Mock
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
 
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
@@ -31,25 +31,25 @@ class JoinServiceTest {
 
     @Test
     @DisplayName("정상적으로 유저 생성")
-    void testCreateUserSuccess() {
-        JoinRequestDTO joinRequestDTO = new JoinRequestDTO("testUser", "test@example.com", "password");
+    void testCreateMemberSuccess() {
+        JoinRequest joinRequest = new JoinRequest("testUser", "test@example.com", "password");
 
-        when(userRepository.existsByUsername("testUser")).thenReturn(false);
+        when(memberRepository.existsByUsername("testUser")).thenReturn(false);
         when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
 
-        joinService.createUser(joinRequestDTO);
+        joinService.createMember(joinRequest);
 
-        verify(userRepository, times(1)).save(any(User.class));
+        verify(memberRepository, times(1)).save(any(Member.class));
     }
 
     @Test
     @DisplayName("중복된 사용자 이름으로 유저 생성 실패")
-    void testCreateUserDuplicateUsername() {
-        JoinRequestDTO joinRequestDTO = new JoinRequestDTO("testUser", "test@example.com", "password");
+    void testCreateMemberDuplicateUsername() {
+        JoinRequest joinRequest = new JoinRequest("testUser", "test@example.com", "password");
 
-        when(userRepository.existsByUsername("testUser")).thenReturn(true);
+        when(memberRepository.existsByUsername("testUser")).thenReturn(true);
 
-        assertThatThrownBy(() -> joinService.createUser(joinRequestDTO))
+        assertThatThrownBy(() -> joinService.createMember(joinRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Username testUser already exists.");
     }

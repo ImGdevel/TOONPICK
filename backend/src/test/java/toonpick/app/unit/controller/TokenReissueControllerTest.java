@@ -11,10 +11,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import toonpick.app.controller.TokenReissueController;
-import toonpick.app.security.jwt.JwtTokenProvider;
-import toonpick.app.security.jwt.JwtTokenValidator;
-import toonpick.app.service.AuthService;
+import toonpick.app.auth.controller.TokenReissueController;
+import toonpick.app.auth.jwt.JwtTokenProvider;
+import toonpick.app.auth.jwt.JwtTokenValidator;
+import toonpick.app.auth.token.TokenService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +31,7 @@ class TokenReissueControllerTest {
     private JwtTokenProvider jwtTokenProvider;
 
     @Mock
-    private AuthService authService;
+    private TokenService tokenService;
 
     @Mock
     private JwtTokenValidator jwtTokenValidator;
@@ -50,7 +50,7 @@ class TokenReissueControllerTest {
 
         when(jwtTokenValidator.extractRefreshTokenFromCookies(request)).thenReturn(refreshToken);
         doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
-        when(authService.refreshAccessToken(refreshToken)).thenReturn(newAccessToken);
+        when(tokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
         when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(false);
 
         ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
@@ -88,9 +88,9 @@ class TokenReissueControllerTest {
 
         when(jwtTokenValidator.extractRefreshTokenFromCookies(request)).thenReturn(refreshToken);
         doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
-        when(authService.refreshAccessToken(refreshToken)).thenReturn(newAccessToken);
+        when(tokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
         when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(true);
-        when(authService.refreshRefreshToken(refreshToken)).thenReturn(newRefreshToken);
+        when(tokenService.reissueRefreshToken(refreshToken)).thenReturn(newRefreshToken);
         when(jwtTokenProvider.createCookie("refresh", newRefreshToken)).thenReturn(new Cookie("refresh", newRefreshToken));
 
         ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
