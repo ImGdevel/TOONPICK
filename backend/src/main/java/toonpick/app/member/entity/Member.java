@@ -9,7 +9,7 @@ import toonpick.app.util.BaseTimeEntity;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "member")
+@Table(name = "member", indexes = @Index(name = "idx_username", columnList = "username"))
 public class Member extends BaseTimeEntity {
 
     @Id
