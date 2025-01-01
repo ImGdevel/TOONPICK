@@ -16,7 +16,7 @@ import toonpick.app.review.entity.ReviewLike;
 import toonpick.app.member.entity.Member;
 import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.review.entity.WebtoonReview;
-import toonpick.app.util.exception.ResourceNotFoundException;
+import toonpick.app.common.exception.ResourceNotFoundException;
 import toonpick.app.review.mapper.WebtoonReviewMapper;
 import toonpick.app.review.repository.ReviewLikeRepository;
 import toonpick.app.member.repository.MemberRepository;

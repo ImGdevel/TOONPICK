@@ -20,7 +20,7 @@ import toonpick.app.auth.handler.*;
 import toonpick.app.auth.filter.*;
 import toonpick.app.auth.jwt.JwtTokenValidator;
 import toonpick.app.auth.service.OAuth2UserService;
-import toonpick.app.util.ErrorResponseSender;
+import toonpick.app.common.utils.ErrorResponseSender;
 
 import java.util.Arrays;
 import java.util.Collections;

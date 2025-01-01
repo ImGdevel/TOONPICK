@@ -1,4 +1,4 @@
-package toonpick.app.util.exception;
+package toonpick.app.common.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;

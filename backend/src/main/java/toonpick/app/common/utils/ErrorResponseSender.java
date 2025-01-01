@@ -1,4 +1,4 @@
-package toonpick.app.util;
+package toonpick.app.common.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

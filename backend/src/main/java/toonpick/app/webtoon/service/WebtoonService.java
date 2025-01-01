@@ -16,7 +16,7 @@ import toonpick.app.webtoon.entity.Author;
 import toonpick.app.webtoon.entity.Genre;
 import toonpick.app.webtoon.entity.Webtoon;
 import toonpick.app.webtoon.entity.enums.SerializationStatus;
-import toonpick.app.util.exception.ResourceNotFoundException;
+import toonpick.app.common.exception.ResourceNotFoundException;
 import toonpick.app.webtoon.mapper.WebtoonMapper;
 import toonpick.app.webtoon.repository.AuthorRepository;
 import toonpick.app.webtoon.repository.GenreRepository;
