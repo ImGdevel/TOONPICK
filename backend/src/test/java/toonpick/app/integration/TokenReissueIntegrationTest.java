@@ -45,7 +45,7 @@ class TokenReissueIntegrationTest {
 
         when(jwtTokenValidator.extractRefreshTokenFromCookies(any())).thenReturn(refreshToken);
         doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
-        when(tokenService.renewAccessToken(refreshToken)).thenReturn(newAccessToken);
+        when(tokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
 
         mockMvc.perform(post("/api/reissue")
                 .cookie(new Cookie("refresh", refreshToken)))

@@ -20,7 +20,8 @@ public class TokenService {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
-    public String renewAccessToken(String refreshToken) {
+
+    public String reissueAccessToken(String refreshToken) {
         // Refresh 토큰 유효 검증
         refreshTokenRepository.findById(refreshToken)
                 .orElseThrow(() -> new RuntimeException("Not found refresh token"));
@@ -36,7 +37,7 @@ public class TokenService {
         return newAccessToken;
     }
 
-    public String renewRefreshToken(String refreshToken) {
+    public String reissueRefreshToken(String refreshToken) {
         // Refresh 토큰 유효 검증
         refreshTokenRepository.findById(refreshToken)
                 .orElseThrow(() -> new RuntimeException("Not found refresh token"));
@@ -48,8 +49,7 @@ public class TokenService {
         String role = jwtTokenProvider.getRole(refreshToken);
 
         String newRefreshToken = jwtTokenProvider.createAccessToken(userid, username, role);
-
-        logger.info("renew Refresh");
+        
         // Refresh Token 저장소에 갱신
         deleteRefreshToken(refreshToken);
         saveRefreshToken(username, newRefreshToken);

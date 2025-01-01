@@ -33,13 +33,13 @@ public class TokenReissueController {
             jwtTokenValidator.validateRefreshToken(refreshToken);
 
             // 새로운 Access 토큰 발급
-            String newAccessToken = tokenService.renewAccessToken(refreshToken);
+            String newAccessToken = tokenService.reissueAccessToken(refreshToken);
             response.setHeader("Authorization", "Bearer " + newAccessToken);
             logger.info("Issued new access token");
 
             // Refresh 토큰 갱신 필요 여부 확인 및 갱신
             if (jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)) {
-                String newRefreshToken = tokenService.renewRefreshToken(refreshToken);
+                String newRefreshToken = tokenService.reissueRefreshToken(refreshToken);
                 Cookie newRefreshCookie = jwtTokenProvider.createCookie("refresh", newRefreshToken);
                 response.addCookie(newRefreshCookie);
                 logger.info("Issued new refresh token");

@@ -50,7 +50,7 @@ class TokenReissueControllerTest {
 
         when(jwtTokenValidator.extractRefreshTokenFromCookies(request)).thenReturn(refreshToken);
         doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
-        when(tokenService.renewAccessToken(refreshToken)).thenReturn(newAccessToken);
+        when(tokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
         when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(false);
 
         ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
@@ -88,9 +88,9 @@ class TokenReissueControllerTest {
 
         when(jwtTokenValidator.extractRefreshTokenFromCookies(request)).thenReturn(refreshToken);
         doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
-        when(tokenService.renewAccessToken(refreshToken)).thenReturn(newAccessToken);
+        when(tokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
         when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(true);
-        when(tokenService.renewRefreshToken(refreshToken)).thenReturn(newRefreshToken);
+        when(tokenService.reissueRefreshToken(refreshToken)).thenReturn(newRefreshToken);
         when(jwtTokenProvider.createCookie("refresh", newRefreshToken)).thenReturn(new Cookie("refresh", newRefreshToken));
 
         ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
