@@ -35,7 +35,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         }
 
         Member member = getOrCreateUser(oAuth2Response);
-        MemberDTO memberDTO = memberMapper.userToUserDto(member);
+        MemberDTO memberDTO = memberMapper.memberToMemberDto(member);
 
         return new CustomOAuth2UserDetails(memberDTO);
     }

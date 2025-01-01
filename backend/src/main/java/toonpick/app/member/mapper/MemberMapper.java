@@ -1,6 +1,7 @@
 package toonpick.app.member.mapper;
 
 import toonpick.app.member.dto.MemberDTO;
+import toonpick.app.member.dto.MemberProfileDTO;
 import toonpick.app.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -9,7 +10,11 @@ import org.mapstruct.factory.Mappers;
 public interface MemberMapper {
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
-    MemberDTO userToUserDto(Member member);
+    MemberDTO memberToMemberDto(Member member);
 
-    Member userDtoToUser(MemberDTO memberDTO);
+    Member memberDtoToMember(MemberDTO memberDTO);
+
+    MemberProfileDTO memberToProfileDto(Member member);
+
+    Member profileDtoToMember(MemberProfileDTO profileDTO);
 }

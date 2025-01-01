@@ -25,9 +25,9 @@ public class MemberController {
     @GetMapping("/profile")
     public ResponseEntity<MemberDTO> getUserProfile(HttpServletRequest request, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getUserId();
+        String username = userDetails.getUsername();
 
-        MemberDTO memberDTO = memberService.getUserById(userId);
+        MemberDTO memberDTO = memberService.getMemberByUsername(username);
         return ResponseEntity.ok(memberDTO);
     }
 }

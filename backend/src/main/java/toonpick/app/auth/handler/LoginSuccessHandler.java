@@ -34,7 +34,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
-        Long userId = memberService.getUserIdByUsername(username);
+        Long userId = memberService.getMemberIdByUsername(username);
         String accessToken = jwtTokenProvider.createAccessToken(userId, username, role);
         String refreshToken = jwtTokenProvider.createRefreshToken(userId, username, role);
 
