@@ -23,7 +23,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenService tokenService;
-    private final MemberService memberService;
 
     private static final Logger logger = LoggerFactory.getLogger(LoginSuccessHandler.class);
 
@@ -34,9 +33,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
-        Long userId = memberService.getMemberIdByUsername(username);
-        String accessToken = jwtTokenProvider.createAccessToken(userId, username, role);
-        String refreshToken = jwtTokenProvider.createRefreshToken(userId, username, role);
+        String accessToken = jwtTokenProvider.createAccessToken( username, role);
+        String refreshToken = jwtTokenProvider.createRefreshToken(username, role);
 
         tokenService.saveRefreshToken(username, refreshToken);
         response.setHeader("Authorization", "Bearer " + accessToken);

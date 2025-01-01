@@ -11,7 +11,6 @@ import java.util.Collections;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final Long userId;
     private final String username;
     private final String password;
     private final String role;
@@ -21,7 +20,6 @@ public class CustomUserDetails implements UserDetails {
     private final boolean isEnabled;
 
     public CustomUserDetails(Member member) {
-        this.userId = member.getId();
         this.username = member.getUsername();
         this.password = member.getPassword();
         this.role = member.getRole();
@@ -31,8 +29,7 @@ public class CustomUserDetails implements UserDetails {
         this.isEnabled = true;
     }
 
-    public CustomUserDetails(Long userId, String username, String password, String role) {
-        this.userId = userId;
+    public CustomUserDetails(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -40,10 +37,6 @@ public class CustomUserDetails implements UserDetails {
         this.isAccountNonLocked = true;
         this.isCredentialsNonExpired = true;
         this.isEnabled = true;
-    }
-
-    public Long getUserId() {
-        return userId;
     }
 
     @Override

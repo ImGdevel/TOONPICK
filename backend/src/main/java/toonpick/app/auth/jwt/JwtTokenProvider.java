@@ -34,11 +34,6 @@ public class JwtTokenProvider {
         return getClaims(token).get("category", String.class);
     }
 
-    // 토큰에서 사용자 Id 추출
-    public Long getUserId(String token) {
-        return getClaims(token).get("userId", Long.class);
-    }
-
     // 토큰에서 사용자 이름 추출
     public String getUsername(String token) {
         return getClaims(token).get("username", String.class);
@@ -74,13 +69,13 @@ public class JwtTokenProvider {
     }
 
     // Access Token 생성
-    public String createAccessToken(Long userId, String username, String role) {
-        return createToken("access", userId, username, role, accessTokenExpiration);
+    public String createAccessToken(String username, String role) {
+        return createToken("access", username, role, accessTokenExpiration);
     }
 
     // Refresh Token 생성
-    public String createRefreshToken(Long userId, String username, String role) {
-        return createToken("refresh", userId, username, role, refreshTokenExpiration);
+    public String createRefreshToken(String username, String role) {
+        return createToken("refresh", username, role, refreshTokenExpiration);
     }
 
     // 쿠키 생성 메서드
@@ -104,10 +99,9 @@ public class JwtTokenProvider {
     }
 
     // 토큰 생성
-    private String createToken(String category, Long userId, String username, String role, Long expirationTime) {
+    private String createToken(String category, String username, String role, Long expirationTime) {
         return Jwts.builder()
                 .claim("category", category)
-                .claim("userId", userId)
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))

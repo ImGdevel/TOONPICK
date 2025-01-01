@@ -31,8 +31,8 @@ public class WebtoonReviewController {
             @RequestBody WebtoonReviewCreateDTO reviewCreateDTO,
             Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getUserId();
-        WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO,webtoonId, userId);
+        String username = userDetails.getUsername();
+        WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO, webtoonId, username);
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
     }
 
@@ -65,9 +65,9 @@ public class WebtoonReviewController {
             @PathVariable Long reviewId,
             Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getUserId();
+        String username = userDetails.getUsername();
 
-        CompletableFuture<Boolean> likeResult = webtoonReviewService.toggleLike(userId, reviewId);
+        CompletableFuture<Boolean> likeResult = webtoonReviewService.toggleLike(username, reviewId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
@@ -93,9 +93,9 @@ public class WebtoonReviewController {
             @PathVariable Long webtoonId,
             Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getUserId();
+        String username = userDetails.getUsername();
 
-        Optional<WebtoonReviewDTO> reviewOpt = webtoonReviewService.getUserReviewForWebtoon(userId, webtoonId);
+        Optional<WebtoonReviewDTO> reviewOpt = webtoonReviewService.getUserReviewForWebtoon(username, webtoonId);
         return reviewOpt
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -107,9 +107,9 @@ public class WebtoonReviewController {
             @PathVariable Long webtoonId,
             Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getUserId();
+        String username = userDetails.getUsername();
 
-        List<Long> likedReviewIds = webtoonReviewService.getLikedReviewIds(userId, webtoonId);
+        List<Long> likedReviewIds = webtoonReviewService.getLikedReviewIds(username, webtoonId);
         return ResponseEntity.ok(likedReviewIds);
     }
 

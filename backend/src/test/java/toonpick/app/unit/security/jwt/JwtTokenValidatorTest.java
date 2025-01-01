@@ -25,11 +25,10 @@ class JwtTokenValidatorTest {
     @Test
     @DisplayName("AccessToken 유효성 검증")
     void testValidateAccessToken() {
-        Long userId = 1L;
         String username = "testUser";
         String role = "USER";
 
-        String accessToken = jwtTokenProvider.createAccessToken(userId, username, role);
+        String accessToken = jwtTokenProvider.createAccessToken(username, role);
 
         Assertions.assertDoesNotThrow(() -> jwtTokenValidator.validateAccessToken(accessToken));
     }
@@ -37,11 +36,10 @@ class JwtTokenValidatorTest {
     @Test
     @DisplayName("RefreshToken 유효성 검증")
     void testValidateRefreshToken() {
-        Long userId = 1L;
         String username = "testUser";
         String role = "USER";
 
-        String refreshToken = jwtTokenProvider.createRefreshToken(userId, username, role);
+        String refreshToken = jwtTokenProvider.createRefreshToken(username, role);
 
         Assertions.assertDoesNotThrow(() -> jwtTokenValidator.validateRefreshToken(refreshToken));
     }
@@ -92,16 +90,14 @@ class JwtTokenValidatorTest {
     @Test
     @DisplayName("Token으로 UserDetails 생성")
     void testGetUserDetails() {
-        Long userId = 1L;
         String username = "testUser";
         String role = "USER";
 
-        String token = jwtTokenProvider.createAccessToken(userId, username, role);
+        String token = jwtTokenProvider.createAccessToken(username, role);
 
         UserDetails userDetails = jwtTokenValidator.getUserDetails(token);
 
         Assertions.assertNotNull(userDetails);
-        Assertions.assertEquals(userId, ((CustomUserDetails) userDetails).getUserId());
         Assertions.assertEquals(username, userDetails.getUsername());
         Assertions.assertEquals(role, userDetails.getAuthorities().iterator().next().getAuthority());
     }

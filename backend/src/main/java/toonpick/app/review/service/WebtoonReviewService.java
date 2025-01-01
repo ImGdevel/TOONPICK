@@ -41,8 +41,8 @@ public class WebtoonReviewService {
     private final WebtoonReviewMapper webtoonReviewMapper = WebtoonReviewMapper.INSTANCE;
 
     // 리뷰 추가
-    public WebtoonReviewDTO createReview(WebtoonReviewCreateDTO reviewCreateDTO, Long webtoonId, Long userId) {
-        Member member = memberRepository.findById(userId)
+    public WebtoonReviewDTO createReview(WebtoonReviewCreateDTO reviewCreateDTO, Long webtoonId, String username) {
+        Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
@@ -96,9 +96,9 @@ public class WebtoonReviewService {
     // 리뷰 체크
     @Transactional
     @Async
-    public CompletableFuture<Boolean> toggleLike(Long userId, Long reviewId) {
+    public CompletableFuture<Boolean> toggleLike(String username, Long reviewId) {
         try {
-            Member member = memberRepository.findById(userId)
+            Member member = memberRepository.findByUsername(username)
                     .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
             WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                     .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
@@ -146,8 +146,8 @@ public class WebtoonReviewService {
 
     // User가 웹툰에 누른 웹툰 리스트 반환
     @Transactional(readOnly = true)
-    public List<Long> getLikedReviewIds(Long userId, Long webtoonId) {
-        Member member = memberRepository.findById(userId)
+    public List<Long> getLikedReviewIds(String username, Long webtoonId) {
+        Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
@@ -191,8 +191,8 @@ public class WebtoonReviewService {
 
     // 어떤 유저가 특정 웹툰에 작성한 리뷰를 가져온다
     @Transactional(readOnly = true)
-    public Optional<WebtoonReviewDTO> getUserReviewForWebtoon(Long userId, Long webtoonId) {
-        Member member = memberRepository.findById(userId)
+    public Optional<WebtoonReviewDTO> getUserReviewForWebtoon(String username, Long webtoonId) {
+        Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));

@@ -32,8 +32,8 @@ public class MemberFavoriteWebtoonService {
     }
 
     @Transactional
-    public void addFavoriteWebtoon(Long userId, Long webtoonId) {
-        Member member = memberRepository.findById(userId)
+    public void addFavoriteWebtoon(String username, Long webtoonId) {
+        Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
@@ -48,16 +48,18 @@ public class MemberFavoriteWebtoonService {
     }
 
     @Transactional
-    public void removeFavoriteWebtoon(Long userId, Long webtoonId) {
-        MemberFavoriteWebtoon favorite = favoriteRepository.findByMemberIdAndWebtoonId(userId, webtoonId)
+    public void removeFavoriteWebtoon(String username, Long webtoonId) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
+        MemberFavoriteWebtoon favorite = favoriteRepository.findByMemberIdAndWebtoonId(member.getId(), webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Favorite not found"));
         favoriteRepository.delete(favorite);
     }
 
     @Transactional(readOnly = true)
-    public List<WebtoonDTO> getFavoriteWebtoons(Long userId) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Member not found with id: " + userId));
+    public List<WebtoonDTO> getFavoriteWebtoons(String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found with username: " + username));
 
         List<Webtoon> favoriteWebtoons = favoriteRepository.findByMember(member);
 
@@ -67,11 +69,11 @@ public class MemberFavoriteWebtoonService {
     }
 
     @Transactional(readOnly = true)
-    public boolean isFavoriteWebtoon(Long userId, Long webtoonId) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Member not found with id: " + userId));
+    public boolean isFavoriteWebtoon(String username, Long webtoonId) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found with username: " + username));
 
-        return favoriteRepository.findByMemberIdAndWebtoonId(userId, webtoonId).isPresent();
+        return favoriteRepository.findByMemberIdAndWebtoonId(member.getId(), webtoonId).isPresent();
     }
 
 }

@@ -24,7 +24,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenService tokenService;
-    private final MemberService memberService;
 
     private static final Logger logger = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
 
@@ -36,8 +35,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String role = authorities.stream().findFirst().map(GrantedAuthority::getAuthority).orElse("");
 
-        Long userid = memberService.getMemberIdByUsername(username);
-        String refreshToken = jwtTokenProvider.createRefreshToken(userid, username, role);
+        String refreshToken = jwtTokenProvider.createRefreshToken( username, role);
 
         tokenService.saveRefreshToken(username, refreshToken);
 

@@ -28,11 +28,10 @@ public class TokenService {
         jwtTokenValidator.validateRefreshToken(refreshToken);
 
         // Access Token 재발급
-        Long userid = jwtTokenProvider.getUserId(refreshToken);
         String username = jwtTokenProvider.getUsername(refreshToken);
         String role = jwtTokenProvider.getRole(refreshToken);
 
-        String newAccessToken = jwtTokenProvider.createAccessToken(userid, username, role);
+        String newAccessToken = jwtTokenProvider.createAccessToken(username, role);
 
         return newAccessToken;
     }
@@ -44,12 +43,11 @@ public class TokenService {
         jwtTokenValidator.validateRefreshToken(refreshToken);
 
         // Refresh 토큰 재발급
-        Long userid = jwtTokenProvider.getUserId(refreshToken);
         String username = jwtTokenProvider.getUsername(refreshToken);
         String role = jwtTokenProvider.getRole(refreshToken);
 
-        String newRefreshToken = jwtTokenProvider.createAccessToken(userid, username, role);
-        
+        String newRefreshToken = jwtTokenProvider.createAccessToken(username, role);
+
         // Refresh Token 저장소에 갱신
         deleteRefreshToken(refreshToken);
         saveRefreshToken(username, newRefreshToken);

@@ -63,9 +63,8 @@ public class JwtTokenValidator {
     }
 
     public UserDetails getUserDetails(String token) {
-        Long userId = jwtTokenProvider.getUserId(token);
         String username = jwtTokenProvider.getUsername(token);
         String role = jwtTokenProvider.getRole(token);
-        return new CustomUserDetails(userId, username, "dummyPassword", role);
+        return new CustomUserDetails(username, "dummyPassword", role);
     }
 }
