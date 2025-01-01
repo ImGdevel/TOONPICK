@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class WebtoonReviewService {
 
     private final WebtoonReviewRepository webtoonReviewRepository;
@@ -41,6 +40,7 @@ public class WebtoonReviewService {
     private final WebtoonReviewMapper webtoonReviewMapper = WebtoonReviewMapper.INSTANCE;
 
     // 리뷰 추가
+    @Transactional
     public WebtoonReviewDTO createReview(WebtoonReviewCreateDTO reviewCreateDTO, Long webtoonId, String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
@@ -72,6 +72,7 @@ public class WebtoonReviewService {
     }
 
     // 리뷰 업데이트
+    @Transactional
     public WebtoonReviewDTO updateReview(Long reviewId, WebtoonReviewCreateDTO reviewCreateDTO) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
@@ -85,6 +86,7 @@ public class WebtoonReviewService {
     }
 
     // 리뷰 삭제
+    @Transactional
     public void deleteReview(Long reviewId) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
@@ -94,8 +96,8 @@ public class WebtoonReviewService {
     }
 
     // 리뷰 체크
-    @Transactional
     @Async
+    @Transactional
     public CompletableFuture<Boolean> toggleLike(String username, Long reviewId) {
         try {
             Member member = memberRepository.findByUsername(username)

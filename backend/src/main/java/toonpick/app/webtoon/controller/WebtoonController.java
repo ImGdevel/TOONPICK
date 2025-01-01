@@ -15,9 +15,9 @@ import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Set;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/webtoons")
-@RequiredArgsConstructor
 public class WebtoonController {
 
     private final WebtoonService webtoonService;
@@ -64,7 +64,6 @@ public class WebtoonController {
         List<WebtoonDTO> webtoons = webtoonService.getWebtoonsBySerializationStatus(SerializationStatus.COMPLETED, page, size);
         return new ResponseEntity<>(webtoons, HttpStatus.OK);
     }
-
 
 
     // 범용 필터링 메서드

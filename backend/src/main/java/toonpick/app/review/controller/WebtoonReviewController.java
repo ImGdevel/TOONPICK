@@ -17,9 +17,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/webtoon/{webtoonId}/reviews")
-@RequiredArgsConstructor
 public class WebtoonReviewController {
 
     private final WebtoonReviewService webtoonReviewService;

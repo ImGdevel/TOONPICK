@@ -1,5 +1,6 @@
 package toonpick.app.webtoon.controller;
 
+import lombok.RequiredArgsConstructor;
 import toonpick.app.webtoon.dto.GenreDTO;
 import toonpick.app.webtoon.service.GenreService;
 import org.springframework.http.HttpStatus;
@@ -8,15 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/genres")
 public class GenreController {
 
     private final GenreService genreService;
-
-    public GenreController(GenreService genreService) {
-        this.genreService = genreService;
-    }
 
     @PostMapping
     public ResponseEntity<GenreDTO> createGenre(@RequestBody GenreDTO genreDTO) {

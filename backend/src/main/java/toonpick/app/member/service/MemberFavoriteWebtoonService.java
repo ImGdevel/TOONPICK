@@ -1,5 +1,6 @@
 package toonpick.app.member.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.webtoon.dto.WebtoonDTO;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class MemberFavoriteWebtoonService {
 
     private final MemberFavoriteWebtoonRepository favoriteRepository;
@@ -24,12 +26,6 @@ public class MemberFavoriteWebtoonService {
     private final MemberRepository memberRepository;
     private final WebtoonMapper webtoonMapper;
 
-    public MemberFavoriteWebtoonService(MemberFavoriteWebtoonRepository favoriteRepository, WebtoonRepository webtoonRepository, MemberRepository memberRepository, WebtoonMapper webtoonMapper) {
-        this.favoriteRepository = favoriteRepository;
-        this.webtoonRepository = webtoonRepository;
-        this.memberRepository = memberRepository;
-        this.webtoonMapper = webtoonMapper;
-    }
 
     @Transactional
     public void addFavoriteWebtoon(String username, Long webtoonId) {

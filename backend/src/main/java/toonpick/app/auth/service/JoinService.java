@@ -1,5 +1,6 @@
 package toonpick.app.auth.service;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,6 +13,7 @@ import toonpick.app.member.repository.MemberRepository;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class JoinService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(JoinService.class);
@@ -19,10 +21,6 @@ public class JoinService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public JoinService(MemberRepository memberRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.memberRepository = memberRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
 
     @Transactional
     public void createMember(JoinRequest joinRequest) {

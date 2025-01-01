@@ -1,5 +1,6 @@
 package toonpick.app.webtoon.service;
 
+import lombok.RequiredArgsConstructor;
 import toonpick.app.webtoon.dto.AuthorDTO;
 import toonpick.app.webtoon.entity.Author;
 import toonpick.app.common.exception.ResourceNotFoundException;
@@ -13,15 +14,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
-
-    public AuthorService(AuthorRepository authorRepository, AuthorMapper authorMapper) {
-        this.authorRepository = authorRepository;
-        this.authorMapper = authorMapper;
-    }
 
     @Transactional(readOnly = true)
     public List<AuthorDTO> getAllAuthors() {
