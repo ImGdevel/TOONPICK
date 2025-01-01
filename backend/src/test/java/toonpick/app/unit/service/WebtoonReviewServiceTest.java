@@ -51,6 +51,7 @@ public class WebtoonReviewServiceTest {
     public void setup() {
         testMember = memberRepository.save(Member.builder()
                 .username("testMember" + System.currentTimeMillis())
+                .email("testEmail" + System.currentTimeMillis())
                 .profilePicture("default.png")
                 .build());
 
@@ -126,6 +127,7 @@ public class WebtoonReviewServiceTest {
     public void testMultipleUsersLikeReview() throws InterruptedException {
         Member member2 = memberRepository.save(Member.builder()
                 .username("member2")
+                .email("email22")
                 .profilePicture("default2.png")
                 .build());
 
@@ -150,6 +152,7 @@ public class WebtoonReviewServiceTest {
     public void testConcurrentLikeAndUnlike() throws InterruptedException {
         Member member2 = memberRepository.save(Member.builder()
                 .username("member2")
+                .email("email2")
                 .profilePicture("default2.png")
                 .build());
 
@@ -180,16 +183,19 @@ public class WebtoonReviewServiceTest {
     public void testMultipleUsersReviewAverageRating() {
         Member memberX = memberRepository.save(Member.builder()
                 .username("memberX")
+                .email("emailX")
                 .profilePicture("defaultX.png")
                 .build());
 
         Member memberY = memberRepository.save(Member.builder()
                 .username("memberY")
+                .email("emailY")
                 .profilePicture("defaultY.png")
                 .build());
 
         Member memberZ = memberRepository.save(Member.builder()
                 .username("memberZ")
+                .email("emailZ")
                 .profilePicture("defaultZ.png")
                 .build());
 

@@ -64,7 +64,6 @@ class JwtAuthorizationFilterTest {
         String validToken = "Bearer validToken";
         given(jwtTokenProvider.isExpired(anyString())).willReturn(false);
         given(jwtTokenProvider.getCategory(anyString())).willReturn("access");
-        given(jwtTokenProvider.getUserId(anyString())).willReturn(123L);
         given(jwtTokenProvider.getUsername(anyString())).willReturn("testUser");
         given(jwtTokenProvider.getRole(anyString())).willReturn("ROLE_USER");
 
