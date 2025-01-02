@@ -1,12 +1,13 @@
 package toonpick.app.member.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.webtoon.dto.WebtoonDTO;
 import toonpick.app.member.entity.Member;
 import toonpick.app.member.entity.MemberFavoriteWebtoon;
 import toonpick.app.webtoon.entity.Webtoon;
-import toonpick.app.util.exception.ResourceNotFoundException;
+import toonpick.app.common.exception.ResourceNotFoundException;
 import toonpick.app.webtoon.mapper.WebtoonMapper;
 import toonpick.app.member.repository.MemberFavoriteWebtoonRepository;
 import toonpick.app.member.repository.MemberRepository;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class MemberFavoriteWebtoonService {
 
     private final MemberFavoriteWebtoonRepository favoriteRepository;
@@ -24,12 +26,6 @@ public class MemberFavoriteWebtoonService {
     private final MemberRepository memberRepository;
     private final WebtoonMapper webtoonMapper;
 
-    public MemberFavoriteWebtoonService(MemberFavoriteWebtoonRepository favoriteRepository, WebtoonRepository webtoonRepository, MemberRepository memberRepository, WebtoonMapper webtoonMapper) {
-        this.favoriteRepository = favoriteRepository;
-        this.webtoonRepository = webtoonRepository;
-        this.memberRepository = memberRepository;
-        this.webtoonMapper = webtoonMapper;
-    }
 
     @Transactional
     public void addFavoriteWebtoon(String username, Long webtoonId) {

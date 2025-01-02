@@ -1,8 +1,9 @@
 package toonpick.app.webtoon.service;
 
+import lombok.RequiredArgsConstructor;
 import toonpick.app.webtoon.dto.GenreDTO;
 import toonpick.app.webtoon.entity.Genre;
-import toonpick.app.util.exception.ResourceNotFoundException;
+import toonpick.app.common.exception.ResourceNotFoundException;
 import toonpick.app.webtoon.mapper.GenreMapper;
 import toonpick.app.webtoon.repository.GenreRepository;
 import org.springframework.stereotype.Service;
@@ -12,15 +13,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class GenreService {
 
     private final GenreRepository genreRepository;
     private final GenreMapper genreMapper;
 
-    public GenreService(GenreRepository genreRepository, GenreMapper genreMapper) {
-        this.genreRepository = genreRepository;
-        this.genreMapper = genreMapper;
-    }
 
     @Transactional(readOnly = true)
     public List<GenreDTO> getAllGenres() {

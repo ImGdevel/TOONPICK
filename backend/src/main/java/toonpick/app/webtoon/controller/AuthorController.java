@@ -1,5 +1,6 @@
 package toonpick.app.webtoon.controller;
 
+import lombok.RequiredArgsConstructor;
 import toonpick.app.webtoon.dto.AuthorDTO;
 import toonpick.app.webtoon.service.AuthorService;
 import org.springframework.http.HttpStatus;
@@ -8,15 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/authors")
 public class AuthorController {
 
     private final AuthorService authorService;
-
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
-    }
 
     @PostMapping
     public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO authorDTO) {

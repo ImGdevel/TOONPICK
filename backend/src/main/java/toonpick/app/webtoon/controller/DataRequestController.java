@@ -1,5 +1,6 @@
 package toonpick.app.webtoon.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/webtoon-request")
 public class DataRequestController {
@@ -30,12 +32,6 @@ public class DataRequestController {
     private final WebtoonService webtoonService;
     private final AuthorService authorService;
     private final GenreService genreService;
-
-    public DataRequestController(WebtoonService webtoonService, AuthorService authorService, GenreService genreService) {
-        this.webtoonService = webtoonService;
-        this.authorService = authorService;
-        this.genreService = genreService;
-    }
 
     @PostMapping
     public ResponseEntity<List<WebtoonDTO>> createWebtoons(@RequestBody List<WebtoonRequestDTO> webtoonRequests) {

@@ -3,18 +3,16 @@ package toonpick.app.auth.jwt;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import toonpick.app.auth.user.CustomUserDetails;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenValidator {
 
     private final JwtTokenProvider jwtTokenProvider;
-
-    public JwtTokenValidator(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     // Access Token 추출
     public String extractAccessToken(String authorizationHeader) {

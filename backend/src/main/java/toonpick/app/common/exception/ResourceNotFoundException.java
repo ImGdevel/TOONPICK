@@ -1,4 +1,4 @@
-package toonpick.app.util.exception;
+package toonpick.app.common.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {
