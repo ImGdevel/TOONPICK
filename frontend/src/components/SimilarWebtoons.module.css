@@ -1,0 +1,36 @@
+.similar-webtoons {
+  margin: 2rem 0;
+  padding: 1.5rem;
+}
+
+.similar-webtoons h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.similar-webtoons-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.similar-webtoon-item {
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background-color: #fff;
+  transition: transform 0.2s ease;
+}
+
+.similar-webtoon-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-similar {
+  color: #666;
+  text-align: center;
+  grid-column: 1 / -1;
+  padding: 1rem;
+} 

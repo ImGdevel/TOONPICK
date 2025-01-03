@@ -1,0 +1,13 @@
+.heart-button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  color: #ff4b4b;
+  transition: transform 0.2s ease;
+}
+
+.heart-button:hover {
+  transform: scale(1.1);
+} 

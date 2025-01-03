@@ -83,3 +83,87 @@
   width: 100px;
   text-align: center;
 }
+
+.webtoonDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statusBadges {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.platformIcons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.title {
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem;
+  font-weight: bold;
+  margin: 0;
+  align-self: flex-start;
+}
+
+.authors {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.synopsis {
+  position: relative;
+}
+
+.description {
+  margin: 0;
+  line-height: 1.6;
+  max-height: 4.8em; /* 3줄 */
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.description.expanded {
+  max-height: none;
+}
+
+.tags {
+  position: relative;
+}
+
+.tagContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-height: 4.5rem; /* 2줄 */
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.tagContainer.expanded {
+  max-height: none;
+}
+
+.expandButton {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+}

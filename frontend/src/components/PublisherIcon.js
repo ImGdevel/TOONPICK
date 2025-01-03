@@ -11,7 +11,7 @@ const ICON_MAP = {
   user: UserIcon,
 };
 
-const Icon = ({ name }) => {
+const PublisherIcon = ({ name }) => {
   const SelectedIcon = ICON_MAP[name];
 
   if (!SelectedIcon) {
@@ -21,4 +21,4 @@ const Icon = ({ name }) => {
   return <SelectedIcon style={{ width: '25px', height: '25px' }} />;
 };
 
-export default Icon;
+export default PublisherIcon;
