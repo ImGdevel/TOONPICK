@@ -1,18 +1,20 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from './components/Header';
-import HomePage from './pages/HomePage';
-import SignInPage from './pages/SignInPage';
-import SignUpPage from './pages/SignUpPage';
-import WebtoonDetailPage from './pages/WebtoonDetailPage';
-import ExplorePage from './pages/ExplorePage';
-import MyPage from './pages/MyPage';
-import { AuthProvider } from './context/AuthContext';
-import SocialLoginCallbackPage from './pages/SocialLoginCallbackPage';
-import ErrorPage from './components/ErrorPage';
-import NewWebtoonsPage from './pages/NewWebtoonsPage';
-import OngoingWebtoonsPage from './pages/OngoingWebtoonsPage';
-import CompletedWebtoonsPage from './pages/CompletedWebtoonsPage';
+import Header from '@components/Header';
+import ErrorPage from '@components/ErrorPage';
+import { AuthProvider } from '@/context/AuthContext';
+
+// Pages
+import HomePage from '@pages/HomePage';
+import SignInPage from '@pages/SignInPage';
+import SignUpPage from '@pages/SignUpPage';
+import WebtoonDetailPage from '@pages/WebtoonDetailPage';
+import ExplorePage from '@pages/ExplorePage';
+import MyPage from '@pages/MyPage';
+import SocialLoginCallbackPage from '@pages/SocialLoginCallbackPage';
+import NewWebtoonsPage from '@pages/NewWebtoonsPage';
+import OngoingWebtoonsPage from '@pages/OngoingWebtoonsPage';
+import CompletedWebtoonsPage from '@pages/CompletedWebtoonsPage';
 
 const App: React.FC = () => {
   return (
