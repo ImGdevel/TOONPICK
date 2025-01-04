@@ -1,32 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaGoogle } from 'react-icons/fa';
-import { SiNaver } from 'react-icons/si';
-import { RiKakaoTalkFill } from 'react-icons/ri';
 import AuthService from '@/services/AuthService';
+import SocialLoginButton from '@/components/SocialLoginButton';
 import styles from './SignInPage.module.css';
-
-interface SignInForm {
-  username: string;
-  password: string;
-  rememberMe: boolean;
-}
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<SignInForm>({
-    username: '',
-    password: '',
-    rememberMe: false
-  });
+  const [formData, setFormData] = useState({ username: '', password: '', rememberMe: false });
   const [error, setError] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,13 +19,7 @@ const SignInPage: React.FC = () => {
     setError('');
 
     try {
-      const response = await AuthService.login(
-        formData.username,
-        formData.password,
-        formData.rememberMe,
-        () => navigate('/')
-      );
-
+      const response = await AuthService.login(formData.username, formData.password, formData.rememberMe, () => navigate('/'));
       if (response.success) {
         navigate('/');
       }
@@ -62,68 +41,28 @@ const SignInPage: React.FC = () => {
         {error && <div className={styles.error}>{error}</div>}
         
         <div className={styles.formGroup}>
-          <input
-            type="text"
-            name="username"
-            placeholder="아이디"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" name="username" placeholder="아이디" value={formData.username} onChange={handleChange} required />
         </div>
 
         <div className={styles.formGroup}>
-          <input
-            type="password"
-            name="password"
-            placeholder="비밀번호"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <input type="password" name="password" placeholder="비밀번호" value={formData.password} onChange={handleChange} required />
         </div>
 
         <div className={styles.rememberMe}>
-          <input
-            type="checkbox"
-            id="rememberMe"
-            name="rememberMe"
-            checked={formData.rememberMe}
-            onChange={handleChange}
-          />
+          <input type="checkbox" id="rememberMe" name="rememberMe" checked={formData.rememberMe} onChange={handleChange} />
           <label htmlFor="rememberMe">로그인 상태 유지</label>
         </div>
 
-        <button type="submit" className={styles.submitButton}>
-          로그인
-        </button>
+        <button type="submit" className={styles.submitButton}>로그인</button>
 
         <div className={styles.divider}>
           <span>또는</span>
         </div>
 
         <div className={styles.socialLogin}>
-          <button 
-            type="button" 
-            className={styles.google}
-            onClick={() => handleSocialLogin('google')}
-          >
-            <FaGoogle />
-          </button>
-          <button 
-            type="button"
-            className={styles.kakao}
-            onClick={() => handleSocialLogin('kakao')}
-          >
-            <RiKakaoTalkFill />
-          </button>
-          <button 
-            type="button"
-            className={styles.naver}
-            onClick={() => handleSocialLogin('naver')}
-          >
-            <SiNaver />
-          </button>
+          <SocialLoginButton provider="google" onClick={() => handleSocialLogin('google')} />
+          <SocialLoginButton provider="kakao" onClick={() => handleSocialLogin('kakao')} />
+          <SocialLoginButton provider="naver" onClick={() => handleSocialLogin('naver')} />
         </div>
 
         <div className={styles.links}>

@@ -10,10 +10,15 @@
 .form {
   background-color: var(--form-background-color);
   width: 100%;
-  max-width: 400px;
-  padding: 40px;
+  max-width: 480px;
+  padding: 50px;
   border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.form:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
 .form h1 {
@@ -71,16 +76,17 @@
   font-size: 16px;
   font-weight: 600;
   background-color: var(--submit-button-background-color);
-  color: var(--form-text-color);
+  color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
   margin: 24px 0;
 }
 
 .submitButton:hover {
   background-color: var(--submit-button-hover-background-color);
+  transform: translateY(-2px);
 }
 
 .submitButton:active {

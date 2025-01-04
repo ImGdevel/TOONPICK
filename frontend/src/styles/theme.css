@@ -1,14 +1,14 @@
 :root {
   --header-background-color: #ffffff; 
   --header-text-color: #333333; 
-  --input-background-color: #f0f0f0; 
+  --input-background-color: #f9f9f9; 
   --input-text-color: #333333; 
   --icon-color: #333333; 
   --login-button-color: #333333; 
-  --body-background-color: #ffffff; 
+  --body-background-color: #f0f2f5; 
   --body-text-color: #333333; 
   --form-background-color: #ffffff; 
-  --form-input-background-color: #f0f0f0; 
+  --form-input-background-color: #f9f9f9; 
   --form-input-border-color: #cccccc; 
   --form-input-focus-border-color: #5a9de2; 
   --submit-button-background-color: #5a9de2; 
