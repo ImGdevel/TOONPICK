@@ -1,1 +1,23 @@
- 
+.webtoon-analysis {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.webtoon-analysis h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.analysis-content {
+  display: grid;
+  gap: 1rem;
+}
+
+.analysis-content p {
+  margin: 0;
+  font-size: 1rem;
+  color: #666;
+} 
