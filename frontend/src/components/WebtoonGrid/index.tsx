@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Webtoon } from '../../types/webtoon';
-import WebtoonItem from '../WebtoonItem';
+import WebtoonItem from '../WebtoonItem/WebtoonItem';
 import styles from './WebtoonGrid.module.css';
 
 interface WebtoonGridProps {

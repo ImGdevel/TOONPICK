@@ -1,6 +1,6 @@
 import React from 'react';
-import { Webtoon } from '../types/webtoon';
-import WebtoonItem from './WebtoonItem';
+import { Webtoon } from '@/types/webtoon';
+import WebtoonItem from '@/components/WebtoonItem';
 import styles from './WebtoonList.module.css';
 
 interface WebtoonListProps {

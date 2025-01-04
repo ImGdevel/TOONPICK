@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Webtoon } from '../types/webtoon';
+import { Webtoon } from '../../types/webtoon';
 import StarRating from '@components/common/StarRating';
-import StatusBadge from './StatusBadge/index';
-import PublisherIcon from './PublisherIcon';
+import StatusBadge from '../StatusBadge/index';
+import PublisherIcon from '../PublisherIcon';
 import styles from './WebtoonItem.module.css';
 
 interface WebtoonItemProps {

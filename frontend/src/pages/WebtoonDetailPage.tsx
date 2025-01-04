@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import WebtoonService from '../services/webtoonService';
-import UserService from '../services/UserService';
-import EvaluationSection from '../components/EvaluationSection';
-import FavoriteButton from '../components/FavoriteButton';
-import BookmarkButton from '../components/BookmarkButton';
-import WebtoonAnalysis from '../components/WebtoonAnalysis';
-import SimilarWebtoons from '../components/SimilarWebtoons';
+import WebtoonService from '@services/webtoonService';
+import UserService from '@services/UserService';
+import EvaluationSection from '@components/EvaluationSection';
+import FavoriteButton from '@components/FavoriteButton';
+import BookmarkButton from '@components/BookMarkButton';
+import WebtoonAnalysis from '@components/WebtoonAnalysis';
+import SimilarWebtoons from '@components/SimilarWebtoons';
 import styles from './WebtoonDetailPage.module.css';
-import StatusBadge from '../components/StatusBadge';
-import PlatformIcon from '../components/PlatformIcon';
-import WebtoonTag from '../components/WebtoonTag';
-import WebtoonReviewService from '../services/WebtoonReviewService';
+import StatusBadge from '@components/StatusBadge';
+import PlatformIcon from '@components/PlatformIcon';
+import WebtoonTag from '@/components/WebtoonTag/WebtoonTag';
+import WebtoonReviewService from '@services/WebtoonReviewService';
 
 interface Author {
   id: number;
