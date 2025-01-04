@@ -44,3 +44,14 @@
   text-align: center;
   padding: 20px;
 }
+
+.completedWebtoonsPage {
+  padding: 2rem;
+}
+
+.completedWebtoonsPage h1 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}

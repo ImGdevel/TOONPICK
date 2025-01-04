@@ -1,0 +1,18 @@
+.socialLoginCallback {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  color: #dc3545;
+  padding: 1rem;
+} 

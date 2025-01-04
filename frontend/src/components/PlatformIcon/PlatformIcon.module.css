@@ -1,0 +1,17 @@
+.platformIcon {
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.small {
+  height: 20px;
+}
+
+.medium {
+  height: 30px;
+}
+
+.large {
+  height: 40px;
+} 
