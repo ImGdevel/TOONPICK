@@ -1,6 +1,6 @@
 import React, { useContext, Dispatch, SetStateAction } from 'react';
 import { Link, NavigateFunction } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import styles from './ProfileWidget.module.css';
 
 interface UserProfile {

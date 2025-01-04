@@ -1,9 +1,10 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import ProfileWidget from './ProfileWidget';
+import { AuthContext } from '@/contexts/AuthContext';
+import ProfileWidget from '@components/ProfileWidget';
 import styles from './Header.module.css';
 import { FiSearch, FiBell } from 'react-icons/fi';
+
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
