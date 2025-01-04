@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '@/contexts/AuthContext';
 import ProfileWidget from '@/components/ProfileWidget';
 import styles from './Header.module.css';
-import { FiSearch, FiBell } from 'react-icons/fi';
-
+import { FiSearch, FiBell, FiSun, FiMoon } from 'react-icons/fi';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, logout } = useContext(AuthContext);  // 타입 캐스팅 제거
+  const { isLoggedIn, logout } = useContext(AuthContext);
   const [isProfileWidgetOpen, setProfileWidgetOpen] = useState<boolean>(false);
   const [isSearchInputVisible, setSearchInputVisible] = useState<boolean>(false);
-  
+  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
+
   const profileButtonRef = useRef<HTMLButtonElement>(null);
   const profileWidgetRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -24,6 +24,18 @@ const Header: React.FC = () => {
   const toggleSearchInput = (event: React.MouseEvent): void => {
     event.stopPropagation();
     setSearchInputVisible((prev) => !prev);
+  };
+
+  const toggleTheme = (): void => {
+    setIsDarkTheme((prev) => !prev);
+    const theme = isDarkTheme ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    
+    // 테마 CSS 파일 로드
+    const linkElement = document.createElement('link');
+    linkElement.rel = 'stylesheet';
+    linkElement.href = '/styles/theme.css';
+    document.head.appendChild(linkElement);
   };
 
   useEffect(() => {
@@ -86,6 +98,14 @@ const Header: React.FC = () => {
             )}
             <button onClick={toggleSearchInput} className={styles.iconButton}>
               <FiSearch className={styles.icon} color="white" size={24} />
+            </button>
+
+            <button onClick={toggleTheme} className={styles.iconButton}>
+              {isDarkTheme ? (
+                <FiSun className={styles.icon} color="white" size={24} />
+              ) : (
+                <FiMoon className={styles.icon} color="white" size={24} />
+              )}
             </button>
 
             <button className={styles.iconButton}>

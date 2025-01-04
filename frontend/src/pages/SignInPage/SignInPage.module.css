@@ -1,14 +1,14 @@
-.signUpPage {
+.signInPage {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #1a1a1a;
+  background-color: var(--body-background-color);
   padding: 20px;
 }
 
 .form {
-  background-color: #2d2d2d;
+  background-color: var(--form-background-color);
   width: 100%;
   max-width: 400px;
   padding: 40px;
@@ -17,7 +17,7 @@
 }
 
 .form h1 {
-  color: #ffffff;
+  color: var(--header-text-color);
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 8px;
@@ -36,28 +36,20 @@
   margin-bottom: 20px;
 }
 
-.formGroup label {
-  display: block;
-  color: #b3b3b3;
-  font-size: 14px;
-  margin-bottom: 8px;
-  text-align: left;
-}
-
 .formGroup input {
   width: 100%;
   padding: 12px 16px;
   font-size: 15px;
-  border: 1px solid #404040;
+  border: 1px solid var(--form-input-border-color);
   border-radius: 8px;
-  background-color: #333333;
-  color: #ffffff;
+  background-color: var(--form-input-background-color);
+  color: var(--form-text-color);
   transition: all 0.2s ease;
 }
 
 .formGroup input:focus {
   outline: none;
-  border-color: #5a9de2;
+  border-color: var(--form-input-focus-border-color);
   box-shadow: 0 0 0 3px rgba(90, 157, 226, 0.2);
 }
 
@@ -70,17 +62,17 @@
   padding: 14px;
   font-size: 16px;
   font-weight: 600;
-  background-color: #5a9de2;
-  color: white;
+  background-color: var(--submit-button-background-color);
+  color: var(--form-text-color);
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
   margin: 24px 0;
 }
 
 .submitButton:hover {
-  background-color: #4a90e2;
+  background-color: var(--submit-button-hover-background-color);
 }
 
 .submitButton:active {
@@ -88,31 +80,13 @@
 }
 
 .error {
-  color: #ff6b6b;
+  color: var(--error-color);
   font-size: 14px;
   margin: 8px 0;
   text-align: center;
   padding: 10px;
   background-color: rgba(255, 107, 107, 0.1);
   border-radius: 8px;
-}
-
-.terms {
-  display: flex;
-  align-items: center;
-  margin: 24px 0;
-}
-
-.terms input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-  accent-color: #5a9de2;
-}
-
-.terms label {
-  color: #b3b3b3;
-  font-size: 14px;
 }
 
 .links {
@@ -132,5 +106,5 @@
 }
 
 .links a:hover {
-  color: #5a9de2;
-}
+  color: var(--submit-button-background-color);
+} 
