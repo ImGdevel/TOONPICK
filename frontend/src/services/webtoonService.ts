@@ -29,9 +29,9 @@ class WebtoonService {
   }
 
   // 연재 중인 모든 웹툰 데이터
-  public async getWebtoons(): Promise<WebtoonResponse> {
+  public async getWebtoons(page: number): Promise<WebtoonResponse> {
     try {
-      const response = await api.get('/api/webtoons/series', { authRequired: false });
+      const response = await api.get(`/api/webtoons/series?page=${page}&size=20`, { authRequired: false });
       return { success: true, data: response };
     } catch (error) {
       console.error('Error fetching webtoons:', error);

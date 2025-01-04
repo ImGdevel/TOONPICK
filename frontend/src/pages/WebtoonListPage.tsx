@@ -18,7 +18,7 @@ const WebtoonListPage: React.FC<WebtoonListPageProps> = ({ category }) => {
     const fetchWebtoons = async () => {
       try {
         const page = Number(searchParams.get('page')) || 1;
-        const response = await WebtoonService.getWebtoons();
+        const response = await WebtoonService.getWebtoons(page);
 
         setState({
           webtoons: response.data,

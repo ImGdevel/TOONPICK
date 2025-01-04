@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { WebtoonsPageState } from '@/types/page';
 import WebtoonService from '@/services/webtoonService';
@@ -16,47 +16,56 @@ const OngoingWebtoonsPage: React.FC = () => {
     error: null
   });
 
-  useEffect(() => {
-    const fetchOngoingWebtoons = async () => {
-      try {
-        const page = Number(searchParams.get('page')) || 1;
-        const response = await WebtoonService.getWebtoons();
-        
-        setState({
-          webtoons: response.data,
-          currentPage: page,
-          totalPages: Math.ceil((response.total || 0) / 20),
-          isLoading: false,
-          error: null
-        });
-      } catch (error) {
-        setState(prev => ({
-          ...prev,
-          isLoading: false,
-          error: '연재 중인 웹툰을 불러오는데 실패했습니다.'
-        }));
-      }
-    };
-
-    fetchOngoingWebtoons();
-  }, [searchParams]);
-
-  const handlePageChange = (page: number) => {
-    setSearchParams({ page: page.toString() });
+  const fetchOngoingWebtoons = async (page: number) => {
+    try {
+      const response = await WebtoonService.getWebtoons(page);  
+      setState(prev => ({
+        webtoons: [...prev.webtoons, ...response.data],
+        currentPage: page,
+        totalPages: Math.ceil((response.total || 0) / 20),
+        isLoading: false,
+        error: null
+      }));
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: '연재 중인 웹툰을 불러오는데 실패했습니다.'
+      }));
+    }
   };
 
-  if (state.isLoading) return <div>로딩중...</div>;
+  useEffect(() => {
+    const page = Number(searchParams.get('page')) || 1;
+    fetchOngoingWebtoons(page);
+  }, [searchParams]);
+
+  const handleScroll = useCallback(() => {
+    if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || state.isLoading) return;
+    const nextPage = state.currentPage + 1;
+    if (nextPage <= state.totalPages) {
+      setSearchParams({ page: nextPage.toString() });
+      fetchOngoingWebtoons(nextPage);
+    }
+  }, [state]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleScroll]);
+
   if (state.error) return <div>{state.error}</div>;
 
   return (
     <div className={styles.ongoingWebtoonsPage}>
       <h1>연재 중인 웹툰</h1>
-      <WebtoonGrid webtoons={state.webtoons} />
-      <Pagination 
-        currentPage={state.currentPage}
-        totalPages={state.totalPages}
-        onPageChange={handlePageChange}
-      />
+      {state.isLoading ? (
+        <p>로딩 중...</p>
+      ) : (
+        <WebtoonGrid webtoons={state.webtoons} />
+      )}
     </div>
   );
 };
