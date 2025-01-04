@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AuthService from '@/services/AuthService';
 import styles from './SocialLoginCallbackPage.module.css';
+import AuthToken from '@/services/AuthToken';
 
 const SocialLoginCallbackPage: React.FC = () => {
   const navigate = useNavigate();
@@ -11,24 +12,15 @@ const SocialLoginCallbackPage: React.FC = () => {
   useEffect(() => {
     const handleSocialLogin = async () => {
       try {
-        // URL에서 인증 코드 추출
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
+        const accessToken = await AuthToken.refreshAccessToken(); 
 
-        if (!code) {
-          throw new Error('인증 코드가 없습니다.');
-        }
-
-        // 소셜 로그인 처리
-        const response = await AuthService.handleSocialLoginCallback(() => navigate('/'));
-        
-        if (response.success) {
+        if (accessToken) {
           navigate('/');
         } else {
-          throw new Error('로그인에 실패했습니다.');
+          throw new Error('Access Token이 없습니다.');
         }
       } catch (err) {
-        setError('소셜 로그인에 실패했습니다. 다시 시도해주세요.');
+        setError('소셜 로그인에 실패했습니다. 다시 시도해주세요.' + err);
         setTimeout(() => navigate('/signin'), 3000);
       }
     };

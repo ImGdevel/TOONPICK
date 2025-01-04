@@ -97,7 +97,7 @@ class AuthTokenService {
 
   // Access 토큰 헤더에서 추출
   public extractAccessTokenFromHeader(headers: Record<string, string>): string | null {
-    const authHeader = headers["authorization"];
+    const authHeader = headers["Authorization"];
     if (!authHeader?.startsWith(TOKEN_TYPE)) return null;
     
     return authHeader.slice(TOKEN_TYPE.length).trim();

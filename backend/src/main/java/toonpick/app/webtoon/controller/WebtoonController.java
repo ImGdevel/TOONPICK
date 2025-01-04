@@ -66,6 +66,25 @@ public class WebtoonController {
     }
 
 
+    @GetMapping("/recent")
+    public ResponseEntity<List<WebtoonDTO>> getrecentWebtoons(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "60") int size) {
+
+        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsBySerializationStatus(SerializationStatus.COMPLETED, page, size);
+        return new ResponseEntity<>(webtoons, HttpStatus.OK);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<List<WebtoonDTO>> getpopularWebtoons(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "60") int size) {
+
+        List<WebtoonDTO> webtoons = webtoonService.getWebtoonsBySerializationStatus(SerializationStatus.COMPLETED, page, size);
+        return new ResponseEntity<>(webtoons, HttpStatus.OK);
+    }
+
+
     // 범용 필터링 메서드
     @GetMapping("/filter")
     public ResponseEntity<List<WebtoonDTO>> filterWebtoons(

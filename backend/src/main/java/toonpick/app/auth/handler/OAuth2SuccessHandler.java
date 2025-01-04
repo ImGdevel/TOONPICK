@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -36,10 +37,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = authorities.stream().findFirst().map(GrantedAuthority::getAuthority).orElse("");
 
         String refreshToken = jwtTokenProvider.createRefreshToken( username, role);
+        String accessToken = jwtTokenProvider.createAccessToken(username, role);
 
         tokenService.saveRefreshToken(username, refreshToken);
 
+        response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(jwtTokenProvider.createCookie("refresh", refreshToken));
+        response.setStatus(HttpStatus.OK.value());
 
         response.sendRedirect("http://localhost:3000/refresh");
     }

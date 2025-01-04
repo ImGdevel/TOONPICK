@@ -99,7 +99,8 @@ class AuthService {
 
   // 소셜 로그인
   public socialLogin(provider: Provider): void {
-    const loginUrl = `${process.env.REACT_APP_API_URL}/oauth2/authorization/${provider}`;
+    //const loginUrl = `${process.env.REACT_APP_API_URL}/oauth2/authorization/${provider}`;
+    const loginUrl = `http://localhost:8080/oauth2/authorization/${provider}`;
     window.location.href = loginUrl;
   }
 
