@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import WebtoonService from '../services/webtoonService';
-import { HomePageState } from '../types/page';
+import WebtoonService from '@/services/webtoonService';
+import { HomePageState } from '@/types/page';
+import WebtoonGrid from '@/components/WebtoonGrid';
 import styles from './HomePage.module.css';
-import WebtoonGrid from '../components/WebtoonGrid';
 
 const HomePage: React.FC = () => {
   const [state, setState] = useState<HomePageState>({

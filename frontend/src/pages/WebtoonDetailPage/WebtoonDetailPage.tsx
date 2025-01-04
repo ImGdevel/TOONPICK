@@ -7,11 +7,12 @@ import FavoriteButton from '@components/FavoriteButton';
 import BookmarkButton from '@components/BookMarkButton';
 import WebtoonAnalysis from '@/components/WebtoonAnalysis/WebtoonAnalysis';
 import SimilarWebtoons from '@components/SimilarWebtoons';
-import styles from './WebtoonDetailPage.module.css';
 import StatusBadge from '@components/StatusBadge';
 import PlatformIcon from '@components/PlatformIcon';
 import WebtoonTag from '@/components/WebtoonTag/WebtoonTag';
 import WebtoonReviewService from '@services/WebtoonReviewService';
+
+import styles from './WebtoonDetailPage.module.css';
 
 interface Author {
   id: number;

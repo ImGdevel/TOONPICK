@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Webtoon } from '../types/webtoon';
 import { SearchPageProps } from '../types/page';
-import WebtoonService from '../services/webtoonService';
+import WebtoonService from '@/services/webtoonService';
 import styles from './SearchPage.module.css';
 
 const SearchPage: React.FC<SearchPageProps> = ({ initialQuery }) => {

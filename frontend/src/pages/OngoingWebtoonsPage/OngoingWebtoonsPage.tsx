@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { WebtoonsPageState } from '../types/page';
-import WebtoonService from '../services/webtoonService';
-import WebtoonGrid from '../components/WebtoonGrid/index';
-import Pagination from '../components/Pagination/index';
-import styles from './NewWebtoonsPage.module.css';
+import { WebtoonsPageState } from '@/types/page';
+import WebtoonService from '@/services/webtoonService';
+import WebtoonGrid from '@/components/WebtoonGrid';
+import Pagination from '@/components/Pagination';
+import styles from './OngoingWebtoonsPage.module.css';
 
-const NewWebtoonsPage: React.FC = () => {
+const OngoingWebtoonsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [state, setState] = useState<WebtoonsPageState>({
     webtoons: [],
@@ -17,10 +17,10 @@ const NewWebtoonsPage: React.FC = () => {
   });
 
   useEffect(() => {
-    const fetchNewWebtoons = async () => {
+    const fetchOngoingWebtoons = async () => {
       try {
         const page = Number(searchParams.get('page')) || 1;
-        const response = await WebtoonService.getRecentWebtoons();
+        const response = await WebtoonService.getWebtoons();
         
         setState({
           webtoons: response.data,
@@ -33,12 +33,12 @@ const NewWebtoonsPage: React.FC = () => {
         setState(prev => ({
           ...prev,
           isLoading: false,
-          error: '새로운 웹툰을 불러오는데 실패했습니다.'
+          error: '연재 중인 웹툰을 불러오는데 실패했습니다.'
         }));
       }
     };
 
-    fetchNewWebtoons();
+    fetchOngoingWebtoons();
   }, [searchParams]);
 
   const handlePageChange = (page: number) => {
@@ -49,8 +49,8 @@ const NewWebtoonsPage: React.FC = () => {
   if (state.error) return <div>{state.error}</div>;
 
   return (
-    <div className={styles.newWebtoonsPage}>
-      <h1>신작 웹툰</h1>
+    <div className={styles.ongoingWebtoonsPage}>
+      <h1>연재 중인 웹툰</h1>
       <WebtoonGrid webtoons={state.webtoons} />
       <Pagination 
         currentPage={state.currentPage}
@@ -61,4 +61,4 @@ const NewWebtoonsPage: React.FC = () => {
   );
 };
 
-export default NewWebtoonsPage; 
+export default OngoingWebtoonsPage; 

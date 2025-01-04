@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { SocialLoginCallbackProps } from '../types/auth-page';
-import AuthService from '../services/AuthService';
+import AuthService from '@/services/AuthService';
 import styles from './SocialLoginCallbackPage.module.css';
 
 const SocialLoginCallbackPage: React.FC = () => {

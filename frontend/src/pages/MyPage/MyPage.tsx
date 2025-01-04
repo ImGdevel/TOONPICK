@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { MyPageState } from '../types/page';
-import UserService from '../services/UserService';
-import WebtoonReviewService from '../services/WebtoonReviewService';
-import WebtoonGrid from '../components/WebtoonGrid/index';
-import ReviewList from '../components/ReviewList/index';
+import { MyPageState } from '../../types/page';
+import UserService from '@/services/UserService';
+import WebtoonReviewService from '@/services/WebtoonReviewService';
+import WebtoonGrid from '@/components/WebtoonGrid';
+import ReviewList from '@/components/ReviewList';
 import styles from './MyPage.module.css';
 
 const MyPage: React.FC = () => {

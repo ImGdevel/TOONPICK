@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ExplorePageState } from '../types/page';
-import WebtoonService from '../services/webtoonService';
-import WebtoonGrid from '../components/WebtoonGrid';
+import { ExplorePageState } from '../../types/page';
+import WebtoonService from '@/services/webtoonService';
+import WebtoonGrid from '@/components/WebtoonGrid';
 import styles from './ExplorePage.module.css';
 
 const ExplorePage: React.FC = () => {

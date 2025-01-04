@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FaGoogle } from 'react-icons/fa';
 import { SiNaver } from 'react-icons/si';
 import { RiKakaoTalkFill } from 'react-icons/ri';
-import AuthService from '../services/AuthService';
+import AuthService from '@/services/AuthService';
 import styles from './SignInPage.module.css';
 
 interface SignInForm {

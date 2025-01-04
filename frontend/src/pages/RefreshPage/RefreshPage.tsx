@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthService from '../services/AuthService';
+import AuthService from '@/services/AuthService';
 import styles from './RefreshPage.module.css';
 
 const RefreshPage: React.FC = () => {

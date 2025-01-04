@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { WebtoonsPageState } from '../types/page';
-import WebtoonService from '../services/webtoonService';
-import WebtoonGrid from '../components/WebtoonGrid/index';
-import Pagination from '../components/Pagination/index';
+import { WebtoonsPageState } from '../../types/page';
+import WebtoonService from '@/services/webtoonService';
+import WebtoonGrid from '@/components/WebtoonGrid';
+import Pagination from '@/components/Pagination';
 import styles from './CompletedWebtoonsPage.module.css';
 
 const CompletedWebtoonsPage: React.FC = () => {
