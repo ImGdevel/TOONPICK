@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Webtoon } from '@/types/webtoon';
-import StarRating from '@/components/StarRating';
-import StatusBadge from '@/components/StatusBadge';
-import PublisherIcon from '@/components/PublisherIcon';
 import styles from './WebtoonCard.module.css';
 
 interface WebtoonItemProps {
@@ -11,29 +8,24 @@ interface WebtoonItemProps {
   showPublisher?: boolean;
 }
 
-const WebtoonCard: React.FC<WebtoonItemProps> = ({ 
-  webtoon,
-  showPublisher = true
-}) => {
+const WebtoonCard: React.FC<WebtoonItemProps> = ({ webtoon, showPublisher = true }) => {
+  const authors = webtoon.authors?.map(author => author.name).join(', ') || 'Unknown Author';
+  const averageRating = webtoon.rating ?? 'N/A';
+  const truncatedTitle = webtoon.title.length > 30 ? `${webtoon.title.substring(0, 30)}...` : webtoon.title;
+
   return (
-    <Link to={`/webtoon/${webtoon.id}`} className={styles.webtoonItem}>
-      <div className={styles.thumbnail}>
-        <img src={webtoon.thumbnailUrl} alt={webtoon.title} />
-        {showPublisher && webtoon.publisher && (
-          <div className={styles.publisher}>
-            <PublisherIcon publisher={webtoon.publisher} size="small" />
-          </div>
-        )}
-      </div>
-      <div className={styles.info}>
-        <h3 className={styles.title}>{webtoon.title}</h3>
-        <p className={styles.author}>{webtoon.authors.map(author => author.name).join(', ')}</p>
-        <div className={styles.meta}>
-          <StarRating rating={webtoon.rating || 0} size="small" />
-          <StatusBadge status={webtoon.status} size="small" />
+    <div className={styles['webtoon-item']}>
+      <Link to={`/webtoon/${webtoon.id}`} className={styles['thumbnail-container']}>
+        <img src={webtoon.thumbnailUrl} alt={webtoon.title} className={styles['thumbnail-image']} />
+      </Link>
+      <div className={styles['webtoon-info']}>
+        <span className={styles['webtoon-title']}>{truncatedTitle}</span>
+        <div className={styles['webtoon-meta']}>
+          <span className={styles['webtoon-author']}>{authors}</span>
+          <span className={styles['webtoon-rating']}>⭐ {averageRating}</span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

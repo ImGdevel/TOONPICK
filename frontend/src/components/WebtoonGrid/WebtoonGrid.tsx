@@ -9,9 +9,11 @@ interface WebtoonGridProps {
 
 const WebtoonGrid: React.FC<WebtoonGridProps> = ({ webtoons }) => {
   return (
-    <div className={styles.webtoonGrid}>
+    <div className={styles.grid}>
       {webtoons.map(webtoon => (
-        <WebtoonCard key={webtoon.id} webtoon={webtoon} />
+        <div className={styles.gridItem} key={webtoon.id}>
+          <WebtoonCard webtoon={webtoon} />
+        </div>
       ))}
     </div>
   );
