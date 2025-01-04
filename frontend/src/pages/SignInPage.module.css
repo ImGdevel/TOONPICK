@@ -4,21 +4,21 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f5f6f8;
+  background-color: #1a1a1a;
   padding: 20px;
 }
 
 .form {
-  background-color: #ffffff;
+  background-color: #2d2d2d;
   width: 100%;
   max-width: 400px;
   padding: 40px;
   border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .form h1 {
-  color: #1a1a1a;
+  color: #ffffff;
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 8px;
@@ -26,7 +26,7 @@
 }
 
 .form h3 {
-  color: #666;
+  color: #b3b3b3;
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 32px;
@@ -41,21 +41,21 @@
   width: 100%;
   padding: 12px 16px;
   font-size: 15px;
-  border: 1px solid #e1e1e1;
+  border: 1px solid #404040;
   border-radius: 8px;
-  background-color: #ffffff;
-  color: #1a1a1a;
+  background-color: #333333;
+  color: #ffffff;
   transition: all 0.2s ease;
 }
 
 .formGroup input:focus {
   outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  border-color: #5a9de2;
+  box-shadow: 0 0 0 3px rgba(90, 157, 226, 0.2);
 }
 
 .formGroup input::placeholder {
-  color: #999;
+  color: #808080;
 }
 
 .submitButton {
@@ -63,7 +63,7 @@
   padding: 14px;
   font-size: 16px;
   font-weight: 600;
-  background-color: #4a90e2;
+  background-color: #5a9de2;
   color: white;
   border: none;
   border-radius: 8px;
@@ -73,7 +73,7 @@
 }
 
 .submitButton:hover {
-  background-color: #357abd;
+  background-color: #4a90e2;
 }
 
 .submitButton:active {
@@ -91,12 +91,12 @@
 .divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 1px solid #404040;
 }
 
 .divider span {
   padding: 0 16px;
-  color: #666;
+  color: #b3b3b3;
   font-size: 14px;
 }
 
@@ -113,15 +113,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #e1e1e1;
+  border: 1px solid #404040;
   border-radius: 8px;
-  background-color: #ffffff;
+  background-color: #333333;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .socialLogin button:hover {
-  background-color: #f8f9fa;
+  background-color: #404040;
   transform: translateY(-2px);
 }
 
@@ -135,7 +135,7 @@
 .socialLogin button.naver svg { color: #03C75A; }
 
 .error {
-  color: #e34850;
+  color: #ff6b6b;
   font-size: 14px;
   margin: 8px 0;
   text-align: center;
@@ -151,11 +151,11 @@
   width: 16px;
   height: 16px;
   margin-right: 8px;
-  accent-color: #4a90e2;
+  accent-color: #5a9de2;
 }
 
 .rememberMe label {
-  color: #666;
+  color: #b3b3b3;
   font-size: 14px;
 }
 
@@ -165,16 +165,16 @@
   gap: 24px;
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid #e1e1e1;
+  border-top: 1px solid #404040;
 }
 
 .links a {
-  color: #666;
+  color: #b3b3b3;
   font-size: 14px;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .links a:hover {
-  color: #4a90e2;
+  color: #5a9de2;
 }

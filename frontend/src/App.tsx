@@ -27,6 +27,7 @@ const App: React.FC = () => {
             <Route path="/webtoon/completed" element={<CompletedWebtoonsPage />} />
             <Route path="/webtoon/:id" element={<WebtoonDetailPage />} />
             <Route path="/login" element={<SignInPage />} />
+            <Route path="/signin" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/mypage" element={<MyPage />} />

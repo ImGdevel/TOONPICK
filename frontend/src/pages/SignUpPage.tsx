@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { SignUpFormData } from '../types/auth-page';
 import AuthService from '../services/AuthService';
 import styles from './SignUpPage.module.css';
@@ -45,7 +45,7 @@ const SignUpPage: React.FC = () => {
       );
 
       if (response.success) {
-        navigate('/');
+        navigate('/login');
       }
     } catch (err) {
       setError('회원가입에 실패했습니다. 다시 시도해주세요.');
@@ -54,16 +54,19 @@ const SignUpPage: React.FC = () => {
 
   return (
     <div className={styles.signUpPage}>
-      <h1>회원가입</h1>
-      {error && <div className={styles.error}>{error}</div>}
-      
       <form onSubmit={handleSubmit} className={styles.form}>
+        <h1>TOONPICK</h1>
+        <h3>회원가입</h3>
+
+        {error && <div className={styles.error}>{error}</div>}
+        
         <div className={styles.formGroup}>
           <label htmlFor="email">이메일</label>
           <input
             type="email"
             id="email"
             name="email"
+            placeholder="example@email.com"
             value={formData.email}
             onChange={handleChange}
             required
@@ -76,6 +79,7 @@ const SignUpPage: React.FC = () => {
             type="text"
             id="username"
             name="username"
+            placeholder="사용자 이름을 입력하세요"
             value={formData.username}
             onChange={handleChange}
             required
@@ -88,6 +92,7 @@ const SignUpPage: React.FC = () => {
             type="password"
             id="password"
             name="password"
+            placeholder="비밀번호를 입력하세요"
             value={formData.password}
             onChange={handleChange}
             required
@@ -100,6 +105,7 @@ const SignUpPage: React.FC = () => {
             type="password"
             id="confirmPassword"
             name="confirmPassword"
+            placeholder="비밀번호를 다시 입력하세요"
             value={formData.confirmPassword}
             onChange={handleChange}
             required
@@ -114,12 +120,18 @@ const SignUpPage: React.FC = () => {
             checked={formData.agreeToTerms}
             onChange={handleChange}
           />
-          <label htmlFor="agreeToTerms">이용약관에 동의합니다</label>
+          <label htmlFor="agreeToTerms">
+            이용약관 및 개인정보 처리방침에 동의합니다
+          </label>
         </div>
 
         <button type="submit" className={styles.submitButton}>
           회원가입
         </button>
+
+        <div className={styles.links}>
+          <Link to="/signin">이미 계정이 있으신가요? 로그인</Link>
+        </div>
       </form>
     </div>
   );
