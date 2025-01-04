@@ -32,7 +32,7 @@ const SimilarWebtoons: React.FC<SimilarWebtoonsProps> = ({
               />
               <div className={styles.info}>
                 <h4>{webtoon.title}</h4>
-                <p>{webtoon.author}</p>
+                <p>{webtoon.authors.map(author => author.name).join(', ')}</p>
               </div>
             </Link>
           ))}

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { WebtoonsPageState } from '@/types/page';
 import WebtoonService from '@/services/webtoonService';
-import WebtoonGrid from '@/components/WebtoonGrid';
+import WebtoonCard from '@/components/WebtoonCard';
 import Pagination from '@/components/Pagination';
 import styles from './OngoingWebtoonsPage.module.css';
 
@@ -64,7 +64,11 @@ const OngoingWebtoonsPage: React.FC = () => {
       {state.isLoading ? (
         <p>로딩 중...</p>
       ) : (
-        <WebtoonGrid webtoons={state.webtoons} />
+        <div className={styles.webtoonGrid}>
+          {state.webtoons.map(webtoon => (
+            <WebtoonCard key={webtoon.id} webtoon={webtoon} />
+          ))}
+        </div>
       )}
     </div>
   );

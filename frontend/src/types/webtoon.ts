@@ -4,11 +4,10 @@ export type StatusType = 'ONGOING' | 'COMPLETED' | 'HIATUS';
 export interface Webtoon {
   id: number;
   title: string;
-  author: string;
   thumbnailUrl: string;
   platforms: Platform[];
   authors: Array<{ id: string; name: string }>;
-  tags: Array<{ id: string; name: string }>;
+  genres: Array<{ id: string; name: string }>;
   description: string;
   status: StatusType;
   publishDay: string;

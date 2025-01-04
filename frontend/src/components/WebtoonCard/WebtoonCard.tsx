@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Webtoon } from '../../types/webtoon';
+import { Webtoon } from '@/types/webtoon';
 import StarRating from '@/components/StarRating';
-import StatusBadge from '../StatusBadge/index';
-import PublisherIcon from '../PublisherIcon/PublisherIcon';
-import styles from './WebtoonItem.module.css';
+import StatusBadge from '@/components/StatusBadge';
+import PublisherIcon from '@/components/PublisherIcon';
+import styles from './WebtoonCard.module.css';
 
 interface WebtoonItemProps {
   webtoon: Webtoon;
   showPublisher?: boolean;
 }
 
-const WebtoonItem: React.FC<WebtoonItemProps> = ({ 
+const WebtoonCard: React.FC<WebtoonItemProps> = ({ 
   webtoon,
   showPublisher = true
 }) => {
@@ -27,7 +27,7 @@ const WebtoonItem: React.FC<WebtoonItemProps> = ({
       </div>
       <div className={styles.info}>
         <h3 className={styles.title}>{webtoon.title}</h3>
-        <p className={styles.author}>{webtoon.author}</p>
+        <p className={styles.author}>{webtoon.authors.map(author => author.name).join(', ')}</p>
         <div className={styles.meta}>
           <StarRating rating={webtoon.rating || 0} size="small" />
           <StatusBadge status={webtoon.status} size="small" />
@@ -37,4 +37,4 @@ const WebtoonItem: React.FC<WebtoonItemProps> = ({
   );
 };
 
-export default WebtoonItem; 
+export default WebtoonCard; 
