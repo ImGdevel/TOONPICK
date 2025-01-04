@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from '@components/common/Header';
+import Header from '@/components/Header';
 import ErrorPage from '@/pages/ErrorPage';
 import { AuthProvider } from '@/contexts/AuthContext';
 

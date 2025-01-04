@@ -1,6 +1,6 @@
 import React from 'react';
 import { Review } from '@/types/review';
-import StarRating from '@components/common/StarRating';
+import StarRating from '@/components/StarRating';
 import styles from './ReviewList.module.css';
 
 interface ReviewListProps {
