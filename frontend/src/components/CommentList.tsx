@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaThumbsUp } from 'react-icons/fa';
-import StarRating from './StarRating';
+import StarRating from '@components/common/StarRating';
 import ReportModal from './ReportModal';
 import WebtoonReviewService from '../services/WebtoonReviewService';
 import styles from './CommentList.module.css';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import StarRating from './StarRating';
+import StarRating from '@components/common/StarRating';
 import EvaluationModal from './EvaluationModal';
 import styles from './EvaluationSection.module.css';
 
