@@ -14,7 +14,6 @@ interface JoinFormat {
 
 type Provider = 'google' | 'kakao' | 'naver';
 
-
 class AuthService {
   private static instance: AuthService;
 
@@ -29,17 +28,18 @@ class AuthService {
 
   // 로그인
   public async login(
-    username: string, 
+    username: string,
     password: string,
     rememberMe: boolean = false,
     loginCallback?: () => void
   ): Promise<LoginResponse> {
     try {
       const response = await api.post<{ accessToken: string }>(
-        '/login', 
-        { username, password, rememberMe }, 
+        '/login',
+        { username, password },
         { authRequired: false }
       );
+
       const { accessToken } = response;
       AuthToken.setAccessToken(accessToken, rememberMe);
       loginCallback?.();
@@ -51,8 +51,8 @@ class AuthService {
 
   // 회원가입
   public async signup(
-    username: string, 
-    password: string, 
+    username: string,
+    password: string,
     confirmPassword: string
   ): Promise<LoginResponse> {
     if (password !== confirmPassword) {
@@ -63,7 +63,7 @@ class AuthService {
       const joinFormat: JoinFormat = {
         username,
         email: username,
-        password
+        password,
       };
 
       await api.post('/join', joinFormat, { authRequired: false });
@@ -86,21 +86,14 @@ class AuthService {
 
   // 로그인 상태 확인
   public isLoggedIn(): boolean {
-    const accessToken = AuthToken.getAccessToken();
-    if (!accessToken) {
-      console.log("AccessToken is not available.");
-      return false;
-    }
-
-    const isValid = !AuthToken.isAccessTokenExpired(accessToken);
-    console.log("Login status:", isValid);
-    return isValid;
+    const isAuthenticated = AuthToken.isAuthenticated();
+    console.log("Login status:", isAuthenticated);
+    return isAuthenticated;
   }
 
   // 소셜 로그인
   public socialLogin(provider: Provider): void {
-    //const loginUrl = `${process.env.REACT_APP_API_URL}/oauth2/authorization/${provider}`;
-    const loginUrl = `http://localhost:8080/oauth2/authorization/${provider}`;
+    const loginUrl = `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/oauth2/authorization/${provider}`;
     window.location.href = loginUrl;
   }
 
@@ -109,14 +102,14 @@ class AuthService {
     loginCallback?: () => void
   ): Promise<LoginResponse> {
     try {
-      const accessToken = await AuthToken.refreshAccessToken();
+      // Refresh Access Token from server (HttpOnly cookie used for Refresh Token)
+      const newAccessToken = await AuthToken.refreshAccessToken();
       
-      if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
+      if (newAccessToken) {
         loginCallback?.();
         return { success: true };
       }
-      return { success: false, message: 'No access token found in URL' };
+      return { success: false, message: 'No access token found during callback.' };
     } catch (error) {
       return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
     }
