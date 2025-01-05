@@ -22,7 +22,7 @@ class ApiService {
       baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8080',
       headers: {
         'Content-Type': 'application/json',
-      } as AxiosRequestHeaders,
+      },
       withCredentials: true,
     });
 
@@ -46,7 +46,7 @@ class ApiService {
           if (!config.headers) {
             config.headers = new axios.AxiosHeaders();
           }
-          config.headers.set('Authorization', `Bearer ${accessToken}`);
+          config.headers['Authorization'] = `Bearer ${accessToken}`;
         }
         return config;
       },
