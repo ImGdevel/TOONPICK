@@ -1,61 +1,67 @@
-import React, { useContext, Dispatch, SetStateAction } from 'react';
-import { Link, NavigateFunction } from 'react-router-dom';
-import { AuthContext } from '@/contexts/AuthContext';
+import React from 'react';
 import styles from './ProfileWidget.module.css';
-
-interface UserProfile {
-  username: string;
-  avatar?: string;
-  favoriteCount: number;
-}
 
 interface ProfileWidgetProps {
   userProfilePic: string;
   userName: string;
   userEmail: string;
-  onNavigate: NavigateFunction;
-  onLogout: () => Promise<void>;
+  onNavigate: (path: string) => void;
+  onLogout: () => void;
   isWidgetOpen: boolean;
-  setProfileWidgetOpen: Dispatch<SetStateAction<boolean>>;
+  setProfileWidgetOpen: (isOpen: boolean) => void;
 }
 
-const ProfileWidget: React.FC<ProfileWidgetProps> = ({ 
+const ProfileWidget: React.FC<ProfileWidgetProps> = ({
   userProfilePic,
   userName,
-  ...rest 
+  userEmail,
+  onNavigate,
+  onLogout,
+  isWidgetOpen,
+  setProfileWidgetOpen,
 }) => {
-  const { isLoggedIn } = useContext(AuthContext);
-  const [profile, setProfile] = React.useState<UserProfile | null>(null);
-
-  React.useEffect(() => {
-    if (isLoggedIn) {
-      // API 호출 또는 상태 관리 로직
-      setProfile({
-        username: "사용자",
-        favoriteCount: 0
-      });
-    }
-  }, [isLoggedIn]);
-
-  if (!isLoggedIn || !profile) {
-    return null;
-  }
+  const handleButtonClick = (action: () => void) => {
+    action();
+    setProfileWidgetOpen(false);
+  };
 
   return (
-    <div className={styles.profileWidget}>
-      <img
-        src={profile.avatar || '/images/default-avatar.png'}
-        alt="프로필 이미지"
-        className={styles.avatar}
-      />
-      <div className={styles.info}>
-        <span className={styles.username}>{profile.username}</span>
-        <Link to="/favorites" className={styles.favorites}>
-          즐겨찾기 ({profile.favoriteCount})
-        </Link>
+    <div
+      id="profileWidget"
+      className={`${styles['profile-widget']} ${isWidgetOpen ? styles['open'] : ''}`}
+      style={{ pointerEvents: isWidgetOpen ? 'auto' : 'none' }}
+    >
+      <img src={userProfilePic} alt="User Profile" className={styles['widget-profile-picture']} />
+      <div className={styles['user-info']}>
+        <p>{userName}</p>
+        <p>{userEmail}</p>
       </div>
+      <button
+        onClick={() => handleButtonClick(() => onNavigate('/mypage'))}
+        className={styles['widget-button']}
+      >
+        마이페이지
+      </button>
+      <button
+        onClick={() => handleButtonClick(() => onNavigate('/profile-edit'))}
+        className={styles['widget-button']}
+      >
+        프로필 수정
+      </button>
+      <button
+        onClick={() => handleButtonClick(() => onNavigate('/my-webtoons'))}
+        className={styles['widget-button']}
+      >
+        나의 웹툰 리스트
+      </button>
+      <button
+        onClick={() => handleButtonClick(onLogout)}
+        className={styles['widget-button']}
+      >
+        로그아웃
+      </button>
     </div>
   );
 };
 
-export default ProfileWidget; 
+export default ProfileWidget;
