@@ -11,7 +11,7 @@ const HomePage: React.FC = () => {
     isLoading: true,
     error: null
   });
-
+/*
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,7 +37,8 @@ const HomePage: React.FC = () => {
 
     fetchData();
   }, []);
-
+  */
+ 
   if (state.isLoading) return <div>로딩중...</div>;
   if (state.error) return <div>{state.error}</div>;
 
@@ -46,13 +47,13 @@ const HomePage: React.FC = () => {
       {/* 인기 웹툰 섹션 */}
       <section className={styles.section}>
         <h2>인기 웹툰</h2>
-        <WebtoonGrid webtoons={state.popularWebtoons || []} />
+        {/* <WebtoonGrid webtoons={state.popularWebtoons || []} /> */}
       </section>
 
       {/* 최신 웹툰 섹션 */}
       <section className={styles.section}>
         <h2>최신 웹툰</h2>
-        <WebtoonGrid webtoons={state.recentWebtoons || []} />
+        {/* <WebtoonGrid webtoons={state.recentWebtoons || []} /> */}
       </section>
     </div>
   );

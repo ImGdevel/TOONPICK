@@ -1,13 +1,14 @@
 import AuthToken from './AuthToken';
-import api from './ApiService';
+import api, { CustomAxiosRequestConfig } from './ApiService';
+
 
 export const AuthService = {
   login: async (username: string, password: string, loginCallback?: () => void): Promise<{ success: boolean; message?: string }> => {
     try {
-      const response = await api.post(
+      const response = await api.post<{ accessToken: string }>(
         '/login',
         { username, password },
-        { authRequired: false } // CustomAxiosRequestConfig를 따름
+        { authRequired: false } as CustomAxiosRequestConfig
       );
       const accessToken = AuthToken.extractAccessTokenFromHeader(response.headers);
       if (accessToken) {
@@ -32,7 +33,7 @@ export const AuthService = {
         email: username,
         password,
       };
-      await api.post('/join', joinFormat, { authRequired: false });
+      await api.post('/join', joinFormat, { authRequired: false } as CustomAxiosRequestConfig);
       return { success: true };
     } catch (error: any) {
       return { success: false, message: error.message };
@@ -41,7 +42,7 @@ export const AuthService = {
 
   logout: async (): Promise<{ success: boolean; message?: string }> => {
     try {
-      await api.post('/logout', {}, { authRequired: true });
+      await api.post('/logout', {}, { authRequired: true } as CustomAxiosRequestConfig);
       AuthToken.clearAccessToken();
       return { success: true };
     } catch (error: any) {

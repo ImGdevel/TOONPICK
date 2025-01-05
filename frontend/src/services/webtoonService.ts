@@ -1,4 +1,4 @@
-import api from './ApiService';
+import api, { CustomAxiosRequestConfig } from './ApiService';
 
 interface WebtoonResponse<T = any> {
   success: boolean;
@@ -31,7 +31,7 @@ class WebtoonService {
   // 연재 중인 모든 웹툰 데이터
   public async getWebtoons(page: number): Promise<WebtoonResponse> {
     try {
-      const response = await api.get(`/api/webtoons/series?page=${page}&size=20`, { authRequired: false });
+      const response = await api.get(`/api/webtoons/series?page=${page}&size=20`, { authRequired: false } as CustomAxiosRequestConfig);
       return { success: true, data: response };
     } catch (error) {
       console.error('Error fetching webtoons:', error);
@@ -42,7 +42,7 @@ class WebtoonService {
   // 특정 요일의 웹툰 데이터
   public async getWebtoonsByDayOfWeek(dayOfWeek: DayOfWeek): Promise<WebtoonResponse> {
     try {
-      const response = await api.get(`/api/webtoons/series/${dayOfWeek}`, { authRequired: false });
+      const response = await api.get(`/api/webtoons/series/${dayOfWeek}`, { authRequired: false } as CustomAxiosRequestConfig);
       return { success: true, data: response };
     } catch (error) {
       console.error(`Error fetching webtoons for day: ${dayOfWeek}`, error);
@@ -56,7 +56,7 @@ class WebtoonService {
   // 특정 웹툰 데이터
   public async getWebtoonById(id: number): Promise<WebtoonResponse | null> {
     try {
-      const response = await api.get(`/api/webtoons/${id}`, { authRequired: false });
+      const response = await api.get(`/api/webtoons/${id}`, { authRequired: false } as CustomAxiosRequestConfig);
       return { success: true, data: response };
     } catch (error) {
       console.error('Error fetching webtoon by ID:', error);
@@ -71,7 +71,7 @@ class WebtoonService {
     try {
       const response = await api.get(
         `/api/webtoons/completed?page=${page}&size=${size}`, 
-        { authRequired: false }
+        { authRequired: false } as CustomAxiosRequestConfig
       );
       return { success: true, data: response };
     } catch (error) {
@@ -91,7 +91,7 @@ class WebtoonService {
   // 인기 웹툰 조회
   public async getPopularWebtoons(): Promise<WebtoonResponse> {
     try {
-      const response = await api.get('/api/webtoons/popular', { authRequired: false });
+      const response = await api.get('/api/webtoons/popular', { authRequired: false } as CustomAxiosRequestConfig);
       return { success: true, data: response };
     } catch (error) {
       console.error('Error fetching popular webtoons:', error);
@@ -102,7 +102,7 @@ class WebtoonService {
   // 최신 웹툰 조회
   public async getRecentWebtoons(): Promise<WebtoonResponse> {
     try {
-      const response = await api.get('/api/webtoons/recent', { authRequired: false });
+      const response = await api.get('/api/webtoons/recent', { authRequired: false } as CustomAxiosRequestConfig);
       return { success: true, data: response };
     } catch (error) {
       console.error('Error fetching recent webtoons:', error);
@@ -116,7 +116,7 @@ class WebtoonService {
       const response = await api.get('/api/webtoons/search', {
         params: { q: query },
         authRequired: false
-      });
+      } as CustomAxiosRequestConfig);
       return { success: true, data: response };
     } catch (error) {
       console.error('Error searching webtoons:', error);
@@ -127,7 +127,7 @@ class WebtoonService {
   // 카테고리별 웹툰 조회
   public async getWebtoonsByCategory(category: string): Promise<WebtoonResponse> {
     try {
-      const response = await api.get(`/api/webtoons/category/${category}`, { authRequired: false });
+      const response = await api.get(`/api/webtoons/category/${category}`, { authRequired: false } as CustomAxiosRequestConfig);
       return { success: true, data: response };
     } catch (error) {
       console.error('Error fetching webtoons by category:', error);
@@ -138,7 +138,7 @@ class WebtoonService {
   // 추천 웹툰 조회
   public async getRecommendedWebtoons(): Promise<WebtoonResponse> {
     try {
-      const response = await api.get('/api/webtoons/recommended', { authRequired: false });
+      const response = await api.get('/api/webtoons/recommended', { authRequired: false } as CustomAxiosRequestConfig);
       return { success: true, data: response };
     } catch (error) {
       console.error('Error fetching recommended webtoons:', error);

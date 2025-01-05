@@ -1,4 +1,4 @@
-import api from './ApiService';
+import api, { CustomAxiosRequestConfig } from './ApiService';
 
 interface ReviewResponse<T = any> {
   success: boolean;
@@ -39,7 +39,7 @@ class WebtoonReviewService {
       const response = await api.post(
         `/api/webtoon/${webtoonId}/reviews`, 
         reviewData, 
-        { authRequired: true }
+        { authRequired: true } as CustomAxiosRequestConfig
       );
       return { success: true, data: response };
     } catch (error) {
@@ -74,7 +74,7 @@ class WebtoonReviewService {
       const response = await api.put(
         `/api/webtoon/${webtoonId}/reviews/${reviewId}`, 
         reviewData, 
-        { authRequired: true }
+        { authRequired: true } as CustomAxiosRequestConfig
       );
       return { success: true, data: response };
     } catch (error) {
@@ -106,7 +106,7 @@ class WebtoonReviewService {
       const response = await api.post(
         `/api/webtoon/${webtoonId}/reviews/${reviewId}/like`, 
         null, 
-        { authRequired: true }
+        { authRequired: true } as CustomAxiosRequestConfig
       );
       return { success: true, data: response };
     } catch (error) {
@@ -120,7 +120,7 @@ class WebtoonReviewService {
     try {
       const response = await api.get(
         `/api/webtoon/${webtoonId}/reviews/liked-reviews`, 
-        { authRequired: true }
+        { authRequired: true } as CustomAxiosRequestConfig
       );
       return { success: true, data: response };
     } catch (error) {
@@ -152,7 +152,7 @@ class WebtoonReviewService {
     try {
       const response = await api.get(
         `/api/webtoon/${webtoonId}/reviews/users`, 
-        { authRequired: true }
+        { authRequired: true } as CustomAxiosRequestConfig
       );
       return { success: true, data: response };
     } catch (error) {
@@ -171,7 +171,7 @@ class WebtoonReviewService {
       const response = await api.post(
         `/api/webtoon/${webtoonId}/reviews/${reviewId}/report`, 
         reportData, 
-        { authRequired: true }
+        { authRequired: true } as CustomAxiosRequestConfig
       );
       return { success: true, data: response };
     } catch (error) {

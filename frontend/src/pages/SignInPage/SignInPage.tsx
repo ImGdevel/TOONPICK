@@ -19,7 +19,7 @@ const SignInPage: React.FC = () => {
     setError('');
 
     try {
-      const response = await AuthService.login(formData.username, formData.password, formData.rememberMe, () => navigate('/'));
+      const response = await AuthService.login(formData.username, formData.password, () => navigate('/'));
       if (response.success) {
         navigate('/');
       }

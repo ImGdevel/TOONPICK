@@ -1,11 +1,18 @@
-import axios, { AxiosResponse, AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
-import { AuthToken } from './AuthToken';
+import axios, {
+  AxiosHeaders,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios';
+import AuthToken from './AuthToken';
 
-// InternalAxiosRequestConfig에 사용자 정의 속성 추가
+// Custom Axios Request Config 타입 정의
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
-  authRequired?: boolean; // 추가된 속성
-  _retry?: boolean; // Add the _retry property
+  authRequired?: boolean; // 사용자 정의 속성
+  _retry?: boolean;       // 토큰 재발급 시도 여부
 }
+
+export type { CustomAxiosRequestConfig };
 
 // Axios 인스턴스 생성
 const api = axios.create({
@@ -20,14 +27,17 @@ const api = axios.create({
 api.interceptors.request.use(
   (config: CustomAxiosRequestConfig) => {
     const accessToken = AuthToken.getAccessToken();
-    if (config.authRequired && accessToken && accessToken.trim() !== '') {
-      // headers가 undefined인 경우 AxiosHeaders.from으로 초기화
-      if (!config.headers) {
-        config.headers = AxiosHeaders.from({});
-      }
 
-      config.headers.set('Authorization', `Bearer ${accessToken}`);
+    // headers 초기화
+    if (!config.headers) {
+      config.headers = AxiosHeaders.from({});
     }
+
+    // Authorization 헤더 설정
+    if (config.authRequired && accessToken && accessToken.trim() !== '') {
+      (config.headers as AxiosHeaders).set('Authorization', `Bearer ${accessToken}`);
+    }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -38,6 +48,7 @@ api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
+
     if (error.response?.status === 401) {
       const errorMessage: string = error.response.data.error;
 
@@ -56,18 +67,26 @@ api.interceptors.response.use(
         return Promise.reject(new Error('잘못된 토큰입니다.'));
       }
     }
+
     return Promise.reject(error);
   }
 );
 
-// Access 토큰 만료 처리
-const handleTokenExpiration = async (originalRequest: CustomAxiosRequestConfig): Promise<any> => {
+// Access 토큰 만료 처리 함수
+const handleTokenExpiration = async (
+  originalRequest: CustomAxiosRequestConfig
+): Promise<any> => {
   try {
     const newAccessToken = await AuthToken.refreshAccessToken();
+
+    // headers 초기화
     if (!originalRequest.headers) {
       originalRequest.headers = AxiosHeaders.from({});
     }
-    originalRequest.headers.set('Authorization', `Bearer ${newAccessToken}`);
+
+    // 새로운 Access 토큰 설정
+    (originalRequest.headers as AxiosHeaders).set('Authorization', `Bearer ${newAccessToken}`);
+
     return api(originalRequest);
   } catch (reissueError) {
     return Promise.reject(reissueError);
