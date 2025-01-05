@@ -61,7 +61,6 @@ const WebtoonDetailPage: React.FC = () => {
         if (!id) return;
         
         const response = await WebtoonService.getWebtoonById(parseInt(id));
-        console.log('API Response:', response);
         
         if (response?.success && response.data) {
           const webtoonData: Webtoon = {
@@ -75,13 +74,10 @@ const WebtoonDetailPage: React.FC = () => {
             isAdult: response.data.isAdult || false
           };
 
-          console.log('Processed webtoon data:', webtoonData);
           setWebtoon(webtoonData);
           
           const favoriteStatus = await UserService.isFavoriteWebtoon(parseInt(id));
           setIsFavorite(favoriteStatus.data || false);
-        } else {
-          console.error('Invalid response format:', response);
         }
       } catch (error) {
         console.error('Error fetching webtoon data:', error);
@@ -130,13 +126,14 @@ const WebtoonDetailPage: React.FC = () => {
 
   return (
     <div className={styles.webtoonDetailPage}>
-      <div className={styles.webtoonInfo}>
+      <section className={styles.webtoonInfo}>
         <div className={styles.webtoonImage}>
           <img src={webtoon.thumbnailUrl || 'https://via.placeholder.com/460x623'} alt={webtoon.title} />
         </div>
         
         <div className={styles.webtoonDetails}>
-          <div className={styles.topRow}>
+          <h1 className={styles.webtoonTitle}>{webtoon.title}</h1>
+          <div className={styles.webtoonMeta}>
             <div className={styles.statusBadges}>
               {webtoon.isAdult && <StatusBadge text="19" />}
               {webtoon.status === 'ONGOING' && <StatusBadge text="연재" />}
@@ -151,8 +148,6 @@ const WebtoonDetailPage: React.FC = () => {
               ))}
             </div>
           </div>
-
-          <h1 className={styles.title}>{webtoon.title}</h1>
 
           <div className={styles.authors}>
             {webtoon.authors.map((author, index) => (
@@ -204,9 +199,14 @@ const WebtoonDetailPage: React.FC = () => {
             />
           </div>
         </div>
-      </div>
+      </section>
 
-      <EvaluationSection webtoonId={webtoon.id} totalRatings={webtoon.totalRatings} averageRating={webtoon.averageRating} onRatingSubmit={handleRatingSubmit} />
+      <EvaluationSection 
+        webtoonId={webtoon.id} 
+        totalRatings={webtoon.totalRatings} 
+        averageRating={webtoon.averageRating} 
+        onRatingSubmit={handleRatingSubmit} 
+      />
       <WebtoonAnalysis analysisData={webtoon.analysisData} />
       <SimilarWebtoons 
         similarWebtoons={webtoon.similarWebtoons || []} 
