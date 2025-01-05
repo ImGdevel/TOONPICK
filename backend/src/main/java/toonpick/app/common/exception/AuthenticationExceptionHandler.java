@@ -39,7 +39,7 @@ public class AuthenticationExceptionHandler {
     @ExceptionHandler(InvalidCsrfTokenException.class)
     public ResponseEntity<String> handleInvalidTokenException(InvalidCsrfTokenException ex) {
         LOGGER.error("Invalid Token: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
     }
 
     @ExceptionHandler(NullPointerException.class)

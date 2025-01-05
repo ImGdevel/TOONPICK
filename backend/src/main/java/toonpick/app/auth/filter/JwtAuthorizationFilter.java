@@ -28,34 +28,30 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
-        // 요청 헤더에서 Access Token 확인
-        String accessToken = jwtTokenValidator.extractAccessToken(request.getHeader("Authorization"));
-        if (accessToken == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         try {
-            // Access Token 검증 및 유저 인증 정보 추출
-            jwtTokenValidator.validateAccessToken(accessToken);
-            UserDetails userDetails = jwtTokenValidator.getUserDetails(accessToken);
+            // 요청 헤더에서 Access Token 확인
+            String accessToken = jwtTokenValidator.extractAccessToken(request.getHeader("Authorization"));
 
-            // SecurityContext 인증 정보가 없으면 인증 정보 설정
-            if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            if (accessToken != null) {
+                // Access Token 검증 및 유저 인증 정보 추출
+                jwtTokenValidator.validateAccessToken(accessToken);
+                UserDetails userDetails = jwtTokenValidator.getUserDetails(accessToken);
 
+                // SecurityContext 인증 정보가 없으면 인증 정보 설정
+                if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
                 logger.info("Authorization successful for user: {}", userDetails.getUsername());
             }
+
+            filterChain.doFilter(request, response);
+
         } catch (Exception e) {
             logger.warn("Authorization failed: {}", e.getMessage());
-            errorResponseSender.sendErrorResponse(response, e.getMessage(), HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+            errorResponseSender.sendErrorResponse(response, "Authentication error", HttpServletResponse.SC_FORBIDDEN);
         }
-
-        filterChain.doFilter(request, response);
     }
+
 }
