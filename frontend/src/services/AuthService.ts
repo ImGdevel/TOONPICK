@@ -37,11 +37,14 @@ class AuthService {
     try {
       const response = await api.post<{ accessToken: string }>(
         '/login', 
-        { username, password, rememberMe }, 
+        { username, password }, 
         { authRequired: false }
       );
       const { accessToken } = response;
-      AuthToken.setAccessToken(accessToken, rememberMe);
+      
+      console.log("accessToken : ", accessToken);
+      
+      AuthToken.setAccessToken(accessToken);
       loginCallback?.();
       return { success: true };
     } catch (error) {
@@ -53,6 +56,7 @@ class AuthService {
   public async signup(
     username: string, 
     password: string, 
+    email: string,
     confirmPassword: string
   ): Promise<LoginResponse> {
     if (password !== confirmPassword) {
@@ -61,9 +65,9 @@ class AuthService {
 
     try {
       const joinFormat: JoinFormat = {
-        username,
-        email: username,
-        password
+        username : username,
+        email : email,
+        password : password
       };
 
       await api.post('/join', joinFormat, { authRequired: false });

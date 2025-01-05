@@ -24,14 +24,17 @@ public class JoinService {
 
     @Transactional
     public void createMember(JoinRequest joinRequest) {
-        if (memberRepository.existsByUsername(joinRequest.getUsername())) {
-            String errorMessage = "Username " + joinRequest.getUsername() + " already exists.";
+
+        String username = joinRequest.getEmail();
+
+        if (memberRepository.existsByUsername(username)) {
+            String errorMessage = "Username " + username + " already exists.";
             LOGGER.error(errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
 
         Member member = Member.builder()
-                .username(joinRequest.getUsername())
+                .username(username)
                 .nickname(generateRandomNickname())
                 .password(bCryptPasswordEncoder.encode(joinRequest.getPassword()))
                 .email(joinRequest.getEmail())

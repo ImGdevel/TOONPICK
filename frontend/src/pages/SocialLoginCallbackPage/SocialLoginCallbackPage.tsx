@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import AuthService from '@/services/AuthService';
 import styles from './SocialLoginCallbackPage.module.css';
 import AuthToken from '@/services/AuthToken';
 

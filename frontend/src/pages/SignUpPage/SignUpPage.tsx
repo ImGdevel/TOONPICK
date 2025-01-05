@@ -41,6 +41,7 @@ const SignUpPage: React.FC = () => {
       const response = await AuthService.signup(
         formData.username,
         formData.password,
+        formData.email,
         formData.confirmPassword
       );
 
