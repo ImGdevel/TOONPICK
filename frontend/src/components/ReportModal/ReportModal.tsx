@@ -49,8 +49,8 @@ const ReportModal: React.FC<ReportModalProps> = ({
             required
           />
           <div className={styles.buttons}>
-            <button type="submit">신고하기</button>
-            <button type="button" onClick={onClose}>취소</button>
+            <button type="submit" className={styles.submitButton}>신고하기</button>
+            <button type="button" onClick={onClose} className={styles.cancelButton}>취소</button>
           </div>
         </form>
       </div>
