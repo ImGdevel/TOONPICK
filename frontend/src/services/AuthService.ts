@@ -1,130 +1,79 @@
 import AuthToken from './AuthToken';
 import api from './ApiService';
 
-interface LoginResponse {
-  success: boolean;
-  message?: string;
-}
-
-interface JoinFormat {
-  username: string;
-  email: string;
-  password: string;
-}
-
-type Provider = 'google' | 'kakao' | 'naver';
-
-
-class AuthService {
-  private static instance: AuthService;
-
-  private constructor() {}
-
-  public static getInstance(): AuthService {
-    if (!AuthService.instance) {
-      AuthService.instance = new AuthService();
-    }
-    return AuthService.instance;
-  }
-
-  // 로그인
-  public async login(
-    username: string, 
-    password: string,
-    rememberMe: boolean = false,
-    loginCallback?: () => void
-  ): Promise<LoginResponse> {
+export const AuthService = {
+  login: async (username: string, password: string, loginCallback?: () => void): Promise<{ success: boolean; message?: string }> => {
     try {
-      const response = await api.post<{ accessToken: string }>(
-        '/login', 
-        { username, password }, 
-        { authRequired: false }
+      const response = await api.post(
+        '/login',
+        { username, password },
+        { authRequired: false } // CustomAxiosRequestConfig를 따름
       );
-      const { accessToken } = response;
-      
-      console.log("accessToken : ", accessToken);
-      
-      AuthToken.setAccessToken(accessToken);
-      loginCallback?.();
-      return { success: true };
-    } catch (error) {
-      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+      const accessToken = AuthToken.extractAccessTokenFromHeader(response.headers);
+      if (accessToken) {
+        AuthToken.setAccessToken(accessToken);
+        loginCallback?.();
+        return { success: true };
+      } else {
+        return { success: false, message: 'Login failed' };
+      }
+    } catch (error: any) {
+      return { success: false, message: error.message };
     }
-  }
+  },
 
-  // 회원가입
-  public async signup(
-    username: string, 
-    password: string, 
-    email: string,
-    confirmPassword: string
-  ): Promise<LoginResponse> {
+  signup: async (username: string, password: string, confirmPassword: string): Promise<{ success: boolean; message?: string }> => {
     if (password !== confirmPassword) {
       return { success: false, message: 'Passwords do not match.' };
     }
-
     try {
-      const joinFormat: JoinFormat = {
-        username : username,
-        email : email,
-        password : password
+      const joinFormat = {
+        username,
+        email: username,
+        password,
       };
-
       await api.post('/join', joinFormat, { authRequired: false });
       return { success: true };
-    } catch (error) {
-      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+    } catch (error: any) {
+      return { success: false, message: error.message };
     }
-  }
+  },
 
-  // 로그아웃
-  public async logout(): Promise<LoginResponse> {
+  logout: async (): Promise<{ success: boolean; message?: string }> => {
     try {
-      await api.post('/logout', null, { authRequired: true });
+      await api.post('/logout', {}, { authRequired: true });
       AuthToken.clearAccessToken();
       return { success: true };
-    } catch (error) {
-      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+    } catch (error: any) {
+      return { success: false, message: error.message };
     }
-  }
+  },
 
-  // 로그인 상태 확인
-  public isLoggedIn(): boolean {
+  isLoggedIn: (): boolean => {
     const accessToken = AuthToken.getAccessToken();
-    if (!accessToken) {
-      console.log("AccessToken is not available.");
-      return false;
-    }
+    if (!accessToken) return false;
+    return !AuthToken.isAccessTokenExpired(accessToken);
+  },
 
-    const isValid = !AuthToken.isAccessTokenExpired(accessToken);
-    console.log("Login status:", isValid);
-    return isValid;
-  }
-
-  // 소셜 로그인
-  public socialLogin(provider: Provider): void {
-    //const loginUrl = `${process.env.REACT_APP_API_URL}/oauth2/authorization/${provider}`;
+  socialLogin: (provider: string): void => {
     const loginUrl = `http://localhost:8080/oauth2/authorization/${provider}`;
     window.location.href = loginUrl;
-  }
+  },
 
-  // 소셜 로그인 콜백 처리
-  public async handleSocialLoginCallback(
-    loginCallback?: () => void
-  ): Promise<LoginResponse> {
+  handleSocialLoginCallback: async (loginCallback?: () => void): Promise<{ success: boolean; message?: string }> => {
     try {
       const accessToken = await AuthToken.refreshAccessToken();
-      
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
         loginCallback?.();
         return { success: true };
+      } else {
+        return { success: false, message: 'No access token found in URL' };
       }
-      return { success: false, message: 'No access token found in URL' };
-    } catch (error) {
-      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+    } catch (error: any) {
+      return { success: false, message: error.message };
     }
-  }
-}
+  },
+};
 
-export default AuthService.getInstance();
+export default AuthService;
