@@ -10,7 +10,7 @@ interface WebtoonItemProps {
 
 const WebtoonCard: React.FC<WebtoonItemProps> = ({ webtoon, showPublisher = true }) => {
   const authors = webtoon.authors?.map(author => author.name).join(', ') || 'Unknown Author';
-  const averageRating = webtoon.rating ?? 'N/A';
+  const averageRating = webtoon.averageRating ?? 'N/A';
   const truncatedTitle = webtoon.title.length > 30 ? `${webtoon.title.substring(0, 30)}...` : webtoon.title;
 
   return (

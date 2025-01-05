@@ -21,9 +21,9 @@ const NewWebtoonsPage: React.FC = () => {
       try {
         const page = Number(searchParams.get('page')) || 1;
         const response = await WebtoonService.getRecentWebtoons();
-        
+
         setState({
-          webtoons: response.data,
+          webtoons: response.data || [],
           currentPage: page,
           totalPages: Math.ceil((response.total || 0) / 20),
           isLoading: false,

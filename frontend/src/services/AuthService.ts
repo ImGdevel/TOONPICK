@@ -1,5 +1,5 @@
 import AuthToken from './AuthToken';
-import api, { CustomAxiosRequestConfig } from './ApiService';
+import api from './ApiService';
 
 
 export const AuthService = {
@@ -8,7 +8,6 @@ export const AuthService = {
       const response = await api.post<{ accessToken: string }>(
         '/login',
         { username, password },
-        { authRequired: false } as CustomAxiosRequestConfig
       );
       const accessToken = AuthToken.extractAccessTokenFromHeader(response.headers);
       if (accessToken) {
@@ -33,7 +32,7 @@ export const AuthService = {
         email: username,
         password,
       };
-      await api.post('/join', joinFormat, { authRequired: false } as CustomAxiosRequestConfig);
+      await api.post('/join', joinFormat);
       return { success: true };
     } catch (error: any) {
       return { success: false, message: error.message };
@@ -42,7 +41,7 @@ export const AuthService = {
 
   logout: async (): Promise<{ success: boolean; message?: string }> => {
     try {
-      await api.post('/logout', {}, { authRequired: true } as CustomAxiosRequestConfig);
+      await api.post('/logout', {});
       AuthToken.clearAccessToken();
       return { success: true };
     } catch (error: any) {

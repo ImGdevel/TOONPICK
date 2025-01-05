@@ -23,7 +23,7 @@ const CompletedWebtoonsPage: React.FC = () => {
         const response = await WebtoonService.getCompletedWebtoons(page);
         
         setState({
-          webtoons: response.data,
+          webtoons: response.data || [],
           currentPage: page,
           totalPages: Math.ceil((response.total || 0) / 20),
           isLoading: false,

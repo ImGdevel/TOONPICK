@@ -13,6 +13,7 @@ interface RecommendationPageState {
 }
 
 const RecommendationPage: React.FC = () => {
+  /*
   const [state, setState] = useState<RecommendationPageState>({
     personalizedWebtoons: [],
     popularWebtoons: [],
@@ -75,6 +76,8 @@ const RecommendationPage: React.FC = () => {
       </section>
     </div>
   );
+  */
+ return(<></>);
 };
 
 export default RecommendationPage; 

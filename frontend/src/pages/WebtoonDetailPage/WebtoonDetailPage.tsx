@@ -11,41 +11,10 @@ import StatusBadge from '@components/StatusBadge';
 import PlatformIcon from '@components/PlatformIcon';
 import WebtoonTag from '@/components/WebtoonTag/WebtoonTag';
 import WebtoonReviewService from '@services/WebtoonReviewService';
-
+import { Webtoon } from '@/types/webtoon';
 import styles from './WebtoonDetailPage.module.css';
+import { Platform } from '@/types/webtoon';
 
-interface Author {
-  id: number;
-  name: string;
-}
-
-interface Platform {
-  id: number;
-  name: string;
-  iconUrl: string;
-}
-
-interface Tag {
-  id: number;
-  name: string;
-}
-
-interface Webtoon {
-  id: number;
-  thumbnailUrl: string;
-  title: string;
-  isAdult: boolean;
-  status: string;
-  publishDay: string;
-  platforms: Platform[];
-  authors: Author[];
-  description: string;
-  tags: Tag[];
-  totalRatings: number;
-  averageRating: number;
-  analysisData?: any;
-  similarWebtoons?: any[];
-}
 
 const WebtoonDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -65,7 +34,7 @@ const WebtoonDetailPage: React.FC = () => {
         if (response?.success && response.data) {
           const webtoonData: Webtoon = {
             ...response.data,
-            platforms: response.data.platforms || [],
+            platforms: response.data.platforms.map((platform: string) => platform as Platform),
             authors: response.data.authors || [],
             tags: response.data.tags || [],
             description: response.data.description || '',
@@ -142,8 +111,7 @@ const WebtoonDetailPage: React.FC = () => {
             <div className={styles.platformIcons}>
               {webtoon.platforms.map((platform) => (
                 <PlatformIcon 
-                  key={platform.id} 
-                  platform={platform.name}
+                  platform={platform}
                 />
               ))}
             </div>

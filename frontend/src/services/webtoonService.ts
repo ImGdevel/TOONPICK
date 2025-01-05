@@ -1,4 +1,5 @@
-import api, { CustomAxiosRequestConfig } from './ApiService';
+import api from './ApiService';
+import { Webtoon } from '@/types/webtoon';
 
 interface WebtoonResponse<T = any> {
   success: boolean;
@@ -16,135 +17,109 @@ interface CarouselImage {
 
 type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
 
+const PAGE_SIZE = 20;
+const COMPLETED_WEBTOON_SIZE = 60;
+
 class WebtoonService {
   private static instance: WebtoonService;
 
   private constructor() {}
 
   public static getInstance(): WebtoonService {
-    if (!WebtoonService.instance) {
-      WebtoonService.instance = new WebtoonService();
+    if (!this.instance) {
+      this.instance = new WebtoonService();
     }
-    return WebtoonService.instance;
+    return this.instance;
   }
 
-  // 연재 중인 모든 웹툰 데이터
-  public async getWebtoons(page: number): Promise<WebtoonResponse> {
+  private handleError(error: any): { success: false; message: string } {
+    console.error('API Error:', error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+  }
+
+  public async getWebtoons(page: number): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get(`/api/webtoons/series?page=${page}&size=20`, { authRequired: false } as CustomAxiosRequestConfig);
-      return { success: true, data: response };
+      const response = await api.get(`/api/webtoons/series?page=${page}&size=${PAGE_SIZE}`);
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error('Error fetching webtoons:', error);
-      return { success: false, data: [] };
+      return this.handleError(error);
     }
   }
 
-  // 특정 요일의 웹툰 데이터
-  public async getWebtoonsByDayOfWeek(dayOfWeek: DayOfWeek): Promise<WebtoonResponse> {
+  public async getWebtoonsByDayOfWeek(dayOfWeek: DayOfWeek): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get(`/api/webtoons/series/${dayOfWeek}`, { authRequired: false } as CustomAxiosRequestConfig);
-      return { success: true, data: response };
+      const response = await api.get(`/api/webtoons/series/${dayOfWeek}`);
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error(`Error fetching webtoons for day: ${dayOfWeek}`, error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
-      };
+      return this.handleError(error);
     }
   }
 
-  // 특정 웹툰 데이터
-  public async getWebtoonById(id: number): Promise<WebtoonResponse | null> {
+  public async getWebtoonById(id: number): Promise<WebtoonResponse<Webtoon> | null> {
     try {
-      const response = await api.get(`/api/webtoons/${id}`, { authRequired: false } as CustomAxiosRequestConfig);
-      return { success: true, data: response };
+      const response = await api.get(`/api/webtoons/${id}`);
+      return { success: true, data: response.data };
     } catch (error) {
       console.error('Error fetching webtoon by ID:', error);
       return null;
     }
   }
 
-  // 완결된 웹툰 데이터
-  public async getCompletedWebtoons(page: number): Promise<WebtoonResponse> {
-    const size = 60;
-
+  public async getCompletedWebtoons(page: number): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get(
-        `/api/webtoons/completed?page=${page}&size=${size}`, 
-        { authRequired: false } as CustomAxiosRequestConfig
-      );
-      return { success: true, data: response };
+      const response = await api.get(`/api/webtoons/completed?page=${page}&size=${COMPLETED_WEBTOON_SIZE}`);
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error('완결된 웹툰을 가져오는 중 오류가 발생했습니다:', error);
-      return { success: false, data: [] };
+      return this.handleError(error);
     }
   }
 
-  // 캐러셀 이미지 데이터
-  public async getCarouselImages(): Promise<CarouselImage[]> {
-    return [
-      { id: 1, imageUrl: 'https://via.placeholder.com/800x400', title: 'Banner 1' },
-      { id: 2, imageUrl: 'https://via.placeholder.com/800x400', title: 'Banner 2' },
-    ];
-  }
-
-  // 인기 웹툰 조회
-  public async getPopularWebtoons(): Promise<WebtoonResponse> {
+  public async getPopularWebtoons(): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get('/api/webtoons/popular', { authRequired: false } as CustomAxiosRequestConfig);
-      return { success: true, data: response };
+      const response = await api.get('/api/webtoons/popular');
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error('Error fetching popular webtoons:', error);
-      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+      return this.handleError(error);
     }
   }
 
-  // 최신 웹툰 조회
-  public async getRecentWebtoons(): Promise<WebtoonResponse> {
+  public async getRecentWebtoons(): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get('/api/webtoons/recent', { authRequired: false } as CustomAxiosRequestConfig);
-      return { success: true, data: response };
+      const response = await api.get('/api/webtoons/recent');
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error('Error fetching recent webtoons:', error);
-      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+      return this.handleError(error);
     }
   }
 
-  // 웹툰 검색
-  public async searchWebtoons(query: string): Promise<WebtoonResponse> {
+  public async searchWebtoons(query: string): Promise<WebtoonResponse<Webtoon[]>> {
     try {
       const response = await api.get('/api/webtoons/search', {
-        params: { q: query },
-        authRequired: false
-      } as CustomAxiosRequestConfig);
-      return { success: true, data: response };
+        params: { q: query }
+      });
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error('Error searching webtoons:', error);
-      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+      return this.handleError(error);
     }
   }
 
-  // 카테고리별 웹툰 조회
-  public async getWebtoonsByCategory(category: string): Promise<WebtoonResponse> {
+  public async getWebtoonsByCategory(category: string): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get(`/api/webtoons/category/${category}`, { authRequired: false } as CustomAxiosRequestConfig);
-      return { success: true, data: response };
+      const response = await api.get(`/api/webtoons/category/${category}`);
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error('Error fetching webtoons by category:', error);
-      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+      return this.handleError(error);
     }
   }
 
-  // 추천 웹툰 조회
-  public async getRecommendedWebtoons(): Promise<WebtoonResponse> {
+  public async getRecommendedWebtoons(): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get('/api/webtoons/recommended', { authRequired: false } as CustomAxiosRequestConfig);
-      return { success: true, data: response };
+      const response = await api.get('/api/webtoons/recommended');
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error('Error fetching recommended webtoons:', error);
-      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+      return this.handleError(error);
     }
   }
 }
 
-export default WebtoonService.getInstance(); 
+export default WebtoonService.getInstance();

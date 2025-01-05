@@ -1,17 +1,38 @@
 export type Platform = 'NAVER' | 'KAKAO' | 'RIDI' | 'TOPTOON';
 export type StatusType = 'ONGOING' | 'COMPLETED' | 'HIATUS';
 
+export interface Author {
+  id: number;
+  name: string;
+}
+
+export interface Tag {
+  id: number;
+  name: string;
+}
+
 export interface Webtoon {
   id: number;
-  title: string;
   thumbnailUrl: string;
-  platforms: Platform[];
-  authors: Array<{ id: string; name: string }>;
-  genres: Array<{ id: string; name: string }>;
-  description: string;
-  status: StatusType;
-  publishDay: string;
+  title: string;
   isAdult: boolean;
-  publisher?: string;
-  rating?: number;
+  status: string;
+  publishDay: string;
+  platforms: Platform[];
+  authors: Author[];
+  description: string;
+  tags: Tag[];
+  totalRatings: number;
+  averageRating: number;
+  analysisData?: any;
+  similarWebtoons?: any[];
 }
+
+export interface WebtoonResponse<T = any> {
+  success: boolean;
+  data?: T;
+  total?: number;
+  message?: string;
+  error?: string;
+}
+
