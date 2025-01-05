@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { MyPageState } from '../../types/page';
 import UserService from '@/services/UserService';
 import WebtoonReviewService from '@/services/WebtoonReviewService';
 import WebtoonGrid from '@/components/WebtoonGrid';
 import ReviewList from '@/components/ReviewList';
 import styles from './MyPage.module.css';
+import { User } from '@/types/auth';
+import { Webtoon } from '@/types/webtoon';
+import { Review } from '@/types/review';
+
+
+export interface MyPageState {
+  user: User | null;
+  bookmarks: Webtoon[];
+  favorites: Webtoon[];
+  reviews: Review[];
+  isLoading: boolean;
+  error: string | null; 
+}
+
 
 const MyPage: React.FC = () => {
   const [state, setState] = useState<MyPageState>({

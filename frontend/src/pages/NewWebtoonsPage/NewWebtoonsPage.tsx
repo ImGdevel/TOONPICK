@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { WebtoonsPageState } from '@/types/page';
 import WebtoonService from '@/services/webtoonService';
 import WebtoonGrid from '@/components/WebtoonGrid';
 import Pagination from '@/components/Pagination';
 import styles from './NewWebtoonsPage.module.css';
+import { Webtoon } from '@/types/webtoon';
+
+export interface NewWebtoonsPageState {
+  webtoons: Webtoon[];
+  totalPages: number;
+  currentPage: number;
+  isLoading: boolean;
+  error: string | null;
+}
+
 
 const NewWebtoonsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [state, setState] = useState<WebtoonsPageState>({
+  const [state, setState] = useState<NewWebtoonsPageState>({
     webtoons: [],
     currentPage: 1,
     totalPages: 1,
