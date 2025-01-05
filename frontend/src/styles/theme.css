@@ -15,6 +15,10 @@
   --submit-button-hover-background-color: #4a90e2; 
   --error-color: #ff6b6b; 
   --form-text-color: #333333; 
+  --card-background-color: #ffffff;
+  --text-color: #333333;
+  --author-color: #666666;
+  --rating-color: #ffcc00;
 }
 
 [data-theme='dark'] {
@@ -34,4 +38,8 @@
   --submit-button-hover-background-color: #4a90e2; 
   --error-color: #ff6b6b; 
   --form-text-color: #ffffff; 
+  --card-background-color: #2d2d2d;
+  --text-color: #ffffff;
+  --author-color: #b3b3b3;
+  --rating-color: #ffcc00;
 } 

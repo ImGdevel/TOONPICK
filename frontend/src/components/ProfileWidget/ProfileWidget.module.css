@@ -1,20 +1,20 @@
 .profile-widget {
   position: absolute;
-  background-color: #333;
-  color: white;
-  border-radius: 8px;
-  width: 200px;
+  background-color: #fff;
+  color: #333;
+  border-radius: 12px;
+  width: 250px;
   height: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  padding: 10px;
-  top: 41px;
-  left: -165px;
+  padding: 15px;
+  top: 50px;
+  left: -180px;
   transform: scale(0); 
   transform-origin: top right;
-  transition: transform 0.2s ease, opacity 0.2s ease; 
+  transition: transform 0.3s ease, opacity 0.3s ease; 
   opacity: 0; 
   visibility: hidden; 
 }
@@ -26,26 +26,28 @@
 }
 
 .widget-profile-picture {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
+  border: 2px solid #ddd;
 }
 
 .user-info {
-  margin: 10px 0;
+  margin: 15px 0;
 }
 
 .widget-button {
-  background-color: #555;
+  background-color: #007bff;
   color: white;
   border: none;
-  padding: 10px;
-  margin: 5px 0;
+  padding: 12px;
+  margin: 8px 0;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 6px;
   width: 100%;
+  transition: background-color 0.3s;
 }
 
 .widget-button:hover {
-  background-color: #777;
+  background-color: #0056b3;
 }
