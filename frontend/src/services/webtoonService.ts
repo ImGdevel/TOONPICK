@@ -9,12 +9,6 @@ interface WebtoonResponse<T = any> {
   error?: string;
 }
 
-interface CarouselImage {
-  id: number;
-  imageUrl: string;
-  title: string;
-}
-
 type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
 
 const PAGE_SIZE = 20;
@@ -39,7 +33,7 @@ class WebtoonService {
 
   public async getWebtoons(page: number): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get(`/api/webtoons/series?page=${page}&size=${PAGE_SIZE}`);
+      const response = await api.get(`/api/public/webtoons/series?page=${page}&size=${PAGE_SIZE}`);
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);
@@ -48,7 +42,7 @@ class WebtoonService {
 
   public async getWebtoonsByDayOfWeek(dayOfWeek: DayOfWeek): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get(`/api/webtoons/series/${dayOfWeek}`);
+      const response = await api.get(`/api/public/webtoons/series/${dayOfWeek}`);
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);
@@ -57,7 +51,7 @@ class WebtoonService {
 
   public async getWebtoonById(id: number): Promise<WebtoonResponse<Webtoon> | null> {
     try {
-      const response = await api.get(`/api/webtoons/${id}`);
+      const response = await api.get(`/api/public/webtoons/${id}`);
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Error fetching webtoon by ID:', error);
@@ -67,7 +61,7 @@ class WebtoonService {
 
   public async getCompletedWebtoons(page: number): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get(`/api/webtoons/completed?page=${page}&size=${COMPLETED_WEBTOON_SIZE}`);
+      const response = await api.get(`/api/public/webtoons/completed?page=${page}&size=${COMPLETED_WEBTOON_SIZE}`);
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);
@@ -76,7 +70,7 @@ class WebtoonService {
 
   public async getPopularWebtoons(): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get('/api/webtoons/popular');
+      const response = await api.get('/api/public/webtoons/popular');
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);
@@ -85,7 +79,7 @@ class WebtoonService {
 
   public async getRecentWebtoons(): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get('/api/webtoons/recent');
+      const response = await api.get('/api/public/webtoons/recent');
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);
@@ -94,7 +88,7 @@ class WebtoonService {
 
   public async searchWebtoons(query: string): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get('/api/webtoons/search', {
+      const response = await api.get('/api/public/webtoons/search', {
         params: { q: query }
       });
       return { success: true, data: response.data };
@@ -105,7 +99,7 @@ class WebtoonService {
 
   public async getWebtoonsByCategory(category: string): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get(`/api/webtoons/category/${category}`);
+      const response = await api.get(`/api/public/webtoons/category/${category}`);
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);
@@ -114,7 +108,7 @@ class WebtoonService {
 
   public async getRecommendedWebtoons(): Promise<WebtoonResponse<Webtoon[]>> {
     try {
-      const response = await api.get('/api/webtoons/recommended');
+      const response = await api.get('/api/public/webtoons/recommended');
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);

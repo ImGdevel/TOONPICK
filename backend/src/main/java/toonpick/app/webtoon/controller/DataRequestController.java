@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/webtoon-request")
+@RequestMapping("/api/public/webtoon-request")
 public class DataRequestController {
 
     private final WebtoonService webtoonService;

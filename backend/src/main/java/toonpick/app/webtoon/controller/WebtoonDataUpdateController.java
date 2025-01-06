@@ -12,7 +12,7 @@ import toonpick.app.webtoon.service.WebtoonService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/webtoon-update-request")
+@RequestMapping("/api/public/webtoon-update-request")
 public class WebtoonDataUpdateController {
 
     private final WebtoonService webtoonService;

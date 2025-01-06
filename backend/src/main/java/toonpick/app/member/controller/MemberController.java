@@ -13,7 +13,7 @@ import toonpick.app.member.service.MemberService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/secure/user")
 public class MemberController {
 
     private final MemberService memberService;

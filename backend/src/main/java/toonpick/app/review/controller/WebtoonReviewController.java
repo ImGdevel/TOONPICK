@@ -19,14 +19,13 @@ import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/webtoon/{webtoonId}/reviews")
 public class WebtoonReviewController {
 
     private final WebtoonReviewService webtoonReviewService;
     private final AuthenticationUtil authenticationUtil;
 
     // 리뷰 작성
-    @PostMapping
+    @PostMapping("/api/secure/webtoon/{webtoonId}/reviews")
     public ResponseEntity<WebtoonReviewDTO> createReview(
             @PathVariable Long webtoonId,
             @RequestBody WebtoonReviewCreateDTO reviewCreateDTO,
@@ -38,14 +37,14 @@ public class WebtoonReviewController {
     }
 
     // 리뷰 조회
-    @GetMapping("/{reviewId}")
+    @GetMapping("/api/public/webtoon/{webtoonId}/reviews/{reviewId}")
     public ResponseEntity<WebtoonReviewDTO> getReview(@PathVariable Long reviewId) {
         WebtoonReviewDTO reviewDTO = webtoonReviewService.getReview(reviewId);
         return reviewDTO != null ? ResponseEntity.ok(reviewDTO) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     // 리뷰 수정하기
-    @PutMapping("/{reviewId}")
+    @PutMapping("/api/public/webtoon/{webtoonId}/reviews/{reviewId}")
     public ResponseEntity<WebtoonReviewDTO> updateReview(
             @PathVariable Long reviewId,
             @RequestBody WebtoonReviewCreateDTO reviewCreateDTO) {
@@ -54,14 +53,14 @@ public class WebtoonReviewController {
     }
 
     // 리뷰 삭제
-    @DeleteMapping("/{reviewId}")
+    @DeleteMapping("/api/public/webtoon/{webtoonId}/reviews/{reviewId}")
     public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
         webtoonReviewService.deleteReview(reviewId);
         return ResponseEntity.noContent().build();
     }
 
     // 리뷰에 좋아요 토글
-    @PostMapping("/{reviewId}/like")
+    @PostMapping("/api/secure/webtoon/{webtoonId}/reviews/{reviewId}/like")
     public ResponseEntity<Map<String, Object>> toggleLike(
             @PathVariable Long reviewId,
             Authentication authentication) {
@@ -77,7 +76,7 @@ public class WebtoonReviewController {
     }
 
     // 웹툰에 해당되는 리뷰들 가져오기 (페이지 조회)
-    @GetMapping
+    @GetMapping("/api/public/webtoon/{webtoonId}/reviews")
     public ResponseEntity<PagedResponseDTO<WebtoonReviewDTO>> getReviewsByWebtoon(
             @PathVariable Long webtoonId,
             @RequestParam(defaultValue = "latest") String sortBy,
@@ -88,7 +87,7 @@ public class WebtoonReviewController {
     }
 
     // User가 작성한
-    @GetMapping("/users")
+    @GetMapping("/api/secure/webtoon/{webtoonId}/reviews/users")
     public ResponseEntity<WebtoonReviewDTO> getUserReviewForWebtoon(
             @PathVariable Long webtoonId,
             Authentication authentication) {
@@ -101,7 +100,7 @@ public class WebtoonReviewController {
     }
 
 
-    @GetMapping("/liked-reviews")
+    @GetMapping("/api/secure/webtoon/{webtoonId}/reviews/liked-reviews")
     public ResponseEntity<List<Long>> getLikedReviews(
             @PathVariable Long webtoonId,
             Authentication authentication) {

@@ -17,7 +17,7 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/webtoons")
+@RequestMapping("/api/public/webtoons")
 public class WebtoonController {
 
     private final WebtoonService webtoonService;

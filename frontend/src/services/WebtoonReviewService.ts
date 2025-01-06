@@ -37,7 +37,7 @@ class WebtoonReviewService {
     try {
       const reviewData: ReviewData = { rating, comment };
       const response = await api.post(
-        `/api/webtoon/${webtoonId}/reviews`, 
+        `/api/secure/webtoon/${webtoonId}/reviews`, 
         reviewData,
       );
       return { success: true, data: response };
@@ -53,7 +53,7 @@ class WebtoonReviewService {
     reviewId: number
   ): Promise<ReviewResponse> {
     try {
-      const response = await api.get(`/api/webtoon/${webtoonId}/reviews/${reviewId}`);
+      const response = await api.get(`/api/public/webtoon/${webtoonId}/reviews/${reviewId}`);
       return { success: true, data: response };
     } catch (error) {
       console.error('리뷰 가져오기 중 오류 발생:', error);
@@ -71,7 +71,7 @@ class WebtoonReviewService {
     try {
       const reviewData: ReviewData = { rating, comment };
       const response = await api.put(
-        `/api/webtoon/${webtoonId}/reviews/${reviewId}`, 
+        `/api/secure/webtoon/${webtoonId}/reviews/${reviewId}`, 
         reviewData, 
       );
       return { success: true, data: response };
@@ -87,7 +87,7 @@ class WebtoonReviewService {
     reviewId: number
   ): Promise<ReviewResponse> {
     try {
-      await api.delete(`/api/webtoon/${webtoonId}/reviews/${reviewId}`);
+      await api.delete(`/api/secure/webtoon/${webtoonId}/reviews/${reviewId}`);
       return { success: true };
     } catch (error) {
       console.error('리뷰 삭제 중 오류 발생:', error);
@@ -102,7 +102,7 @@ class WebtoonReviewService {
   ): Promise<ReviewResponse> {
     try {
       const response = await api.post(
-        `/api/webtoon/${webtoonId}/reviews/${reviewId}/like`, 
+        `/api/secure/webtoon/${webtoonId}/reviews/${reviewId}/like`, 
         null, 
       );
       return { success: true, data: response };
@@ -116,7 +116,7 @@ class WebtoonReviewService {
   public async getLikedReviews(webtoonId: number): Promise<ReviewResponse> {
     try {
       const response = await api.get(
-        `/api/webtoon/${webtoonId}/reviews/liked-reviews`, 
+        `/api/secure/webtoon/${webtoonId}/reviews/liked-reviews`, 
       );
       return { success: true, data: response };
     } catch (error) {
@@ -134,7 +134,7 @@ class WebtoonReviewService {
   ): Promise<ReviewResponse> {
     try {
       const response = await api.get(
-        `/api/webtoon/${webtoonId}/reviews?sortBy=${sortBy}&page=${page}&size=${size}`
+        `/api/public/webtoon/${webtoonId}/reviews?sortBy=${sortBy}&page=${page}&size=${size}`
       );
       return { success: true, data: response };
     } catch (error) {
@@ -147,7 +147,7 @@ class WebtoonReviewService {
   public async getUserReviewForWebtoon(webtoonId: number): Promise<ReviewResponse> {
     try {
       const response = await api.get(
-        `/api/webtoon/${webtoonId}/reviews/users`, 
+        `/api/secure/webtoon/${webtoonId}/reviews/users`, 
       );
       return { success: true, data: response };
     } catch (error) {
@@ -164,7 +164,7 @@ class WebtoonReviewService {
   ): Promise<ReviewResponse> {
     try {
       const response = await api.post(
-        `/api/webtoon/${webtoonId}/reviews/${reviewId}/report`, 
+        `/api/secure/webtoon/${webtoonId}/reviews/${reviewId}/report`, 
         reportData, 
       );
       return { success: true, data: response };
