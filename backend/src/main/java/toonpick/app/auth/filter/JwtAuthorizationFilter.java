@@ -29,6 +29,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 인증이 필요 없는 경로 건너뛰기 (임시)
+        // todo : 추후 다른 대안을 모색하거나 제거
         String requestUri = request.getRequestURI();
         if (requestUri.startsWith("/api/public/") || requestUri.equals("/login")) {
             filterChain.doFilter(request, response);

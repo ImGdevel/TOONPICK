@@ -68,8 +68,8 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/join", "/reissue", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                .requestMatchers("/api/webtoons/**").permitAll() // 인증 불필요
-                .requestMatchers("/api/webtoon/{webtoonId}/reviews/**").authenticated() // 인증 필요
+                .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/api/security/**").authenticated()
                 .requestMatchers("/hello").hasRole("USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().denyAll()
