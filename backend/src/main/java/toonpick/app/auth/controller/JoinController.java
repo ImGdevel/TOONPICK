@@ -1,6 +1,7 @@
 package toonpick.app.auth.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +18,8 @@ public class JoinController {
     private final JoinService joinService;
 
     @PostMapping("/join")
-    public ResponseEntity<String> joinProcess(@RequestBody JoinRequest joinRequest) {
+    public ResponseEntity<?> joinProcess(@RequestBody JoinRequest joinRequest) {
         joinService.createMember(joinRequest);
-        return ResponseEntity.ok("Member created successfully.");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
