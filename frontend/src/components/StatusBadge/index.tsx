@@ -1,15 +1,15 @@
 import React from 'react';
 import styles from './StatusBadge.module.css';
-import { StatusType } from '../../models/webtoon';
+import { SerializationStatus } from '@models/enum';
 
 interface StatusBadgeProps {
-  status?: StatusType;
+  status?: SerializationStatus;
   text?: string;
   size?: 'small' | 'medium' | 'large';
 }
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, text, size = 'medium' }) => {
-  const getStatusText = (status?: StatusType): string => {
+  const getStatusText = (status?: SerializationStatus): string => {
     if (!status) return '';
     
     switch (status) {

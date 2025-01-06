@@ -11,7 +11,8 @@ import StatusBadge from '@components/StatusBadge';
 import PlatformIcon from '@components/PlatformIcon';
 import WebtoonTag from '@components/WebtoonTag/WebtoonTag';
 import WebtoonReviewService from '@services/WebtoonReviewService';
-import { Webtoon, Platform } from '@models/webtoon';
+import { Webtoon } from '@models/webtoon';
+import { Platform } from '@models/enum';
 import styles from './WebtoonDetailPage.module.css';
 
 
@@ -35,7 +36,7 @@ const WebtoonDetailPage: React.FC = () => {
             ...response.data,
             platforms: response.data.platforms.map((platform: string) => platform as Platform),
             authors: response.data.authors || [],
-            tags: response.data.tags || [],
+            genre: response.data.genre || [],
             description: response.data.description || '',
             status: response.data.status || 'UNKNOWN',
             publishDay: response.data.publishDay || '',
@@ -141,11 +142,11 @@ const WebtoonDetailPage: React.FC = () => {
 
           <div className={styles.tags}>
             <div className={`${styles.tagContainer} ${isTagsExpanded ? styles.expanded : ''}`}>
-              {webtoon.tags.map((tag) => (
+              {webtoon.genre.map((tag) => (
                 <WebtoonTag key={tag.id} text={tag.name} />
               ))}
             </div>
-            {webtoon.tags.length > 6 && (
+            {webtoon.genre.length > 6 && (
               <button 
                 className={styles.expandButton}
                 onClick={() => setIsTagsExpanded(!isTagsExpanded)}

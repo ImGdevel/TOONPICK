@@ -1,5 +1,4 @@
 import { Webtoon } from './webtoon';
-import { Platform, StatusType } from './webtoon';
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -8,7 +7,6 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
-export interface WebtoonResponse extends ApiResponse<Webtoon> {}
 export interface WebtoonListResponse {
   data: Webtoon[];
   total: number;

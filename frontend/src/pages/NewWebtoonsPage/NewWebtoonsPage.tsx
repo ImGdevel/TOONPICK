@@ -29,15 +29,16 @@ const NewWebtoonsPage: React.FC = () => {
     const fetchNewWebtoons = async () => {
       try {
         const page = Number(searchParams.get('page')) || 1;
-        const response = await WebtoonService.getRecentWebtoons();
+        const response = await WebtoonService.getRecentWebtoons(page);
 
-        setState({
+        setState((prev) => ({ 
+          ...prev,
           webtoons: response.data || [],
           currentPage: page,
           totalPages: Math.ceil((response.total || 0) / 20),
           isLoading: false,
           error: null
-        });
+        }));
       } catch (error) {
         setState(prev => ({
           ...prev,

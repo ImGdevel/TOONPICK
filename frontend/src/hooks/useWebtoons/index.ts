@@ -16,8 +16,8 @@ export const useWebtoons = () => {
     const fetchWebtoons = async () => {
       try {
         const [popular, recent] = await Promise.all([
-          WebtoonService.getPopularWebtoons(),
-          WebtoonService.getRecentWebtoons()
+          WebtoonService.getPopularWebtoons(0),
+          WebtoonService.getRecentWebtoons(0)
         ]) as [WebtoonListResponse, WebtoonListResponse];
         
         setPopularWebtoons(popular.data);

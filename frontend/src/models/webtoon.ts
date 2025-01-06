@@ -1,15 +1,6 @@
-export type Platform = 'NAVER' | 'KAKAO' | 'RIDI' | 'TOPTOON';
-export type StatusType = 'ONGOING' | 'COMPLETED' | 'HIATUS';
-
-export interface Author {
-  id: number;
-  name: string;
-}
-
-export interface Tag {
-  id: number;
-  name: string;
-}
+import { Platform, SerializationStatus, AgeRating, DayOfWeek } from '@models/enum';
+import { Author } from '@models/author';
+import { Genre } from '@models/genre';
 
 export interface Webtoon {
   id: number;
@@ -21,7 +12,7 @@ export interface Webtoon {
   platforms: Platform[];
   authors: Author[];
   description: string;
-  tags: Tag[];
+  genre: Genre[];
   totalRatings: number;
   averageRating: number;
   analysisData?: any;
