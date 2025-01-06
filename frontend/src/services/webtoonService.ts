@@ -19,11 +19,7 @@ class WebtoonService {
     return this.instance;
   }
 
-  private handleError(error: any): { success: false; message: string } {
-    console.error('API Error:', error);
-    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
-  }
-
+  // 웹툰 목록 조회
   public async getWebtoons(page: number): Promise<WebtoonResponse<Webtoon[]>> {
     try {
       const response = await api.get(`/api/public/webtoons/series?page=${page}&size=${PAGE_SIZE}`);
@@ -33,6 +29,7 @@ class WebtoonService {
     }
   }
 
+  // 요일별 웹툰 목록 조회
   public async getWebtoonsByDayOfWeek(dayOfWeek: DayOfWeek): Promise<WebtoonResponse<Webtoon[]>> {
     try {
       const response = await api.get(`/api/public/webtoons/series/${dayOfWeek}`);
@@ -42,6 +39,7 @@ class WebtoonService {
     }
   }
 
+  // 웹툰 상세 조회
   public async getWebtoonById(id: number): Promise<WebtoonResponse<Webtoon> | null> {
     try {
       const response = await api.get(`/api/public/webtoons/${id}`);
@@ -52,6 +50,7 @@ class WebtoonService {
     }
   }
 
+  // 완결 웹툰 목록 조회
   public async getCompletedWebtoons(page: number): Promise<WebtoonResponse<Webtoon[]>> {
     try {
       const response = await api.get(`/api/public/webtoons/completed?page=${page}&size=${COMPLETED_WEBTOON_SIZE}`);
@@ -61,6 +60,7 @@ class WebtoonService {
     }
   }
 
+  // 인기 웹툰 목록 조회
   public async getPopularWebtoons(): Promise<WebtoonResponse<Webtoon[]>> {
     try {
       const response = await api.get('/api/public/webtoons/popular');
@@ -70,6 +70,7 @@ class WebtoonService {
     }
   }
 
+  // 최근 웹툰 목록 조회
   public async getRecentWebtoons(): Promise<WebtoonResponse<Webtoon[]>> {
     try {
       const response = await api.get('/api/public/webtoons/recent');
@@ -79,6 +80,7 @@ class WebtoonService {
     }
   }
 
+  // 웹툰 검색
   public async searchWebtoons(query: string): Promise<WebtoonResponse<Webtoon[]>> {
     try {
       const response = await api.get('/api/public/webtoons/search', {
@@ -90,6 +92,7 @@ class WebtoonService {
     }
   }
 
+  // 카테고리별 웹툰 목록 조회
   public async getWebtoonsByCategory(category: string): Promise<WebtoonResponse<Webtoon[]>> {
     try {
       const response = await api.get(`/api/public/webtoons/category/${category}`);
@@ -99,6 +102,7 @@ class WebtoonService {
     }
   }
 
+  // 추천 웹툰 목록 조회
   public async getRecommendedWebtoons(): Promise<WebtoonResponse<Webtoon[]>> {
     try {
       const response = await api.get('/api/public/webtoons/recommended');
@@ -106,6 +110,12 @@ class WebtoonService {
     } catch (error) {
       return this.handleError(error);
     }
+  }
+
+  // 오류 처리
+  private handleError(error: any): { success: false; message: string } {
+    console.error('API Error:', error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
   }
 }
 
