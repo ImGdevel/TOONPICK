@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import toonpick.app.auth.jwt.JwtTokenValidator;
 import toonpick.app.common.utils.ErrorResponseSender;
@@ -28,6 +27,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
+        // 인증이 필요 없는 경로 건너뛰기 (임시)
+        String requestUri = request.getRequestURI();
+        if (requestUri.startsWith("/api/public/") || requestUri.equals("/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             // 요청 헤더에서 Access Token 확인
             String accessToken = jwtTokenValidator.extractAccessToken(request.getHeader("Authorization"));
