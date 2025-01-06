@@ -1,4 +1,4 @@
-package toonpick.app.common.exception;
+package toonpick.app.common.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
