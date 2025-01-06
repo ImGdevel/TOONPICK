@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import WebtoonService from '@services/webtoonService';
 import UserService from '@services/UserService';
-import EvaluationSection from '@/components/EvaluationSection/EvaluationSection';
+import EvaluationSection from '@components/EvaluationSection/EvaluationSection';
 import FavoriteButton from '@components/FavoriteButton';
 import BookmarkButton from '@components/BookMarkButton';
-import WebtoonAnalysis from '@/components/WebtoonAnalysis/WebtoonAnalysis';
+import WebtoonAnalysis from '@components/WebtoonAnalysis/WebtoonAnalysis';
 import SimilarWebtoons from '@components/SimilarWebtoons';
 import StatusBadge from '@components/StatusBadge';
 import PlatformIcon from '@components/PlatformIcon';
-import WebtoonTag from '@/components/WebtoonTag/WebtoonTag';
+import WebtoonTag from '@components/WebtoonTag/WebtoonTag';
 import WebtoonReviewService from '@services/WebtoonReviewService';
-import { Webtoon } from '@/types/webtoon';
+import { Webtoon, Platform } from '@models/webtoon';
 import styles from './WebtoonDetailPage.module.css';
-import { Platform } from '@/types/webtoon';
 
 
 const WebtoonDetailPage: React.FC = () => {

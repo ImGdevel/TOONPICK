@@ -1,4 +1,4 @@
-import api from './ApiService';
+import api from '@services/ApiService';
 
 interface UserResponse<T = any> {
   success: boolean;

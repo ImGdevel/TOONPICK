@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '@/contexts/AuthContext';
-import ProfileWidget from '@/components/ProfileWidget';
+import { AuthContext } from '@contexts/AuthContext';
+import ProfileWidget from '@components/ProfileWidget';
 import styles from './Header.module.css';
 import { FiSearch, FiBell, FiSun, FiMoon } from 'react-icons/fi';
 

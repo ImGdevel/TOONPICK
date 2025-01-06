@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './StatusBadge.module.css';
-import { StatusType } from '../../types/webtoon';
+import { StatusType } from '../../models/webtoon';
 
 interface StatusBadgeProps {
   status?: StatusType;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import StarRating from '@/components/StarRating';
+import StarRating from '@components/StarRating';
 import styles from './EvaluationModal.module.css';
 
 interface EvaluationModalProps {

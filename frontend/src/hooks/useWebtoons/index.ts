@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Webtoon } from '../../types/webtoon';
+import { Webtoon } from '../../models/webtoon';
 import WebtoonService from '../../services/webtoonService';
 
 interface WebtoonListResponse {

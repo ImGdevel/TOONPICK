@@ -26,14 +26,15 @@
       "@pages/*": ["src/pages/*"],
       "@services/*": ["src/services/*"],
       "@contexts/*": ["src/contexts/*"],
-      "@types/*": ["src/types/*"],
+      "@models/*": ["src/models/*"],
       "@styles/*": ["src/styles/*"],
       "@assets/*": ["src/assets/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@global/*": ["src/global/*"]
     }
   },
   "include": [
-    "src"
-, "global.d.ts"  ]
+    "src",
+    "global.d.ts"  ]
 } 

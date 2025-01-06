@@ -1,5 +1,5 @@
-import AuthToken from './AuthToken';
-import api from './ApiService';
+import AuthToken from '@services/AuthToken';
+import api from '@services/ApiService';
 
 
 export const AuthService = {

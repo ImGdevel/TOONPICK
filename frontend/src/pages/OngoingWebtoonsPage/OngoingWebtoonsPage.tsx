@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Webtoon } from '@/types/webtoon';
-import WebtoonService from '@/services/webtoonService';
-import WebtoonCard from '@/components/WebtoonCard';
+import { Webtoon } from '@models/webtoon';
+import WebtoonService from '@services/webtoonService';
+import WebtoonCard from '@components/WebtoonCard';
 import styles from './OngoingWebtoonsPage.module.css';
 
 

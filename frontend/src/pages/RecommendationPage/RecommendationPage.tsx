@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Webtoon } from '@/types/webtoon';
+import { Webtoon } from '@/models/webtoon';
 import WebtoonService from '@/services/webtoonService';
 import WebtoonGrid from '@/components/WebtoonGrid';
 import styles from './RecommendationPage.module.css';

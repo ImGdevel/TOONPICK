@@ -35,4 +35,3 @@ export interface WebtoonResponse<T = any> {
   message?: string;
   error?: string;
 }
-

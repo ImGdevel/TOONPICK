@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import AuthToken from '@services/AuthToken';
 import styles from './SocialLoginCallbackPage.module.css';
-import AuthToken from '@/services/AuthToken';
+
 
 const SocialLoginCallbackPage: React.FC = () => {
   const navigate = useNavigate();

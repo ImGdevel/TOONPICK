@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AuthService from '@/services/AuthService';
-import SocialLoginButton from '@/components/SocialLoginButton';
+import AuthService from '@services/AuthService';
+import SocialLoginButton from '@components/SocialLoginButton';
 import styles from './SignInPage.module.css';
 
 const SignInPage: React.FC = () => {

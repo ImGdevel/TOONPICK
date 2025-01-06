@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Webtoon } from '@/types/webtoon';
+import { Webtoon } from '@models/webtoon';
 import styles from './WebtoonCard.module.css';
 
 interface WebtoonItemProps {

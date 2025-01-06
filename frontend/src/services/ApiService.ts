@@ -1,5 +1,5 @@
 import axios, { AxiosHeaders, AxiosRequestConfig, AxiosResponse } from 'axios';
-import AuthToken from './AuthToken';
+import AuthToken from '@services/AuthToken';
 
 // 실패한 요청 큐 관리
 let isRefreshing = false;

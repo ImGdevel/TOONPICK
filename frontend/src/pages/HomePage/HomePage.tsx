@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import WebtoonService from '@/services/webtoonService';
-import { Webtoon } from '@/types/webtoon';  
-import WebtoonGrid from '@/components/WebtoonGrid';
+import WebtoonService from '@services/webtoonService';
+import { Webtoon } from '@models/webtoon';  
+import WebtoonGrid from '@components/WebtoonGrid';
 import styles from './HomePage.module.css';
 
 export interface HomePageState {

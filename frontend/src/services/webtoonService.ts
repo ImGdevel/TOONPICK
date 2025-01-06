@@ -1,13 +1,6 @@
-import api from './ApiService';
-import { Webtoon } from '@/types/webtoon';
+import api from '@services/ApiService';
+import { Webtoon, WebtoonResponse } from '@models/webtoon';
 
-interface WebtoonResponse<T = any> {
-  success: boolean;
-  data?: T;
-  total?: number;
-  message?: string;
-  error?: string;
-}
 
 type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
 

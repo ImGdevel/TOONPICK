@@ -1,4 +1,4 @@
-import api from './ApiService';
+import api from '@services/ApiService';
 
 const ACCESS_TOKEN_KEY = 'accessToken';
 

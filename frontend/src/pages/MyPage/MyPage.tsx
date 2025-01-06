@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import UserService from '@/services/UserService';
-import WebtoonReviewService from '@/services/WebtoonReviewService';
-import WebtoonGrid from '@/components/WebtoonGrid';
-import ReviewList from '@/components/ReviewList';
+import UserService from '@services/UserService';
+import WebtoonReviewService from '@services/WebtoonReviewService';
+import WebtoonGrid from '@components/WebtoonGrid';
+import ReviewList from '@components/ReviewList';
 import styles from './MyPage.module.css';
-import { User } from '@/types/auth';
-import { Webtoon } from '@/types/webtoon';
-import { Review } from '@/types/review';
+import { User } from '@models/auth';
+import { Webtoon } from '@models/webtoon';
+import { Review } from '@models/review';
 
 
 export interface MyPageState {
