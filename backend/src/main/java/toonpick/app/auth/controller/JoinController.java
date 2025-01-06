@@ -19,7 +19,7 @@ public class JoinController {
 
     @PostMapping("/join")
     public ResponseEntity<?> joinProcess(@RequestBody JoinRequest joinRequest) {
-        joinService.createMember(joinRequest);
+        joinService.registerNewMember(joinRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
