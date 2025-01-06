@@ -11,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
+import toonpick.app.auth.exception.ExpiredJwtTokenException;
+import toonpick.app.auth.exception.MissingJwtTokenException;
 import toonpick.app.auth.jwt.JwtTokenValidator;
 import toonpick.app.auth.exception.InvalidJwtTokenException;
 import toonpick.app.common.utils.ErrorResponseSender;
@@ -58,12 +60,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 logger.info("Authorization successful for user: {}", userDetails.getUsername());
             }
 
-        } catch (InvalidJwtTokenException e){
+        } catch (ExpiredJwtTokenException | InvalidJwtTokenException | MissingJwtTokenException e){
             // todo : 방법 2. 잘못된 JWT의 경우 세션 정보를 지우고 다음 필터로 전송
+            logger.warn("Invalid JWT Token {}", e.getMessage());
             SecurityContextHolder.clearContext();
-            logger.info("Invalid JWT Token");
         } catch (Exception e) {
-            logger.warn("Authorization failed: {}", e.getMessage());
+            logger.error("Authorization failed: {}", e.getMessage());
             errorResponseSender.sendErrorResponse(response, "Authentication error", HttpServletResponse.SC_FORBIDDEN);
         }
 

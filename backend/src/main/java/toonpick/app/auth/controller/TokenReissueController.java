@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import toonpick.app.auth.exception.ExpiredJwtTokenException;
+import toonpick.app.auth.exception.InvalidJwtTokenException;
+import toonpick.app.auth.exception.MissingJwtTokenException;
 import toonpick.app.auth.jwt.JwtTokenProvider;
 import toonpick.app.auth.jwt.JwtTokenValidator;
 import toonpick.app.auth.token.TokenService;
@@ -30,6 +33,9 @@ public class TokenReissueController {
         try {
             // 쿠키에서 refresh token 추출 및 검증
             String refreshToken = jwtTokenValidator.extractRefreshTokenFromCookies(request);
+            if (refreshToken == null || refreshToken.isEmpty()) {
+                throw new MissingJwtTokenException("Refresh token is missing.");
+            }
             jwtTokenValidator.validateRefreshToken(refreshToken);
 
             // 새로운 Access 토큰 발급
@@ -46,13 +52,12 @@ public class TokenReissueController {
             }
 
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (ExpiredJwtTokenException | InvalidJwtTokenException | MissingJwtTokenException e) {
             logger.error("Token validation error: {}", e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (RuntimeException e) {
             logger.error("Unexpected error: {}", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
