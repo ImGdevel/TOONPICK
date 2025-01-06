@@ -37,7 +37,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // todo : 방법 1. 인증이 필요 없는 경로 건너뛰기 (임시)
         String requestUri = request.getRequestURI();
-        if (requestUri.startsWith("/api/public/") || requestUri.equals("/login")) {
+        if (requestUri.startsWith("/oauth2/") || requestUri.startsWith("/api/public/") || requestUri.equals("/login")) {
             filterChain.doFilter(request, response);
             return;
         }
