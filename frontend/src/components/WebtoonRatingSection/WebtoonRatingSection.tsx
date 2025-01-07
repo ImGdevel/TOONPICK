@@ -1,13 +1,13 @@
 import React from 'react';
 import styles from './WebtoonRatingSection.module.css';
 import { Review } from '@models/review';
-import WebtoonReviewCard from '@/components/WebtoonReviewCard';
+import WebtoonReviewCard from '@components/WebtoonReviewCard';
 
 interface WebtoonRatingSectionProps {
   averageRating: number;
   reviews: Review[];
-  onLike: (reviewId: number) => Promise<void>; // 좋아요 핸들러
-  onReport: (reviewId: number) => void; // 리포트 핸들러
+  onLike: (reviewId: number) => Promise<void>;
+  onReport: (reviewId: number) => void;
 }
 
 const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ averageRating, reviews, onLike, onReport }) => {
