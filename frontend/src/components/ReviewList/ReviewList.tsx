@@ -19,10 +19,10 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
           <div className={styles.reviewHeader}>
             <StarRating rating={review.rating} interactive={false} />
             <span className={styles.date}>
-              {new Date(review.createdAt).toLocaleDateString()}
+              {new Date(review.createdDate).toLocaleDateString()}
             </span>
           </div>
-          <p className={styles.content}>{review.content}</p>
+          <p className={styles.content}>{review.comment}</p>
         </div>
       ))}
     </div>

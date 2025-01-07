@@ -1,26 +1,19 @@
-import { User } from './auth';
-import { ApiResponse } from './api';
-
 export interface Review {
-  id: string;
-  webtoonId: string;
-  userId: string;
-  content: string;
+  id: number;
+  webtoonId: number;
+  memberId: {
+    username: string;
+    nickname: string;
+    profilePicture: string;
+  };
   rating: number;
-  createdAt: string;
-  updatedAt: string;
-  user?: User;
+  comment: string;
+  likes: number;
+  createdDate: string;
+  modifiedDate: string;
 }
 
-export interface CreateReviewDto {
-  content: string;
+export interface ReviewRequest {
   rating: number;
-}
-
-export interface UpdateReviewDto {
-  content?: string;
-  rating?: number;
-}
-
-export interface ReviewResponse extends ApiResponse<Review> {}
-export interface ReviewListResponse extends ApiResponse<Review[]> {} 
+  comment: string;
+} 

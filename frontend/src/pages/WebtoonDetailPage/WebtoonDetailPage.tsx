@@ -15,7 +15,6 @@ import { Webtoon } from '@models/webtoon';
 import { Platform } from '@models/enum';
 import styles from './WebtoonDetailPage.module.css';
 
-
 const WebtoonDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [webtoon, setWebtoon] = useState<Webtoon | null>(null);
@@ -28,6 +27,8 @@ const WebtoonDetailPage: React.FC = () => {
     const fetchWebtoon = async () => {
       try {
         if (!id) return;
+
+        console.log("fetchWebtoon = " , id);
         
         const response = await WebtoonService.getWebtoonById(parseInt(id));
         
@@ -40,7 +41,11 @@ const WebtoonDetailPage: React.FC = () => {
             description: response.data.description || '',
             status: response.data.status || 'UNKNOWN',
             publishDay: response.data.publishDay || '',
-            isAdult: response.data.isAdult || false
+            isAdult: response.data.isAdult || false,
+            totalRatings: response.data.totalRatings || 0,
+            averageRating: response.data.averageRating || 0,
+            analysisData: response.data.analysisData || null,
+            similarWebtoons: response.data.similarWebtoons || []
           };
 
           setWebtoon(webtoonData);
@@ -83,7 +88,7 @@ const WebtoonDetailPage: React.FC = () => {
     if (!webtoon) return;
     
     try {
-      await WebtoonReviewService.createWebtoonReview(webtoon.id, rating, comment);
+      await WebtoonReviewService.createWebtoonReview(webtoon.id, { rating, comment });
     } catch (error) {
       console.error('Failed to submit rating:', error);
     }
@@ -111,6 +116,7 @@ const WebtoonDetailPage: React.FC = () => {
             <div className={styles.platformIcons}>
               {webtoon.platforms.map((platform) => (
                 <PlatformIcon 
+                  key={platform}
                   platform={platform}
                 />
               ))}
@@ -169,6 +175,7 @@ const WebtoonDetailPage: React.FC = () => {
         </div>
       </section>
 
+      {/* 임시 비활성화 
       <EvaluationSection 
         webtoonId={webtoon.id} 
         totalRatings={webtoon.totalRatings} 
@@ -180,6 +187,7 @@ const WebtoonDetailPage: React.FC = () => {
         similarWebtoons={webtoon.similarWebtoons || []} 
         currentWebtoonId={webtoon.id} 
       />
+      */}
     </div>
   );
 };
