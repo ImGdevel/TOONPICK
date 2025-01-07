@@ -3,7 +3,6 @@ package toonpick.app.webtoon.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +16,7 @@ import toonpick.app.webtoon.service.WebtoonService;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/admin/webtoons")
-public class WebtoonAdminController {
+public class AdminWebtoonController {
 
     private final WebtoonService webtoonService;
 

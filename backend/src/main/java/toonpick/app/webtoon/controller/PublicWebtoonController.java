@@ -1,9 +1,7 @@
 package toonpick.app.webtoon.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +21,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/public/webtoons")
-public class WebtoonPublicController {
+public class PublicWebtoonController {
 
     private final WebtoonService webtoonService;
 
@@ -58,6 +56,8 @@ public class WebtoonPublicController {
         List<WebtoonDTO> webtoons = webtoonService.filterWebtoonsOptions(filter, page, size, sortBy, sortDir);
         return ResponseEntity.ok(webtoons);
     }
+
+    // todo : 추후 아래 요청들은 제거할 것
 
     @GetMapping("/completed")
     public ResponseEntity<List<WebtoonDTO>> getCompletedWebtoons(
