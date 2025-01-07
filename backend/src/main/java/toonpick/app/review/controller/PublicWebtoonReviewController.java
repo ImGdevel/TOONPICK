@@ -27,7 +27,7 @@ public class PublicWebtoonReviewController {
     }
 
     // 특정 웹툰의 리뷰들 가져오기
-    @GetMapping("/{webtoonId}")
+    @GetMapping("/webtoon/{webtoonId}")
     public ResponseEntity<PagedResponseDTO<WebtoonReviewDTO>> getReviewsByWebtoon(
             @PathVariable Long webtoonId,
             @RequestParam(defaultValue = "latest") String sortBy,

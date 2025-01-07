@@ -31,11 +31,10 @@ public class AuthenticatedWebtoonReviewController {
     // 리뷰 작성
     @PostMapping("/{webtoonId}")
     public ResponseEntity<WebtoonReviewDTO> createReview(
-            @PathVariable Long webtoonId,
             @RequestBody WebtoonReviewCreateDTO reviewCreateDTO,
             Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO, webtoonId, username);
+        WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
 

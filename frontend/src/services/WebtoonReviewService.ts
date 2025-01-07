@@ -4,8 +4,17 @@ import { Review, ReviewRequest } from '@models/review';
 export interface ReviewResponse<T = any> {
   success: boolean;
   data?: T;
-  error?: string;
+  message?: string;
 } 
+
+export interface PagedReviewResponse<T> {
+  content: T[]; 
+  page: number; 
+  size: number; 
+  totalElements: number; 
+  totalPages: number;
+  last: boolean;
+}
 
 
 class WebtoonReviewService {
@@ -33,7 +42,7 @@ class WebtoonReviewService {
       return { success: true, data: response.data };
     } catch (error) {
       console.error('리뷰 생성 중 오류 발생:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
     }
   }
 
@@ -46,7 +55,7 @@ class WebtoonReviewService {
       return { success: true, data: response.data };
     } catch (error) {
       console.error('리뷰 가져오기 중 오류 발생:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
     }
   }
 
@@ -63,7 +72,7 @@ class WebtoonReviewService {
       return { success: true, data: response.data };
     } catch (error) {
       console.error('리뷰 수정 중 오류 발생:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
     }
   }
 
@@ -76,7 +85,7 @@ class WebtoonReviewService {
       return { success: true };
     } catch (error) {
       console.error('리뷰 삭제 중 오류 발생:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
     }
   }
 
@@ -85,11 +94,11 @@ class WebtoonReviewService {
     reviewId: number
   ): Promise<ReviewResponse<void>> {
     try {
-      await api.post(`/api/secure/reviews/${reviewId}/like`, null);
+      await api.post(`/api/secure/reviews/${reviewId}/like`);
       return { success: true };
     } catch (error) {
       console.error('리뷰 좋아요 토글 중 오류 발생:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
     }
   }
 
@@ -100,7 +109,7 @@ class WebtoonReviewService {
       return { success: true, data: response.data };
     } catch (error) {
       console.error('사용자 리뷰 가져오기 중 오류 발생:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
     }
   }
 
@@ -112,13 +121,14 @@ class WebtoonReviewService {
     size: number = 20
   ): Promise<ReviewResponse<Review[]>> {
     try {
-      const response = await api.get<Review[]>(
-        `/api/public/reviews/${webtoonId}?sortBy=${sortBy}&page=${page}&size=${size}`
+      const response = await api.get<PagedReviewResponse<Review>>(
+        `/api/public/reviews/webtoon/${webtoonId}?sortBy=${sortBy}&page=${page}&size=${size}`
       );
-      return { success: true, data: response.data };
+
+      return { success: true, data: response.data.content || [] };
     } catch (error) {
       console.error('웹툰 리뷰 목록 가져오기 중 오류 발생:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
     }
   }
 }

@@ -27,10 +27,10 @@ const WebtoonDetailPage: React.FC = () => {
           
           const reviewResponse = await WebtoonReviewService.getReviewsByWebtoon(parseInt(id));
           if (reviewResponse?.success && reviewResponse.data) {
-            setReviews(reviewResponse.data);
             const totalRating = reviewResponse.data.reduce((acc, review) => acc + review.rating, 0);
             const avgRating = totalRating / reviewResponse.data.length || 0;
             setAverageRating(avgRating);
+            setReviews(reviewResponse.data);
           }
         }
       } catch (error) {

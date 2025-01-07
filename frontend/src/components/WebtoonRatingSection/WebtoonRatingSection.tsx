@@ -11,6 +11,7 @@ interface WebtoonRatingSectionProps {
 }
 
 const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ averageRating, reviews, onLike, onReport }) => {
+
   return (
     <div className={styles.ratingSection}>
       <h2>웹툰 평가</h2>
@@ -18,14 +19,18 @@ const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ averageRati
         <span>평균 별점: {averageRating.toFixed(1)} ⭐</span>
       </div>
       <div className={styles.reviewList}>
-        {reviews.map(review => (
-          <WebtoonReviewCard 
-            key={review.id} 
-            review={review} 
-            onLike={onLike} 
-            onReport={onReport} 
-          />
-        ))}
+        {Array.isArray(reviews) && reviews.length > 0 ? (
+          reviews.map(review => (
+            <WebtoonReviewCard 
+              key={review.id} 
+              review={review} 
+              onLike={onLike} 
+              onReport={onReport} 
+            />
+          ))
+        ) : (
+          <p>리뷰가 없습니다.</p>
+        )}
       </div>
     </div>
   );

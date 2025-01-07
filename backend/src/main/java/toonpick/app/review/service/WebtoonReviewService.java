@@ -41,10 +41,10 @@ public class WebtoonReviewService {
 
     // 리뷰 추가
     @Transactional
-    public WebtoonReviewDTO createReview(WebtoonReviewCreateDTO reviewCreateDTO, Long webtoonId, String username) {
+    public WebtoonReviewDTO createReview(WebtoonReviewCreateDTO reviewCreateDTO, String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
-        Webtoon webtoon = webtoonRepository.findById(webtoonId)
+        Webtoon webtoon = webtoonRepository.findById(reviewCreateDTO.getWebtoonId())
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
 
         WebtoonReview review = WebtoonReview.builder()

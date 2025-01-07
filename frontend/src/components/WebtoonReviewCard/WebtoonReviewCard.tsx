@@ -12,8 +12,6 @@ interface WebtoonReviewCardProps {
 
 const WebtoonReviewCard: React.FC<WebtoonReviewCardProps> = ({ review, onLike, onReport }) => {
 
-  
-
   return (
     <div className={styles.reviewCard}>
       <div className={styles.reviewHeader}>

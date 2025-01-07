@@ -14,6 +14,7 @@ export interface Review {
 }
 
 export interface ReviewRequest {
+  webtoonId: number;
   rating: number;
   comment: string;
 } 

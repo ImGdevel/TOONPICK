@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styles from './UserInteractionSection.module.css';
-import WebtoonReviewService from '@/services/WebtoonReviewService';
-import UserService from '@/services/UserService';
+import WebtoonReviewService from '@services/WebtoonReviewService';
+import UserService from '@services/UserService';
 import { ReviewRequest } from '@models/review';
-import StarRating from '@/components/StarRating';
-import BookmarkButton from '@/components/BookMarkButton/BookmarkButton';
+import StarRating from '@components/StarRating';
+import BookmarkButton from '@components/BookMarkButton/BookmarkButton';
+import { AuthContext } from '@contexts/AuthContext';
 
 interface UserInteractionSectionProps {
   webtoonId: number;
 }
 
 const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoonId }) => {
+  const { isLoggedIn } = useContext(AuthContext);
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>('');
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
   useEffect(() => {
     const checkIfBookmarked = async () => {
+      if (!isLoggedIn) return;
       const response = await UserService.isFavoriteWebtoon(webtoonId);
       if (response.success) {
         setIsBookmarked(response.data ?? false);
@@ -24,22 +27,25 @@ const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoon
     };
 
     checkIfBookmarked();
-  }, [webtoonId]);
+  }, [webtoonId, isLoggedIn]);
 
   const handleSubmitReview = async () => {
-    const reviewRequest: ReviewRequest = { rating, comment };
+    const reviewRequest: ReviewRequest = { webtoonId, rating, comment };
     const response = await WebtoonReviewService.createWebtoonReview(webtoonId, reviewRequest);
     if (response.success) {
-      // 리뷰 작성 성공 후 처리 (예: 상태 초기화, 알림 등)
       setRating(0);
       setComment('');
     } else {
-      // 오류 처리 (예: 알림)
-      console.error(response.error);
+      console.error(response.message);
     }
   };
 
   const toggleBookmark = async () => {
+    if (!isLoggedIn) {
+      console.warn('로그인 후 북마크를 추가할 수 있습니다.');
+      return;
+    }
+
     const response = isBookmarked
       ? await UserService.removeFavoriteWebtoon(webtoonId)
       : await UserService.addFavoriteWebtoon(webtoonId);
@@ -47,7 +53,6 @@ const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoon
     if (response.success) {
       setIsBookmarked(prev => !prev);
     } else {
-      // 오류 처리 (예: 알림)
       console.error(response.message);
     }
   };
