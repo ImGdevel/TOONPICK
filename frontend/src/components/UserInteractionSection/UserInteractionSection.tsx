@@ -61,7 +61,6 @@ const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoon
           rating={rating} 
           onChange={setRating} 
           interactive={true} 
-          size="medium" 
         />
         <div>
           <label>코멘트:</label>
