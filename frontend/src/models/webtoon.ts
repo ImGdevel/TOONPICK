@@ -9,7 +9,7 @@ export interface Webtoon {
   isAdult: boolean;
   status: string;
   publishDay: string;
-  platforms: Platform[];
+  platforms: Platform;
   authors: Author[];
   description: string;
   genre: Genre[];
