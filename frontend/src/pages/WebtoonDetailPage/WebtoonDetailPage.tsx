@@ -4,6 +4,7 @@ import WebtoonService from '@services/webtoonService';
 import WebtoonReviewService from '@services/WebtoonReviewService';
 import WebtoonDetailsSection from '@components/WebtoonDetailsSection';
 import WebtoonRatingSection from '@components/WebtoonRatingSection';
+import UserInteractionSection from '@components/UserInteractionSection';
 import styles from './WebtoonDetailPage.module.css';
 import { Webtoon } from '@models/webtoon';
 import { Review } from '@models/review';
@@ -66,6 +67,7 @@ const WebtoonDetailPage: React.FC = () => {
         onLike={handleLike} 
         onReport={handleReport} 
       />
+      <UserInteractionSection webtoonId={webtoon.id} />
     </div>
   );
 };
