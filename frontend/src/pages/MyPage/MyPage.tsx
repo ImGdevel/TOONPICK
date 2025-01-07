@@ -4,20 +4,19 @@ import WebtoonReviewService from '@services/WebtoonReviewService';
 import WebtoonGrid from '@components/WebtoonGrid';
 import ReviewList from '@components/ReviewList';
 import styles from './MyPage.module.css';
-import { User } from '@models/auth';
 import { Webtoon } from '@models/webtoon';
 import { Review } from '@models/review';
+import { MemberProfileDTO } from '@models/memberprofile';
 
 
 export interface MyPageState {
-  user: User | null;
+  user: MemberProfileDTO | null;
   bookmarks: Webtoon[];
   favorites: Webtoon[];
   reviews: Review[];
   isLoading: boolean;
   error: string | null; 
 }
-
 
 const MyPage: React.FC = () => {
   const [state, setState] = useState<MyPageState>({
@@ -40,10 +39,10 @@ const MyPage: React.FC = () => {
         ]);
 
         setState({
-          user: profile.data,
-          bookmarks: bookmarks.data,
-          favorites: favorites.data,
-          reviews: reviews.data,
+          user: profile.data || null,
+          bookmarks: bookmarks.data || [],
+          favorites: favorites.data || [],
+          reviews: reviews.data || [],
           isLoading: false,
           error: null
         });
@@ -68,7 +67,7 @@ const MyPage: React.FC = () => {
         <h2>프로필</h2>
         {state.user && (
           <div className={styles.userInfo}>
-            <img src={state.user.profileImage} alt="프로필" />
+            <img src={state.user.profilePicture} alt="프로필" />
             <h3>{state.user.username}</h3>
             <p>{state.user.email}</p>
           </div>

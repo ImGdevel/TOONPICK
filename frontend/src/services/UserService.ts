@@ -1,4 +1,6 @@
 import api from '@services/ApiService';
+import { MemberProfileDTO } from '@models/memberprofile';
+import { Webtoon } from '@models/webtoon';
 
 interface UserResponse<T = any> {
   success: boolean;
@@ -19,10 +21,10 @@ class UserService {
   }
 
   // 사용자 프로필 정보 가져오기
-  public async getUserProfile(): Promise<UserResponse> {
+  public async getUserProfile(): Promise<UserResponse<MemberProfileDTO>> {
     try {
-      const response = await api.get('/api/user/profile');
-      return { success: true, data: response };
+      const response = await api.get<MemberProfileDTO>('/api/secure/user/profile');
+      return { success: true, data: response.data };
     } catch (error) {
       console.error('Error fetching user profile:', error);
       return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
@@ -32,7 +34,7 @@ class UserService {
   // 관심 웹툰 추가
   public async addFavoriteWebtoon(webtoonId: number): Promise<UserResponse> {
     try {
-      await api.post(`/api/users/favorites/${webtoonId}`);
+      await api.post(`/api/secure/users/favorites/${webtoonId}`);
       return { success: true };
     } catch (error) {
       console.error('Error adding favorite webtoon:', error);
@@ -43,8 +45,7 @@ class UserService {
   // 관심 웹툰 삭제
   public async removeFavoriteWebtoon(webtoonId: number): Promise<UserResponse> {
     try {
-      await api.delete(`/api/users/favorites/${webtoonId}`
-      );
+      await api.delete(`/api/secure/users/favorites/${webtoonId}`);
       return { success: true };
     } catch (error) {
       console.error('Error removing favorite webtoon:', error);
@@ -53,10 +54,10 @@ class UserService {
   }
 
   // 관심 웹툰 목록 가져오기
-  public async getFavorites(): Promise<UserResponse> {
+  public async getFavorites(): Promise<UserResponse<Webtoon[]>> {
     try {
-      const response = await api.get(`/api/users/favorites`);
-      return { success: true, data: response };
+      const response = await api.get<Webtoon[]>(`/api/secure/users/favorites`);
+      return { success: true, data: response.data };
     } catch (error) {
       console.error('Error fetching favorites:', error);
       return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
@@ -66,7 +67,7 @@ class UserService {
   // 웹툰이 관심 웹툰인지 확인
   public async isFavoriteWebtoon(webtoonId: number): Promise<UserResponse<boolean>> {
     try {
-      const response = await api.get<boolean>(`/api/users/favorites/${webtoonId}/is-favorite`);
+      const response = await api.get<boolean>(`/api/secure/users/favorites/${webtoonId}/is-favorite`);
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Error checking favorite webtoon:', error);
@@ -77,7 +78,7 @@ class UserService {
   public async getBookmarks(): Promise<UserResponse> {
     try {
       const response = await api.get('/api/users/bookmarks');
-      return { success: true, data: response };
+      return { success: true, data: response.data };
     } catch (error) {
       console.error('Error fetching bookmarks:', error);
       return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
