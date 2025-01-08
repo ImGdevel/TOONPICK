@@ -10,8 +10,8 @@ interface WebtoonGridProps {
 const WebtoonGrid: React.FC<WebtoonGridProps> = ({ webtoons }) => {
   return (
     <div className={styles.grid}>
-      {webtoons.map(webtoon => (
-        <div className={styles.gridItem} key={webtoon.id}>
+      {webtoons.map((webtoon, index) => (
+        <div className={styles.gridItem} key={webtoon.id || index}>
           <WebtoonCard webtoon={webtoon} />
         </div>
       ))}

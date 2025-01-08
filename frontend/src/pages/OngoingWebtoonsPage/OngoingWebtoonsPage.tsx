@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Webtoon } from '@models/webtoon';
 import WebtoonService from '@services/webtoonService';
-import WebtoonCard from '@components/WebtoonCard';
 import styles from './OngoingWebtoonsPage.module.css';
+import WebtoonGrid from '@/components/WebtoonGrid';
 
 
 // 상태 타입 정의
@@ -31,9 +31,9 @@ const OngoingWebtoonsPage: React.FC = () => {
       if (response.success) {
         setState((prev) => ({
           ...prev,
-          webtoons: [...prev.webtoons, ...(response.data || [])], // Ensure response.data is of type Webtoon[]
+          webtoons: [...prev.webtoons, ...(response.data || [])],
           currentPage: page,
-          totalPages: Math.ceil((response.total || 0) / 20), // Calculate total pages
+          totalPages: Math.ceil((response.total || 0) / 20),
           isLoading: false,
           error: null,
         }));
@@ -92,11 +92,7 @@ const OngoingWebtoonsPage: React.FC = () => {
       {state.isLoading ? (
         <p>로딩 중...</p>
       ) : (
-        <div className={styles.webtoonGrid}>
-          {state.webtoons.map((webtoon) => (
-            <WebtoonCard key={webtoon.id} webtoon={webtoon} />
-          ))}
-        </div>
+        <WebtoonGrid webtoons={state.webtoons} />
       )}
     </div>
   );

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import WebtoonService from '@services/webtoonService';
 import WebtoonGrid from '@components/WebtoonGrid';
-import Pagination from '@components/Pagination';
 import styles from './NewWebtoonsPage.module.css';
 import { Webtoon } from '@models/webtoon';
 
@@ -13,7 +12,6 @@ export interface NewWebtoonsPageState {
   isLoading: boolean;
   error: string | null;
 }
-
 
 const NewWebtoonsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -51,22 +49,16 @@ const NewWebtoonsPage: React.FC = () => {
     fetchNewWebtoons();
   }, [searchParams]);
 
-  const handlePageChange = (page: number) => {
-    setSearchParams({ page: page.toString() });
-  };
-
-  if (state.isLoading) return <div>로딩중...</div>;
   if (state.error) return <div>{state.error}</div>;
 
   return (
     <div className={styles.newWebtoonsPage}>
       <h1>신작 웹툰</h1>
-      <WebtoonGrid webtoons={state.webtoons} />
-      <Pagination 
-        currentPage={state.currentPage}
-        totalPages={state.totalPages}
-        onPageChange={handlePageChange}
-      />
+      {state.isLoading ? (
+        <p>로딩중...</p>
+      ) : (
+        <WebtoonGrid webtoons={state.webtoons} />
+      )}
     </div>
   );
 };
