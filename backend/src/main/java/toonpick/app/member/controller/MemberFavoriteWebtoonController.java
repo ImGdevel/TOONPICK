@@ -49,7 +49,7 @@ public class MemberFavoriteWebtoonController {
     }
 
     // 특정 웹툰이 즐겨찾기인지 확인
-    @GetMapping("/{webtoonId}")
+    @GetMapping("/{webtoonId}/is-favorite")
     public ResponseEntity<Boolean> isFavoriteWebtoon(@PathVariable Long webtoonId, Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
         boolean isFavorite = memberFavoriteWebtoonService.isFavoriteWebtoon(username, webtoonId);
