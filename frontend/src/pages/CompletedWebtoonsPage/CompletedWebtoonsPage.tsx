@@ -1,87 +1,68 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Webtoon } from '@models/webtoon';
+import React, { useState, useEffect, useRef } from 'react';
 import WebtoonService from '@services/webtoonService';
 import WebtoonGrid from '@components/WebtoonGrid';
 import styles from './CompletedWebtoonsPage.module.css';
-
-export interface WebtoonsPageState {
-  webtoons: Webtoon[];
-  currentPage: number;
-  totalPages: number;
-  isLoading: boolean;
-  error: string | null;
-}
+import{ Webtoon } from '@models/webtoon';
 
 const CompletedWebtoonsPage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [state, setState] = useState<WebtoonsPageState>({
-    webtoons: [],
-    currentPage: 0,
-    totalPages: 1,
-    isLoading: true,
-    error: null
-  });
+  const [webtoons, setWebtoons] = useState<Webtoon[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastWebtoonRef = useRef<HTMLDivElement | null>(null); // 마지막 웹툰 요소 참조
 
   const fetchCompletedWebtoons = async (page: number) => {
     const size = 20; // 페이지 크기 설정
-    const sortBy = 'title'; // 정렬 기준
-    const sortDir = 'asc'; // 정렬 방향
-    const genres = []; // 필요에 따라 장르를 설정
-
     try {
-      const response = await WebtoonService.getCompletedWebtoons(page, size, sortBy, sortDir);
-      setState((prev) => ({
-        webtoons: [...prev.webtoons, ...(response.data || [])],
-        currentPage: page,
-        totalPages: Math.ceil((response.total || 0) / size),
-        isLoading: false,
-        error: null
-      }));
+      const response = await WebtoonService.getCompletedWebtoons(page, size);
+      setWebtoons((prev) => [...prev, ...(response.data || [])]);
+      setTotalPages(Math.ceil((response.total || 0) / size));
+      setIsLoading(false);
     } catch (error) {
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        error: '완결 웹툰을 불러오는데 실패했습니다.'
-      }));
+      setError('완결 웹툰을 불러오는데 실패했습니다.');
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    const page = Number(searchParams.get('page')) || 0;
-    fetchCompletedWebtoons(page);
-  }, [searchParams]);
-
-  const handleScroll = useCallback(() => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop !==
-        document.documentElement.offsetHeight ||
-      state.isLoading ||
-      state.currentPage >= state.totalPages
-    ) return;
-
-    const nextPage = state.currentPage + 1;
-    setSearchParams({ page: nextPage.toString() });
-    fetchCompletedWebtoons(nextPage);
-  }, [state, setSearchParams]);
+    fetchCompletedWebtoons(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [handleScroll]);
+    if (observer.current) {
+      observer.current.disconnect(); // 이전 관찰 중지
+    }
 
-  if (state.error) return <div>{state.error}</div>;
+    observer.current = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && currentPage < totalPages) {
+          setCurrentPage((prev) => prev + 1); // 다음 페이지 로드
+        }
+      });
+    });
+
+    if (lastWebtoonRef.current) {
+      observer.current.observe(lastWebtoonRef.current); // 마지막 웹툰 요소 관찰
+    }
+
+    return () => {
+      if (observer.current && lastWebtoonRef.current) {
+        observer.current.unobserve(lastWebtoonRef.current); // 언마운트 시 관찰 중지
+      }
+    };
+  }, [lastWebtoonRef.current, currentPage, totalPages]);
 
   return (
     <div className={styles.completedWebtoonsPage}>
       <h1>완결 웹툰</h1>
-      {state.isLoading ? (
+      {isLoading ? (
         <p>로딩중...</p>
       ) : (
-        <WebtoonGrid webtoons={state.webtoons} />
+        <WebtoonGrid webtoons={webtoons} />
       )}
+      <div ref={lastWebtoonRef} /> {/* 마지막 웹툰 요소 */}
     </div>
   );
 };
