@@ -1,5 +1,6 @@
-import AuthToken from '@services/AuthToken';
+import TokenManager from '@services/TokenManager';
 import api from '@services/ApiService';
+import TokenRefresher from '@services/TokenRefresher';
 
 
 export const AuthService = {
@@ -9,9 +10,9 @@ export const AuthService = {
         '/login',
         { username, password },
       );
-      const accessToken = AuthToken.extractAccessTokenFromHeader(response.headers);
+      const accessToken = TokenManager.extractAccessTokenFromHeader(response.headers);
       if (accessToken) {
-        AuthToken.setAccessToken(accessToken);
+        TokenManager.setAccessToken(accessToken);
         loginCallback?.();
         return { success: true };
       } else {
@@ -42,7 +43,7 @@ export const AuthService = {
   logout: async (): Promise<{ success: boolean; message?: string }> => {
     try {
       await api.post('/logout', {});
-      AuthToken.clearAccessToken();
+      TokenManager.clearAccessToken();
       return { success: true };
     } catch (error: any) {
       return { success: false, message: error.message };
@@ -50,9 +51,9 @@ export const AuthService = {
   },
 
   isLoggedIn: (): boolean => {
-    const accessToken = AuthToken.getAccessToken();
+    const accessToken = TokenManager.getAccessToken();
     if (!accessToken) return false;
-    return !AuthToken.isAccessTokenExpired(accessToken);
+    return !TokenManager.isAccessTokenExpired(accessToken);
   },
 
   socialLogin: (provider: string): void => {
@@ -62,9 +63,9 @@ export const AuthService = {
 
   handleSocialLoginCallback: async (loginCallback?: () => void): Promise<{ success: boolean; message?: string }> => {
     try {
-      const accessToken = await AuthToken.refreshAccessToken();
+      const accessToken = await TokenRefresher.refreshAccessToken();
       if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
+        TokenManager.setAccessToken(accessToken);
         loginCallback?.();
         return { success: true };
       } else {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import AuthToken from '@services/AuthToken';
 import styles from './SocialLoginCallbackPage.module.css';
+import TokenRefresher from '@services/TokenRefresher';
 
 
 const SocialLoginCallbackPage: React.FC = () => {
@@ -12,7 +12,7 @@ const SocialLoginCallbackPage: React.FC = () => {
   useEffect(() => {
     const handleSocialLogin = async () => {
       try {
-        const accessToken = await AuthToken.refreshAccessToken(); 
+        const accessToken = await TokenRefresher.refreshAccessToken(); 
 
         if (accessToken) {
           navigate('/');

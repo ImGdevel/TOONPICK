@@ -1,8 +1,6 @@
-import api from '@services/ApiService';
-
 const ACCESS_TOKEN_KEY = 'accessToken';
 
-export const AuthToken = {
+export const TokenManager = {
   setAccessToken: (token: string): void => {
     localStorage.setItem(ACCESS_TOKEN_KEY, token);
   },
@@ -32,24 +30,6 @@ export const AuthToken = {
     }
     return null;
   },
-
-  refreshAccessToken: async (): Promise<string> => {
-    try {
-      const response = await api.post('/api/reissue', {}, { withCredentials: true });
-      const newAccessToken = AuthToken.extractAccessTokenFromHeader(response.headers);
-      if (newAccessToken) {
-        AuthToken.setAccessToken(newAccessToken);
-        return newAccessToken;
-      } else {
-        throw new Error('토큰 재발급 실패');
-      }
-    } catch (reissueError) {
-      console.error('토큰 재발급 실패:', reissueError);
-      AuthToken.clearAccessToken();
-      window.location.href = '/login';
-      throw reissueError;
-    }
-  },
 };
 
-export default AuthToken;
+export default TokenManager; 
