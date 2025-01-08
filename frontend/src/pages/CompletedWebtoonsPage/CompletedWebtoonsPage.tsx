@@ -17,19 +17,24 @@ const CompletedWebtoonsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [state, setState] = useState<WebtoonsPageState>({
     webtoons: [],
-    currentPage: 1,
+    currentPage: 0,
     totalPages: 1,
     isLoading: true,
     error: null
   });
 
   const fetchCompletedWebtoons = async (page: number) => {
+    const size = 20; // 페이지 크기 설정
+    const sortBy = 'title'; // 정렬 기준
+    const sortDir = 'asc'; // 정렬 방향
+    const genres = []; // 필요에 따라 장르를 설정
+
     try {
-      const response = await WebtoonService.getCompletedWebtoons(page);
+      const response = await WebtoonService.getCompletedWebtoons(page, size, sortBy, sortDir);
       setState((prev) => ({
         webtoons: [...prev.webtoons, ...(response.data || [])],
         currentPage: page,
-        totalPages: Math.ceil((response.total || 0) / 20),
+        totalPages: Math.ceil((response.total || 0) / size),
         isLoading: false,
         error: null
       }));
@@ -43,7 +48,7 @@ const CompletedWebtoonsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const page = Number(searchParams.get('page')) || 1;
+    const page = Number(searchParams.get('page')) || 0;
     fetchCompletedWebtoons(page);
   }, [searchParams]);
 
