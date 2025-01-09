@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Webtoon } from '../../models/webtoon';
 import WebtoonService from '../../services/webtoonService';
+import { SerializationStatus } from '@/models/enum';
 
 interface WebtoonListResponse {
   data: Webtoon[];
@@ -16,8 +17,14 @@ export const useWebtoons = () => {
     const fetchWebtoons = async () => {
       try {
         const [popular, recent] = await Promise.all([
-          WebtoonService.getWebtoons(0),
-          WebtoonService.getWebtoons(0)
+          WebtoonService.getWebtoons({
+            page: 0,
+            serializationStatus: SerializationStatus.ONGOING,
+          }),
+          WebtoonService.getWebtoons({
+            page: 0,
+            serializationStatus: SerializationStatus.COMPLETED,
+          })
         ]) as [WebtoonListResponse, WebtoonListResponse];
         
         setPopularWebtoons(popular.data);

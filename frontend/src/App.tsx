@@ -6,14 +6,14 @@ import { AuthProvider } from '@contexts/AuthContext';
 
 // Pages
 import HomePage from '@pages/HomePage/HomePage';
-import SignInPage from '@pages/SignInPage';
-import SignUpPage from '@pages/SignUpPage';
+import SignInPage from '@/pages/auth/SignInPage';
+import SignUpPage from '@/pages/auth/SignUpPage';
 import WebtoonDetailPage from '@pages/WebtoonDetailPage/WebtoonDetailPage';
 import MyPage from '@pages/MyPage';
-import SocialLoginCallbackPage from '@pages/SocialLoginCallbackPage/SocialLoginCallbackPage';
-import NewWebtoonsPage from '@pages/NewWebtoonsPage/NewWebtoonsPage';
-import OngoingWebtoonsPage from '@pages/OngoingWebtoonsPage/OngoingWebtoonsPage';
-import CompletedWebtoonsPage from '@pages/CompletedWebtoonsPage/CompletedWebtoonsPage';
+import SocialLoginCallbackPage from '@/pages/auth/SocialLoginCallbackPage/SocialLoginCallbackPage';
+import NewWebtoonsPage from '@/pages/NewWebtoonsPage/NewWebtoonsPage';
+import OngoingWebtoonsPage from '@/pages/OngoingWebtoonsPage/OngoingWebtoonsPage';
+import CompletedWebtoonsPage from '@/pages/CompletedWebtoonsPage/CompletedWebtoonsPage';
 
 const App: React.FC = () => {
   return (

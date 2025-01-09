@@ -77,7 +77,6 @@ const Header: React.FC = () => {
             <li onClick={() => navigate('/webtoon/ongoing')} className={styles.menuItem}>연재</li>
             <li onClick={() => navigate('/webtoon/new')} className={styles.menuItem}>신작</li>
             <li onClick={() => navigate('/webtoon/completed')} className={styles.menuItem}>완결</li>
-            <li onClick={() => navigate('/recommendation')} className={styles.menuItem}>추천</li>
           </ul>
         </nav>
 
