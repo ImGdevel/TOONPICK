@@ -27,7 +27,7 @@ const NewWebtoonsPage: React.FC = () => {
     const fetchNewWebtoons = async () => {
       try {
         const page = Number(searchParams.get('page')) || 1;
-        const response = await WebtoonService.getRecentWebtoons(page);
+        const response = await WebtoonService.getWebtoons(page);
 
         setState((prev) => ({ 
           ...prev,

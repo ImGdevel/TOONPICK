@@ -23,13 +23,13 @@ const HomePage: React.FC = () => {
     const fetchData = async () => {
       try {
         const [popular, recent] = await Promise.all([
-          WebtoonService.getPopularWebtoons(0),
-          WebtoonService.getRecentWebtoons(0)  
+          [],
+          []
         ]);
 
         setState({
-          popularWebtoons: popular.data || [],
-          recentWebtoons: recent.data || [],
+          popularWebtoons: [],
+          recentWebtoons: [],
           isLoading: false,
           error: null
         });

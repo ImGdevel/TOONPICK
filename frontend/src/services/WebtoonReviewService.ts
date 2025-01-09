@@ -7,7 +7,7 @@ export interface ReviewResponse<T = any> {
   message?: string;
 } 
 
-export interface PagedReviewResponse<T> {
+export interface PagedResponse<T> {
   content: T[]; 
   page: number; 
   size: number; 
@@ -121,7 +121,7 @@ class WebtoonReviewService {
     size: number = 20
   ): Promise<ReviewResponse<Review[]>> {
     try {
-      const response = await api.get<PagedReviewResponse<Review>>(
+      const response = await api.get<PagedResponse<Review>>(
         `/api/public/reviews/webtoon/${webtoonId}?sortBy=${sortBy}&page=${page}&size=${size}`
       );
 

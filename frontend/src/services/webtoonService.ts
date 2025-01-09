@@ -4,11 +4,19 @@ import { DayOfWeek, SerializationStatus, AgeRating, Platform } from '@models/enu
 
 const PAGE_SIZE = 20;
 
-export interface WebtoonResponse<T = any> {
+export interface Response<T = any> {
   success: boolean;
   data?: T;
   message?: string;
   total?: number;
+}
+
+export interface PagedResponse<T> extends Response<T> {
+  page?: number; 
+  size?: number; 
+  totalElements?: number; 
+  totalPages?: number;
+  last?: boolean;
 }
 
 // WebtoonService 클래스
@@ -25,7 +33,7 @@ class WebtoonService {
   }
 
   // 웹툰 목록 조회
-  public async getWebtoons(page: number): Promise<WebtoonResponse<Webtoon[]>> {
+  public async getWebtoons(page: number): Promise<PagedResponse<Webtoon[]>> {
     try {
       const response = await api.get<Webtoon[]>(`/api/public/webtoons`, { params: { page, size: PAGE_SIZE } });
       return { success: true, data: response.data };
@@ -35,7 +43,7 @@ class WebtoonService {
   }
 
   // 요일별 웹툰 목록 조회
-  public async getWebtoonsByDayOfWeek(week: DayOfWeek): Promise<WebtoonResponse<Webtoon[]>> {
+  public async getWebtoonsByDayOfWeek(week: DayOfWeek): Promise<PagedResponse<Webtoon[]>> {
     try {
       const response = await api.get<Webtoon[]>(`/api/public/webtoons`, { params: { week } });
       return { success: true, data: response.data };
@@ -45,7 +53,7 @@ class WebtoonService {
   }
 
   // 웹툰 상세 조회
-  public async getWebtoonById(id: number): Promise<WebtoonResponse<Webtoon>> {
+  public async getWebtoonById(id: number): Promise<PagedResponse<Webtoon>> {
     try {
       const response = await api.get<Webtoon>(`/api/public/webtoons/${id}`);
       return { success: true, data: response.data };
@@ -62,10 +70,9 @@ class WebtoonService {
     sortDir: 'asc' | 'desc' = 'asc',
     genres?: string[],
     platform?: Platform
-  ): Promise<WebtoonResponse<Webtoon[]>> {
+  ): Promise<PagedResponse<Webtoon[]>> {
     try {
-      console.log(page, size, sortBy, sortDir, genres, platform);
-      const response = await api.get<Webtoon[]>(`/api/public/webtoons`, {
+      const response = await api.get<PagedResponse<Webtoon[]>>(`/api/public/webtoons`, {
         params: {
           page,
           size,
@@ -77,39 +84,17 @@ class WebtoonService {
         },
       });
 
-      console.log(response.data);
-
-      return { success: true, data: response.data };
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
-
-  // 인기 웹툰 목록 조회
-  public async getPopularWebtoons(page: number): Promise<WebtoonResponse<Webtoon[]>> {
-    try {
-      const response = await api.get<Webtoon[]>(`/api/public/webtoons/popular`, { params: { page, size: 60 } });
-      return { success: true, data: response.data };
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
-
-  // 최근 웹툰 목록 조회
-  public async getRecentWebtoons(page: number): Promise<WebtoonResponse<Webtoon[]>> {
-    try {
-      const response = await api.get<Webtoon[]>(`/api/public/webtoons/recent`, { params: { page, size: PAGE_SIZE } });
-      return { success: true, data: response.data };
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
-
-  // 웹툰 검색
-  public async searchWebtoons(query: string): Promise<WebtoonResponse<Webtoon[]>> {
-    try {
-      const response = await api.get<Webtoon[]>(`/api/public/webtoons`, { params: { title: query } });
-      return { success: true, data: response.data };
+      // 응답 데이터 구조 검증
+      const { data, totalElements, page: currentPage, size: pageSize, last } = response.data || {};
+      
+      return {
+        success: true,
+        data: data || [],
+        total: totalElements || 0, 
+        page: currentPage || 0,
+        size: pageSize || size,
+        last: last || false,
+      };
     } catch (error) {
       return this.handleError(error);
     }
@@ -127,7 +112,7 @@ class WebtoonService {
     size?: number;
     sortBy?: string;
     sortDir?: 'asc' | 'desc';
-  }): Promise<WebtoonResponse<Webtoon[]>> {
+  }): Promise<Response<Webtoon[]>> {
     try {
       const response = await api.get<Webtoon[]>(`/api/public/webtoons`, { params: options });
       return { success: true, data: response.data };
@@ -136,19 +121,6 @@ class WebtoonService {
     }
   }
 
-  // 오웹툰 카테고리 조회
-  public async getWebtoonsByCategory(category: string): Promise<WebtoonResponse<Webtoon[]>> {
-    try {
-      const response = await api.get(`/api/public/webtoons/category/${category}`, {
-        params: {
-          serializationStatus: SerializationStatus.COMPLETED,
-        },
-      });
-      return { success: true, data: response.data };
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
 
   // 오류 처리
   private handleError(error: any): { success: false; message: string } {

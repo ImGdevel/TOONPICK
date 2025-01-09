@@ -17,6 +17,10 @@ const CompletedWebtoonsPage: React.FC = () => {
     const size = 20; // 페이지 크기 설정
     try {
       const response = await WebtoonService.getCompletedWebtoons(page, size);
+      console.log("page response: ", response);
+      console.log("page response.data: ", response.data);
+
+
       setWebtoons((prev) => [...prev, ...(response.data || [])]);
       setTotalPages(Math.ceil((response.total || 0) / size));
       setIsLoading(false);
