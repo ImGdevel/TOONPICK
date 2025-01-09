@@ -43,7 +43,6 @@ public class DataRequestController {
         return ResponseEntity.ok(createdWebtoons);
     }
 
-    // 요일 변환 맵
     private static final Map<String, DayOfWeek> DAY_OF_WEEK_MAP = Map.of(
             "일", DayOfWeek.SUNDAY,
             "월", DayOfWeek.MONDAY,
@@ -53,7 +52,6 @@ public class DataRequestController {
             "금", DayOfWeek.FRIDAY,
             "토", DayOfWeek.SATURDAY
     );
-
 
     private Platform mapToPlatform(String platform) {
         try {
@@ -65,7 +63,6 @@ public class DataRequestController {
 
     private AgeRating mapToAgeRating(String ageRating) {
         try {
-            // 숫자로 들어온 경우 처리
             if (ageRating.matches("\\d+")) {
                 return AgeRating.valueOf("AGE_" + ageRating);
             }
@@ -84,7 +81,6 @@ public class DataRequestController {
     }
 
     private WebtoonDTO convertToWebtoonDTO(WebtoonRequestDTO request) {
-        // Authors DTO 변환
         Set<AuthorDTO> authorDTOs = request.getAuthors().stream()
                 .map(authorRequest -> AuthorDTO.builder()
                         .name(authorRequest.getName())
@@ -94,31 +90,28 @@ public class DataRequestController {
                 .map(authorService::findOrCreateAuthor)
                 .collect(Collectors.toSet());
 
-        // Genres DTO 변환
         Set<GenreDTO> genreDTOs = request.getGenres().stream()
                 .map(genreName -> GenreDTO.builder().name(genreName).build())
                 .map(genreService::findOrCreateGenre)
                 .collect(Collectors.toSet());
 
-        // DayOfWeek 변환
         DayOfWeek dayOfWeek = DAY_OF_WEEK_MAP.getOrDefault(request.getDay(), DayOfWeek.MONDAY);
 
-        // Webtoon DTO 생성
         return WebtoonDTO.builder()
                 .title(request.getTitle())
-                .platform(mapToPlatform(request.getPlatform())) // 플랫폼 매핑
-                .platformId(request.getUniqueId())
-                .averageRating(0) // 기본 평균 평점 설정
-                .platformRating(Float.parseFloat(request.getRating())) // 플랫폼 평점
+                .platform(mapToPlatform(request.getPlatform()))
+                .platformId(String.valueOf(request.getUniqueId())) // uniqueId 처리
+                .averageRating(0)
+                .platformRating(request.getRating())
                 .description(request.getStory())
-                .episodeCount(request.getEpisodeCount() != 0 ? request.getEpisodeCount() : 1) // 기본값 설정
-                .serializationStartDate(LocalDate.now()) // 현재 날짜 사용
-                .lastUpdatedDate(LocalDate.now()) // 최신 업데이트 날짜 설정
-                .serializationStatus(mapToSerializationStatus(request.getStatus())) // 연재 상태 매핑
+                .episodeCount(request.getEpisodeCount() != 0 ? request.getEpisodeCount() : 1)
+                .serializationStartDate(request.getFirstDay() != null ? request.getFirstDay() : LocalDate.now()) // firstDay 추가
+                .lastUpdatedDate(request.getLastUpdateDay() != null ? request.getLastUpdateDay() : LocalDate.now()) // lastUpdateDay 추가
+                .serializationStatus(mapToSerializationStatus(request.getStatus()))
                 .week(dayOfWeek)
                 .thumbnailUrl(request.getThumbnailUrl())
                 .url(request.getUrl())
-                .ageRating(mapToAgeRating(request.getAgeRating())) // 연령대 매핑
+                .ageRating(mapToAgeRating(request.getAgeRating()))
                 .authors(authorDTOs)
                 .genres(genreDTOs)
                 .build();

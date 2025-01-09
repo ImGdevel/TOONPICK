@@ -25,6 +25,7 @@ import toonpick.app.webtoon.repository.WebtoonRepository;
 import java.time.DayOfWeek;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,12 @@ public class WebtoonService {
     // 웹툰 추가
     @Transactional
     public WebtoonDTO createWebtoon(WebtoonDTO webtoonDTO) {
+
+        Optional<Webtoon> existingWebtoon = webtoonRepository.findByPlatformId(webtoonDTO.getPlatformId());
+        if (existingWebtoon.isPresent()) {
+            return null;
+        }
+
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(
                 webtoonDTO.getAuthors().stream().map(AuthorDTO::getId).collect(Collectors.toSet())));
 

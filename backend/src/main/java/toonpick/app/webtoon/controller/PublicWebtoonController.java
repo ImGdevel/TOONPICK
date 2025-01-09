@@ -55,8 +55,8 @@ public class PublicWebtoonController {
 
         List<WebtoonDTO> webtoons = webtoonService.filterWebtoonsOptions(filter, page, size, sortBy, sortDir);
 
-        System.out.println("filter: " + platform + " State: " + serializationStatus);
-        System.out.println("page: " + page + " size: " + size + " webtoons: " + webtoons.size() + " sortBy: " + sortBy + " sortDir: " + sortDir);
+        //System.out.println("filter: " + platform + " State: " + serializationStatus);
+        //System.out.println("page: " + page + " size: " + size + " webtoons: " + webtoons.size() + " sortBy: " + sortBy + " sortDir: " + sortDir);
 
         return ResponseEntity.ok(webtoons);
     }
