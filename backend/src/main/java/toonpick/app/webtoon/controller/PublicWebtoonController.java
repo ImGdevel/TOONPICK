@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import toonpick.app.webtoon.dto.PagedResponseDTO;
 import toonpick.app.webtoon.dto.WebtoonDTO;
 import toonpick.app.webtoon.dto.WebtoonFilterDTO;
 import toonpick.app.webtoon.entity.enums.AgeRating;
@@ -27,12 +28,12 @@ public class PublicWebtoonController {
 
     @GetMapping("/{id}")
     public ResponseEntity<WebtoonDTO> getWebtoon(@PathVariable Long id) {
-        WebtoonDTO webtoonDTO = webtoonService.getWebtoon(id);
+        WebtoonDTO webtoonDTO = webtoonService.getWebtoonById(id);
         return ResponseEntity.ok(webtoonDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<WebtoonDTO>> filterWebtoons(
+    public ResponseEntity<PagedResponseDTO<WebtoonDTO>> filterWebtoons(
             @RequestParam(required = false) Platform platform,
             @RequestParam(required = false) SerializationStatus serializationStatus,
             @RequestParam(required = false) AgeRating ageRating,
@@ -53,35 +54,11 @@ public class PublicWebtoonController {
                 .authors(authors)
                 .build();
 
-        List<WebtoonDTO> webtoons = webtoonService.filterWebtoonsOptions(filter, page, size, sortBy, sortDir);
+        PagedResponseDTO<WebtoonDTO> webtoons = webtoonService.getWebtoonsOptions(filter, page, size, sortBy, sortDir);
 
-        //System.out.println("filter: " + platform + " State: " + serializationStatus);
-        //System.out.println("page: " + page + " size: " + size + " webtoons: " + webtoons.size() + " sortBy: " + sortBy + " sortDir: " + sortDir);
+
 
         return ResponseEntity.ok(webtoons);
     }
 
-    // todo : 추후 아래 요청들은 제거할 것
-
-    @GetMapping("/completed")
-    public ResponseEntity<List<WebtoonDTO>> getCompletedWebtoons(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        return filterWebtoons(null, SerializationStatus.COMPLETED, null, null, null, null, page, size, "title", "asc");
-    }
-
-    @GetMapping("/recent")
-    public ResponseEntity<List<WebtoonDTO>> getRecentWebtoons(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        return filterWebtoons(null, SerializationStatus.ONGOING, null, null, null, null, page, size, "updatedDate", "desc");
-    }
-
-    @GetMapping("/popular")
-    public ResponseEntity<List<WebtoonDTO>> getPopularWebtoons(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "60") int size) {
-
-        return filterWebtoons(null, SerializationStatus.ONGOING, null, null, null, null, page, size, "updatedDate", "desc");
-    }
 }

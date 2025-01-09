@@ -182,7 +182,7 @@ public class WebtoonReviewService {
                 .collect(Collectors.toList());
 
         return PagedResponseDTO.<WebtoonReviewDTO>builder()
-                .content(reviewDTOs)
+                .data(reviewDTOs)
                 .page(reviewPage.getNumber())
                 .size(reviewPage.getSize())
                 .totalElements(reviewPage.getTotalElements())

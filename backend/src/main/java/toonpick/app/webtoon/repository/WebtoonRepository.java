@@ -20,9 +20,6 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
     List<Webtoon> findByAuthors_Name(String authorName);
     List<Webtoon> findByGenres_Name(String genreName);
 
-    List<Webtoon> findByWeek(DayOfWeek week);
-    List<Webtoon> findBySerializationStatus(SerializationStatus status);
-
     Page<Webtoon> findBySerializationStatus(SerializationStatus status, Pageable pageable);
 
     @Modifying
