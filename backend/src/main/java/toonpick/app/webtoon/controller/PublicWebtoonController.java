@@ -3,6 +3,7 @@ package toonpick.app.webtoon.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,30 +35,13 @@ public class PublicWebtoonController {
 
     @GetMapping
     public ResponseEntity<PagedResponseDTO<WebtoonDTO>> filterWebtoons(
-            @RequestParam(required = false) Platform platform,
-            @RequestParam(required = false) SerializationStatus serializationStatus,
-            @RequestParam(required = false) AgeRating ageRating,
-            @RequestParam(required = false) DayOfWeek week,
-            @RequestParam(required = false) Set<String> genres,
-            @RequestParam(required = false) Set<String> authors,
+            @ModelAttribute WebtoonFilterDTO filter,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "title") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir
     ) {
-        WebtoonFilterDTO filter = WebtoonFilterDTO.builder()
-                .platform(platform)
-                .serializationStatus(serializationStatus)
-                .ageRating(ageRating)
-                .week(week)
-                .genres(genres)
-                .authors(authors)
-                .build();
-
         PagedResponseDTO<WebtoonDTO> webtoons = webtoonService.getWebtoonsOptions(filter, page, size, sortBy, sortDir);
-
-
-
         return ResponseEntity.ok(webtoons);
     }
 
