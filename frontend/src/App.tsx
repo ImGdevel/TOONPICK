@@ -11,9 +11,9 @@ import SignUpPage from '@pages/SignUpPage';
 import WebtoonDetailPage from '@pages/WebtoonDetailPage/WebtoonDetailPage';
 import MyPage from '@pages/MyPage';
 import SocialLoginCallbackPage from '@pages/SocialLoginCallbackPage/SocialLoginCallbackPage';
-import NewWebtoonsPage from '@pages/NewWebtoonsPage';
+import NewWebtoonsPage from '@pages/NewWebtoonsPage/NewWebtoonsPage';
 import OngoingWebtoonsPage from '@pages/OngoingWebtoonsPage/OngoingWebtoonsPage';
-import CompletedWebtoonsPage from '@pages/CompletedWebtoonsPage';
+import CompletedWebtoonsPage from '@pages/CompletedWebtoonsPage/CompletedWebtoonsPage';
 
 const App: React.FC = () => {
   return (

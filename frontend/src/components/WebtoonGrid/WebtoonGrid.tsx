@@ -1,17 +1,22 @@
 import React from 'react';
 import { Webtoon } from '@models/webtoon';
-import WebtoonCard from '@components/WebtoonCard';
+import WebtoonCard from '@components/WebtoonCard/WebtoonCard';
 import styles from './WebtoonGrid.module.css';
 
 interface WebtoonGridProps {
   webtoons: Webtoon[];
+  lastWebtoonRef?: React.RefObject<HTMLDivElement>;
 }
 
-const WebtoonGrid: React.FC<WebtoonGridProps> = ({ webtoons }) => {
+const WebtoonGrid: React.FC<WebtoonGridProps> = ({ webtoons, lastWebtoonRef }) => {
   return (
     <div className={styles.grid}>
       {webtoons.map((webtoon, index) => (
-        <div className={styles.gridItem} key={webtoon.id || index}>
+        <div
+          className={styles.gridItem}
+          key={webtoon.id || index}
+          ref={index === webtoons.length - 1 ? lastWebtoonRef : null} 
+        >
           <WebtoonCard webtoon={webtoon} />
         </div>
       ))}
@@ -19,4 +24,4 @@ const WebtoonGrid: React.FC<WebtoonGridProps> = ({ webtoons }) => {
   );
 };
 
-export default WebtoonGrid; 
+export default WebtoonGrid;
