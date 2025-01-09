@@ -52,25 +52,34 @@ class WebtoonService {
     }
   }
 
-  // 완결 웹툰 목록 조회
+  // 웹툰 목록 조회
   public async getWebtoons(
-    page: number,
-    size: number = PAGE_SIZE,
-    sortBy: string = 'title',
-    sortDir: 'asc' | 'desc' = 'asc',
-    genres?: string[],
-    platform?: Platform
+    options: {
+      page: number;
+      size?: number;
+      sortBy?: string;
+      sortDir?: 'asc' | 'desc';
+      platform?: Platform;
+      genres?: string[];
+      authors?: string[];
+      week?: DayOfWeek;
+      serializationStatus?: SerializationStatus;
+      ageRating?: AgeRating;
+    }
   ): Promise<PagedResponse<Webtoon[]>> {
     try {
       const response = await api.get<PagedResponse<Webtoon[]>>(`/api/public/webtoons`, {
         params: {
-          page,
-          size,
-          sortBy,
-          sortDir,
-          serializationStatus: SerializationStatus.COMPLETED,
-          genres,
-          platform,
+          page: options.page,
+          size: options.size || PAGE_SIZE,
+          sortBy: options.sortBy || 'title',
+          sortDir: options.sortDir || 'asc',
+          genres: options.genres,
+          authors: options.authors,
+          platform: options.platform,
+          week: options.week,
+          serializationStatus: options.serializationStatus,
+          ageRating: options.ageRating,
         },
       });
 
@@ -82,7 +91,7 @@ class WebtoonService {
         data: data || [],
         total: totalElements || 0, 
         page: currentPage || 0,
-        size: pageSize || size,
+        size: pageSize || PAGE_SIZE,
         last: last || false,
       };
     } catch (error) {
@@ -112,9 +121,8 @@ class WebtoonService {
         },
       });
 
-      // 응답 데이터 구조 검증
       const { data, totalElements, page: currentPage, size: pageSize, last } = response.data || {};
-      
+
       return {
         success: true,
         data: data || [],

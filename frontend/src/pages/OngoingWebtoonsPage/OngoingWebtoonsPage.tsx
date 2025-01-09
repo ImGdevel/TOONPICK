@@ -1,101 +1,96 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Webtoon } from '@models/webtoon';
+import React, { useState, useEffect, useRef } from 'react';
 import WebtoonService from '@services/webtoonService';
+import WebtoonGrid from '@components/WebtoonGrid';
 import styles from './OngoingWebtoonsPage.module.css';
-import WebtoonGrid from '@/components/WebtoonGrid';
-
-
-// 상태 타입 정의
-interface WebtoonsPageState {
-  webtoons: Webtoon[];
-  currentPage: number;
-  totalPages: number;
-  isLoading: boolean;
-  error: string | null;
-}
+import { Webtoon } from '@models/webtoon';
+import { SerializationStatus } from '@/models/enum';
 
 const OngoingWebtoonsPage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [state, setState] = useState<WebtoonsPageState>({
-    webtoons: [],
-    currentPage: 1,
-    totalPages: 1,
-    isLoading: true,
-    error: null,
-  });
+  const [webtoons, setWebtoons] = useState<Webtoon[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isLastPage, setIsLastPage] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastWebtoonRef = useRef<HTMLDivElement | null>(null);
 
   const fetchOngoingWebtoons = async (page: number) => {
+    setIsLoading(true);
     try {
-      const response = await WebtoonService.getWebtoons(page);
-      if (response.success) {
-        setState((prev) => ({
-          ...prev,
-          webtoons: [...prev.webtoons, ...(response.data || [])],
-          currentPage: page,
-          totalPages: Math.ceil((response.total || 0) / 20),
-          isLoading: false,
-          error: null,
-        }));
-      } else {
-        setState((prev) => ({
-          ...prev,
-          isLoading: false,
-          error: response.message || 'Failed to load webtoons.',
-        }));
-      }
+      const response = await WebtoonService.getWebtoons({
+        page,
+        serializationStatus: SerializationStatus.ONGOING,
+      });
+      const { data, last } = response;
+
+      setWebtoons((prev) => [...prev, ...(data || [])]);
+      setIsLastPage(last || false);
     } catch (error) {
-      setState((prev) => ({
-        ...prev,
-        isLoading: false,
-        error: 'Failed to load ongoing webtoons.',
-      }));
+      setError('진행 중인 웹툰을 불러오는데 실패했습니다.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // 초기 데이터 로드
   useEffect(() => {
-    const page = Number(searchParams.get('page')) || 1;
-    setState((prev) => ({
-      ...prev,
-      webtoons: [], // 페이지 변경 시 기존 데이터를 초기화
-      isLoading: true,
-    }));
-    fetchOngoingWebtoons(page);
-  }, [searchParams]);
+    fetchOngoingWebtoons(0);
+  }, []);
 
-  const handleScroll = useCallback(() => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop !==
-        document.documentElement.offsetHeight ||
-      state.isLoading
-    )
-      return;
-
-    const nextPage = state.currentPage + 1;
-    if (nextPage <= state.totalPages) {
-      setSearchParams({ page: nextPage.toString() });
-    }
-  }, [state, setSearchParams]);
-
+  // IntersectionObserver 설정
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !isLoading && !isLastPage) {
+          setCurrentPage((prev) => prev + 1);
+        }
+      });
     };
-  }, [handleScroll]);
 
-  if (state.error) return <div>{state.error}</div>;
+    if (!observer.current) {
+      observer.current = new IntersectionObserver(observerCallback);
+    }
+
+    const currentRef = lastWebtoonRef.current;
+    if (currentRef) {
+      observer.current.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.current?.unobserve(currentRef);
+      }
+    };
+  }, [isLoading, isLastPage]);
+
+  // 새로운 페이지 로드
+  useEffect(() => {
+    if (currentPage > 0 && !isLastPage) {
+      fetchOngoingWebtoons(currentPage);
+    }
+  }, [currentPage, isLastPage]);
 
   return (
     <div className={styles.ongoingWebtoonsPage}>
-      <h1>연재 중인 웹툰</h1>
-      {state.isLoading ? (
-        <p>로딩 중...</p>
+      <h1>진행 중인 웹툰</h1>
+
+      {error ? (
+        <div className={styles.error}>
+          <p>{error}</p>
+          <button onClick={() => fetchOngoingWebtoons(currentPage)}>재시도</button>
+        </div>
       ) : (
-        <WebtoonGrid webtoons={state.webtoons} />
+        <>
+          <WebtoonGrid
+            webtoons={webtoons}
+            lastWebtoonRef={lastWebtoonRef}
+          />
+          {isLoading && <div className={styles.spinner}></div>}
+          {isLastPage && <p className={styles.endMessage}>모든 웹툰을 불러왔습니다.</p>}
+        </>
       )}
     </div>
   );
 };
 
-export default OngoingWebtoonsPage;
+export default OngoingWebtoonsPage; 

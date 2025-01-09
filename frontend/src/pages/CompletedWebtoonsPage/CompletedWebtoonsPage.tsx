@@ -3,6 +3,7 @@ import WebtoonService from '@services/webtoonService';
 import WebtoonGrid from '@components/WebtoonGrid';
 import styles from './CompletedWebtoonsPage.module.css';
 import { Webtoon } from '@models/webtoon';
+import { SerializationStatus } from '@/models/enum';
 
 const CompletedWebtoonsPage: React.FC = () => {
   const [webtoons, setWebtoons] = useState<Webtoon[]>([]);
@@ -14,10 +15,12 @@ const CompletedWebtoonsPage: React.FC = () => {
   const lastWebtoonRef = useRef<HTMLDivElement | null>(null);
 
   const fetchCompletedWebtoons = async (page: number) => {
-    const size = 30;
     setIsLoading(true);
     try {
-      const response = await WebtoonService.getCompletedWebtoons(page, size);
+      const response = await WebtoonService.getWebtoons({
+        page,
+        serializationStatus: SerializationStatus.COMPLETED,
+      });
       const { data, last } = response;
 
       setWebtoons((prev) => [...prev, ...(data || [])]);
@@ -82,7 +85,7 @@ const CompletedWebtoonsPage: React.FC = () => {
             webtoons={webtoons}
             lastWebtoonRef={lastWebtoonRef}
           />
-          {isLoading && <div className={styles.spinner}>로딩중...</div>}
+          {isLoading && <div className={styles.spinner}></div>}
           {isLastPage && <p className={styles.endMessage}>모든 웹툰을 불러왔습니다.</p>}
         </>
       )}

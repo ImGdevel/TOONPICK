@@ -97,8 +97,6 @@ public class WebtoonService {
                 .map(webtoonMapper::webtoonToWebtoonDto)
                 .collect(Collectors.toList());
 
-        logger.info("webtoon request size = {}, page = {}", webtoonPage.getSize(), webtoonPage.getNumber());
-
         return PagedResponseDTO.<WebtoonDTO>builder()
                 .data(webtoonDTOs)
                 .page(webtoonPage.getNumber())
