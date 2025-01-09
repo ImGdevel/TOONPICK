@@ -32,16 +32,6 @@ class WebtoonService {
     return this.instance;
   }
 
-  // 웹툰 목록 조회
-  public async getWebtoons(page: number): Promise<PagedResponse<Webtoon[]>> {
-    try {
-      const response = await api.get<Webtoon[]>(`/api/public/webtoons`, { params: { page, size: PAGE_SIZE } });
-      return { success: true, data: response.data };
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
-
   // 요일별 웹툰 목록 조회
   public async getWebtoonsByDayOfWeek(week: DayOfWeek): Promise<PagedResponse<Webtoon[]>> {
     try {
@@ -57,6 +47,44 @@ class WebtoonService {
     try {
       const response = await api.get<Webtoon>(`/api/public/webtoons/${id}`);
       return { success: true, data: response.data };
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  // 완결 웹툰 목록 조회
+  public async getWebtoons(
+    page: number,
+    size: number = PAGE_SIZE,
+    sortBy: string = 'title',
+    sortDir: 'asc' | 'desc' = 'asc',
+    genres?: string[],
+    platform?: Platform
+  ): Promise<PagedResponse<Webtoon[]>> {
+    try {
+      const response = await api.get<PagedResponse<Webtoon[]>>(`/api/public/webtoons`, {
+        params: {
+          page,
+          size,
+          sortBy,
+          sortDir,
+          serializationStatus: SerializationStatus.COMPLETED,
+          genres,
+          platform,
+        },
+      });
+
+      // 응답 데이터 구조 검증
+      const { data, totalElements, page: currentPage, size: pageSize, last } = response.data || {};
+      
+      return {
+        success: true,
+        data: data || [],
+        total: totalElements || 0, 
+        page: currentPage || 0,
+        size: pageSize || size,
+        last: last || false,
+      };
     } catch (error) {
       return this.handleError(error);
     }
@@ -99,6 +127,9 @@ class WebtoonService {
       return this.handleError(error);
     }
   }
+
+
+
 
   // 필터 기반 웹툰 조회
   public async filterWebtoons(options: {
