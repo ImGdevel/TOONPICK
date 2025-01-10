@@ -1,6 +1,5 @@
-import axios, { AxiosHeaders, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosHeaders, AxiosResponse } from 'axios';
 import TokenManager from '@/services/TokenManager';
-import TokenExpirationHandler from '@/services/TokenExpirationHandler';
 
 // Axios 인스턴스 생성
 const api = axios.create({
@@ -34,21 +33,17 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error) => {
-    const originalRequest = error.config;
 
-    if (error.response?.status === 401) {
-      const errorMessage: string = error.response.data.error;
+    if(error.response){
+      const status = error.response.status;
+      const message = error.response.data || 'Unknown error';
 
-      if (errorMessage === 'access token expired') {
-        return TokenExpirationHandler(originalRequest);
-      } else if (errorMessage === 'Refresh token expired') {
-        TokenManager.clearAccessToken();
-        window.location.href = '/login';
-        return Promise.reject(new Error('리프레시 토큰이 만료되었습니다. 다시 로그인하세요.'));
-      } else if (errorMessage === 'invalid access token') {
-        TokenManager.clearAccessToken();
-        window.location.href = '/login';
-        return Promise.reject(new Error('잘못된 토큰입니다.'));
+      console.log(error.response, "message : ", message);
+
+      if (status === 401) {
+        console.error('잘못된 요청:', message);
+      } else if (status >= 500) {
+        console.error('서버 오류:', message);
       }
     }
 
