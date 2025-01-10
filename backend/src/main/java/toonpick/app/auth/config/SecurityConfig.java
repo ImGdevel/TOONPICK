@@ -16,13 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import toonpick.app.auth.filter.CustomLogoutFilter;
-import toonpick.app.auth.filter.JwtAuthorizationFilter;
-import toonpick.app.auth.filter.LoginAuthenticationFilter;
-import toonpick.app.auth.handler.LoginFailureHandler;
-import toonpick.app.auth.handler.LoginSuccessHandler;
-import toonpick.app.auth.handler.LogoutHandler;
-import toonpick.app.auth.handler.OAuth2SuccessHandler;
+import toonpick.app.auth.handler.*;
+import toonpick.app.auth.filter.*;
 import toonpick.app.auth.jwt.JwtTokenValidator;
 import toonpick.app.auth.service.OAuth2UserService;
 import toonpick.app.common.utils.ErrorResponseSender;
@@ -62,18 +57,13 @@ public class SecurityConfig {
             .httpBasic(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .oauth2Login(oauth2 -> oauth2
-                .loginPage("/login")
                 .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
                 .successHandler(oAuth2SuccessHandler)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/join", "/reissue", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers("/oauth2/**").permitAll()
-                .requestMatchers("/api/secure/**").authenticated()
+                .requestMatchers("/", "/login", "/join", "/reissue", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
                 .requestMatchers("/hello").hasRole("USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
-                .anyRequest().denyAll()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterAt(

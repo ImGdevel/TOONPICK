@@ -20,7 +20,7 @@ public class JwtTokenValidator {
     // Access Token 추출
     public String extractAccessToken(String authorizationHeader) {
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw null;
+            return null;
         }
         return authorizationHeader.substring(7).trim();
     }
