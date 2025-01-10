@@ -1,3 +1,4 @@
+// components/LoginRequiredModal.tsx
 import React from 'react';
 import styles from './LoginRequiredModal.module.css';
 
