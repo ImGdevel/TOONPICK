@@ -16,14 +16,13 @@ import OngoingWebtoonsPage from '@pages/OngoingWebtoonsPage';
 import CompletedWebtoonsPage from '@pages/CompletedWebtoonsPage';
 import ErrorPage from '@pages/ErrorPage/ErrorPage';
 
-
 const App: React.FC = () => {
   return (
     <AuthProvider>
       <ModalProvider>
       <Router>
         <Header />
-        <main>
+        <main style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '20px' }}>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/webtoon/new" element={<NewWebtoonsPage />} />
