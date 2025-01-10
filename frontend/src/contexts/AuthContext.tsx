@@ -5,39 +5,52 @@ interface AuthContextType {
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
-}
-
-interface AuthProviderProps {
-  children: ReactNode;
+  showLoginModal: () => void;
+  hideLoginModal: () => void;
+  isLoginModalVisible: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
   login: () => {},
   logout: () => {},
+  showLoginModal: () => {},
+  hideLoginModal: () => {},
+  isLoginModalVisible: false,
 });
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(AuthService.isLoggedIn());
+  const [isLoginModalVisible, setIsLoginModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
+    
     setIsLoggedIn(AuthService.isLoggedIn());
+    console.log(isLoginModalVisible);
+    console.log(AuthService.isLoggedIn());
   }, []);
 
-  const login = (): void => {
-    setIsLoggedIn(true);
-  };
-
+  const login = (): void => setIsLoggedIn(true);
   const logout = (): void => {
-    console.log("do logout");
     AuthService.logout();
-    console.log("logout");
     setIsLoggedIn(false);
   };
 
+  useEffect(() => {
+    setIsLoginModalVisible(true); // 모달 강제 표시
+  }, []);
+  
+
+  const showLoginModal = (): void => setIsLoginModalVisible(true);
+  const hideLoginModal = (): void => setIsLoginModalVisible(false);
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, showLoginModal, hideLoginModal, isLoginModalVisible }}>
       {children}
     </AuthContext.Provider>
   );
-}; 
+};
