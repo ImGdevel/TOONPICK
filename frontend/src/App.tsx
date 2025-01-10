@@ -1,23 +1,26 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from '@components/Header';
-import ErrorPage from '@pages/ErrorPage/ErrorPage';
-import { AuthProvider } from '@contexts/AuthContext';
 
-// Pages
-import HomePage from '@pages/HomePage/HomePage';
-import SignInPage from '@/pages/auth/SignInPage';
-import SignUpPage from '@/pages/auth/SignUpPage';
-import WebtoonDetailPage from '@pages/WebtoonDetailPage/WebtoonDetailPage';
+import { AuthProvider } from '@contexts/AuthContext';
+import { ModalProvider } from '@contexts/ModalContext';
+
+import HomePage from '@pages/HomePage';
+import SignInPage from '@pages/auth/SignInPage';
+import SignUpPage from '@pages/auth/SignUpPage';
+import WebtoonDetailPage from '@pages/WebtoonDetailPage';
 import MyPage from '@pages/MyPage';
-import SocialLoginCallbackPage from '@/pages/auth/SocialLoginCallbackPage/SocialLoginCallbackPage';
-import NewWebtoonsPage from '@/pages/NewWebtoonsPage/NewWebtoonsPage';
-import OngoingWebtoonsPage from '@/pages/OngoingWebtoonsPage/OngoingWebtoonsPage';
-import CompletedWebtoonsPage from '@/pages/CompletedWebtoonsPage/CompletedWebtoonsPage';
+import SocialLoginCallbackPage from '@pages/auth/SocialLoginCallbackPage';
+import NewWebtoonsPage from '@pages/NewWebtoonsPage';
+import OngoingWebtoonsPage from '@pages/OngoingWebtoonsPage';
+import CompletedWebtoonsPage from '@pages/CompletedWebtoonsPage';
+import ErrorPage from '@pages/ErrorPage/ErrorPage';
+
 
 const App: React.FC = () => {
   return (
     <AuthProvider>
+      <ModalProvider>
       <Router>
         <Header />
         <main>
@@ -36,6 +39,7 @@ const App: React.FC = () => {
           </Routes>
         </main>
       </Router>
+      </ModalProvider>
     </AuthProvider>
   );
 };
