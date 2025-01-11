@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthService from '@services/AuthService';
-import { SignUpFormData } from '@/models/auth-page';
+import { AuthContext } from '@/contexts/AuthContext';
 import styles from './SignUpPage.module.css';
+
+export interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+export interface SignUpFormData extends LoginFormData {
+  username: string;
+  confirmPassword: string;
+  agreeToTerms: boolean;
+}
 
 const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthContext);
   const [formData, setFormData] = useState<SignUpFormData>({
     email: '',
     password: '',
@@ -14,6 +26,12 @@ const SignUpPage: React.FC = () => {
     agreeToTerms: false
   });
   const [error, setError] = useState<string>('');
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/');
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
