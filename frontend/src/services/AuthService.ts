@@ -1,5 +1,5 @@
+import { api } from '@api';
 import TokenManager from '@services/TokenManager';
-import api from '@services/ApiService';
 import TokenRefresher from '@services/TokenRefresher';
 
 

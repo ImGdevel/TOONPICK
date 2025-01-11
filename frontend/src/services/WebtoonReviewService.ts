@@ -1,21 +1,7 @@
-import api from '@services/ApiService';
+import { api, Response, PagedResponse } from '@api';
 import { Review, ReviewRequest } from '@models/review';
 
-export interface ReviewResponse<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
-} 
-
-export interface PagedResponse<T> {
-  content: T[]; 
-  page: number; 
-  size: number; 
-  totalElements: number; 
-  totalPages: number;
-  last: boolean;
-}
-
+const PAGE_SIZE = 10;
 
 class WebtoonReviewService {
   private static instance: WebtoonReviewService;
@@ -33,7 +19,7 @@ class WebtoonReviewService {
   public async createWebtoonReview(
     webtoonId: number, 
     reviewCreateDTO: ReviewRequest
-  ): Promise<ReviewResponse<Review>> {
+  ): Promise<Response<Review>> {
     try {
       const response = await api.post<Review>(
         `/api/secure/reviews/${webtoonId}`, 
@@ -49,7 +35,7 @@ class WebtoonReviewService {
   // 특정 리뷰 가져오기
   public async getWebtoonReviewById(
     reviewId: number
-  ): Promise<ReviewResponse<Review>> {
+  ): Promise<Response<Review>> {
     try {
       const response = await api.get<Review>(`/api/public/reviews/${reviewId}`);
       return { success: true, data: response.data };
@@ -63,7 +49,7 @@ class WebtoonReviewService {
   public async updateWebtoonReview(
     reviewId: number, 
     reviewCreateDTO: ReviewRequest
-  ): Promise<ReviewResponse<Review>> {
+  ): Promise<Response<Review>> {
     try {
       const response = await api.put<Review>(
         `/api/secure/reviews/${reviewId}`, 
@@ -79,7 +65,7 @@ class WebtoonReviewService {
   // 리뷰 삭제
   public async deleteWebtoonReview(
     reviewId: number
-  ): Promise<ReviewResponse<void>> {
+  ): Promise<Response<void>> {
     try {
       await api.delete(`/api/secure/reviews/${reviewId}`);
       return { success: true };
@@ -92,7 +78,7 @@ class WebtoonReviewService {
   // 좋아요 토글
   public async toggleLikeForReview(
     reviewId: number
-  ): Promise<ReviewResponse<void>> {
+  ): Promise<Response<void>> {
     try {
       await api.post(`/api/secure/reviews/${reviewId}/like`);
       return { success: true };
@@ -103,7 +89,7 @@ class WebtoonReviewService {
   }
 
   // 사용자가 특정 웹툰에 작성한 리뷰 조회
-  public async getUserReviewForWebtoon(webtoonId: number): Promise<ReviewResponse<Review>> {
+  public async getUserReviewForWebtoon(webtoonId: number): Promise<Response<Review>> {
     try {
       const response = await api.get<Review>(`/api/secure/reviews/${webtoonId}/user`);
       return { success: true, data: response.data };
@@ -119,13 +105,22 @@ class WebtoonReviewService {
     sortBy: string = 'latest', 
     page: number = 0, 
     size: number = 20
-  ): Promise<ReviewResponse<Review[]>> {
+  ): Promise<PagedResponse<Review[]>> {
     try {
-      const response = await api.get<PagedResponse<Review>>(
+      const response = await api.get<PagedResponse<Review[]>>(
         `/api/public/reviews/webtoon/${webtoonId}?sortBy=${sortBy}&page=${page}&size=${size}`
       );
-
-      return { success: true, data: response.data.content || [] };
+      // 응답 데이터 구조 검증
+      const { data, totalElements, page: currentPage, size: pageSize, last } = response.data || {};
+      
+      return {
+        success: true,
+        data: data || [],
+        total: totalElements || 0, 
+        page: currentPage || 0,
+        size: pageSize || PAGE_SIZE,
+        last: last || false,
+      };
     } catch (error) {
       console.error('웹툰 리뷰 목록 가져오기 중 오류 발생:', error);
       return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };

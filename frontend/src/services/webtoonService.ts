@@ -1,23 +1,8 @@
-import api from '@services/ApiService';
+import { api , Response, PagedResponse } from '@api';
 import { Webtoon } from '@models/webtoon';
 import { DayOfWeek, SerializationStatus, AgeRating, Platform } from '@models/enum';
 
 const PAGE_SIZE = 20;
-
-export interface Response<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
-  total?: number;
-}
-
-export interface PagedResponse<T> extends Response<T> {
-  page?: number; 
-  size?: number; 
-  totalElements?: number; 
-  totalPages?: number;
-  last?: boolean;
-}
 
 // WebtoonService 클래스
 class WebtoonService {
@@ -32,18 +17,8 @@ class WebtoonService {
     return this.instance;
   }
 
-  // 요일별 웹툰 목록 조회
-  public async getWebtoonsByDayOfWeek(week: DayOfWeek): Promise<PagedResponse<Webtoon[]>> {
-    try {
-      const response = await api.get<Webtoon[]>(`/api/public/webtoons`, { params: { week } });
-      return { success: true, data: response.data };
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
-
   // 웹툰 상세 조회
-  public async getWebtoonById(id: number): Promise<PagedResponse<Webtoon>> {
+  public async getWebtoonById(id: number): Promise<Response<Webtoon>> {
     try {
       const response = await api.get<Webtoon>(`/api/public/webtoons/${id}`);
       return { success: true, data: response.data };
@@ -159,7 +134,6 @@ class WebtoonService {
       return this.handleError(error);
     }
   }
-
 
   // 오류 처리
   private handleError(error: any): { success: false; message: string } {

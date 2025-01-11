@@ -1,12 +1,7 @@
-import api from '@services/ApiService';
+import { api, Response } from '@api';
 import { MemberProfileDTO } from '@models/memberprofile';
 import { Webtoon } from '@models/webtoon';
 
-interface UserResponse<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
-}
 
 class UserService {
   private static instance: UserService;
@@ -21,7 +16,7 @@ class UserService {
   }
 
   // 사용자 프로필 정보 가져오기
-  public async getUserProfile(): Promise<UserResponse<MemberProfileDTO>> {
+  public async getUserProfile(): Promise<Response<MemberProfileDTO>> {
     try {
       const response = await api.get<MemberProfileDTO>('/api/secure/user/profile');
       return { success: true, data: response.data };
@@ -32,7 +27,7 @@ class UserService {
   }
 
   // 관심 웹툰 추가
-  public async addFavoriteWebtoon(webtoonId: number): Promise<UserResponse> {
+  public async addFavoriteWebtoon(webtoonId: number): Promise<Response> {
     try {
       await api.post(`/api/secure/users/favorites/${webtoonId}`);
       return { success: true };
@@ -43,7 +38,7 @@ class UserService {
   }
 
   // 관심 웹툰 삭제
-  public async removeFavoriteWebtoon(webtoonId: number): Promise<UserResponse> {
+  public async removeFavoriteWebtoon(webtoonId: number): Promise<Response> {
     try {
       await api.delete(`/api/secure/users/favorites/${webtoonId}`);
       return { success: true };
@@ -54,7 +49,7 @@ class UserService {
   }
 
   // 관심 웹툰 목록 가져오기
-  public async getFavorites(): Promise<UserResponse<Webtoon[]>> {
+  public async getFavorites(): Promise<Response<Webtoon[]>> {
     try {
       const response = await api.get<Webtoon[]>(`/api/secure/users/favorites`);
       return { success: true, data: response.data };
@@ -65,7 +60,7 @@ class UserService {
   }
 
   // 웹툰이 관심 웹툰인지 확인
-  public async isFavoriteWebtoon(webtoonId: number): Promise<UserResponse<boolean>> {
+  public async isFavoriteWebtoon(webtoonId: number): Promise<Response<boolean>> {
     try {
       const response = await api.get<boolean>(`/api/secure/users/favorites/${webtoonId}/is-favorite`);
       return { success: true, data: response.data };
@@ -75,7 +70,7 @@ class UserService {
     }
   }
 
-  public async getBookmarks(): Promise<UserResponse> {
+  public async getBookmarks(): Promise<Response> {
     try {
       const response = await api.get('/api/users/bookmarks');
       return { success: true, data: response.data };
