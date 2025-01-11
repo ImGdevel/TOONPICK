@@ -2,18 +2,19 @@ package toonpick.app.webtoon.dto;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
 public class WebtoonRequestDTO {
 
     private Long id;
-    private String uniqueId;
+    private Long uniqueId;
     private String platform;
     private String title;
     private String day;
     private String status;
-    private String rating;
+    private Float rating;
     private String thumbnailUrl;
     private String story;
     private String url;
@@ -21,6 +22,9 @@ public class WebtoonRequestDTO {
     private List<AuthorRequest> authors;
     private List<String> genres;
     private int episodeCount;
+    private String firstEpisodeLink;
+    private LocalDate firstDay;
+    private LocalDate lastUpdateDay;
 
     @Data
     public static class AuthorRequest {

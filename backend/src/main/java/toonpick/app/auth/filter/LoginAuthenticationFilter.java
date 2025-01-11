@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,7 @@ import toonpick.app.auth.handler.LoginFailureHandler;
 import toonpick.app.auth.handler.LoginSuccessHandler;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -26,23 +29,27 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     private final LoginSuccessHandler successHandler;
     private final LoginFailureHandler failureHandler;
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginAuthenticationFilter.class);
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            // 요청에서 LoginRequest 추출
-            LoginRequest loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
+            String requestBody = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            LoginRequest loginRequest = objectMapper.readValue(requestBody, LoginRequest.class);
+
             String username = loginRequest.getUsername();
             String password = loginRequest.getPassword();
 
-            // 인증 토큰 생성 및 인증
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             return authenticationManager.authenticate(authenticationToken);
         } catch (Exception e) {
+            logger.error("Failed to parse authentication request body", e);
             throw new AuthenticationServiceException("Failed to parse authentication request body", e);
         }
     }
+
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {

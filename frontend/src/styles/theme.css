@@ -1,0 +1,45 @@
+:root {
+  --header-background-color: #ffffff; 
+  --header-text-color: #333333; 
+  --input-background-color: #f9f9f9; 
+  --input-text-color: #333333; 
+  --icon-color: #333333; 
+  --login-button-color: #333333; 
+  --body-background-color: #f0f2f5; 
+  --body-text-color: #333333; 
+  --form-background-color: #ffffff; 
+  --form-input-background-color: #f9f9f9; 
+  --form-input-border-color: #cccccc; 
+  --form-input-focus-border-color: #5a9de2; 
+  --submit-button-background-color: #5a9de2; 
+  --submit-button-hover-background-color: #4a90e2; 
+  --error-color: #ff6b6b; 
+  --form-text-color: #333333; 
+  --card-background-color: #ffffff;
+  --text-color: #333333;
+  --author-color: #666666;
+  --rating-color: #ffcc00;
+}
+
+[data-theme='dark'] {
+  --header-background-color: #161616; 
+  --header-text-color: white; 
+  --input-background-color: #333333; 
+  --input-text-color: white; 
+  --icon-color: white; 
+  --login-button-color: white; 
+  --body-background-color: #161616; 
+  --body-text-color: white; 
+  --form-background-color: #2d2d2d; 
+  --form-input-background-color: #333333; 
+  --form-input-border-color: #404040; 
+  --form-input-focus-border-color: #5a9de2; 
+  --submit-button-background-color: #5a9de2; 
+  --submit-button-hover-background-color: #4a90e2; 
+  --error-color: #ff6b6b; 
+  --form-text-color: #ffffff; 
+  --card-background-color: #2d2d2d;
+  --text-color: #ffffff;
+  --author-color: #b3b3b3;
+  --rating-color: #ffcc00;
+} 

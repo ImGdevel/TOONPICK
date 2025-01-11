@@ -56,6 +56,7 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             return true;
         } catch (Exception e) {
+            System.out.println("???????????????");
             return false;
         }
     }

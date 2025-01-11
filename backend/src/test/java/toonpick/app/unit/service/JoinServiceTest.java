@@ -31,25 +31,25 @@ class JoinServiceTest {
 
     @Test
     @DisplayName("정상적으로 유저 생성")
-    void testCreateMemberSuccess() {
+    void testRegisterNewMemberSuccess() {
         JoinRequest joinRequest = new JoinRequest("testUser", "test@example.com", "password");
 
         when(memberRepository.existsByUsername("testUser")).thenReturn(false);
         when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
 
-        joinService.createMember(joinRequest);
+        joinService.registerNewMember(joinRequest);
 
         verify(memberRepository, times(1)).save(any(Member.class));
     }
 
     @Test
     @DisplayName("중복된 사용자 이름으로 유저 생성 실패")
-    void testCreateMemberDuplicateUsername() {
+    void testRegisterNewMemberDuplicateUsername() {
         JoinRequest joinRequest = new JoinRequest("testUser", "test@example.com", "password");
 
         when(memberRepository.existsByUsername("testUser")).thenReturn(true);
 
-        assertThatThrownBy(() -> joinService.createMember(joinRequest))
+        assertThatThrownBy(() -> joinService.registerNewMember(joinRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Username testUser already exists.");
     }

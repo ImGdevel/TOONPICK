@@ -1,0 +1,49 @@
+.reviewCard {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 10px 0;
+  background-color: #fff;
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+}
+
+.profilePicture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.nickname {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.likeButton, .reportButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  color: #007bff;
+}
+
+.comment {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+}

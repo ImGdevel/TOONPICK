@@ -1,0 +1,120 @@
+* {
+  box-sizing: border-box;
+}
+
+.signInPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--body-background-color);
+  padding: 20px;
+}
+
+.form {
+  background-color: var(--form-background-color);
+  width: 100%;
+  max-width: 480px;
+  padding: 50px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.form:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.form h1 {
+  color: var(--header-text-color);
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.form h3 {
+  color: #b3b3b3;
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 1px solid var(--form-input-border-color);
+  border-radius: 8px;
+  background-color: var(--form-input-background-color);
+  color: var(--form-text-color);
+  transition: all 0.2s ease;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--form-input-focus-border-color);
+  box-shadow: 0 0 0 3px rgba(90, 157, 226, 0.2);
+}
+
+.formGroup input::placeholder {
+  color: #808080;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: var(--submit-button-background-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin: 24px 0;
+}
+
+.submitButton:hover {
+  background-color: var(--submit-button-hover-background-color);
+  transform: translateY(-2px);
+}
+
+.submitButton:active {
+  transform: scale(0.98);
+}
+
+.error {
+  color: var(--error-color);
+  font-size: 14px;
+  margin: 8px 0;
+  text-align: center;
+  padding: 10px;
+  background-color: rgba(255, 107, 107, 0.1);
+  border-radius: 8px;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #404040;
+}
+
+.links a {
+  color: #b3b3b3;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.links a:hover {
+  color: var(--submit-button-background-color);
+} 

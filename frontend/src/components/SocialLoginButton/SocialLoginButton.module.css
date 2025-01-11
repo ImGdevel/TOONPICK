@@ -1,0 +1,35 @@
+.socialButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin: 10px 0;
+}
+
+.socialButton:hover {
+  transform: translateY(-2px);
+}
+
+.socialButton:active {
+  transform: scale(0.98);
+}
+
+.socialButton.google {
+  background-color: #DB4437;
+}
+
+.socialButton.kakao {
+  background-color: #FEE500;
+}
+
+.socialButton.naver {
+  background-color: #03C75A;
+} 

@@ -78,7 +78,7 @@ public class WebtoonReviewServiceTest {
                 .comment("Great webtoon!")
                 .build();
 
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testMember.getUsername());
+        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testMember.getUsername());
         assertNotNull(reviewDTO);
         assertEquals("Great webtoon!", reviewDTO.getComment());
 
@@ -93,7 +93,7 @@ public class WebtoonReviewServiceTest {
                 .comment("Not bad")
                 .build();
 
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testMember.getUsername());
+        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testMember.getUsername());
 
         // 첫 번째 좋아요 클릭
         CompletableFuture<Boolean> likedFuture = webtoonReviewService.toggleLike(testMember.getUsername(), reviewDTO.getId());
@@ -113,7 +113,7 @@ public class WebtoonReviewServiceTest {
                 .comment("Pretty good!")
                 .build();
 
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testMember.getUsername());
+        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testMember.getUsername());
 
         for (int i = 0; i < 10; i++) {
             webtoonReviewService.toggleLike(testMember.getUsername(), reviewDTO.getId());
@@ -136,7 +136,7 @@ public class WebtoonReviewServiceTest {
                 .comment("Interesting!")
                 .build();
 
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testMember.getUsername());
+        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testMember.getUsername());
 
         webtoonReviewService.toggleLike(testMember.getUsername(), reviewDTO.getId());
         webtoonReviewService.toggleLike(member2.getUsername(), reviewDTO.getId());
@@ -161,7 +161,7 @@ public class WebtoonReviewServiceTest {
                 .comment("Concurrent test review")
                 .build();
 
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testWebtoon.getId(), testMember.getUsername());
+        WebtoonReviewDTO reviewDTO = webtoonReviewService.createReview(reviewCreateDTO, testMember.getUsername());
 
         Runnable likeTask = () -> webtoonReviewService.toggleLike(testMember.getUsername(), reviewDTO.getId());
         Runnable unlikeTask = () -> webtoonReviewService.toggleLike(member2.getUsername(), reviewDTO.getId());
@@ -203,7 +203,7 @@ public class WebtoonReviewServiceTest {
                 .rating(5.0f)
                 .comment("Review by X")
                 .build();
-        webtoonReviewService.createReview(reviewX, testWebtoon.getId(), memberX.getUsername());
+        webtoonReviewService.createReview(reviewX, memberX.getUsername());
         Webtoon updatedWebtoonX = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
         System.out.println("평균 평점 after X's review: " + updatedWebtoonX.getAverageRating());
 
@@ -211,7 +211,7 @@ public class WebtoonReviewServiceTest {
                 .rating(4.0f)
                 .comment("Review by Y")
                 .build();
-        webtoonReviewService.createReview(reviewY, testWebtoon.getId(), memberY.getUsername());
+        webtoonReviewService.createReview(reviewY, memberY.getUsername());
         Webtoon updatedWebtoonY = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
         System.out.println("평균 평점 after Y's review: " + updatedWebtoonY.getAverageRating());
 
@@ -219,7 +219,7 @@ public class WebtoonReviewServiceTest {
                 .rating(1.0f)
                 .comment("Review by Z")
                 .build();
-        webtoonReviewService.createReview(reviewZ, testWebtoon.getId(), memberZ.getUsername());
+        webtoonReviewService.createReview(reviewZ, memberZ.getUsername());
         Webtoon updatedWebtoonZ = webtoonRepository.findById(testWebtoon.getId()).orElseThrow();
         System.out.println("평균 평점 after Z's review: " + updatedWebtoonZ.getAverageRating());
 

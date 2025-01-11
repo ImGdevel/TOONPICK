@@ -34,6 +34,11 @@ public class MemberFavoriteWebtoonService {
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
 
+        // 중복 확인
+        if (favoriteRepository.findByMemberAndWebtoon(member, webtoon).isPresent()) {
+            throw new IllegalArgumentException("This webtoon is already added to favorites.");
+        }
+
         MemberFavoriteWebtoon favorite = MemberFavoriteWebtoon.builder()
                 .member(member)
                 .webtoon(webtoon)
@@ -43,12 +48,16 @@ public class MemberFavoriteWebtoonService {
         favoriteRepository.save(favorite);
     }
 
+
     @Transactional
     public void removeFavoriteWebtoon(String username, Long webtoonId) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
-        MemberFavoriteWebtoon favorite = favoriteRepository.findByMemberIdAndWebtoonId(member.getId(), webtoonId)
+        Webtoon webtoon = webtoonRepository.findById(webtoonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
+        MemberFavoriteWebtoon favorite = favoriteRepository.findByMemberAndWebtoon(member, webtoon)
                 .orElseThrow(() -> new ResourceNotFoundException("Favorite not found"));
+
         favoriteRepository.delete(favorite);
     }
 
@@ -68,8 +77,11 @@ public class MemberFavoriteWebtoonService {
     public boolean isFavoriteWebtoon(String username, Long webtoonId) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found with username: " + username));
+        Webtoon webtoon = webtoonRepository.findById(webtoonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
 
-        return favoriteRepository.findByMemberIdAndWebtoonId(member.getId(), webtoonId).isPresent();
+        return favoriteRepository.findByMemberAndWebtoon(member, webtoon).isPresent();
     }
+
 
 }

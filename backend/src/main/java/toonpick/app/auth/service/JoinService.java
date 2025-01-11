@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.auth.dto.JoinRequest;
+import toonpick.app.auth.exception.UsernameAlreadyExistsException;
 import toonpick.app.member.entity.Member;
 import toonpick.app.member.repository.MemberRepository;
 
@@ -16,23 +17,24 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class JoinService {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(JoinService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JoinService.class);
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-
     @Transactional
-    public void createMember(JoinRequest joinRequest) {
-        if (memberRepository.existsByUsername(joinRequest.getUsername())) {
-            String errorMessage = "Username " + joinRequest.getUsername() + " already exists.";
-            LOGGER.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
+    public Member registerNewMember(JoinRequest joinRequest) {
+        String username = joinRequest.getEmail();
+
+        if (memberRepository.existsByUsername(username)) {
+            throw new UsernameAlreadyExistsException("Username already exists : " + username);
         }
 
+        String nickname = generateUniqueNickname();
+
         Member member = Member.builder()
-                .username(joinRequest.getUsername())
-                .nickname(generateRandomNickname())
+                .username(username)
+                .nickname(nickname)
                 .password(bCryptPasswordEncoder.encode(joinRequest.getPassword()))
                 .email(joinRequest.getEmail())
                 .role("ROLE_USER")
@@ -40,17 +42,22 @@ public class JoinService {
                 .profilePicture("default_profile_img.png")
                 .build();
 
-        memberRepository.save(member);
-
-        LOGGER.info("Member {} created successfully.", joinRequest.getUsername());
+        Member savedMember = memberRepository.save(member);
+        LOGGER.info("Member {} created successfully.", username);
+        return savedMember;
     }
 
-    private String generateRandomNickname() {
+    private String generateUniqueNickname() {
         String[] words = {"Moon", "Star", "Sky", "Blue", "Red", "Cloud", "Ocean", "Fire", "Leaf", "Snow"};
         Random rand = new Random();
-        String firstPart = words[rand.nextInt(words.length)];
-        String secondPart = words[rand.nextInt(words.length)];
-        return firstPart + secondPart;
+        String nickname;
+        do {
+            String firstPart = words[rand.nextInt(words.length)];
+            String secondPart = words[rand.nextInt(words.length)];
+            int randomNumber = rand.nextInt(9000) + 1000;
+            nickname = firstPart + secondPart + randomNumber;
+        } while (memberRepository.existsByNickname(nickname));
+        return nickname;
     }
 
 }

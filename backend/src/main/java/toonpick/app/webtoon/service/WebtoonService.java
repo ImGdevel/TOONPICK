@@ -1,30 +1,33 @@
 package toonpick.app.webtoon.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import toonpick.app.auth.controller.TokenReissueController;
 import toonpick.app.webtoon.dto.AuthorDTO;
 import toonpick.app.webtoon.dto.GenreDTO;
+import toonpick.app.webtoon.dto.PagedResponseDTO;
 import toonpick.app.webtoon.dto.WebtoonDTO;
 import toonpick.app.webtoon.dto.WebtoonFilterDTO;
 import toonpick.app.webtoon.dto.WebtoonUpdateRequestDTO;
 import toonpick.app.webtoon.entity.Author;
 import toonpick.app.webtoon.entity.Genre;
 import toonpick.app.webtoon.entity.Webtoon;
-import toonpick.app.webtoon.entity.enums.SerializationStatus;
 import toonpick.app.common.exception.ResourceNotFoundException;
 import toonpick.app.webtoon.mapper.WebtoonMapper;
 import toonpick.app.webtoon.repository.AuthorRepository;
 import toonpick.app.webtoon.repository.GenreRepository;
 import toonpick.app.webtoon.repository.WebtoonRepository;
 
-import java.time.DayOfWeek;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,9 +40,16 @@ public class WebtoonService {
     private final GenreRepository genreRepository;
     private final WebtoonMapper webtoonMapper;
 
+    private static final Logger logger = LoggerFactory.getLogger(WebtoonService.class);
+
     // 웹툰 추가
     @Transactional
     public WebtoonDTO createWebtoon(WebtoonDTO webtoonDTO) {
+        Optional<Webtoon> existingWebtoon = webtoonRepository.findByPlatformId(webtoonDTO.getPlatformId());
+        if (existingWebtoon.isPresent()) {
+            return null;
+        }
+
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(
                 webtoonDTO.getAuthors().stream().map(AuthorDTO::getId).collect(Collectors.toSet())));
 
@@ -65,6 +75,36 @@ public class WebtoonService {
 
         webtoon = webtoonRepository.save(webtoon);
         return webtoonMapper.webtoonToWebtoonDto(webtoon);
+    }
+
+    // Id 기반으로 웹툰 가져오기
+    @Transactional(readOnly = true)
+    public WebtoonDTO getWebtoonById(Long id) {
+        Webtoon webtoon = webtoonRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
+        return webtoonMapper.webtoonToWebtoonDto(webtoon);
+    }
+
+    // 필터 옵션에 따라 웹툰 가져오기
+    @Transactional(readOnly = true)
+    public PagedResponseDTO<WebtoonDTO> getWebtoonsOptions(
+            WebtoonFilterDTO filter, int page, int size, String sortBy, String sortDir) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortBy);
+        Page<Webtoon> webtoonPage = webtoonRepository.findWebtoonsByFilterOptions(filter, pageable);
+
+        List<WebtoonDTO> webtoonDTOs = webtoonPage.getContent().stream()
+                .map(webtoonMapper::webtoonToWebtoonDto)
+                .collect(Collectors.toList());
+
+        return PagedResponseDTO.<WebtoonDTO>builder()
+                .data(webtoonDTOs)
+                .page(webtoonPage.getNumber())
+                .size(webtoonPage.getSize())
+                .totalElements(webtoonPage.getTotalElements())
+                .totalPages(webtoonPage.getTotalPages())
+                .last(webtoonPage.isLast())
+                .build();
     }
 
     // 웹툰 정보 업데이트
@@ -129,100 +169,12 @@ public class WebtoonService {
         webtoonRepository.save(webtoon);
     }
 
-    // 특정 웹툰 가져오기
-    @Transactional(readOnly = true)
-    public WebtoonDTO getWebtoon(Long id) {
-        Webtoon webtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
-        return webtoonMapper.webtoonToWebtoonDto(webtoon);
-    }
-
-    // 모든 웹툰 가져오기 (안씀)
-    @Transactional(readOnly = true)
-    public List<WebtoonDTO> getAllWebtoons() {
-        List<Webtoon> webtoons = webtoonRepository.findAll();
-        return webtoons.stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
-                .collect(Collectors.toList());
-    }
-
-    // 특정 작가의 웹툰 가져오기
-    @Transactional(readOnly = true)
-    public List<WebtoonDTO> getWebtoonsByAuthorName(String authorName) {
-        List<Webtoon> webtoons = webtoonRepository.findByAuthors_Name(authorName);
-        return webtoons.stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
-                .collect(Collectors.toList());
-    }
-
-    //장르에 따라 웹툰 가져오기
-    @Transactional(readOnly = true)
-    public List<WebtoonDTO> getWebtoonsByGenreName(String genreName) {
-        List<Webtoon> webtoons = webtoonRepository.findByGenres_Name(genreName);
-        return webtoons.stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
-                .collect(Collectors.toList());
-    }
-
-
-    // 요일에 맞춘 웹툰 가져오기
-    @Transactional(readOnly = true)
-    public List<WebtoonDTO> getSeriesOfWebtoonsByDayOfWeek(DayOfWeek dayOfWeek) {
-        List<SerializationStatus> statuses = List.of(
-                SerializationStatus.ONGOING,
-               SerializationStatus.PAUSED
-        );
-
-        List<Webtoon> webtoons = webtoonRepository.findWebtoonsByFilter(
-                WebtoonFilterDTO.builder()
-                        .week(dayOfWeek)
-                        .serializationStatus(SerializationStatus.ONGOING)
-                        .build()
-        ).stream()
-                .filter(w -> statuses.contains(w.getSerializationStatus()))
-                .collect(Collectors.toList());
-
-        return webtoons.stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
-                .collect(Collectors.toList());
-    }
-
     // 웹툰 삭제
     @Transactional
     public void deleteWebtoon(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
         webtoonRepository.delete(webtoon);
-    }
-
-    // 연재 상황에 따른 웹툰 가져오기
-    @Transactional(readOnly = true)
-    public List<WebtoonDTO> getWebtoonsBySerializationStatus(SerializationStatus status, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "title"));
-        Page<Webtoon> webtoonPage = webtoonRepository.findBySerializationStatus(status, pageable);
-
-        return webtoonPage.stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
-                .collect(Collectors.toList());
-    }
-
-    // WebtoonFilterDTO에 맞춘 웹툰 가져오기
-    @Transactional(readOnly = true)
-    public List<WebtoonDTO> filterWebtoons(WebtoonFilterDTO filter) {
-        List<Webtoon> webtoons = webtoonRepository.findWebtoonsByFilter(filter);
-        return webtoons.stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
-                .collect(Collectors.toList());
-    }
-
-    // 필터 옵션에 따라 웹툰 가져오기
-    @Transactional(readOnly = true)
-    public List<WebtoonDTO> filterWebtoonsOptions(WebtoonFilterDTO filter, int page, int size, String sortBy, String sortDir) {
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortBy);
-        Page<Webtoon> webtoonPage = webtoonRepository.findWebtoonsByFilterOptions(filter, pageable);
-        return webtoonPage.stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
-                .collect(Collectors.toList());
     }
 
 }
