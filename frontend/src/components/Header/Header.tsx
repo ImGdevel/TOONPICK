@@ -18,7 +18,7 @@ const Header: React.FC = () => {
 
   const handleLogout = async (): Promise<void> => {
     logout();
-    navigate('/');
+    navigate('/login');
   };
 
   const toggleSearchInput = (event: React.MouseEvent): void => {
@@ -31,7 +31,6 @@ const Header: React.FC = () => {
     const theme = isDarkTheme ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
     
-    // 테마 CSS 파일 로드
     const linkElement = document.createElement('link');
     linkElement.rel = 'stylesheet';
     linkElement.href = '/styles/theme.css';

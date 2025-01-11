@@ -6,6 +6,7 @@ import { ReviewRequest } from '@models/review';
 import StarRating from '@components/StarRating';
 import BookmarkButton from '@components/BookMarkButton/BookmarkButton';
 import { AuthContext } from '@contexts/AuthContext';
+import { useModal } from '@/contexts/ModalContext';
 
 interface UserInteractionSectionProps {
   webtoonId: number;
@@ -16,6 +17,7 @@ const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoon
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>('');
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const { showLoginRequiredModal } = useModal();
 
   useEffect(() => {
     const checkIfBookmarked = async () => {
@@ -30,6 +32,14 @@ const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoon
   }, [webtoonId, isLoggedIn]);
 
   const handleSubmitReview = async () => {
+
+    console.log('handleSubmitReview');
+    if (!isLoggedIn) {
+      showLoginRequiredModal();
+      console.warn('로그인 후 리뷰를 작성할 수 있습니다.');
+      return;
+    }
+
     const reviewRequest: ReviewRequest = { webtoonId, rating, comment };
     const response = await WebtoonReviewService.createWebtoonReview(webtoonId, reviewRequest);
     if (response.success) {
@@ -41,7 +51,9 @@ const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoon
   };
 
   const toggleBookmark = async () => {
+    console.log('toggleBookmark');
     if (!isLoggedIn) {
+      showLoginRequiredModal();
       console.warn('로그인 후 북마크를 추가할 수 있습니다.');
       return;
     }
