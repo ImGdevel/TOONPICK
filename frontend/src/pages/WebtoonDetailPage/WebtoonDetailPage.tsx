@@ -4,7 +4,7 @@ import WebtoonService from '@services/webtoonService';
 import WebtoonReviewService from '@services/WebtoonReviewService';
 import WebtoonDetailsSection from '@pages/WebtoonDetailPage/WebtoonDetailsSection';
 import WebtoonRatingSection from '@pages/WebtoonDetailPage/WebtoonRatingSection';
-import UserInteractionSection from '@pages/WebtoonDetailPage/UserInteractionSection';
+import UserInteractionSection from '@/pages/WebtoonDetailPage/MemberInteractionSection';
 import styles from './WebtoonDetailPage.module.css';
 import { Webtoon } from '@models/webtoon';
 import { Review } from '@models/review';

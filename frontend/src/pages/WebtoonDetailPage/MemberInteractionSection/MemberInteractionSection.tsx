@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
-import styles from './UserInteractionSection.module.css';
+import styles from './MemberInteractionSection.module.css';
 import WebtoonReviewService from '@services/WebtoonReviewService';
-import UserService from '@services/UserService';
-import { ReviewRequest } from '@models/review';
+import MemberService from '@services/MemberService';
 import StarRating from '@components/StarRating';
 import BookmarkButton from '@components/BookMarkButton/BookmarkButton';
+import { ReviewRequest } from '@models/review';
 import { AuthContext } from '@contexts/AuthContext';
-import { useModal } from '@/contexts/ModalContext';
+import { useModal } from '@contexts/ModalContext';
 
-interface UserInteractionSectionProps {
+interface MemberInteractionSectionProps {
   webtoonId: number;
 }
 
-const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoonId }) => {
+const MemberInteractionSection: React.FC<MemberInteractionSectionProps> = ({ webtoonId }) => {
   const { isLoggedIn } = useContext(AuthContext);
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>('');
@@ -22,7 +22,7 @@ const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoon
   useEffect(() => {
     const checkIfBookmarked = async () => {
       if (!isLoggedIn) return;
-      const response = await UserService.isFavoriteWebtoon(webtoonId);
+      const response = await MemberService.isFavoriteWebtoon(webtoonId);
       if (response.success) {
         setIsBookmarked(response.data ?? false);
       }
@@ -59,8 +59,8 @@ const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoon
     }
 
     const response = isBookmarked
-      ? await UserService.removeFavoriteWebtoon(webtoonId)
-      : await UserService.addFavoriteWebtoon(webtoonId);
+      ? await MemberService.removeFavoriteWebtoon(webtoonId)
+      : await MemberService.addFavoriteWebtoon(webtoonId);
 
     if (response.success) {
       setIsBookmarked(prev => !prev);
@@ -95,4 +95,4 @@ const UserInteractionSection: React.FC<UserInteractionSectionProps> = ({ webtoon
   );
 };
 
-export default UserInteractionSection; 
+export default MemberInteractionSection; 
