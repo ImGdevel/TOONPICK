@@ -1,19 +1,19 @@
 import React from 'react';
 import { Webtoon } from '@models/webtoon';
-import WebtoonItem from '@components/WebtoonCard';
+import WebtoonCard from '@components/WebtoonCard';
 import styles from './WebtoonList.module.css';
 
 interface WebtoonListProps {
   webtoons: Webtoon[];
   title?: string;
-  showPublisher?: boolean;
+  showTags?: boolean;
   emptyMessage?: string;
 }
 
 const WebtoonList: React.FC<WebtoonListProps> = ({
   webtoons,
   title,
-  showPublisher = true,
+  showTags = true,
   emptyMessage = "웹툰이 없습니다."
 }) => {
   return (
@@ -22,10 +22,10 @@ const WebtoonList: React.FC<WebtoonListProps> = ({
       {webtoons.length > 0 ? (
         <div className={styles.list}>
           {webtoons.map((webtoon) => (
-            <WebtoonItem
+            <WebtoonCard
               key={webtoon.id}
               webtoon={webtoon}
-              showPublisher={showPublisher}
+              showTags={showTags}
             />
           ))}
         </div>

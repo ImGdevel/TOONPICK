@@ -2,14 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Webtoon } from '@models/webtoon';
 import styles from './WebtoonCard.module.css';
+import PlatformIcon from '../PlatformIcon/PlatformIcon';
 
 interface WebtoonCardProps {
   webtoon: Webtoon;
-  showPublisher?: boolean;
+  showTags?: boolean;
 }
 
-const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showPublisher = true }) => {
-  const authors = webtoon.authors?.map(author => author.name).join(', ') || 'Unknown Author';
+const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showTags = true }) => {
+  const authors = webtoon.authors?.map(author => author.name).join(', ') || '작가 없음';
   const averageRating = webtoon.averageRating ? webtoon.averageRating.toFixed(1) : '0';
   const truncatedTitle = webtoon.title.length > 30 ? `${webtoon.title.substring(0, 30)}...` : webtoon.title;
 
@@ -18,6 +19,11 @@ const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showPublisher = true
       
       <div className={styles.thumbnailContainer}>
         <img src={webtoon.thumbnailUrl} alt={webtoon.title} className={styles.thumbnailImage} />
+        {showTags && (
+          <div className={styles.tagsContainer}>
+            <PlatformIcon platform={webtoon.platform} size="small" />
+          </div>
+        )}
       </div>
 
       <div className={styles.webtoonInfo}>
