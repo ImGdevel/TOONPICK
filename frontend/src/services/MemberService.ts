@@ -3,20 +3,20 @@ import { MemberProfile } from '@models/member';
 import { Webtoon } from '@models/webtoon';
 
 
-class UserService {
-  private static instance: UserService;
+class MemberService {
+  private static instance: MemberService;
 
   private constructor() {}
 
-  public static getInstance(): UserService {
-    if (!UserService.instance) {
-      UserService.instance = new UserService();
+  public static getInstance(): MemberService {
+    if (!MemberService.instance) {
+      MemberService.instance = new MemberService();
     }
-    return UserService.instance;
+    return MemberService.instance;
   }
 
   // 사용자 프로필 정보 가져오기
-  public async getUserProfile(): Promise<Response<MemberProfile>> {
+  public async getMemberProfile(): Promise<Response<MemberProfile>> {
     try {
       const response = await api.get<MemberProfile>('/api/secure/user/profile');
       return { success: true, data: response.data };
@@ -81,4 +81,4 @@ class UserService {
   }
 }
 
-export default UserService.getInstance();
+export default MemberService.getInstance();
