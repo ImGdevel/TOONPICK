@@ -70,7 +70,7 @@ public class AuthenticatedWebtoonReviewController {
     }
 
     // 사용자가 특정 웹툰에 작성한 리뷰 조회
-    @GetMapping("/{webtoonId}/user")
+    @GetMapping("/{webtoonId}/member")
     public ResponseEntity<WebtoonReviewDTO> getUserReviewForWebtoon(
             @PathVariable Long webtoonId,
             Authentication authentication) {
