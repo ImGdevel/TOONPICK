@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import UserService from '@services/UserService';
+import styles from './MyProfilePage.module.css';
+import MemberService from '@services/MemberService';
 import WebtoonReviewService from '@services/WebtoonReviewService';
-import WebtoonGrid from '@components/WebtoonGrid';
+import WebtoonList from '@components/WebtoonList';
 import ReviewList from '@components/ReviewList';
-import styles from './MyPage.module.css';
+import MemberProfileSection from '@pages/MyProfilePage/MemberProfileSection';
+
 import { Webtoon } from '@models/webtoon';
 import { Review } from '@models/review';
-import { MemberProfileDTO } from '@models/memberprofile';
-
+import { MemberProfile } from '@models/member';
 
 export interface MyPageState {
-  user: MemberProfileDTO | null;
+  memberProfile: MemberProfile | null;
   bookmarks: Webtoon[];
   favorites: Webtoon[];
   reviews: Review[];
@@ -18,9 +19,9 @@ export interface MyPageState {
   error: string | null; 
 }
 
-const MyPage: React.FC = () => {
+const MyProfilePage: React.FC = () => {
   const [state, setState] = useState<MyPageState>({
-    user: null,
+    memberProfile: null,
     bookmarks: [],
     favorites: [],
     reviews: [],
@@ -32,14 +33,14 @@ const MyPage: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const [profile, bookmarks, favorites, reviews] = await Promise.all([
-          UserService.getUserProfile(),
-          UserService.getBookmarks(),
-          UserService.getFavorites(),
+          MemberService.getMemberProfile(),
+          MemberService.getBookmarks(),
+          MemberService.getFavorites(),
           WebtoonReviewService.getReviewsByWebtoon(0)
         ]);
 
         setState({
-          user: profile.data || null,
+          memberProfile: profile.data || null,
           bookmarks: bookmarks.data || [],
           favorites: favorites.data || [],
           reviews: reviews.data || [],
@@ -63,25 +64,16 @@ const MyPage: React.FC = () => {
 
   return (
     <div className={styles.myPage}>
-      <section className={styles.profile}>
-        <h2>프로필</h2>
-        {state.user && (
-          <div className={styles.userInfo}>
-            <img src={state.user.profilePicture} alt="프로필" />
-            <h3>{state.user.username}</h3>
-            <p>{state.user.email}</p>
-          </div>
-        )}
-      </section>
+      <MemberProfileSection memberProfile={state.memberProfile} />
 
       <section className={styles.bookmarks}>
         <h2>북마크</h2>
-        <WebtoonGrid webtoons={state.bookmarks} />
+        <WebtoonList webtoons={state.bookmarks} />
       </section>
 
       <section className={styles.favorites}>
         <h2>좋아요</h2>
-        <WebtoonGrid webtoons={state.favorites} />
+        <WebtoonList webtoons={state.favorites} />
       </section>
 
       <section className={styles.reviews}>
@@ -92,4 +84,4 @@ const MyPage: React.FC = () => {
   );
 };
 
-export default MyPage; 
+export default MyProfilePage; 
