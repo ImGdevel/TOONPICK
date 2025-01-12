@@ -1,5 +1,5 @@
 import { api, Response } from '@api';
-import { MemberProfileDTO } from '@models/memberprofile';
+import { MemberProfile } from '@models/member';
 import { Webtoon } from '@models/webtoon';
 
 
@@ -16,9 +16,9 @@ class UserService {
   }
 
   // 사용자 프로필 정보 가져오기
-  public async getUserProfile(): Promise<Response<MemberProfileDTO>> {
+  public async getUserProfile(): Promise<Response<MemberProfile>> {
     try {
-      const response = await api.get<MemberProfileDTO>('/api/secure/user/profile');
+      const response = await api.get<MemberProfile>('/api/secure/user/profile');
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Error fetching user profile:', error);
