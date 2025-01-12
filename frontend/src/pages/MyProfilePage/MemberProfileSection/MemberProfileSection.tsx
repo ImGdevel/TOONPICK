@@ -12,7 +12,6 @@ const MemberProfileSection: React.FC<MemberProfileSectionProps> = ({ memberProfi
   
     return (
     <section className={styles.profile}>
-      <h2>프로필</h2>
       {memberProfile && (
         <div className={styles.userInfo}>
           <img src={memberProfile.profilePicture} alt="프로필" />

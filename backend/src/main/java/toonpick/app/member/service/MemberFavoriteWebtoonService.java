@@ -66,7 +66,7 @@ public class MemberFavoriteWebtoonService {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found with username: " + username));
 
-        List<Webtoon> favoriteWebtoons = favoriteRepository.findByMember(member);
+        List<Webtoon> favoriteWebtoons = favoriteRepository.findFavoriteWebtoonsByMember(member);
 
         return favoriteWebtoons.stream()
                 .map(webtoonMapper::webtoonToWebtoonDto)
