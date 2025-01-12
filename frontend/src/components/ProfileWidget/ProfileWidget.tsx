@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styles from './ProfileWidget.module.css';
 
 interface ProfileWidgetProps {
@@ -9,6 +9,8 @@ interface ProfileWidgetProps {
   onLogout: () => void;
   isWidgetOpen: boolean;
   setProfileWidgetOpen: (isOpen: boolean) => void;
+  profileButtonRef: React.RefObject<HTMLButtonElement>;
+  profileWidgetRef: React.RefObject<HTMLDivElement>;
 }
 
 const ProfileWidget: React.FC<ProfileWidgetProps> = ({
@@ -19,11 +21,29 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
   onLogout,
   isWidgetOpen,
   setProfileWidgetOpen,
+  profileButtonRef,
+  profileWidgetRef,
 }) => {
   const handleButtonClick = (action: () => void) => {
     action();
     setProfileWidgetOpen(false);
   };
+
+  const handleClickOutside = useCallback((event: MouseEvent): void => {
+    const isProfileClick = profileButtonRef.current && profileButtonRef.current.contains(event.target as Node);
+    const isProfileWidgetClick = profileWidgetRef.current && profileWidgetRef.current.contains(event.target as Node);
+
+    if (!isProfileClick && !isProfileWidgetClick) {
+      setProfileWidgetOpen(false);
+    }
+  }, [profileButtonRef, profileWidgetRef, setProfileWidgetOpen]);
+
+  useEffect(() => {
+    window.addEventListener('click', handleClickOutside);
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, [handleClickOutside]);
 
   return (
     <div
