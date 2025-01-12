@@ -3,26 +3,26 @@ import { Link } from 'react-router-dom';
 import { Webtoon } from '@models/webtoon';
 import styles from './WebtoonCard.module.css';
 
-interface WebtoonItemProps {
+interface WebtoonCardProps {
   webtoon: Webtoon;
   showPublisher?: boolean;
 }
 
-const WebtoonCard: React.FC<WebtoonItemProps> = ({ webtoon, showPublisher = true }) => {
+const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showPublisher = true }) => {
   const authors = webtoon.authors?.map(author => author.name).join(', ') || 'Unknown Author';
-  const averageRating = webtoon.averageRating ?? 'N/A';
+  const averageRating = webtoon.averageRating ? webtoon.averageRating.toFixed(1) : '0';
   const truncatedTitle = webtoon.title.length > 30 ? `${webtoon.title.substring(0, 30)}...` : webtoon.title;
 
   return (
-    <div className={styles['webtoon-item']}>
-      <Link to={`/webtoon/${webtoon.id}`} className={styles['thumbnail-container']}>
-        <img src={webtoon.thumbnailUrl} alt={webtoon.title} className={styles['thumbnail-image']} />
+    <div className={styles.webtoonCard}>
+      <Link to={`/webtoon/${webtoon.id}`} className={styles.thumbnailContainer}>
+        <img src={webtoon.thumbnailUrl} alt={webtoon.title} className={styles.thumbnailImage} />
       </Link>
-      <div className={styles['webtoon-info']}>
-        <span className={styles['webtoon-title']}>{truncatedTitle}</span>
-        <div className={styles['webtoon-meta']}>
-          <span className={styles['webtoon-author']}>{authors}</span>
-          <span className={styles['webtoon-rating']}>⭐ {averageRating}</span>
+      <div className={styles.webtoonInfo}>
+        <span className={styles.webtoonTitle}>{truncatedTitle}</span>
+        <div className={styles.webtoonMeta}>
+          <span className={styles.webtoonAuthor}>{authors}</span>
+          <span className={styles.webtoonRating}>⭐ {averageRating}</span>
         </div>
       </div>
     </div>
