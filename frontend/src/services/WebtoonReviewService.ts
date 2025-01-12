@@ -91,7 +91,7 @@ class WebtoonReviewService {
   // 사용자가 특정 웹툰에 작성한 리뷰 조회
   public async getUserReviewForWebtoon(webtoonId: number): Promise<Response<Review>> {
     try {
-      const response = await api.get<Review>(`/api/secure/reviews/${webtoonId}/user`);
+      const response = await api.get<Review>(`/api/secure/reviews/${webtoonId}/member`);
       return { success: true, data: response.data };
     } catch (error) {
       console.error('사용자 리뷰 가져오기 중 오류 발생:', error);

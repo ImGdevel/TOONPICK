@@ -17,7 +17,7 @@ const MemberProfileSection: React.FC<MemberProfileSectionProps> = ({ memberProfi
         <div className={styles.userInfo}>
           <img src={memberProfile.profilePicture} alt="프로필" />
           <div>
-            <h3>{memberProfile.username}</h3>
+            <h3>{memberProfile.nickname}</h3>
           </div>
         </div>
       )}
