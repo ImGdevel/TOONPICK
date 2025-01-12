@@ -14,10 +14,12 @@ const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showPublisher = true
   const truncatedTitle = webtoon.title.length > 30 ? `${webtoon.title.substring(0, 30)}...` : webtoon.title;
 
   return (
-    <div className={styles.webtoonCard}>
-      <Link to={`/webtoon/${webtoon.id}`} className={styles.thumbnailContainer}>
+    <Link to={`/webtoon/${webtoon.id}`} className={styles.webtoonCard}>
+      
+      <div className={styles.thumbnailContainer}>
         <img src={webtoon.thumbnailUrl} alt={webtoon.title} className={styles.thumbnailImage} />
-      </Link>
+      </div>
+
       <div className={styles.webtoonInfo}>
         <span className={styles.webtoonTitle}>{truncatedTitle}</span>
         <div className={styles.webtoonMeta}>
@@ -25,7 +27,7 @@ const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showPublisher = true
           <span className={styles.webtoonRating}>⭐ {averageRating}</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

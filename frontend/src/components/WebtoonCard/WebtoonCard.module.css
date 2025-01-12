@@ -9,11 +9,13 @@
   background-color: var(--card-background-color);
   box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s, box-shadow 0.3s;
+  text-decoration: none;
 }
 
 .webtoonCard:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+  text-decoration: none;
 }
 
 .thumbnailContainer {
