@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.auth.controller.TokenReissueController;
 import toonpick.app.webtoon.dto.AuthorDTO;
 import toonpick.app.webtoon.dto.GenreDTO;
 import toonpick.app.webtoon.dto.PagedResponseDTO;

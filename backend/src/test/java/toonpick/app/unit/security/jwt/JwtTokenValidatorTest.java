@@ -9,9 +9,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
-import toonpick.app.auth.user.CustomUserDetails;
-import toonpick.app.auth.jwt.JwtTokenProvider;
-import toonpick.app.auth.jwt.JwtTokenValidator;
+import toonpick.app.security.jwt.JwtTokenProvider;
+import toonpick.app.security.jwt.JwtTokenValidator;
 
 @SpringBootTest
 class JwtTokenValidatorTest {
