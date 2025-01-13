@@ -1,4 +1,4 @@
-.profile-widget {
+.profileWidget {
   position: absolute;
   background-color: #fff;
   color: #333;
@@ -19,24 +19,24 @@
   visibility: hidden; 
 }
 
-.profile-widget.open {
+.profileWidget.open {
   transform: scale(1); 
   opacity: 1;
   visibility: visible;
 }
 
-.widget-profile-picture {
+.widgetProfilePicture {
   width: 70px;
   height: 70px;
   border-radius: 50%;
   border: 2px solid #ddd;
 }
 
-.user-info {
+.userInfo {
   margin: 15px 0;
 }
 
-.widget-button {
+.widgetButton {
   background-color: #007bff;
   color: white;
   border: none;
@@ -48,6 +48,6 @@
   transition: background-color 0.3s;
 }
 
-.widget-button:hover {
+.widgetButton:hover {
   background-color: #0056b3;
 }

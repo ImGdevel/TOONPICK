@@ -1,4 +1,4 @@
-.heart-button {
+.heartButton {
   cursor: pointer;
   background: none;
   border: none;
@@ -8,6 +8,6 @@
   transition: transform 0.2s ease;
 }
 
-.heart-button:hover {
+.heartButton:hover {
   transform: scale(1.1);
 } 

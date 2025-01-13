@@ -48,35 +48,36 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
   return (
     <div
       id="profileWidget"
-      className={`${styles['profile-widget']} ${isWidgetOpen ? styles['open'] : ''}`}
+      className={`${styles.profileWidget} ${isWidgetOpen ? styles.open : ''}`}
       style={{ pointerEvents: isWidgetOpen ? 'auto' : 'none' }}
+      ref={profileWidgetRef}
     >
-      <img src={userProfilePic} alt="User Profile" className={styles['widget-profile-picture']} />
-      <div className={styles['user-info']}>
+      <img src={userProfilePic} alt="User Profile" className={styles.widgetProfilePicture} />
+      <div className={styles.userInfo}>
         <p>{userName}</p>
         <p>{userEmail}</p>
       </div>
       <button
         onClick={() => handleButtonClick(() => onNavigate('/mypage'))}
-        className={styles['widget-button']}
+        className={styles.widgetButton}
       >
         마이페이지
       </button>
       <button
         onClick={() => handleButtonClick(() => onNavigate('/profile-edit'))}
-        className={styles['widget-button']}
+        className={styles.widgetButton}
       >
         프로필 수정
       </button>
       <button
         onClick={() => handleButtonClick(() => onNavigate('/my-webtoons'))}
-        className={styles['widget-button']}
+        className={styles.widgetButton}
       >
         나의 웹툰 리스트
       </button>
       <button
         onClick={() => handleButtonClick(onLogout)}
-        className={styles['widget-button']}
+        className={styles.widgetButton}
       >
         로그아웃
       </button>
