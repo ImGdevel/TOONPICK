@@ -62,10 +62,6 @@ const Header: React.FC = () => {
     setProfileWidgetOpen(true);
   };
 
-  const handleMouseLeaveProfile = (): void => {
-    setProfileWidgetOpen(false);
-  };
-
   return (
     <header className={styles.header}>
       <div className={styles.headerTitle}>
@@ -113,8 +109,7 @@ const Header: React.FC = () => {
 
           <div
             className={styles.profileContainer}
-            onMouseEnter={handleMouseEnterProfile}
-            onMouseLeave={handleMouseLeaveProfile}
+            onClick={handleMouseEnterProfile}
           >
             {isLoggedIn ? (
               <>
@@ -133,6 +128,8 @@ const Header: React.FC = () => {
                   onLogout={handleLogout}
                   isWidgetOpen={isProfileWidgetOpen}
                   setProfileWidgetOpen={setProfileWidgetOpen}
+                  profileButtonRef={profileButtonRef}
+                  profileWidgetRef={profileWidgetRef}
                 />
               </>
             ) : (

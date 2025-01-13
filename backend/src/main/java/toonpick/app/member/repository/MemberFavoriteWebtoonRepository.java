@@ -1,6 +1,8 @@
 package toonpick.app.member.repository;
 
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import toonpick.app.member.entity.Member;
 import toonpick.app.member.entity.MemberFavoriteWebtoon;
@@ -13,5 +15,6 @@ import java.util.Optional;
 public interface MemberFavoriteWebtoonRepository extends JpaRepository<MemberFavoriteWebtoon, Long> {
     Optional<MemberFavoriteWebtoon> findByMemberAndWebtoon(Member member, Webtoon webtoon);
 
-    List<Webtoon> findByMember(Member member);
+    @Query("SELECT w FROM MemberFavoriteWebtoon m JOIN m.webtoon w WHERE m.member = :member")
+    List<Webtoon> findFavoriteWebtoonsByMember(@Param("member") Member member);
 }

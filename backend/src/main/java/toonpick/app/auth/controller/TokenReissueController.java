@@ -29,7 +29,7 @@ public class TokenReissueController {
     private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
 
     @PostMapping("/api/reissue")
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
         try {
             // 쿠키에서 refresh token 추출 및 검증
             String refreshToken = jwtTokenValidator.extractRefreshTokenFromCookies(request);
@@ -54,7 +54,7 @@ public class TokenReissueController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (ExpiredJwtTokenException | InvalidJwtTokenException | MissingJwtTokenException e) {
             logger.error("Token validation error: {}", e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         } catch (RuntimeException e) {
             logger.error("Unexpected error: {}", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

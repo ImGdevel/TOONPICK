@@ -18,7 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/secure/users/favorites")
+@RequestMapping("/api/secure/member/favorites")
 public class MemberFavoriteWebtoonController {
 
     private final MemberFavoriteWebtoonService memberFavoriteWebtoonService;

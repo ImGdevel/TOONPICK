@@ -22,6 +22,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@api": ["src/api/index.ts"] ,
       "@components/*": ["src/components/*"],
       "@pages/*": ["src/pages/*"],
       "@services/*": ["src/services/*"],

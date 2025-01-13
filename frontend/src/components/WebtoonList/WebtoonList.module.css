@@ -1,33 +1,40 @@
-/* src/components/WebtoonList.css */
-.webtoon-list-container {
-  position: relative;
-  width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
+.webtoonList {
+  padding: 20px;
 }
 
-.webtoon-list {
+.carousel {
   display: flex;
   overflow: hidden;
-  gap: 10px;
+  scroll-behavior: smooth;
 }
 
-.list-control {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.5);
+.carousel > * {
+  flex: 0 0 20%;
+  margin-right: 20px;
+}
+
+.emptyMessage {
+  text-align: center;
+  color: #888;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.navButton {
+  background-color: transparent;
   border: none;
-  color: white;
   font-size: 24px;
-  padding: 10px;
   cursor: pointer;
-  z-index: 1;
+  margin: 0 10px;
 }
 
-.list-control.prev {
-  left: -50px;
-}
-
-.list-control.next {
-  right: -50px;
+.navButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }

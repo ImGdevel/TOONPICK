@@ -9,7 +9,7 @@ import HomePage from '@pages/HomePage';
 import SignInPage from '@pages/auth/SignInPage';
 import SignUpPage from '@pages/auth/SignUpPage';
 import WebtoonDetailPage from '@pages/WebtoonDetailPage';
-import MyPage from '@pages/MyPage';
+import MyProfilePage from '@pages/MyProfilePage';
 import SocialLoginCallbackPage from '@pages/auth/SocialLoginCallbackPage';
 import NewWebtoonsPage from '@pages/NewWebtoonsPage';
 import OngoingWebtoonsPage from '@pages/OngoingWebtoonsPage';
@@ -32,7 +32,7 @@ const App: React.FC = () => {
             <Route path="/login" element={<SignInPage />} />
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage" element={<MyProfilePage />} />
             <Route path="/refresh" element={<SocialLoginCallbackPage />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>

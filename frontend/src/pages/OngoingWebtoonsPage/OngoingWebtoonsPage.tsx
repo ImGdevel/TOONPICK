@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import styles from './OngoingWebtoonsPage.module.css';
 import WebtoonService from '@services/webtoonService';
 import WebtoonGrid from '@components/WebtoonGrid';
-import styles from './OngoingWebtoonsPage.module.css';
+import Spinner from '@components/Spinner';
 import { Webtoon } from '@models/webtoon';
-import { SerializationStatus } from '@/models/enum';
+import { SerializationStatus } from '@models/enum';
 
 const OngoingWebtoonsPage: React.FC = () => {
   const [webtoons, setWebtoons] = useState<Webtoon[]>([]);
@@ -85,7 +86,7 @@ const OngoingWebtoonsPage: React.FC = () => {
             webtoons={webtoons}
             lastWebtoonRef={lastWebtoonRef}
           />
-          {isLoading && <div className={styles.spinner}></div>}
+          {isLoading && <Spinner />}
           {isLastPage && <p className={styles.endMessage}>모든 웹툰을 불러왔습니다.</p>}
         </>
       )}

@@ -30,28 +30,28 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
   return (
     <div className={styles.carousel}>
       <div
-        className={styles['carousel-inner']}
+        className={styles.carouselInner}
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((image, index) => (
-          <div key={index} className={styles['carousel-item']}>
+          <div key={index} className={styles.carouselItem}>
             <img
               src={image}
               alt={`Slide ${index}`}
               onLoad={() => handleImageLoad(index)}
               style={{ display: loadedImages.includes(index) ? 'block' : 'none' }}
             />
-            {!loadedImages.includes(index) && <div className={styles['image-placeholder']}></div>}
+            {!loadedImages.includes(index) && <div className={styles.imagePlaceholder}></div>}
           </div>
         ))}
       </div>
-      <button className={`${styles['carousel-control']} ${styles.prev}`} onClick={prevSlide}>
+      <button className={`${styles.carouselControl} ${styles.prev}`} onClick={prevSlide}>
         &#10094;
       </button>
-      <button className={`${styles['carousel-control']} ${styles.next}`} onClick={nextSlide}>
+      <button className={`${styles.carouselControl} ${styles.next}`} onClick={nextSlide}>
         &#10095;
       </button>
-      <div className={styles['carousel-indicators']}>
+      <div className={styles.carouselIndicators}>
         {images.map((_, index) => (
           <button
             key={index}
