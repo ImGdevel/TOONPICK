@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosHeaders, AxiosResponse } from 'axios';
-import { handleErrorResponse } from './ErrorHandler';
 import TokenManager from '@/services/TokenManager';
+import TokenRefresher from '@/services/TokenRefresher';
+import Logger from '@utils/Logger';
 
 // Axios 인스턴스 생성
 const api = axios.create({
@@ -8,7 +9,8 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 요청 제한 시간 추가
+  timeout: 10000,
+  withCredentials: true,
 });
 
 // 요청 인터셉터
@@ -30,11 +32,26 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const updatedConfig = await handleErrorResponse(error);
-    if (updatedConfig) {
-      // Retry the failed request with updated config
-      return api.request(updatedConfig);
+
+    const errorStatus = error.response?.status;
+    const errorMessage = error.response?.data;
+
+    Logger.error('API Error:', { status: errorStatus, message: errorMessage });
+
+    if (errorStatus === 401) {
+      const originalRequest = error.config!;
+      if (errorMessage === 'Authentication credentials are required.') {
+        try {
+          return await TokenRefresher.handleTokenExpiration(originalRequest);
+        } catch (refreshError) {
+          return Promise.reject(refreshError);
+        }
+      } else if (errorMessage === 'Invalid refresh token') {
+        TokenManager.clearAccessToken();
+        window.location.href = '/login';
+      }
     }
+
     return Promise.reject(error);
   }
 );

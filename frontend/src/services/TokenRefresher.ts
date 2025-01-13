@@ -1,5 +1,4 @@
 import { api } from '@api';
-import Logger from '@utils/Logger';
 import TokenManager from '@services/TokenManager';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
@@ -11,7 +10,6 @@ let failedQueue: Array<{
 }> = [];
 let isRefreshing = false;
 
-// 큐 처리 함수
 const processQueue = (error: any, token: string | null) => {
   failedQueue.forEach(({ requestConfig, resolve, reject }) => {
     if (token) {
@@ -27,39 +25,44 @@ const processQueue = (error: any, token: string | null) => {
   failedQueue = [];
 };
 
-// 토큰 갱신 핸들러
 const TokenRefresher = {
+
+  /**
+   * @param originalRequest 
+   * @returns 
+   */
   handleTokenExpiration: async (originalRequest: AxiosRequestConfig) => {
     if (!isRefreshing) {
       isRefreshing = true;
       try {
         const newAccessToken = await TokenRefresher.refreshAccessToken();
         processQueue(null, newAccessToken);
-        isRefreshing = false;
         return api(originalRequest);
       } catch (refreshError) {
-        Logger.error('Token Refresh Error:', refreshError as Record<string, any>);
         processQueue(refreshError, null);
-        isRefreshing = false;
         TokenManager.clearAccessToken();
+        TokenManager.clearRefreshToken();
         window.location.href = '/login';
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 
     return new Promise((resolve, reject) => {
-      failedQueue.push({
-        requestConfig: originalRequest,
-        resolve,
-        reject,
-      });
+      failedQueue.push({ requestConfig: originalRequest, resolve, reject });
     });
   },
 
+  /**
+   * 토큰 재발급
+   * @returns 
+   */
   refreshAccessToken: async (): Promise<string> => {
     try {
       const response = await api.post('/api/reissue', {}, { withCredentials: true });
       const newAccessToken = TokenManager.extractAccessTokenFromHeader(response.headers);
+
       if (newAccessToken) {
         TokenManager.setAccessToken(newAccessToken);
         return newAccessToken;
@@ -67,8 +70,8 @@ const TokenRefresher = {
         throw new Error('Failed to reissue access token');
       }
     } catch (error) {
-      Logger.error('Token Refresh Failed:', error as Record<string, any>);
       TokenManager.clearAccessToken();
+      TokenManager.clearRefreshToken();
       throw error;
     }
   },

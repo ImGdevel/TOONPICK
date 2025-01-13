@@ -38,6 +38,17 @@ export const TokenManager = {
   },
 
   /**
+   * Remove the refresh token from localStorage.
+   */
+  clearRefreshToken: (): void => {
+    try {
+      // todo : 리프레시 토큰 삭제 로직 추가 (서버로 요청)
+    } catch (error) {
+      console.error('Failed to clear refresh token:', error);
+    }
+  },
+
+  /**
    * Check if the access token is expired.
    * @param token - The access token to check.
    * @returns True if the token is expired or invalid, false otherwise.
