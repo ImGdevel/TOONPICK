@@ -1,0 +1,35 @@
+.achievementItem {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.achievementItem:hover {
+  transform: scale(1.02);
+}
+
+.icon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 16px;
+  color: #333;
+}
+
+.count {
+  font-size: 14px;
+  color: #666;
+} 
