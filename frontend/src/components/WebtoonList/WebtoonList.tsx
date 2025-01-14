@@ -10,7 +10,7 @@ interface WebtoonListProps {
 
 const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, showTags = true }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
   const totalPages = Math.ceil(webtoons.length / itemsPerPage);
 
   const handleNext = () => {
@@ -28,21 +28,24 @@ const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, showTags = true }) 
   const startIndex = currentPage * itemsPerPage;
   const currentWebtoons = webtoons.slice(startIndex, startIndex + itemsPerPage);
 
+  const cardHeight = 360; 
+  const cardWidth = ((cardHeight * 220) / 360 + 20) * 4;
+
   return (
     <div className={styles.webtoonList}>
-      {currentWebtoons.length > 0 ? (
-        <div className={styles.carousel}>
-          {currentWebtoons.map((webtoon) => (
-            <WebtoonCard
-              key={webtoon.id}
-              webtoon={webtoon}
-              showTags={showTags}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className={styles.emptyMessage}>웹툰이 없습니다.</p>
-      )}
+      <div
+        className={styles.carousel}
+        style={{ transform: `translateX(-${currentPage * cardWidth}px)` }}
+      >
+        {webtoons.map((webtoon) => (
+          <WebtoonCard
+            key={webtoon.id}
+            webtoon={webtoon}
+            showTags={showTags}
+            size={cardHeight}
+          />
+        ))}
+      </div>
       <div className={styles.navigation}>
         <button onClick={handlePrev} disabled={currentPage === 0} className={styles.navButton}>
           ◀

@@ -7,15 +7,31 @@ import PlatformIcon from '../PlatformIcon/PlatformIcon';
 interface WebtoonCardProps {
   webtoon: Webtoon;
   showTags?: boolean;
+  size?: number;
 }
 
-const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showTags = true }) => {
-  const authors = webtoon.authors?.map(author => author.name).join(', ') || '작가 없음';
-  const averageRating = webtoon.averageRating ? webtoon.averageRating.toFixed(1) : '0';
-  const truncatedTitle = webtoon.title.length > 30 ? `${webtoon.title.substring(0, 30)}...` : webtoon.title;
+const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showTags = true, size = 360 }) => {
+  const getAuthors = (authors: { name: string }[] | undefined): string => {
+    return authors?.map(author => author.name).join(', ') || '작가 없음';
+  };
+
+  const formatAverageRating = (rating: number | undefined): string => {
+    return rating ? rating.toFixed(1) : '0';
+  };
+
+  const truncateTitle = (title: string): string => {
+    return title.length > 30 ? `${title.substring(0, 30)}...` : title;
+  };
+
+  const authors = getAuthors(webtoon.authors);
+  const averageRating = formatAverageRating(webtoon.averageRating);
+  const truncatedTitle = truncateTitle(webtoon.title);
+
+  const height = size;
+  const width = (size * 220) / 360;
 
   return (
-    <Link to={`/webtoon/${webtoon.id}`} className={styles.webtoonCard}>
+    <Link to={`/webtoon/${webtoon.id}`} className={styles.webtoonCard} style={{ width: `${width}px`, height: `${height}px` }}>
       
       <div className={styles.thumbnailContainer}>
         <img src={webtoon.thumbnailUrl} alt={webtoon.title} className={styles.thumbnailImage} />
