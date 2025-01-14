@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toonpick.app.common.utils.BaseTimeEntity;
 import toonpick.app.member.entity.Member;
 import toonpick.app.webtoon.entity.Webtoon;
 
@@ -25,7 +26,7 @@ import toonpick.app.webtoon.entity.Webtoon;
     uniqueConstraints = {
         @UniqueConstraint(columnNames = {"member_id", "webtoon_id"})
     })
-public class BookmarkToons {
+public class BookmarkToons extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
