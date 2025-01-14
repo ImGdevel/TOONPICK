@@ -1,10 +1,9 @@
 import React, { useEffect, useCallback } from 'react';
+import { MemberProfile } from '@models/member';
 import styles from './ProfileWidget.module.css';
 
 interface ProfileWidgetProps {
-  userProfilePic: string;
-  userName: string;
-  userEmail: string;
+  memberProfile: MemberProfile | null;
   onNavigate: (path: string) => void;
   onLogout: () => void;
   isWidgetOpen: boolean;
@@ -14,9 +13,7 @@ interface ProfileWidgetProps {
 }
 
 const ProfileWidget: React.FC<ProfileWidgetProps> = ({
-  userProfilePic,
-  userName,
-  userEmail,
+  memberProfile,
   onNavigate,
   onLogout,
   isWidgetOpen,
@@ -45,6 +42,8 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
     };
   }, [handleClickOutside]);
 
+  const defaultProfilePicture = '/image/profile/user.png';
+
   return (
     <div
       id="profileWidget"
@@ -52,10 +51,13 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
       style={{ pointerEvents: isWidgetOpen ? 'auto' : 'none' }}
       ref={profileWidgetRef}
     >
-      <img src={userProfilePic} alt="User Profile" className={styles.widgetProfilePicture} />
+      <img 
+        src={memberProfile?.profilePicture || defaultProfilePicture}
+        alt="User Profile" 
+        className={styles.widgetProfilePicture} 
+      />
       <div className={styles.userInfo}>
-        <p>{userName}</p>
-        <p>{userEmail}</p>
+        <p>{memberProfile?.nickname || '게스트 사용자'}</p>
       </div>
       <button
         onClick={() => handleButtonClick(() => onNavigate('/mypage'))}

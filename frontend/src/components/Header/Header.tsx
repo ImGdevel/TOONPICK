@@ -7,7 +7,7 @@ import { FiSearch, FiBell, FiSun, FiMoon } from 'react-icons/fi';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, logout } = useContext(AuthContext);
+  const { isLoggedIn, logout, memberProfile } = useContext(AuthContext);
   const [isProfileWidgetOpen, setProfileWidgetOpen] = useState<boolean>(false);
   const [isSearchInputVisible, setSearchInputVisible] = useState<boolean>(false);
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
@@ -118,12 +118,10 @@ const Header: React.FC = () => {
                   ref={profileButtonRef}
                   className={styles.profileButton}
                 >
-                  <img src="https://via.placeholder.com/40" alt="User Profile" className={styles.profilePicture} />
+                  <img src={memberProfile?.profilePicture || "https://via.placeholder.com/40"} alt="User Profile" className={styles.profilePicture} />
                 </button>
                 <ProfileWidget
-                  userProfilePic="https://via.placeholder.com/40"
-                  userName="사용자 이름"
-                  userEmail="email@example.com"
+                  memberProfile={memberProfile}
                   onNavigate={navigate}
                   onLogout={handleLogout}
                   isWidgetOpen={isProfileWidgetOpen}
