@@ -1,6 +1,8 @@
 import React from 'react';
-import { MemberProfile } from '@models/member';
 import styles from './MemberProfileSection.module.css';
+import LevelDisplay from '@components/LevelDisplay';
+import AchievementItem from '@components/AchievementItem';
+import { MemberProfile } from '@models/member';
 
 interface MemberProfileSectionProps {
   memberProfile: MemberProfile | null;
@@ -14,18 +16,24 @@ const MemberProfileSection: React.FC<MemberProfileSectionProps> = ({ memberProfi
           <img src={memberProfile.profilePicture} alt="프로필" className={styles.profilePicture} />
           <div className={styles.profileDetails}>
             <h3>{memberProfile.nickname}</h3>
-            <p className={styles.level}>Level: {memberProfile.level}</p>
-            <p className={styles.points}>Current Points: {memberProfile.points}</p>
+            <LevelDisplay 
+              currentLevel={memberProfile.level}
+              currentPoints={memberProfile.points}
+              maxPoints={100}
+            />
             <div className={styles.stats}>
-              <div className={styles.statItem}>
-                <span>북마크한 웹툰: {memberProfile.bookmarkedWebtoons}</span>
-              </div>
-              <div className={styles.statItem}>
-                <span>감상한 웹툰: {memberProfile.watchedWebtoons}</span>
-              </div>
-              <div className={styles.statItem}>
-                <span>평가 남긴 웹툰: {memberProfile.ratedWebtoons}</span>
-              </div>
+              <AchievementItem 
+                title="북마크한 웹툰" 
+                count={memberProfile.bookmarkedWebtoons || 0} 
+              />
+              <AchievementItem 
+                title="감상한 웹툰" 
+                count={memberProfile.watchedWebtoons || 0} 
+              />
+              <AchievementItem 
+                title="평가 남긴 웹툰" 
+                count={memberProfile.ratedWebtoons || 0} 
+              />
             </div>
           </div>
         </div>
