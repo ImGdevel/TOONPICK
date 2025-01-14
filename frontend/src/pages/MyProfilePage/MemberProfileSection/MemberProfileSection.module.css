@@ -5,6 +5,8 @@
   background-color: #ffffff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
 .profile:hover {
@@ -16,22 +18,48 @@
   align-items: center;
 }
 
-.userInfo img {
+.profilePicture {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   margin-right: 20px;
 }
 
-.userInfo h3 {
+.profileDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.profileDetails h3 {
   font-size: 24px;
   margin: 0;
   color: #333;
 }
 
-.userInfo p {
+.level, .points {
   font-size: 16px;
   color: #666;
+  margin: 5px 0;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.statItem {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 10px;
+  flex: 1;
+  margin: 0 5px;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+
+.statItem:hover {
+  background-color: #e0e0e0;
 }
 
 @media (max-width: 768px) {
