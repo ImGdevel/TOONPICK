@@ -44,4 +44,26 @@ public class ToonCollection {
         inverseJoinColumns = @JoinColumn(name = "webtoon_id")
     )
     private List<Webtoon> webtoons;
+
+    @Builder
+    public ToonCollection(Member member, String title) {
+        this.member = member;
+        this.title = title;
+    }
+
+    public void addWebtoon(Webtoon webtoon) {
+        this.webtoons.add(webtoon);
+    }
+
+    public void removeWebtoon(Webtoon webtoon) {
+        this.webtoons.remove(webtoon);
+    }
+
+    public void clearWebtoons() {
+        this.webtoons.clear();
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 }
