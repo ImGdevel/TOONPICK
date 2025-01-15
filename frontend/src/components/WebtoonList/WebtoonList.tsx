@@ -5,10 +5,11 @@ import styles from './WebtoonList.module.css';
 
 interface WebtoonListProps {
   webtoons: Webtoon[];
+  size?: number;
   showTags?: boolean;
 }
 
-const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, showTags = true }) => {
+const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, size = 360, showTags = true }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(webtoons.length / itemsPerPage);
@@ -25,11 +26,8 @@ const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, showTags = true }) 
     }
   };
 
-  const startIndex = currentPage * itemsPerPage;
-  const currentWebtoons = webtoons.slice(startIndex, startIndex + itemsPerPage);
-
-  const cardHeight = 360; 
-  const cardWidth = ((cardHeight * 220) / 360 + 20) * 4;
+  const cardHeight = size; 
+  const cardWidth = ((cardHeight * 220) / 360 + 10) * 4; 
 
   return (
     <div className={styles.webtoonList}>
