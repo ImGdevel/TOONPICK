@@ -76,7 +76,7 @@ const MyProfilePage: React.FC = () => {
               <h2>북마크</h2>
               <WebtoonList 
                 webtoons={state.bookmarks} 
-                size={295}
+                size={180}
                 showTags={false}
               />
             </section>
@@ -85,7 +85,7 @@ const MyProfilePage: React.FC = () => {
               <h2>좋아요</h2>
               <WebtoonList 
                 webtoons={state.favorites} 
-                size={295}
+                size={180}
                 showTags={false}
               />
             </section>
