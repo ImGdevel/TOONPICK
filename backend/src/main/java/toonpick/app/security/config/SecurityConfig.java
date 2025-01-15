@@ -16,8 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import toonpick.app.auth.handler.*;
-import toonpick.app.auth.filter.*;
+
 import toonpick.app.security.filter.CustomLogoutFilter;
 import toonpick.app.security.filter.JwtAuthorizationFilter;
 import toonpick.app.security.filter.LoginAuthenticationFilter;

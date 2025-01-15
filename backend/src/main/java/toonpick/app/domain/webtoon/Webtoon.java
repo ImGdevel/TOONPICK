@@ -82,7 +82,7 @@ public class Webtoon {
     @Enumerated(EnumType.STRING)
     private DayOfWeek week;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "webtoon_author",
             joinColumns = @JoinColumn(name = "webtoon_id"),
@@ -90,7 +90,7 @@ public class Webtoon {
     )
     private Set<Author> authors = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "webtoon_genre",
             joinColumns = @JoinColumn(name = "webtoon_id"),
