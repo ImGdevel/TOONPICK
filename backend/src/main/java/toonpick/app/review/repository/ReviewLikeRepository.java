@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import toonpick.app.review.entity.ReviewLike;
 import toonpick.app.member.entity.Member;
-import toonpick.app.webtoon.entity.Webtoon;
+import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.review.entity.WebtoonReview;
 
 import java.util.List;

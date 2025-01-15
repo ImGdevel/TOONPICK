@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.member.entity.Member;
-import toonpick.app.webtoon.entity.Webtoon;
-import toonpick.app.webtoon.repository.WebtoonRepository;
+import toonpick.app.domain.webtoon.Webtoon;
+import toonpick.app.repository.WebtoonRepository;
 
 import java.util.List;
 

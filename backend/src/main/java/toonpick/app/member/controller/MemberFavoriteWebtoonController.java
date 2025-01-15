@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.common.utils.AuthenticationUtil;
 import toonpick.app.member.service.MemberFavoriteWebtoonService;
-import toonpick.app.webtoon.dto.WebtoonDTO;
+import toonpick.app.dto.WebtoonDTO;
 
 import java.util.List;
 

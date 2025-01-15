@@ -8,13 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.review.dto.WebtoonReviewCreateDTO;
 import toonpick.app.review.dto.WebtoonReviewDTO;
 import toonpick.app.member.entity.Member;
-import toonpick.app.webtoon.entity.Webtoon;
+import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.review.entity.WebtoonReview;
-import toonpick.app.webtoon.entity.enums.Platform;
-import toonpick.app.webtoon.entity.enums.SerializationStatus;
-import toonpick.app.common.exception.ResourceNotFoundException;
+import toonpick.app.domain.webtoon.enums.Platform;
+import toonpick.app.domain.webtoon.enums.SerializationStatus;
+import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.member.repository.MemberRepository;
-import toonpick.app.webtoon.repository.WebtoonRepository;
+import toonpick.app.repository.WebtoonRepository;
 import toonpick.app.review.repository.WebtoonReviewRepository;
 import toonpick.app.review.service.WebtoonReviewService;
 

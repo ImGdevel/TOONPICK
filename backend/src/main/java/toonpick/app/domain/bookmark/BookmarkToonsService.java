@@ -3,11 +3,11 @@ package toonpick.app.domain.bookmark;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.common.exception.ResourceNotFoundException;
+import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.member.entity.Member;
 import toonpick.app.member.repository.MemberRepository;
-import toonpick.app.webtoon.entity.Webtoon;
-import toonpick.app.webtoon.repository.WebtoonRepository;
+import toonpick.app.domain.webtoon.Webtoon;
+import toonpick.app.repository.WebtoonRepository;
 
 import java.util.List;
 

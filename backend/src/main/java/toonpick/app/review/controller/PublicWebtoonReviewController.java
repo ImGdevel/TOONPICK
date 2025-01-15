@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.review.dto.WebtoonReviewDTO;
 import toonpick.app.review.service.WebtoonReviewService;
-import toonpick.app.webtoon.dto.PagedResponseDTO;
+import toonpick.app.dto.PagedResponseDTO;
 
 @RequiredArgsConstructor
 @RestController

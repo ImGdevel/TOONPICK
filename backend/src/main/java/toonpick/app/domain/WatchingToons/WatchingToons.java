@@ -16,7 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import toonpick.app.common.utils.BaseTimeEntity;
 import toonpick.app.member.entity.Member;
-import toonpick.app.webtoon.entity.Webtoon;
+import toonpick.app.domain.webtoon.Webtoon;
 
 @Entity
 @Getter
