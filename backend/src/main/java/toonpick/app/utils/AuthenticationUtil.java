@@ -1,4 +1,4 @@
-package toonpick.app.common.utils;
+package toonpick.app.utils;
 
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;

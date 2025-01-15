@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import toonpick.app.common.utils.BaseTimeEntity;
+import toonpick.app.domain.BaseTimeEntity;
 
 @Entity
 @Getter

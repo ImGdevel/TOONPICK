@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.GenericFilterBean;
 import toonpick.app.security.handler.LogoutHandler;
 import toonpick.app.security.jwt.JwtTokenValidator;
-import toonpick.app.common.utils.ErrorResponseSender;
+import toonpick.app.utils.ErrorResponseSender;
 
 
 import java.io.IOException;

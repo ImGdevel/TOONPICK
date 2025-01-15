@@ -15,7 +15,7 @@ import toonpick.app.security.exception.ExpiredJwtTokenException;
 import toonpick.app.security.exception.MissingJwtTokenException;
 import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.security.exception.InvalidJwtTokenException;
-import toonpick.app.common.utils.ErrorResponseSender;
+import toonpick.app.utils.ErrorResponseSender;
 
 import java.io.IOException;
 

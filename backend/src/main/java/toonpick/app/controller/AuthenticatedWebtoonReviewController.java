@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import toonpick.app.common.utils.AuthenticationUtil;
+import toonpick.app.utils.AuthenticationUtil;
 import toonpick.app.dto.WebtoonReviewCreateDTO;
 import toonpick.app.dto.WebtoonReviewDTO;
 import toonpick.app.service.WebtoonReviewService;

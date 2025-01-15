@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import toonpick.app.common.utils.AuthenticationUtil;
+import toonpick.app.utils.AuthenticationUtil;
 import toonpick.app.dto.MemberDTO;
 import toonpick.app.service.MemberService;
 

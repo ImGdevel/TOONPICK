@@ -27,7 +27,7 @@ import toonpick.app.security.handler.LogoutHandler;
 import toonpick.app.security.handler.OAuth2SuccessHandler;
 import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.security.service.OAuth2UserService;
-import toonpick.app.common.utils.ErrorResponseSender;
+import toonpick.app.utils.ErrorResponseSender;
 
 import java.util.Arrays;
 import java.util.Collections;
