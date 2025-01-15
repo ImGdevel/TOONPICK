@@ -74,12 +74,20 @@ const MyProfilePage: React.FC = () => {
             <MemberProfileSection memberProfile={state.memberProfile} />
             <section className={styles.bookmarks}>
               <h2>북마크</h2>
-              <WebtoonList webtoons={state.bookmarks} />
+              <WebtoonList 
+                webtoons={state.bookmarks} 
+                size={295}
+                showTags={false}
+              />
             </section>
 
             <section className={styles.favorites}>
               <h2>좋아요</h2>
-              <WebtoonList webtoons={state.favorites} />
+              <WebtoonList 
+                webtoons={state.favorites} 
+                size={295}
+                showTags={false}
+              />
             </section>
           </div>
         ) : (
