@@ -1,11 +1,11 @@
-package toonpick.app.review.mapper;
+package toonpick.app.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import toonpick.app.review.dto.WebtoonReviewCreateDTO;
-import toonpick.app.review.dto.WebtoonReviewDTO;
-import toonpick.app.review.entity.WebtoonReview;
+import toonpick.app.dto.WebtoonReviewCreateDTO;
+import toonpick.app.dto.WebtoonReviewDTO;
+import toonpick.app.domain.review.WebtoonReview;
 
 @Mapper
 public interface WebtoonReviewMapper {

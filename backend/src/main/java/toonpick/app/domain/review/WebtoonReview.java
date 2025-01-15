@@ -1,4 +1,4 @@
-package toonpick.app.review.entity;
+package toonpick.app.domain.review;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

@@ -1,12 +1,12 @@
-package toonpick.app.review.repository;
+package toonpick.app.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import toonpick.app.review.entity.ReviewLike;
+import toonpick.app.domain.review.ReviewLike;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
-import toonpick.app.review.entity.WebtoonReview;
+import toonpick.app.domain.review.WebtoonReview;
 
 import java.util.List;
 import java.util.Optional;

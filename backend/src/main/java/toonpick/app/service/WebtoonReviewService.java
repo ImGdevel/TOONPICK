@@ -1,4 +1,4 @@
-package toonpick.app.review.service;
+package toonpick.app.service;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -10,18 +10,18 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.PagedResponseDTO;
-import toonpick.app.review.dto.WebtoonReviewCreateDTO;
-import toonpick.app.review.dto.WebtoonReviewDTO;
-import toonpick.app.review.entity.ReviewLike;
+import toonpick.app.dto.WebtoonReviewCreateDTO;
+import toonpick.app.dto.WebtoonReviewDTO;
+import toonpick.app.domain.review.ReviewLike;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
-import toonpick.app.review.entity.WebtoonReview;
+import toonpick.app.domain.review.WebtoonReview;
 import toonpick.app.exception.ResourceNotFoundException;
-import toonpick.app.review.mapper.WebtoonReviewMapper;
-import toonpick.app.review.repository.ReviewLikeRepository;
+import toonpick.app.mapper.WebtoonReviewMapper;
+import toonpick.app.repository.ReviewLikeRepository;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.WebtoonRepository;
-import toonpick.app.review.repository.WebtoonReviewRepository;
+import toonpick.app.repository.WebtoonReviewRepository;
 
 import java.util.List;
 import java.util.Optional;

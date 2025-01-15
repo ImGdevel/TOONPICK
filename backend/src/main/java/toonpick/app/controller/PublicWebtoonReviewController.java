@@ -1,4 +1,4 @@
-package toonpick.app.review.controller;
+package toonpick.app.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import toonpick.app.review.dto.WebtoonReviewDTO;
-import toonpick.app.review.service.WebtoonReviewService;
+import toonpick.app.dto.WebtoonReviewDTO;
+import toonpick.app.service.WebtoonReviewService;
 import toonpick.app.dto.PagedResponseDTO;
 
 @RequiredArgsConstructor
