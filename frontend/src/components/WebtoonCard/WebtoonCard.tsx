@@ -10,7 +10,7 @@ interface WebtoonCardProps {
   size?: number;
 }
 
-const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showTags = true, size = 360 }) => {
+const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showTags = true, size = 210 }) => {
   const getAuthors = (authors: { name: string }[] | undefined): string => {
     return authors?.map(author => author.name).join(', ') || '작가 없음';
   };
@@ -27,8 +27,9 @@ const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showTags = true, siz
   const averageRating = formatAverageRating(webtoon.averageRating);
   const truncatedTitle = truncateTitle(webtoon.title);
 
-  const height = size;
-  const width = (size * 220) / 360;
+  const width = size;
+  const height = size * 1.6;
+  
 
   return (
     <Link to={`/webtoon/${webtoon.id}`} className={styles.webtoonCard} style={{ width: `${width}px`, height: `${height}px` }}>

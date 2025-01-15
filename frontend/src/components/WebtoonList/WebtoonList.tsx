@@ -9,7 +9,7 @@ interface WebtoonListProps {
   showTags?: boolean;
 }
 
-const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, size = 360, showTags = true }) => {
+const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, size = 220, showTags = true }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(webtoons.length / itemsPerPage);
@@ -26,21 +26,19 @@ const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, size = 360, showTag
     }
   };
 
-  const cardHeight = size; 
-  const cardWidth = ((cardHeight * 220) / 360 + 10) * 4; 
 
   return (
     <div className={styles.webtoonList}>
       <div
         className={styles.carousel}
-        style={{ transform: `translateX(-${currentPage * cardWidth}px)` }}
+        style={{ transform: `translateX(-${currentPage * (size + 10) * 5 }px)` }}
       >
         {webtoons.map((webtoon) => (
           <WebtoonCard
             key={webtoon.id}
             webtoon={webtoon}
             showTags={showTags}
-            size={cardHeight}
+            size={size}
           />
         ))}
       </div>
