@@ -8,9 +8,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -32,33 +34,40 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "webtoon")
+@Table(
+    name = "webtoon",
+    indexes = {
+        @Index(name = "idx_platform", columnList = "platform"),
+        @Index(name = "idx_serialization_status", columnList = "serializationStatus")
+    }
+)
 public class Webtoon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
+    @NotNull
     private Platform platform;
 
-    @Column(unique = true)
+    // todo : 추후 필드 제거 (id 자동 생성을 제거하고 platform id를 조합한 방식으로 전환 할 것)
     private String platformId;
 
     @NotNull
     private String title;
 
+    @NotNull
     private String titleWithoutSpaces;
 
     private String thumbnailUrl;
 
     @NotNull
-    private String url;
+    private String link;
 
-    @Enumerated(EnumType.STRING)
+    @NotNull
     private SerializationStatus serializationStatus;
 
-    @Enumerated(EnumType.STRING)
+    @NotNull
     private AgeRating ageRating;
 
     @Column(length = 3000)
@@ -73,7 +82,7 @@ public class Webtoon {
     @Enumerated(EnumType.STRING)
     private DayOfWeek week;
 
-    @ManyToMany
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
             name = "webtoon_author",
             joinColumns = @JoinColumn(name = "webtoon_id"),
@@ -81,7 +90,7 @@ public class Webtoon {
     )
     private Set<Author> authors = new HashSet<>();
 
-    @ManyToMany
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
             name = "webtoon_genre",
             joinColumns = @JoinColumn(name = "webtoon_id"),
@@ -104,7 +113,7 @@ public class Webtoon {
     private int ratingCount = 0;
 
     @Builder
-    public Webtoon(Long id, String title, Platform platform, String platformId, float ratingSum, int ratingCount, float averageRating, String description, SerializationStatus serializationStatus, int episodeCount, LocalDate serializationStartDate, LocalDate lastUpdatedDate, DayOfWeek week, String thumbnailUrl, String url, AgeRating ageRating, Set<Author> authors, Set<Genre> genres) {
+    public Webtoon(Long id, String title, Platform platform, String platformId, float ratingSum, int ratingCount, float averageRating, String description, SerializationStatus serializationStatus, int episodeCount, LocalDate serializationStartDate, LocalDate lastUpdatedDate, DayOfWeek week, String thumbnailUrl, String link, AgeRating ageRating, Set<Author> authors, Set<Genre> genres) {
         this.id = id;
         this.title = title;
         this.titleWithoutSpaces = title != null ? title.replaceAll(" ", "") : null;
@@ -120,7 +129,7 @@ public class Webtoon {
         this.lastUpdatedDate = lastUpdatedDate;
         this.week = week;
         this.thumbnailUrl = thumbnailUrl;
-        this.url = url;
+        this.link = link;
         this.ageRating = ageRating;
         this.authors = authors != null ? authors : new HashSet<>();
         this.genres = genres != null ? genres : new HashSet<>();
@@ -144,7 +153,7 @@ public class Webtoon {
         this.lastUpdatedDate = lastUpdatedDate;
         this.week = week;
         this.thumbnailUrl = thumbnailUrl;
-        this.url = url;
+        this.link = url;
         this.ageRating = ageRating;
         this.authors = authors != null ? authors : this.authors;
         this.genres = genres != null ? genres : this.genres;

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "genre")
+@Table(name = "webtoon_genre")
 public class Genre {
 
     @Id

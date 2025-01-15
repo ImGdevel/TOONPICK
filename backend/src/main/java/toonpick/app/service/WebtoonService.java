@@ -66,7 +66,7 @@ public class WebtoonService {
                 .serializationStatus(webtoonDTO.getSerializationStatus())
                 .week(webtoonDTO.getWeek())
                 .thumbnailUrl(webtoonDTO.getThumbnailUrl())
-                .url(webtoonDTO.getUrl())
+                .link(webtoonDTO.getUrl())
                 .ageRating(webtoonDTO.getAgeRating())
                 .authors(authors)
                 .genres(genres)
