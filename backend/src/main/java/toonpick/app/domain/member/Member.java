@@ -1,4 +1,4 @@
-package toonpick.app.member.entity;
+package toonpick.app.domain.member;
 
 import jakarta.persistence.*;
 import lombok.Builder;

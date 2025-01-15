@@ -1,14 +1,14 @@
-package toonpick.app.member.service;
+package toonpick.app.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.member.dto.MemberDTO;
-import toonpick.app.member.dto.MemberProfileDTO;
-import toonpick.app.member.entity.Member;
-import toonpick.app.member.mapper.MemberMapper;
-import toonpick.app.member.repository.MemberRepository;
+import toonpick.app.dto.MemberDTO;
+import toonpick.app.dto.MemberProfileDTO;
+import toonpick.app.domain.member.Member;
+import toonpick.app.mapper.MemberMapper;
+import toonpick.app.repository.MemberRepository;
 
 @Service
 @RequiredArgsConstructor

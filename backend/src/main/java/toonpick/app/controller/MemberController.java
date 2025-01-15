@@ -1,4 +1,4 @@
-package toonpick.app.member.controller;
+package toonpick.app.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.common.utils.AuthenticationUtil;
-import toonpick.app.member.dto.MemberDTO;
-import toonpick.app.member.service.MemberService;
+import toonpick.app.dto.MemberDTO;
+import toonpick.app.service.MemberService;
 
 @RequiredArgsConstructor
 @RestController

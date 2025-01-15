@@ -1,16 +1,16 @@
-package toonpick.app.member.service;
+package toonpick.app.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.WebtoonDTO;
-import toonpick.app.member.entity.Member;
-import toonpick.app.member.entity.MemberFavoriteWebtoon;
+import toonpick.app.domain.member.Member;
+import toonpick.app.domain.member.MemberFavoriteWebtoon;
 import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
-import toonpick.app.member.repository.MemberFavoriteWebtoonRepository;
-import toonpick.app.member.repository.MemberRepository;
+import toonpick.app.repository.MemberFavoriteWebtoonRepository;
+import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.WebtoonRepository;
 
 import java.time.LocalDateTime;

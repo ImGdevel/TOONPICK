@@ -4,7 +4,7 @@ import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import toonpick.app.member.entity.Member;
+import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
 
 import java.util.List;

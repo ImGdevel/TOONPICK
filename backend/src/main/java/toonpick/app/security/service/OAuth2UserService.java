@@ -10,10 +10,10 @@ import toonpick.app.security.user.CustomOAuth2UserDetails;
 import toonpick.app.security.dto.oauth2responseImpl.GoogleResponse;
 import toonpick.app.security.dto.oauth2responseImpl.NaverResponse;
 import toonpick.app.security.dto.OAuth2Response;
-import toonpick.app.member.dto.MemberDTO;
-import toonpick.app.member.entity.Member;
-import toonpick.app.member.mapper.MemberMapper;
-import toonpick.app.member.repository.MemberRepository;
+import toonpick.app.dto.MemberDTO;
+import toonpick.app.domain.member.Member;
+import toonpick.app.mapper.MemberMapper;
+import toonpick.app.repository.MemberRepository;
 
 import java.util.Map;
 

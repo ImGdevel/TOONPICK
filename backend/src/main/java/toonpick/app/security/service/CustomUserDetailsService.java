@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import toonpick.app.security.user.CustomUserDetails;
-import toonpick.app.member.entity.Member;
-import toonpick.app.member.repository.MemberRepository;
+import toonpick.app.domain.member.Member;
+import toonpick.app.repository.MemberRepository;
 
 @Service
 @RequiredArgsConstructor

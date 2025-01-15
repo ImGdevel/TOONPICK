@@ -1,4 +1,4 @@
-package toonpick.app.member.controller;
+package toonpick.app.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.common.utils.AuthenticationUtil;
-import toonpick.app.member.service.MemberFavoriteWebtoonService;
+import toonpick.app.service.MemberFavoriteWebtoonService;
 import toonpick.app.dto.WebtoonDTO;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package toonpick.app.member.dto;
+package toonpick.app.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

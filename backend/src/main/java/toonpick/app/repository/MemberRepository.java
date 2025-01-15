@@ -1,6 +1,6 @@
-package toonpick.app.member.repository;
+package toonpick.app.repository;
 
-import toonpick.app.member.entity.Member;
+import toonpick.app.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
