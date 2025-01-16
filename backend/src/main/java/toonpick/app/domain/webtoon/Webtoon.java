@@ -2,8 +2,6 @@ package toonpick.app.domain.webtoon;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,8 +10,9 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
@@ -38,7 +37,8 @@ import java.util.Set;
     name = "webtoon",
     indexes = {
         @Index(name = "idx_platform", columnList = "platform"),
-        @Index(name = "idx_serialization_status", columnList = "serializationStatus")
+        @Index(name = "idx_status", columnList = "status"),
+        @Index(name = "idx_day_of_week", columnList = "day_of_week")
     }
 )
 public class Webtoon {
@@ -48,39 +48,50 @@ public class Webtoon {
     private Long id;
 
     @NotNull
-    private Platform platform;
-
-    // todo : 추후 필드 제거 (id 자동 생성을 제거하고 platform id를 조합한 방식으로 전환 할 것)
-    private String platformId;
-
-    @NotNull
+    @Column(name = "title", nullable = false)
     private String title;
 
     @NotNull
+    @Column(name = "normalized_title", nullable = false)
     private String titleWithoutSpaces;
 
-    private String thumbnailUrl;
+    @NotNull
+    @Column(name = "platform", nullable = false, length = 8)
+    private Platform platform;
 
     @NotNull
-    private String link;
+    @Column(name = "external_id", nullable = false, unique = true)
+    private String externalId;
+
+    @Column(name = "day_of_week")
+    private DayOfWeek dayOfWeek;
 
     @NotNull
+    @Column(name = "status", nullable = false)
     private SerializationStatus serializationStatus;
 
     @NotNull
+    @Column(name = "age_rating", nullable = false)
     private AgeRating ageRating;
 
-    @Column(length = 3000)
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl;
+
+    @NotNull
+    @Column(name = "link", nullable = false)
+    private String link;
+
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "episode_count")
     private int episodeCount;
 
-    private LocalDate serializationStartDate;
+    @Column(name = "publish_start_date")
+    private LocalDate publishStartDate;
 
+    @Column(name = "last_update_date")
     private LocalDate lastUpdatedDate;
-
-    @Enumerated(EnumType.STRING)
-    private DayOfWeek week;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -101,9 +112,6 @@ public class Webtoon {
     @OneToMany(mappedBy = "webtoon", fetch = FetchType.LAZY)
     private Set<WebtoonReview> userRatings = new HashSet<>();
 
-    @Version
-    private int version;
-
     private float platformRating = 0;
 
     private float averageRating = 0;
@@ -112,50 +120,74 @@ public class Webtoon {
 
     private int ratingCount = 0;
 
+    @Version
+    private int version;
+
     @Builder
-    public Webtoon(Long id, String title, Platform platform, String platformId, float ratingSum, int ratingCount, float averageRating, String description, SerializationStatus serializationStatus, int episodeCount, LocalDate serializationStartDate, LocalDate lastUpdatedDate, DayOfWeek week, String thumbnailUrl, String link, AgeRating ageRating, Set<Author> authors, Set<Genre> genres) {
+    public Webtoon(Long id,
+                   String externalId,
+                   String title,
+                   Platform platform,
+                   DayOfWeek dayOfWeek,
+                   String thumbnailUrl,
+                   String link,
+                   AgeRating ageRating,
+                   String description,
+                   SerializationStatus serializationStatus,
+                   int episodeCount,
+                   float platformRating,
+                   LocalDate publishStartDate,
+                   LocalDate lastUpdatedDate,
+                   Set<Author> authors,
+                   Set<Genre> genres) {
         this.id = id;
+        this.externalId = externalId;
         this.title = title;
-        this.titleWithoutSpaces = title != null ? title.replaceAll(" ", "") : null;
         this.platform = platform;
-        this.platformId = platformId;
-        this.ratingSum = ratingSum;
-        this.ratingCount = ratingCount;
-        this.averageRating = averageRating;
-        this.description = description;
-        this.serializationStatus = serializationStatus;
-        this.episodeCount = episodeCount;
-        this.serializationStartDate = serializationStartDate;
-        this.lastUpdatedDate = lastUpdatedDate;
-        this.week = week;
+        this.dayOfWeek = dayOfWeek;
         this.thumbnailUrl = thumbnailUrl;
         this.link = link;
         this.ageRating = ageRating;
+        this.description = description;
+        this.serializationStatus = serializationStatus;
+        this.platformRating = platformRating;
+        this.episodeCount = episodeCount;
+        this.publishStartDate = publishStartDate;
+        this.lastUpdatedDate = lastUpdatedDate;
         this.authors = authors != null ? authors : new HashSet<>();
         this.genres = genres != null ? genres : new HashSet<>();
     }
 
-    public void addRating(float newRating) {
-        this.ratingSum += newRating;
-        this.ratingCount += 1;
-        this.averageRating = this.ratingSum / this.ratingCount;
+    public void updateEpisodeCountAndDate(int episodeCount, LocalDate lastUpdatedDate) {
+        this.episodeCount = episodeCount;
+        this.lastUpdatedDate = lastUpdatedDate;
     }
 
-    public void update(String title, Platform platform, float averageRating, String description, int episodeCount, LocalDate serializationStartDate, LocalDate lastUpdatedDate, SerializationStatus serializationStatus, DayOfWeek week, String thumbnailUrl, String url, AgeRating ageRating, Set<Author> authors, Set<Genre> genres) {
+    public void updateWebtoonDetails(String title,
+                                     Platform platform,
+                                     String description,
+                                     SerializationStatus serializationStatus,
+                                     DayOfWeek dayOfWeek,
+                                     String thumbnailUrl,
+                                     String link,
+                                     AgeRating ageRating,
+                                     Set<Author> authors,
+                                     Set<Genre> genres) {
         this.title = title;
-        this.titleWithoutSpaces = title != null ? title.replaceAll(" ", "") : this.titleWithoutSpaces;
         this.platform = platform;
-        this.averageRating = averageRating;
         this.description = description;
         this.serializationStatus = serializationStatus;
-        this.episodeCount = episodeCount;
-        this.serializationStartDate = serializationStartDate;
-        this.lastUpdatedDate = lastUpdatedDate;
-        this.week = week;
+        this.dayOfWeek = dayOfWeek;
         this.thumbnailUrl = thumbnailUrl;
-        this.link = url;
+        this.link = link;
         this.ageRating = ageRating;
         this.authors = authors != null ? authors : this.authors;
         this.genres = genres != null ? genres : this.genres;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void prePersistAndUpdate() {
+        this.titleWithoutSpaces = this.title != null ? this.title.replaceAll(" ", "") : null;
     }
 }
