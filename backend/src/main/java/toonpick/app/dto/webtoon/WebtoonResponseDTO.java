@@ -1,5 +1,6 @@
 package toonpick.app.dto.webtoon;
 
+import lombok.Builder;
 import lombok.Data;
 import toonpick.app.domain.webtoon.enums.AgeRating;
 import toonpick.app.domain.webtoon.enums.Platform;
@@ -12,15 +13,16 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Data
+@Builder
 public class WebtoonResponseDTO {
     private Long id;
     private String title;
     private Platform platform;
     private String description;
     private SerializationStatus serializationStatus;
-    private DayOfWeek week;
+    private DayOfWeek dayOfWeek;
     private String thumbnailUrl;
-    private String url;
+    private String link;
     private AgeRating ageRating;
     private Set<AuthorDTO> authors;
     private Set<GenreDTO> genres;

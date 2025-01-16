@@ -1,5 +1,6 @@
 package toonpick.app.dto.webtoon;
 
+import lombok.Builder;
 import lombok.Data;
 import toonpick.app.domain.webtoon.enums.AgeRating;
 import toonpick.app.domain.webtoon.enums.Platform;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Data
+@Builder
 public class WebtoonCreateRequestDTO {
 
     private String title;

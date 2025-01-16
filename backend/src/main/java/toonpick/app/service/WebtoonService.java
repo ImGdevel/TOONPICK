@@ -123,9 +123,9 @@ public class WebtoonService {
                 webtoonRequestDTO.getPlatform(),
                 webtoonRequestDTO.getDescription(),
                 webtoonRequestDTO.getSerializationStatus(),
-                webtoonRequestDTO.getWeek(),
+                webtoonRequestDTO.getDayOfWeek(),
                 webtoonRequestDTO.getThumbnailUrl(),
-                webtoonRequestDTO.getUrl(),
+                webtoonRequestDTO.getLink(),
                 webtoonRequestDTO.getAgeRating(),
                 authors,
                 genres
