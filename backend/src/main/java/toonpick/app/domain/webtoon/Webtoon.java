@@ -47,6 +47,9 @@ public class Webtoon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "external_id", nullable = false, unique = true)
+    private String externalId;
+
     @NotNull
     @Column(name = "title", nullable = false)
     private String title;
@@ -58,10 +61,6 @@ public class Webtoon {
     @NotNull
     @Column(name = "platform", nullable = false, length = 8)
     private Platform platform;
-
-    @NotNull
-    @Column(name = "external_id", nullable = false, unique = true)
-    private String externalId;
 
     @Column(name = "day_of_week")
     private DayOfWeek dayOfWeek;

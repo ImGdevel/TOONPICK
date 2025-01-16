@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.AuthorDTO;
 import toonpick.app.dto.GenreDTO;
 import toonpick.app.dto.PagedResponseDTO;
-import toonpick.app.dto.WebtoonDTO;
 import toonpick.app.dto.WebtoonFilterDTO;
-import toonpick.app.dto.WebtoonUpdateRequestDTO;
 import toonpick.app.domain.webtoon.Author;
 import toonpick.app.domain.webtoon.Genre;
 import toonpick.app.domain.webtoon.Webtoon;
@@ -48,7 +46,7 @@ public class WebtoonService {
     // 웹툰 추가
     @Transactional
     public WebtoonResponseDTO createWebtoon(WebtoonCreateRequestDTO createRequestDTO) {
-        Optional<Webtoon> existingWebtoon = webtoonRepository.findByPlatformId(createRequestDTO.getExternalId());
+        Optional<Webtoon> existingWebtoon = webtoonRepository.findByExternalId(createRequestDTO.getExternalId());
         if (existingWebtoon.isPresent()) {
             return null;
         }

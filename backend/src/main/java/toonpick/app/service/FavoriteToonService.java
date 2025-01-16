@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.domain.favoritetoon.FavoriteToon;
-import toonpick.app.dto.WebtoonDTO;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
+import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.FavoriteToonRepository;
@@ -62,14 +62,14 @@ public class FavoriteToonService {
     }
 
     @Transactional(readOnly = true)
-    public List<WebtoonDTO> getFavoriteWebtoons(String username) {
+    public List<WebtoonResponseDTO> getFavoriteWebtoons(String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found with username: " + username));
 
         List<Webtoon> favoriteWebtoons = favoriteRepository.findFavoriteWebtoonsByMember(member);
 
         return favoriteWebtoons.stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
+                .map(webtoonMapper::webtoonToWebtoonResponseDto)
                 .collect(Collectors.toList());
     }
 

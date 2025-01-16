@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import toonpick.app.dto.WebtoonDTO;
+import toonpick.app.dto.webtoon.WebtoonCreateRequestDTO;
+import toonpick.app.dto.webtoon.WebtoonRequestDTO;
+import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.service.WebtoonService;
 
 @RequiredArgsConstructor
@@ -24,15 +26,14 @@ public class AdminWebtoonController {
     // todo : 추후 @PreAuthorize("hasRole('ADMIN')") 어노테이션을 추가할 것
 
     @PutMapping("/{id}")
-
-    public ResponseEntity<WebtoonDTO> updateWebtoon(@PathVariable Long id, @RequestBody WebtoonDTO webtoonDTO) {
-        WebtoonDTO updatedWebtoon = webtoonService.updateWebtoon(id, webtoonDTO);
+    public ResponseEntity<WebtoonResponseDTO> updateWebtoon(@PathVariable Long id, @RequestBody WebtoonRequestDTO webtoonDTO) {
+        WebtoonResponseDTO updatedWebtoon = webtoonService.updateWebtoon(id, webtoonDTO);
         return ResponseEntity.ok(updatedWebtoon);
     }
 
     @PostMapping
-    public ResponseEntity<WebtoonDTO> createWebtoon(@RequestBody WebtoonDTO webtoonDTO) {
-        WebtoonDTO createdWebtoon = webtoonService.createWebtoon(webtoonDTO);
+    public ResponseEntity<WebtoonResponseDTO> createWebtoon(@RequestBody WebtoonCreateRequestDTO webtoonDTO) {
+        WebtoonResponseDTO createdWebtoon = webtoonService.createWebtoon(webtoonDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWebtoon);
     }
 

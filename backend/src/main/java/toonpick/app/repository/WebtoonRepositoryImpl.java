@@ -72,8 +72,8 @@ public class WebtoonRepositoryImpl implements WebtoonRepositoryCustom {
         return ageRating != null ? QWebtoon.webtoon.ageRating.eq(ageRating) : null;
     }
 
-    private BooleanExpression weekEq(java.time.DayOfWeek week) {
-        return week != null ? QWebtoon.webtoon.week.eq(week) : null;
+    private BooleanExpression weekEq(java.time.DayOfWeek dayOfWeek) {
+        return dayOfWeek != null ? QWebtoon.webtoon.dayOfWeek.eq(dayOfWeek) : null;
     }
 
     private BooleanExpression genresIn(Set<String> genres) {

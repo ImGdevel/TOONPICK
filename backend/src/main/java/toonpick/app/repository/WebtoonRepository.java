@@ -1,25 +1,16 @@
 package toonpick.app.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.domain.webtoon.Webtoon;
-import toonpick.app.domain.webtoon.enums.SerializationStatus;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, WebtoonRepositoryCustom {
-   Optional<Webtoon> findByPlatformId(String platformId);
-
-    List<Webtoon> findByAuthors_Name(String authorName);
-    List<Webtoon> findByGenres_Name(String genreName);
-
-    Page<Webtoon> findBySerializationStatus(SerializationStatus status, Pageable pageable);
+   Optional<Webtoon> findByExternalId(String externalId);
 
     @Modifying
     @Transactional
