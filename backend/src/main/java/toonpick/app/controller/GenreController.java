@@ -1,4 +1,4 @@
-package toonpick.app.controller.webtoon;
+package toonpick.app.controller;
 
 import lombok.RequiredArgsConstructor;
 import toonpick.app.dto.GenreDTO;

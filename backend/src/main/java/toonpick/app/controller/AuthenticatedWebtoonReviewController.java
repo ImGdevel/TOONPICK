@@ -1,4 +1,4 @@
-package toonpick.app.controller.review;
+package toonpick.app.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

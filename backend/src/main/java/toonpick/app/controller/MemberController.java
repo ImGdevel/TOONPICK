@@ -1,4 +1,4 @@
-package toonpick.app.controller.member;
+package toonpick.app.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
