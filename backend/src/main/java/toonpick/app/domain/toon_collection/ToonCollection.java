@@ -1,4 +1,4 @@
-package toonpick.app.domain.collection;
+package toonpick.app.domain.toon_collection;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

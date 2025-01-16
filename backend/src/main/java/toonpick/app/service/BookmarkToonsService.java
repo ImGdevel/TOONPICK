@@ -1,8 +1,10 @@
-package toonpick.app.domain.WatchingToons;
+package toonpick.app.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import toonpick.app.domain.bookmark_toons.BookmarkToons;
+import toonpick.app.repository.BookmarkToonsRepository;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.domain.member.Member;
 import toonpick.app.repository.MemberRepository;
@@ -13,47 +15,47 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class WatchingToonsService {
+public class BookmarkToonsService {
 
-    private final WatchingToonsRepository watchingToonsRepository;
+    private final BookmarkToonsRepository bookmarkToonsRepository;
     private final MemberRepository memberRepository;
     private final WebtoonRepository webtoonRepository;
 
     @Transactional
-    public boolean createWatchingToons(String username, Long webtoonId){
+    public boolean createBookmarkToons(String username, Long webtoonId){
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(()-> new ResourceNotFoundException("Member not found"));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(()-> new ResourceNotFoundException("Webtoon not found"));
 
-        WatchingToons watchingToons = WatchingToons.builder()
+        BookmarkToons bookmarkToons = BookmarkToons.builder()
                                         .member(member)
                                         .webtoon(webtoon)
                                         .build();
 
-        watchingToonsRepository.save(watchingToons);
+        bookmarkToonsRepository.save(bookmarkToons);
         return true;
     }
 
     @Transactional
-    public boolean deleteWatchingToons(String username, Long webtoonId){
+    public boolean deleteBookmarkToons(String username, Long webtoonId){
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(()-> new ResourceNotFoundException("Member not found"));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(()-> new ResourceNotFoundException("Webtoon not found"));
-        WatchingToons watchingToons = watchingToonsRepository.findByMemberAndWebtoon(member, webtoon)
-                .orElseThrow(() -> new ResourceNotFoundException("WatchingToons not found"));
+        BookmarkToons bookmarkToons = bookmarkToonsRepository.findByMemberAndWebtoon(member, webtoon)
+                .orElseThrow(() -> new ResourceNotFoundException("Bookmarks not found"));
 
-        watchingToonsRepository.delete(watchingToons);
+        bookmarkToonsRepository.delete(bookmarkToons);
         return true;
     }
 
     @Transactional(readOnly = true)
     public List<Webtoon> getWebtoonsByUsername(String username) {
-        Member member = memberRepository.findByUsername(username)
+         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(()-> new ResourceNotFoundException("Member not found"));
 
-        return watchingToonsRepository.findWebtoonsByMember(member);
+         return bookmarkToonsRepository.findWebtoonsByMember(member);
     }
 
 }

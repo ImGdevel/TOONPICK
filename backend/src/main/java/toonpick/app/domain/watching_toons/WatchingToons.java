@@ -1,4 +1,4 @@
-package toonpick.app.domain.WatchingToons;
+package toonpick.app.domain.watching_toons;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

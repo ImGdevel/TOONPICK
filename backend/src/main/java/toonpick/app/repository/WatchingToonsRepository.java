@@ -1,9 +1,10 @@
-package toonpick.app.domain.bookmark;
+package toonpick.app.repository;
 
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import toonpick.app.domain.watching_toons.WatchingToons;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
 
@@ -11,11 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BookmarkToonsRepository extends JpaRepository<BookmarkToons, Long> {
+public interface WatchingToonsRepository extends JpaRepository<WatchingToons, Long> {
 
-    Optional<BookmarkToons> findByMemberAndWebtoon(Member member, Webtoon webtoon);
+    Optional<WatchingToons> findByMemberAndWebtoon(Member member, Webtoon webtoon);
 
-    @Query("SELECT b.webtoon FROM BookmarkToons b WHERE b.member = :member")
+    @Query("SELECT w.webtoon FROM WatchingToons w WHERE w.member = :member")
     List<Webtoon> findWebtoonsByMember(@Param("member") Member member);
 
 }

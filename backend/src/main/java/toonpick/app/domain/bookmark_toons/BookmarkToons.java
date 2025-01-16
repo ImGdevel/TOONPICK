@@ -1,4 +1,4 @@
-package toonpick.app.domain.bookmark;
+package toonpick.app.domain.bookmark_toons;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

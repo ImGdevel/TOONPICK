@@ -1,9 +1,11 @@
-package toonpick.app.domain.collection;
+package toonpick.app.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import toonpick.app.domain.toon_collection.ToonCollection;
+import toonpick.app.repository.ToonCollectionRepository;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.repository.WebtoonRepository;
