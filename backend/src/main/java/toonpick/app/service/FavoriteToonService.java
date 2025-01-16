@@ -3,13 +3,13 @@ package toonpick.app.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import toonpick.app.domain.favoritetoon.FavoriteToon;
 import toonpick.app.dto.WebtoonDTO;
 import toonpick.app.domain.member.Member;
-import toonpick.app.domain.member.MemberFavoriteWebtoon;
 import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
-import toonpick.app.repository.MemberFavoriteWebtoonRepository;
+import toonpick.app.repository.FavoriteToonRepository;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.WebtoonRepository;
 
@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class MemberFavoriteWebtoonService {
+public class FavoriteToonService {
 
-    private final MemberFavoriteWebtoonRepository favoriteRepository;
+    private final FavoriteToonRepository favoriteRepository;
     private final WebtoonRepository webtoonRepository;
     private final MemberRepository memberRepository;
     private final WebtoonMapper webtoonMapper;
@@ -39,7 +39,7 @@ public class MemberFavoriteWebtoonService {
             throw new IllegalArgumentException("This webtoon is already added to favorites.");
         }
 
-        MemberFavoriteWebtoon favorite = MemberFavoriteWebtoon.builder()
+        FavoriteToon favorite = FavoriteToon.builder()
                 .member(member)
                 .webtoon(webtoon)
                 .addedDate(LocalDateTime.now())
@@ -55,7 +55,7 @@ public class MemberFavoriteWebtoonService {
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
-        MemberFavoriteWebtoon favorite = favoriteRepository.findByMemberAndWebtoon(member, webtoon)
+        FavoriteToon favorite = favoriteRepository.findByMemberAndWebtoon(member, webtoon)
                 .orElseThrow(() -> new ResourceNotFoundException("Favorite not found"));
 
         favoriteRepository.delete(favorite);

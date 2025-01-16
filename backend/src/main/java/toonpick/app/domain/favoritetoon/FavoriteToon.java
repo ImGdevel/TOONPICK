@@ -1,4 +1,4 @@
-package toonpick.app.domain.member;
+package toonpick.app.domain.favoritetoon;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
 
 import java.time.LocalDateTime;
@@ -21,12 +22,12 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
-    name = "member_favorite_webtoon",
+    name = "favorite_toon",
     uniqueConstraints = {
         @UniqueConstraint(columnNames = {"member_id", "webtoon_id"})
     }
 )
-public class MemberFavoriteWebtoon {
+public class FavoriteToon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +44,7 @@ public class MemberFavoriteWebtoon {
     private LocalDateTime addedDate;
 
     @Builder
-    public MemberFavoriteWebtoon(Member member, Webtoon webtoon, LocalDateTime addedDate) {
+    public FavoriteToon(Member member, Webtoon webtoon, LocalDateTime addedDate) {
         this.member = member;
         this.webtoon = webtoon;
         this.addedDate = addedDate;

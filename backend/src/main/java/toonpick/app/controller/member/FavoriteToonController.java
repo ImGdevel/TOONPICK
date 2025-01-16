@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.utils.AuthenticationUtil;
-import toonpick.app.service.MemberFavoriteWebtoonService;
+import toonpick.app.service.FavoriteToonService;
 import toonpick.app.dto.WebtoonDTO;
 
 import java.util.List;
@@ -19,16 +19,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/secure/member/favorites")
-public class MemberFavoriteWebtoonController {
+public class FavoriteToonController {
 
-    private final MemberFavoriteWebtoonService memberFavoriteWebtoonService;
+    private final FavoriteToonService favoriteToonService;
     private final AuthenticationUtil authenticationUtil;
 
     // 즐겨찾기 추가
     @PostMapping("/{webtoonId}")
     public ResponseEntity<Void> addFavoriteWebtoon(@PathVariable Long webtoonId, Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        memberFavoriteWebtoonService.addFavoriteWebtoon(username, webtoonId);
+        favoriteToonService.addFavoriteWebtoon(username, webtoonId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -36,7 +36,7 @@ public class MemberFavoriteWebtoonController {
     @DeleteMapping("/{webtoonId}")
     public ResponseEntity<Void> removeFavoriteWebtoon(@PathVariable Long webtoonId, Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        memberFavoriteWebtoonService.removeFavoriteWebtoon(username, webtoonId);
+        favoriteToonService.removeFavoriteWebtoon(username, webtoonId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -44,7 +44,7 @@ public class MemberFavoriteWebtoonController {
     @GetMapping
     public ResponseEntity<List<WebtoonDTO>> getFavoriteWebtoons(Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        List<WebtoonDTO> favoriteWebtoons = memberFavoriteWebtoonService.getFavoriteWebtoons(username);
+        List<WebtoonDTO> favoriteWebtoons = favoriteToonService.getFavoriteWebtoons(username);
         return ResponseEntity.ok(favoriteWebtoons);
     }
 
@@ -52,7 +52,7 @@ public class MemberFavoriteWebtoonController {
     @GetMapping("/{webtoonId}/is-favorite")
     public ResponseEntity<Boolean> isFavoriteWebtoon(@PathVariable Long webtoonId, Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        boolean isFavorite = memberFavoriteWebtoonService.isFavoriteWebtoon(username, webtoonId);
+        boolean isFavorite = favoriteToonService.isFavoriteWebtoon(username, webtoonId);
         return ResponseEntity.ok(isFavorite);
     }
 }
