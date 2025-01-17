@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.member.MemberProfileDetailsResponseDTO;
+import toonpick.app.dto.member.MemberProfileRequestDTO;
 import toonpick.app.dto.member.MemberProfileResponseDTO;
 import toonpick.app.dto.member.MemberResponseDTO;
 import toonpick.app.domain.member.Member;
@@ -36,11 +37,14 @@ public class MemberService {
 
     // Member 프로필 업데이트
     @Transactional
-    public void updateProfile(String username, String nickname, String profilePicture) {
+    public void updateProfile(String username, MemberProfileRequestDTO memberProfileRequestDTO) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
 
-        member.updateProfile(nickname, profilePicture);
+        member.updateProfile(
+                memberProfileRequestDTO.getNickname(),
+                memberProfileRequestDTO.getProfilePicture()
+        );
 
         memberRepository.save(member);
     }
