@@ -4,6 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Error 코드 정의
+ * 유의 : Error 코드 작성시 [타깃] [문제/원인] 컨벤션을 따를 것
+ */
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ErrorCode {
@@ -13,19 +17,19 @@ public enum ErrorCode {
     INVALID_INPUT(1001, "Invalid input provided"),
     PERMISSION_DENIED(1002, "Permission denied"),
 
-    // 2xxx : security error
+    // 2xxx : Security error
 
-
-    // 22xx : jwt error
-    ACCESS_TOKEN_NOT_FOUND(2221, "access token not found"),
-    REFRESH_TOKEN_NOT_FOUND(2222,"refresh token not found"),
-    INVALID_ACCESS_TOKEN(2223,"invalid access token"),
-    INVALID_REFRESH_TOKEN(2224,"invalid refresh token"),
-    EXPIRED_ACCESS_TOKEN(2225,"access token expired"),
-    EXPIRED_REFRESH_TOKEN(2226,"refresh token expired"),
+    // 22xx : JWT error
+    ACCESS_TOKEN_MISSING(2221, "Access token is missing"),
+    REFRESH_TOKEN_MISSING(2222, "Refresh token is missing"),
+    ACCESS_TOKEN_INVALID(2223, "Access token is invalid"),
+    REFRESH_TOKEN_INVALID(2224, "Refresh token is invalid"),
+    ACCESS_TOKEN_EXPIRED(2225, "Access token has expired"),
+    EXPIRED_REFRESH_TOKEN(2226, "Refresh token has expired"),
+    REFRESH_TOKEN_NOT_FOUND(2227, "Refresh token not found in cache"),
 
     // 4xxx : Database error
-    DATABASE_ERROR(4000, "General database error"),
+    DATABASE_ERROR(4000, "Database error occurred"),
     DATA_ACCESS_ERROR(4001, "Error accessing data"),
     DATA_SAVE_ERROR(4002, "Error saving data"),
     DATA_DELETE_ERROR(4003, "Error deleting data"),

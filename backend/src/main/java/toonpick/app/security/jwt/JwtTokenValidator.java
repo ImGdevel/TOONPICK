@@ -29,10 +29,10 @@ public class JwtTokenValidator {
     // Access Token 검증
     public void validateAccessToken(String token) {
         if (jwtTokenProvider.isExpired(token)) {
-            throw new ExpiredJwtTokenException(ErrorCode.EXPIRED_ACCESS_TOKEN);
+            throw new ExpiredJwtTokenException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
         if (!"access".equals(jwtTokenProvider.getCategory(token))) {
-            throw new InvalidJwtTokenException(ErrorCode.INVALID_ACCESS_TOKEN);
+            throw new InvalidJwtTokenException(ErrorCode.ACCESS_TOKEN_INVALID);
         }
     }
 
@@ -52,7 +52,7 @@ public class JwtTokenValidator {
     // Refresh Token 검증
     public void validateRefreshToken(String refreshToken) {
         if (refreshToken == null || refreshToken.isEmpty()) {
-            throw new MissingJwtTokenException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
+            throw new MissingJwtTokenException(ErrorCode.REFRESH_TOKEN_MISSING);
         }
 
         if (jwtTokenProvider.isExpired(refreshToken)) {
@@ -60,7 +60,7 @@ public class JwtTokenValidator {
         }
 
         if (!"refresh".equals(jwtTokenProvider.getCategory(refreshToken))) {
-            throw new InvalidJwtTokenException(ErrorCode.INVALID_REFRESH_TOKEN);
+            throw new InvalidJwtTokenException(ErrorCode.REFRESH_TOKEN_INVALID);
         }
     }
 
