@@ -12,17 +12,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import toonpick.app.security.user.CustomOAuth2UserDetails;
-import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.security.token.TokenService;
+import toonpick.app.utils.CookieUtils;
 
 import java.io.IOException;
-import java.util.Collection;
 
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final TokenService tokenService;
 
     private static final Logger logger = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
@@ -31,18 +29,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomOAuth2UserDetails customUserDetails = (CustomOAuth2UserDetails) authentication.getPrincipal();
         String username = customUserDetails.getUsername();
+        String role = authentication.getAuthorities().stream().
+                findFirst().map(GrantedAuthority::getAuthority).orElse("");
 
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        String role = authorities.stream().findFirst().map(GrantedAuthority::getAuthority).orElse("");
-
-        String refreshToken = jwtTokenProvider.createRefreshToken( username, role);
-        String accessToken = jwtTokenProvider.createAccessToken(username, role);
-
-        tokenService.saveRefreshToken(username, refreshToken);
+        String refreshToken = tokenService.issueAccessToken(username, role);
+        String accessToken = tokenService.issueRefreshToken(username, role);
 
         response.setHeader("Authorization", "Bearer " + accessToken);
-        response.addCookie(jwtTokenProvider.createCookie("refresh", refreshToken));
+        response.addCookie(CookieUtils.createEmptyCookie(refreshToken));
         response.setStatus(HttpStatus.OK.value());
+        logger.info("USER LOGIN SUCCESS (username-{})", username);
 
         response.sendRedirect("http://localhost:3000/refresh");
     }

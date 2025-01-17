@@ -17,6 +17,7 @@ import toonpick.app.exception.exception.MissingJwtTokenException;
 import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.security.token.TokenService;
+import toonpick.app.utils.CookieUtils;
 
 @Controller
 @ResponseBody
@@ -42,8 +43,7 @@ public class TokenReissueController {
             // Refresh 토큰 갱신 필요 여부 확인 및 갱신
             if (jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)) {
                 String newRefreshToken = tokenService.reissueRefreshToken(refreshToken);
-                Cookie newRefreshCookie = jwtTokenProvider.createCookie("refresh", newRefreshToken);
-                response.addCookie(newRefreshCookie);
+                response.addCookie(CookieUtils.createRefreshCookie(newRefreshToken));
             }
 
             return new ResponseEntity<>(HttpStatus.OK);

@@ -1,12 +1,12 @@
 package toonpick.app.security.handler;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import toonpick.app.security.token.TokenService;
+import toonpick.app.utils.CookieUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -21,10 +21,7 @@ public class LogoutHandler {
 
         tokenService.deleteRefreshToken(refreshToken);
 
-        Cookie cookie = new Cookie("refresh", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        response.addCookie(CookieUtils.createEmptyCookie("refresh"));
 
         response.setStatus(HttpServletResponse.SC_OK);
     }
