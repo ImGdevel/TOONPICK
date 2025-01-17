@@ -43,13 +43,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({OptimisticLockException.class, OptimisticLockingFailureException.class})
     public ResponseEntity<String> handleOptimisticLock(Exception ex) {
         LOGGER.error("Concurrency issue: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                             .body("동시성 문제가 발생했습니다. 다시 시도해주세요.");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception ex) {
         LOGGER.error("Unexpected error: {}", ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 }
