@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import toonpick.app.security.jwt.JwtTokenProvider;
+import toonpick.app.utils.CookieUtils;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -102,17 +103,4 @@ class JwtTokenProviderTest {
         Assertions.assertTrue(expiration.after(new Date()));
     }
 
-    @Test
-    @DisplayName("쿠키 생성 확인")
-    void testCreateCookie() {
-        String key = "refresh";
-        String value = "testValue";
-
-        Cookie cookie = jwtTokenProvider.createCookie(key, value);
-
-        Assertions.assertEquals(key, cookie.getName());
-        Assertions.assertEquals(value, cookie.getValue());
-        Assertions.assertTrue(cookie.isHttpOnly());
-        Assertions.assertEquals("/", cookie.getPath());
-    }
 }

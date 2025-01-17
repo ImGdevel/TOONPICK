@@ -11,7 +11,7 @@ public class MemberProfileDetailsResponseDTO {
     private String profilePicture;
     private String email;
     private Boolean isAdultVerified;
-    private String level;
-    
+    private int level;
+
     // todo : 프로필 상세 페이지에 필요한 데이터
 }

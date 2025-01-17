@@ -15,6 +15,9 @@ import toonpick.app.security.controller.TokenReissueController;
 import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.security.token.TokenService;
+import toonpick.app.utils.CookieUtils;
+
+import javax.swing.text.Utilities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -91,7 +94,7 @@ class TokenReissueControllerTest {
         when(tokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
         when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(true);
         when(tokenService.reissueRefreshToken(refreshToken)).thenReturn(newRefreshToken);
-        when(jwtTokenProvider.createCookie("refresh", newRefreshToken)).thenReturn(new Cookie("refresh", newRefreshToken));
+        when(CookieUtils.createRefreshCookie(newRefreshToken)).thenReturn(new Cookie("refresh", newRefreshToken));
 
         ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
 
