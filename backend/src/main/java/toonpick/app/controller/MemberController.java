@@ -65,12 +65,4 @@ public class MemberController {
         return ResponseEntity.ok(memberResponseDTO);
     }
 
-    // Member Id 조회
-    @GetMapping("/id")
-    public ResponseEntity<Long> getMemberIdByUsername(Authentication authentication) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-
-        Long memberId = memberService.getMemberIdByUsername(username);
-        return ResponseEntity.ok(memberId);
-    }
 }

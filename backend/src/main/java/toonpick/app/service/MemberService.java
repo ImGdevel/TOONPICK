@@ -79,12 +79,4 @@ public class MemberService {
         return memberMapper.memberToMemberResponseDTO(member);
     }
 
-    // Member Id 조회
-    @Transactional(readOnly = true)
-    public Long getMemberIdByUsername(String username) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Member not found with username: " + username));
-        return member.getId();
-    }
-
 }
