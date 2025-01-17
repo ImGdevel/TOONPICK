@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import toonpick.app.domain.member.MemberRole;
 import toonpick.app.security.dto.JoinRequest;
 import toonpick.app.security.exception.UsernameAlreadyExistsException;
 import toonpick.app.domain.member.Member;
@@ -37,7 +38,7 @@ public class JoinService {
                 .nickname(nickname)
                 .password(bCryptPasswordEncoder.encode(joinRequest.getPassword()))
                 .email(joinRequest.getEmail())
-                .role("ROLE_USER")
+                .role(MemberRole.ROLE_USER)
                 .isAdultVerified(false)
                 .profilePicture("default_profile_img.png")
                 .build();

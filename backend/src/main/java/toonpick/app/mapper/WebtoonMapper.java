@@ -1,10 +1,10 @@
 package toonpick.app.mapper;
 
-import toonpick.app.dto.WebtoonDTO;
 import toonpick.app.domain.webtoon.Webtoon;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 
 @Mapper(componentModel = "spring")
 public interface WebtoonMapper {
@@ -12,9 +12,5 @@ public interface WebtoonMapper {
 
     @Mapping(source = "authors", target = "authors")
     @Mapping(source = "genres", target = "genres")
-    WebtoonDTO webtoonToWebtoonDto(Webtoon webtoon);
-
-    @Mapping(source = "authors", target = "authors")
-    @Mapping(source = "genres", target = "genres")
-    Webtoon webtoonDtoToWebtoon(WebtoonDTO webtoonDto);
+    WebtoonResponseDTO webtoonToWebtoonResponseDto(Webtoon webtoon);
 }

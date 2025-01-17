@@ -12,12 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.AuthorDTO;
 import toonpick.app.dto.GenreDTO;
 import toonpick.app.dto.PagedResponseDTO;
-import toonpick.app.dto.WebtoonDTO;
 import toonpick.app.dto.WebtoonFilterDTO;
-import toonpick.app.dto.WebtoonUpdateRequestDTO;
 import toonpick.app.domain.webtoon.Author;
 import toonpick.app.domain.webtoon.Genre;
 import toonpick.app.domain.webtoon.Webtoon;
+import toonpick.app.dto.webtoon.WebtoonCreateRequestDTO;
+import toonpick.app.dto.webtoon.WebtoonEpisodeUpdateRequestDTO;
+import toonpick.app.dto.webtoon.WebtoonRequestDTO;
+import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.AuthorRepository;
@@ -43,60 +45,61 @@ public class WebtoonService {
 
     // 웹툰 추가
     @Transactional
-    public WebtoonDTO createWebtoon(WebtoonDTO webtoonDTO) {
-        Optional<Webtoon> existingWebtoon = webtoonRepository.findByPlatformId(webtoonDTO.getPlatformId());
+    public WebtoonResponseDTO createWebtoon(WebtoonCreateRequestDTO createRequestDTO) {
+        Optional<Webtoon> existingWebtoon = webtoonRepository.findByExternalId(createRequestDTO.getExternalId());
         if (existingWebtoon.isPresent()) {
             return null;
         }
 
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(
-                webtoonDTO.getAuthors().stream().map(AuthorDTO::getId).collect(Collectors.toSet())));
+                createRequestDTO.getAuthors().stream().map(AuthorDTO::getId).collect(Collectors.toSet())));
 
         Set<Genre> genres = new HashSet<>(genreRepository.findAllById(
-                webtoonDTO.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet())));
+                createRequestDTO.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet())));
 
-        Webtoon webtoon = Webtoon.builder()
-                .title(webtoonDTO.getTitle())
-                .platform(webtoonDTO.getPlatform())
-                .platformId(webtoonDTO.getPlatformId())
-                .averageRating(webtoonDTO.getAverageRating())
-                .description(webtoonDTO.getDescription())
-                .episodeCount(webtoonDTO.getEpisodeCount())
-                .serializationStartDate(webtoonDTO.getSerializationStartDate())
-                .serializationStatus(webtoonDTO.getSerializationStatus())
-                .week(webtoonDTO.getWeek())
-                .thumbnailUrl(webtoonDTO.getThumbnailUrl())
-                .link(webtoonDTO.getUrl())
-                .ageRating(webtoonDTO.getAgeRating())
+        Webtoon newWebtoon = Webtoon.builder()
+                .externalId(createRequestDTO.getExternalId())
+                .title(createRequestDTO.getTitle())
+                .platform(createRequestDTO.getPlatform())
+                .dayOfWeek(createRequestDTO.getDayOfWeek())
+                .thumbnailUrl(createRequestDTO.getThumbnailUrl())
+                .link(createRequestDTO.getLink())
+                .ageRating(createRequestDTO.getAgeRating())
+                .description(createRequestDTO.getDescription())
+                .serializationStatus(createRequestDTO.getSerializationStatus())
+                .episodeCount(createRequestDTO.getEpisodeCount())
+                .platformRating(createRequestDTO.getPlatformRating())
+                .publishStartDate(createRequestDTO.getPublishStartDate())
+                .lastUpdatedDate(createRequestDTO.getLastUpdatedDate())
                 .authors(authors)
                 .genres(genres)
                 .build();
 
-        webtoon = webtoonRepository.save(webtoon);
-        return webtoonMapper.webtoonToWebtoonDto(webtoon);
+        Webtoon savedWebtoon = webtoonRepository.save(newWebtoon);
+        return webtoonMapper.webtoonToWebtoonResponseDto(savedWebtoon);
     }
 
     // Id 기반으로 웹툰 가져오기
     @Transactional(readOnly = true)
-    public WebtoonDTO getWebtoonById(Long id) {
+    public WebtoonResponseDTO getWebtoonById(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
-        return webtoonMapper.webtoonToWebtoonDto(webtoon);
+        return webtoonMapper.webtoonToWebtoonResponseDto(webtoon);
     }
 
     // 필터 옵션에 따라 웹툰 가져오기
     @Transactional(readOnly = true)
-    public PagedResponseDTO<WebtoonDTO> getWebtoonsOptions(
+    public PagedResponseDTO<WebtoonResponseDTO> getWebtoonsOptions(
             WebtoonFilterDTO filter, int page, int size, String sortBy, String sortDir) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortBy);
         Page<Webtoon> webtoonPage = webtoonRepository.findWebtoonsByFilterOptions(filter, pageable);
 
-        List<WebtoonDTO> webtoonDTOs = webtoonPage.getContent().stream()
-                .map(webtoonMapper::webtoonToWebtoonDto)
+        List<WebtoonResponseDTO> webtoonDTOs = webtoonPage.getContent().stream()
+                .map(webtoonMapper::webtoonToWebtoonResponseDto)
                 .collect(Collectors.toList());
 
-        return PagedResponseDTO.<WebtoonDTO>builder()
+        return PagedResponseDTO.<WebtoonResponseDTO>builder()
                 .data(webtoonDTOs)
                 .page(webtoonPage.getNumber())
                 .size(webtoonPage.getSize())
@@ -106,66 +109,45 @@ public class WebtoonService {
                 .build();
     }
 
-    // 웹툰 정보 업데이트
+    // 웹툰 세부 내용 업데이트
     @Transactional
-    public WebtoonDTO updateWebtoon(Long id, WebtoonDTO webtoonDTO) {
+    public WebtoonResponseDTO updateWebtoon(Long id, WebtoonRequestDTO webtoonRequestDTO) {
         Webtoon existingWebtoon = webtoonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
 
-        Set<Author> authors = new HashSet<>(authorRepository.findAllById(
-                webtoonDTO.getAuthors().stream().map(AuthorDTO::getId).collect(Collectors.toSet())));
+        Set<Author> authors = new HashSet<>(authorRepository.findAllById(webtoonRequestDTO.getAuthorIds()));
+        Set<Genre> genres = new HashSet<>(genreRepository.findAllById(webtoonRequestDTO.getGenreIds()));
 
-        Set<Genre> genres = new HashSet<>(genreRepository.findAllById(
-                webtoonDTO.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet())));
-
-        existingWebtoon.update(
-                webtoonDTO.getTitle(),
-                webtoonDTO.getPlatform(),
-                webtoonDTO.getAverageRating(),
-                webtoonDTO.getDescription(),
-                webtoonDTO.getEpisodeCount(),
-                webtoonDTO.getSerializationStartDate(),
-                webtoonDTO.getLastUpdatedDate(),
-                webtoonDTO.getSerializationStatus(),
-                webtoonDTO.getWeek(),
-                webtoonDTO.getThumbnailUrl(),
-                webtoonDTO.getUrl(),
-                webtoonDTO.getAgeRating(),
+        existingWebtoon.updateWebtoonDetails(
+                webtoonRequestDTO.getTitle(),
+                webtoonRequestDTO.getPlatform(),
+                webtoonRequestDTO.getDescription(),
+                webtoonRequestDTO.getSerializationStatus(),
+                webtoonRequestDTO.getDayOfWeek(),
+                webtoonRequestDTO.getThumbnailUrl(),
+                webtoonRequestDTO.getLink(),
+                webtoonRequestDTO.getAgeRating(),
                 authors,
                 genres
         );
 
         existingWebtoon = webtoonRepository.save(existingWebtoon);
-        return webtoonMapper.webtoonToWebtoonDto(existingWebtoon);
+
+        return webtoonMapper.webtoonToWebtoonResponseDto(existingWebtoon);
     }
 
-    // 정기적 업데이트
+    // 간단한 정기적 업데이트
     @Transactional
-    public void updateWebtoon(WebtoonUpdateRequestDTO request) {
-        Webtoon webtoon = webtoonRepository.findByPlatformId(request.getPlatformId())
-                .orElseThrow(() -> new RuntimeException("Webtoon not found with platformId: " + request.getPlatformId()));
+    public void updateWebtoonEpisode(Long id, WebtoonEpisodeUpdateRequestDTO updateRequest) {
+        Webtoon existingWebtoon = webtoonRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
 
-        Set<Author> authors = authorRepository.findByNameIn(request.getAuthors());
-        Set<Genre> genres = genreRepository.findByNameIn(request.getGenres());
-
-        webtoon.update(
-                webtoon.getTitle(),
-                webtoon.getPlatform(),
-                request.getPlatformRating() != null ? request.getPlatformRating() : webtoon.getAverageRating(),
-                request.getDescription(),
-                request.getEpisodeCount() != null ? request.getEpisodeCount() : webtoon.getEpisodeCount(),
-                webtoon.getSerializationStartDate(),
-                request.getLastUpdatedDate() != null ? request.getLastUpdatedDate() : webtoon.getLastUpdatedDate(),
-                request.getSerializationStatus(),
-                request.getWeek(),
-                request.getThumbnailUrl(),
-                request.getUrl(),
-                request.getAgeRating(),
-                authors,
-                genres
+        existingWebtoon.updateEpisodeCountAndDate(
+                updateRequest.getEpisodeCount(),
+                updateRequest.getLastUpdatedDate()
         );
 
-        webtoonRepository.save(webtoon);
+        webtoonRepository.save(existingWebtoon);
     }
 
     // 웹툰 삭제

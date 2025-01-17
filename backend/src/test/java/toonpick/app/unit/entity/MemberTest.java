@@ -3,6 +3,7 @@ package toonpick.app.unit.entity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import toonpick.app.domain.member.Member;
+import toonpick.app.domain.member.MemberRole;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,7 +18,7 @@ class MemberTest {
                 .email("test@example.com")
                 .password("password")
                 .nickname("testNickname")
-                .role("ROLE_USER")
+                .role(MemberRole.ROLE_USER)
                 .isAdultVerified(false)
                 .profilePicture("default_profile_img.png")
                 .build();

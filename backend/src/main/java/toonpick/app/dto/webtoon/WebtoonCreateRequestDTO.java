@@ -1,34 +1,34 @@
-package toonpick.app.dto;
+package toonpick.app.dto.webtoon;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 import toonpick.app.domain.webtoon.enums.AgeRating;
 import toonpick.app.domain.webtoon.enums.Platform;
 import toonpick.app.domain.webtoon.enums.SerializationStatus;
+import toonpick.app.dto.AuthorDTO;
+import toonpick.app.dto.GenreDTO;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class WebtoonDTO {
-    private Long id;
+public class WebtoonCreateRequestDTO {
+
     private String title;
-    private String platformId;
+    private String externalId;
     private Platform platform;
-    private float averageRating;
-    private float platformRating;
+    private DayOfWeek dayOfWeek;
+    private String thumbnailUrl;
+    private String link;
+    private AgeRating ageRating;
     private String description;
-    private int episodeCount;
-    private LocalDate serializationStartDate;
-    private LocalDate lastUpdatedDate;
     private SerializationStatus serializationStatus;
-    private DayOfWeek week;
+    private int episodeCount;
+    private float platformRating;
+    private LocalDate publishStartDate;
+    private LocalDate lastUpdatedDate;
     private Set<AuthorDTO> authors;
     private Set<GenreDTO> genres;
-    private String thumbnailUrl;
-    private String url;
-    private AgeRating ageRating;
 }

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.utils.AuthenticationUtil;
 import toonpick.app.service.FavoriteToonService;
-import toonpick.app.dto.WebtoonDTO;
 
 import java.util.List;
 
@@ -42,9 +42,9 @@ public class FavoriteToonController {
 
     // 즐겨찾기 목록 조회
     @GetMapping
-    public ResponseEntity<List<WebtoonDTO>> getFavoriteWebtoons(Authentication authentication) {
+    public ResponseEntity<List<WebtoonResponseDTO>> getFavoriteWebtoons(Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        List<WebtoonDTO> favoriteWebtoons = favoriteToonService.getFavoriteWebtoons(username);
+        List<WebtoonResponseDTO> favoriteWebtoons = favoriteToonService.getFavoriteWebtoons(username);
         return ResponseEntity.ok(favoriteWebtoons);
     }
 

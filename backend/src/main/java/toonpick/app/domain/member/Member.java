@@ -9,31 +9,43 @@ import toonpick.app.domain.BaseTimeEntity;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "member", indexes = @Index(name = "idx_username", columnList = "username"))
+@Table(name = "member", indexes = @Index(name = "idx_username", columnList = "user_name"))
 public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "user_name", unique = true, nullable = false)
     private String username;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "email", unique = true)
     private String email;
 
+    @Column(name = "password")
     private String password;
 
+    @Column(name = "nick_name", unique = true)
     private String nickname;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private MemberRole role;
 
-    private Boolean isAdultVerified;
-
+    @Column(name = "profile_picture")
     private String profilePicture;
 
+    @Column(name = "is_adult_verified")
+    private Boolean isAdultVerified = false;
+
+    @Column(name = "level")
+    private int level = 0;
+
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY ,cascade = CascadeType.ALL, orphanRemoval = true)
+    private MemberStatistics statistics;
+
     @Builder
-    public Member(String username, String email, String password, String nickname, String role,
+    public Member(String username, String email, String password, String nickname, MemberRole role,
                   Boolean isAdultVerified, String profilePicture) {
         this.username = username;
         this.email = email;
@@ -55,5 +67,9 @@ public class Member extends BaseTimeEntity {
 
     public void verifyAdult() {
         this.isAdultVerified = true;
+    }
+
+    public void updateLevel(int newLevel) {
+        this.level = newLevel;
     }
 }
