@@ -78,17 +78,6 @@ public class JwtTokenProvider {
         return createToken("refresh", username, role, refreshTokenExpiration);
     }
 
-    // 쿠키 생성 메서드
-    public Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge((int) refreshTokenExpiration);
-        //cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        return cookie;
-    }
-
     // 검증/확인을 위한 추출 메서드
     private Claims getClaims(String token) {
         return Jwts.parser()
