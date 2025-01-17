@@ -1,17 +1,15 @@
-package toonpick.app.dto;
+package toonpick.app.dto.member;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 @Builder
-public class MemberProfileDTO {
+public class MemberResponseDTO {
     private String username;
     private String nickname;
-    private String role;
     private String profilePicture;
     private String email;
     private Boolean isAdultVerified;
+    private String level;
 }
