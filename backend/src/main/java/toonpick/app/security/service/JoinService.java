@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.domain.member.MemberRole;
 import toonpick.app.security.dto.JoinRequest;
-import toonpick.app.security.exception.UsernameAlreadyExistsException;
+import toonpick.app.exception.exception.UsernameAlreadyExistsException;
 import toonpick.app.domain.member.Member;
 import toonpick.app.repository.MemberRepository;
 

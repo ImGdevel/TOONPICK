@@ -6,9 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import toonpick.app.security.exception.ExpiredJwtTokenException;
-import toonpick.app.security.exception.InvalidJwtTokenException;
-import toonpick.app.security.exception.MissingJwtTokenException;
+import toonpick.app.exception.exception.ExpiredJwtTokenException;
+import toonpick.app.exception.exception.InvalidJwtTokenException;
+import toonpick.app.exception.exception.MissingJwtTokenException;
 import toonpick.app.security.user.CustomUserDetails;
 
 @Component

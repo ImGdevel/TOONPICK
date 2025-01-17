@@ -1,4 +1,4 @@
-package toonpick.app.security.handler;
+package toonpick.app.exception.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import toonpick.app.security.exception.UsernameAlreadyExistsException;
+import toonpick.app.exception.exception.UsernameAlreadyExistsException;
 
 import java.nio.file.AccessDeniedException;
 

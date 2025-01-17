@@ -1,4 +1,4 @@
-package toonpick.app.security.exception;
+package toonpick.app.exception.exception;
 
 public class ExpiredJwtTokenException extends JwtException {
     public ExpiredJwtTokenException(String message) {

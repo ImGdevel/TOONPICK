@@ -1,4 +1,4 @@
-package toonpick.app.security.exception;
+package toonpick.app.exception.exception;
 
 public class JwtException extends RuntimeException {
     public JwtException(String message) {

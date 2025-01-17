@@ -1,4 +1,4 @@
-package toonpick.app.security.exception;
+package toonpick.app.exception.exception;
 
 public class MissingJwtTokenException extends JwtException {
     public MissingJwtTokenException(String message) {
