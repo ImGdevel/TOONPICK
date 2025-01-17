@@ -6,11 +6,12 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import toonpick.app.domain.member.MemberRole;
+import toonpick.app.dto.member.MemberResponseDTO;
 import toonpick.app.security.user.CustomOAuth2UserDetails;
 import toonpick.app.security.dto.oauth2responseImpl.GoogleResponse;
 import toonpick.app.security.dto.oauth2responseImpl.NaverResponse;
 import toonpick.app.security.dto.OAuth2Response;
-import toonpick.app.dto.MemberDTO;
 import toonpick.app.domain.member.Member;
 import toonpick.app.mapper.MemberMapper;
 import toonpick.app.repository.MemberRepository;
@@ -35,9 +36,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         }
 
         Member member = getOrCreateUser(oAuth2Response);
-        MemberDTO memberDTO = memberMapper.memberToMemberDto(member);
+        MemberResponseDTO memberResponseDTO = memberMapper.memberToMemberResponseDTO(member);
 
-        return new CustomOAuth2UserDetails(memberDTO);
+        return new CustomOAuth2UserDetails(memberResponseDTO);
     }
 
     // 서비스 제공자에 따른 OAuth2Response 생성
@@ -76,7 +77,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .nickname(oAuth2Response.getName())
                 .profilePicture("default_profile_img.png")
                 .isAdultVerified(false)
-                .role("ROLE_USER")
+                .role(MemberRole.ROLE_USER)
                 .build();
     }
 
