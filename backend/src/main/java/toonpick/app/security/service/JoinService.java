@@ -7,8 +7,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.domain.member.MemberRole;
+import toonpick.app.exception.ErrorCode;
 import toonpick.app.security.dto.JoinRequest;
-import toonpick.app.exception.exception.UsernameAlreadyExistsException;
+import toonpick.app.exception.exception.UserAlreadyRegisteredException;
 import toonpick.app.domain.member.Member;
 import toonpick.app.repository.MemberRepository;
 
@@ -28,7 +29,7 @@ public class JoinService {
         String username = joinRequest.getEmail();
 
         if (memberRepository.existsByUsername(username)) {
-            throw new UsernameAlreadyExistsException("Username already exists : " + username);
+            throw new UserAlreadyRegisteredException(ErrorCode.USER_ALREADY_REGISTERED, username);
         }
 
         String nickname = generateUniqueNickname();

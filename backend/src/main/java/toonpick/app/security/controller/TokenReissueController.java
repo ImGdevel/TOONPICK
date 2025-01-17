@@ -33,28 +33,23 @@ public class TokenReissueController {
         try {
             // 쿠키에서 refresh token 추출 및 검증
             String refreshToken = jwtTokenValidator.extractRefreshTokenFromCookies(request);
-            if (refreshToken == null || refreshToken.isEmpty()) {
-                throw new MissingJwtTokenException("Refresh token is missing.");
-            }
             jwtTokenValidator.validateRefreshToken(refreshToken);
 
             // 새로운 Access 토큰 발급
             String newAccessToken = tokenService.reissueAccessToken(refreshToken);
             response.setHeader("Authorization", "Bearer " + newAccessToken);
-            logger.info("Issued new access token");
 
             // Refresh 토큰 갱신 필요 여부 확인 및 갱신
             if (jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)) {
                 String newRefreshToken = tokenService.reissueRefreshToken(refreshToken);
                 Cookie newRefreshCookie = jwtTokenProvider.createCookie("refresh", newRefreshToken);
                 response.addCookie(newRefreshCookie);
-                logger.info("Issued new refresh token");
             }
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (ExpiredJwtTokenException | InvalidJwtTokenException | MissingJwtTokenException e) {
             logger.error("Token validation error: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (RuntimeException e) {
             logger.error("Unexpected error: {}", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import toonpick.app.exception.exception.UsernameAlreadyExistsException;
+import toonpick.app.exception.exception.UserAlreadyRegisteredException;
 
 import java.nio.file.AccessDeniedException;
 
@@ -37,8 +37,8 @@ public class AuthenticationExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication credentials are required.");
     }
 
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<String> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex) {
+    @ExceptionHandler(UserAlreadyRegisteredException.class)
+    public ResponseEntity<String> handleUsernameAlreadyExistsException(UserAlreadyRegisteredException ex) {
         LOGGER.error("Username already exists: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists: " + ex.getMessage());
     }
