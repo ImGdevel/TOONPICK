@@ -9,6 +9,8 @@ import toonpick.app.dto.member.MemberProfileRequestDTO;
 import toonpick.app.dto.member.MemberProfileResponseDTO;
 import toonpick.app.dto.member.MemberResponseDTO;
 import toonpick.app.domain.member.Member;
+import toonpick.app.exception.ErrorCode;
+import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.MemberMapper;
 import toonpick.app.repository.MemberRepository;
 
@@ -23,7 +25,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberProfileResponseDTO getProfile(String username) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         return memberMapper.memberToProfileResponseDTO(member);
     }
 
@@ -31,7 +33,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberProfileDetailsResponseDTO getProfileDetails(String username) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         return memberMapper.memberToProfileDetailsResponseDTO(member);
     }
 
@@ -39,7 +41,7 @@ public class MemberService {
     @Transactional
     public void updateProfile(String username, MemberProfileRequestDTO memberProfileRequestDTO) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
         member.updateProfile(
                 memberProfileRequestDTO.getNickname(),
@@ -53,7 +55,7 @@ public class MemberService {
     @Transactional
     public void changePassword(String username, String newPassword) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
         member.changePassword(newPassword);
 
@@ -64,7 +66,7 @@ public class MemberService {
     @Transactional
     public void verifyAdult(String username) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
         member.verifyAdult();
 
@@ -75,7 +77,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberResponseDTO getMemberByUsername(String username) {
         Member member = memberRepository.findByUsername(username)
-                                  .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
+                                  .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         return memberMapper.memberToMemberResponseDTO(member);
     }
 

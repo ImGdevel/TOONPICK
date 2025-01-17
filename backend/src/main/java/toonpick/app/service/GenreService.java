@@ -3,6 +3,8 @@ package toonpick.app.service;
 import lombok.RequiredArgsConstructor;
 import toonpick.app.dto.GenreDTO;
 import toonpick.app.domain.webtoon.Genre;
+import toonpick.app.exception.ErrorCode;
+import toonpick.app.exception.ResourceAlreadyExistsException;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.GenreMapper;
 import toonpick.app.repository.GenreRepository;
@@ -30,16 +32,15 @@ public class GenreService {
     @Transactional(readOnly = true)
     public GenreDTO getGenre(Long id) {
         Genre genre = genreRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Genre not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.GENRE_NOT_FOUND, id));
         return genreMapper.genreToGenreDto(genre);
     }
-
 
 
     @Transactional
     public GenreDTO createGenre(GenreDTO genreDTO) {
         if (genreRepository.existsByName(genreDTO.getName())) {
-            throw new IllegalArgumentException("Genre with name " + genreDTO.getName() + " already exists.");
+            throw new ResourceAlreadyExistsException(ErrorCode.GENRE_ALREADY_EXISTS, genreDTO.getName());
         }
 
         Genre genre = genreMapper.genreDtoToGenre(genreDTO);
@@ -61,7 +62,7 @@ public class GenreService {
     @Transactional
     public void deleteGenre(Long id) {
         Genre genre = genreRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Genre not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.GENRE_NOT_FOUND, id));
         genreRepository.delete(genre);
     }
 }

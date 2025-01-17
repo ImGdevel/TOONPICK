@@ -7,6 +7,8 @@ import toonpick.app.domain.favoritetoon.FavoriteToon;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.dto.webtoon.WebtoonResponseDTO;
+import toonpick.app.exception.ErrorCode;
+import toonpick.app.exception.ResourceAlreadyExistsException;
 import toonpick.app.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.FavoriteToonRepository;
@@ -30,13 +32,13 @@ public class FavoriteToonService {
     @Transactional
     public void addFavoriteWebtoon(String username, Long webtoonId) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
-                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, webtoonId));
 
         // 중복 확인
         if (favoriteRepository.findByMemberAndWebtoon(member, webtoon).isPresent()) {
-            throw new IllegalArgumentException("This webtoon is already added to favorites.");
+            throw new ResourceAlreadyExistsException(ErrorCode.FAVORITE_TOON_ALREADY_EXISTS);
         }
 
         FavoriteToon favorite = FavoriteToon.builder()
@@ -48,15 +50,15 @@ public class FavoriteToonService {
         favoriteRepository.save(favorite);
     }
 
-
     @Transactional
     public void removeFavoriteWebtoon(String username, Long webtoonId) {
+        // todo : 클라이언트와 상의 후 id 로 변경, 성능 최적화 고려
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
-                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, webtoonId));
         FavoriteToon favorite = favoriteRepository.findByMemberAndWebtoon(member, webtoon)
-                .orElseThrow(() -> new ResourceNotFoundException("Favorite not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.FAVORITE_TOON_NOT_FOUND));
 
         favoriteRepository.delete(favorite);
     }
@@ -64,7 +66,7 @@ public class FavoriteToonService {
     @Transactional(readOnly = true)
     public List<WebtoonResponseDTO> getFavoriteWebtoons(String username) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Member not found with username: " + username));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
         List<Webtoon> favoriteWebtoons = favoriteRepository.findFavoriteWebtoonsByMember(member);
 
@@ -76,9 +78,9 @@ public class FavoriteToonService {
     @Transactional(readOnly = true)
     public boolean isFavoriteWebtoon(String username, Long webtoonId) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Member not found with username: " + username));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
-                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, webtoonId));
 
         return favoriteRepository.findByMemberAndWebtoon(member, webtoon).isPresent();
     }
