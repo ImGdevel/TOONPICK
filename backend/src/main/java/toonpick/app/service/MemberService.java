@@ -1,7 +1,6 @@
 package toonpick.app.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.dto.member.MemberProfileDetailsResponseDTO;
@@ -10,7 +9,7 @@ import toonpick.app.dto.member.MemberProfileResponseDTO;
 import toonpick.app.dto.member.MemberResponseDTO;
 import toonpick.app.domain.member.Member;
 import toonpick.app.exception.ErrorCode;
-import toonpick.app.exception.ResourceNotFoundException;
+import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.mapper.MemberMapper;
 import toonpick.app.repository.MemberRepository;
 

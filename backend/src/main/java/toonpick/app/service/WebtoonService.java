@@ -21,8 +21,8 @@ import toonpick.app.dto.webtoon.WebtoonEpisodeUpdateRequestDTO;
 import toonpick.app.dto.webtoon.WebtoonRequestDTO;
 import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.exception.ErrorCode;
-import toonpick.app.exception.ResourceAlreadyExistsException;
-import toonpick.app.exception.ResourceNotFoundException;
+import toonpick.app.exception.exception.ResourceAlreadyExistsException;
+import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.AuthorRepository;
 import toonpick.app.repository.GenreRepository;
@@ -30,7 +30,6 @@ import toonpick.app.repository.WebtoonRepository;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 

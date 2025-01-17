@@ -1,4 +1,6 @@
-package toonpick.app.exception;
+package toonpick.app.exception.exception;
+
+import toonpick.app.exception.ErrorCode;
 
 /**
  * 이미 존재하는 데이터

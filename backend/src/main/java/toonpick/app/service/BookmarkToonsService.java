@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.domain.bookmark_toons.BookmarkToons;
 import toonpick.app.exception.ErrorCode;
 import toonpick.app.repository.BookmarkToonsRepository;
-import toonpick.app.exception.ResourceNotFoundException;
+import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.domain.member.Member;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.domain.webtoon.Webtoon;
