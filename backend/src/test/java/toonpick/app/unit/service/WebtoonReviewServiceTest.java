@@ -58,15 +58,13 @@ public class WebtoonReviewServiceTest {
         testWebtoon = webtoonRepository.save(Webtoon.builder()
                 .title("Test Webtoon")
                 .platform(Platform.NAVER)
-                .platformId("naver-123-" + System.currentTimeMillis())
-                .averageRating(0f)
+                .externalId("naver-123-" + System.currentTimeMillis())
                 .description("Test webtoon description")
                 .serializationStatus(SerializationStatus.ONGOING)
                 .episodeCount(10)
-                .serializationStartDate(LocalDate.now())
+                .publishStartDate(LocalDate.now())
                 .lastUpdatedDate(LocalDate.now())
-                .week(DayOfWeek.MONDAY)
-                .url("http://testwebtoon.com")
+                .dayOfWeek(DayOfWeek.MONDAY)
                 .build());
 
     }
