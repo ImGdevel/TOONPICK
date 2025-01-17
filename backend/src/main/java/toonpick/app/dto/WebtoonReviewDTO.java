@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import toonpick.app.dto.member.MemberProfileResponseDTO;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class WebtoonReviewDTO {
     private Long id;
     private Long webtoonId;
-    private MemberDTO memberId;
+    private MemberProfileResponseDTO memberId;
     private float rating;
     private String comment;
     private int likes;

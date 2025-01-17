@@ -41,6 +41,9 @@ public class Member extends BaseTimeEntity {
     @Column(name = "level")
     private int level = 0;
 
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY ,cascade = CascadeType.ALL, orphanRemoval = true)
+    private MemberStatistics statistics;
+
     @Builder
     public Member(String username, String email, String password, String nickname, MemberRole role,
                   Boolean isAdultVerified, String profilePicture) {

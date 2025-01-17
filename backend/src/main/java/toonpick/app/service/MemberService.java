@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.dto.MemberDTO;
-import toonpick.app.dto.MemberProfileDTO;
+import toonpick.app.dto.member.MemberProfileDetailsResponseDTO;
+import toonpick.app.dto.member.MemberProfileResponseDTO;
+import toonpick.app.dto.member.MemberResponseDTO;
 import toonpick.app.domain.member.Member;
 import toonpick.app.mapper.MemberMapper;
 import toonpick.app.repository.MemberRepository;
@@ -19,10 +20,18 @@ public class MemberService {
 
     // Member 프로필 조회
     @Transactional(readOnly = true)
-    public MemberProfileDTO getProfile(String username) {
+    public MemberProfileResponseDTO getProfile(String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
-        return memberMapper.memberToProfileDto(member);
+        return memberMapper.memberToProfileResponseDTO(member);
+    }
+
+    // Member 상세 프로필 조회
+    @Transactional(readOnly = true)
+    public MemberProfileDetailsResponseDTO getProfileDetails(String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
+        return memberMapper.memberToProfileDetailsResponseDTO(member);
     }
 
     // Member 프로필 업데이트
@@ -60,10 +69,10 @@ public class MemberService {
 
     // Member 조회
     @Transactional(readOnly = true)
-    public MemberDTO getMemberByUsername(String username) {
+    public MemberResponseDTO getMemberByUsername(String username) {
         Member member = memberRepository.findByUsername(username)
                                   .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
-        return memberMapper.memberToMemberDto(member);
+        return memberMapper.memberToMemberResponseDTO(member);
     }
 
     // Member Id 조회

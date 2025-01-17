@@ -7,8 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import toonpick.app.dto.member.MemberProfileDetailsResponseDTO;
 import toonpick.app.utils.AuthenticationUtil;
-import toonpick.app.dto.MemberDTO;
 import toonpick.app.service.MemberService;
 
 @RequiredArgsConstructor
@@ -20,10 +20,10 @@ public class MemberController {
     private final AuthenticationUtil authenticationUtil;
 
     @GetMapping("/profile")
-    public ResponseEntity<MemberDTO> getUserProfile(HttpServletRequest request, Authentication authentication) {
+    public ResponseEntity<MemberProfileDetailsResponseDTO> getUserProfile(HttpServletRequest request, Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
 
-        MemberDTO memberDTO = memberService.getMemberByUsername(username);
-        return ResponseEntity.ok(memberDTO);
+        MemberProfileDetailsResponseDTO memberResponseDTO = memberService.getProfileDetails(username);
+        return ResponseEntity.ok(memberResponseDTO);
     }
 }

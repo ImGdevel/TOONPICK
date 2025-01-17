@@ -2,7 +2,7 @@ package toonpick.app.security.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import toonpick.app.dto.MemberDTO;
+import toonpick.app.dto.member.MemberResponseDTO;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,17 +11,17 @@ import java.util.Map;
 
 public class CustomOAuth2UserDetails implements OAuth2User {
 
-    private final MemberDTO memberDTO;
+    private final MemberResponseDTO memberResponseDTO;
 
-    public CustomOAuth2UserDetails(MemberDTO memberDTO){
-        this.memberDTO = memberDTO;
+    public CustomOAuth2UserDetails(MemberResponseDTO memberResponseDTO){
+        this.memberResponseDTO = memberResponseDTO;
     }
 
     @Override
     public Map<String, Object> getAttributes() {
         Map<String, Object> attributes = new HashMap<>();
-        attributes.put("username", memberDTO.getUsername());
-        attributes.put("role", memberDTO.getRole());
+        attributes.put("username", memberResponseDTO.getUsername());
+        attributes.put("role", memberResponseDTO.getRole());
         return attributes;
     }
 
@@ -33,7 +33,7 @@ public class CustomOAuth2UserDetails implements OAuth2User {
         collection.add(new GrantedAuthority() {
                            @Override
                            public String getAuthority() {
-                               return memberDTO.getRole();
+                               return memberResponseDTO.getRole();
                            }
                        }
 
@@ -44,11 +44,11 @@ public class CustomOAuth2UserDetails implements OAuth2User {
 
     @Override
     public String getName() {
-        return memberDTO.getUsername();
+        return memberResponseDTO.getUsername();
     }
 
 
     public String getUsername() {
-        return memberDTO.getUsername();
+        return memberResponseDTO.getUsername();
     }
 }
