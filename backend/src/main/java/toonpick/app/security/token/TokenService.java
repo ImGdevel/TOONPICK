@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import toonpick.app.exception.ErrorCode;
+import toonpick.app.exception.exception.RefreshTokenNotFoundException;
 import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.security.jwt.JwtTokenProvider;
 
@@ -24,7 +26,7 @@ public class TokenService {
     public String reissueAccessToken(String refreshToken) {
         // Refresh 토큰 유효 검증
         refreshTokenRepository.findById(refreshToken)
-                .orElseThrow(() -> new RuntimeException("Not found refresh token"));
+                .orElseThrow(() -> new RefreshTokenNotFoundException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
         jwtTokenValidator.validateRefreshToken(refreshToken);
 
         // Access Token 재발급
@@ -39,7 +41,7 @@ public class TokenService {
     public String reissueRefreshToken(String refreshToken) {
         // Refresh 토큰 유효 검증
         refreshTokenRepository.findById(refreshToken)
-                .orElseThrow(() -> new RuntimeException("Not found refresh token"));
+                .orElseThrow(() -> new RefreshTokenNotFoundException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
         jwtTokenValidator.validateRefreshToken(refreshToken);
 
         // Refresh 토큰 재발급
@@ -70,7 +72,7 @@ public class TokenService {
 
     public void deleteRefreshToken(String refreshToken) {
         refreshTokenRepository.findById(refreshToken)
-                .orElseThrow(() -> new RuntimeException("Not found refresh token - Delete"));
+                .orElseThrow(() -> new RefreshTokenNotFoundException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
 
         refreshTokenRepository.deleteById(refreshToken);
     }
