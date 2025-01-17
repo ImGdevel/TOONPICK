@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import toonpick.app.domain.member.MemberRole;
+import toonpick.app.dto.member.MemberDTO;
 import toonpick.app.dto.member.MemberResponseDTO;
 import toonpick.app.security.user.CustomOAuth2UserDetails;
 import toonpick.app.security.dto.oauth2responseImpl.GoogleResponse;
@@ -36,7 +37,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         }
 
         Member member = getOrCreateUser(oAuth2Response);
-        MemberResponseDTO memberResponseDTO = memberMapper.memberToMemberResponseDTO(member);
+        MemberDTO memberResponseDTO = memberMapper.memberToMemberDTO(member);
 
         return new CustomOAuth2UserDetails(memberResponseDTO);
     }

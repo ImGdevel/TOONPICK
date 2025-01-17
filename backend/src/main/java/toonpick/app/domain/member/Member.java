@@ -9,14 +9,14 @@ import toonpick.app.domain.BaseTimeEntity;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "member", indexes = @Index(name = "idx_username", columnList = "username"))
+@Table(name = "member", indexes = @Index(name = "idx_username", columnList = "user_name"))
 public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", unique = true, nullable = false)
+    @Column(name = "user_name", unique = true, nullable = false)
     private String username;
 
     @Column(name = "email", unique = true)

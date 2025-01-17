@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import toonpick.app.domain.member.Member;
+import toonpick.app.domain.member.MemberRole;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -22,7 +23,7 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(Member member) {
         this.username = member.getUsername();
         this.password = member.getPassword();
-        this.role = member.getRole();
+        this.role = member.getRole().toString();
         this.isAccountNonExpired = true;
         this.isAccountNonLocked = true;
         this.isCredentialsNonExpired = true;
