@@ -13,6 +13,17 @@ public enum ErrorCode {
     INVALID_INPUT(1001, "Invalid input provided"),
     PERMISSION_DENIED(1002, "Permission denied"),
 
+    // 2xxx : security error
+
+
+    // 22xx : jwt error
+    ACCESS_TOKEN_NOT_FOUND(2221, "access token not found"),
+    REFRESH_TOKEN_NOT_FOUND(2222,"refresh token not found"),
+    INVALID_ACCESS_TOKEN(2223,"invalid access token"),
+    INVALID_REFRESH_TOKEN(2224,"invalid refresh token"),
+    EXPIRED_ACCESS_TOKEN(2225,"access token expired"),
+    EXPIRED_REFRESH_TOKEN(2226,"refresh token expired"),
+
     // 4xxx : Database error
     DATABASE_ERROR(4000, "General database error"),
     DATA_ACCESS_ERROR(4001, "Error accessing data"),
