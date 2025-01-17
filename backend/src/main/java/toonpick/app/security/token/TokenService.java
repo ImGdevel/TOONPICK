@@ -22,6 +22,16 @@ public class TokenService {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
+    public String issueAccessToken(String username, String role){
+        String newAccessToken = jwtTokenProvider.createAccessToken(username, role);
+        return newAccessToken;
+    }
+
+    public String issueRefreshToken(String username, String role){
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(username,role);
+        saveRefreshToken(username, newRefreshToken);
+        return newRefreshToken;
+    }
 
     public String reissueAccessToken(String refreshToken) {
         // Refresh 토큰 유효 검증
@@ -59,8 +69,7 @@ public class TokenService {
 
     public void saveRefreshToken(String username, String refresh) {
         Date expirationDate = jwtTokenProvider.getExpiration(refresh);
-        RefreshToken refreshToken = RefreshToken
-                .builder()
+        RefreshToken refreshToken = RefreshToken.builder()
                 .token(refresh)
                 .username(username)
                 .expiration(expirationDate.toString())
