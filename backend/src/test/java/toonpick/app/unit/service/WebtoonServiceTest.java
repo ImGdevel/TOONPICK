@@ -167,8 +167,8 @@ class WebtoonServiceTest {
                 .build();
 
         when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
-        when(authorRepository.findAllById(anyList())).thenReturn(Collections.emptyList());
-        when(genreRepository.findAllById(anyList())).thenReturn(Collections.emptyList());
+        when(authorRepository.findAllById(null)).thenReturn(new ArrayList<>());
+        when(genreRepository.findAllById(null)).thenReturn(new ArrayList<>());
         when(webtoonRepository.save(any(Webtoon.class))).thenReturn(webtoon);
         when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
 
