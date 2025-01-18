@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.domain.toon_collection.ToonCollection;
 import toonpick.app.exception.ErrorCode;
 import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.ToonCollectionRepository;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
@@ -19,9 +20,13 @@ public class ToonCollectionService {
 
     private final ToonCollectionRepository toonCollectionRepository;
     private final WebtoonRepository webtoonRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public ToonCollection createCollection(Member member, String title) {
+    public ToonCollection createCollection(String username, String title) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+
         ToonCollection collection = ToonCollection.builder()
             .member(member)
             .title(title)
@@ -57,7 +62,9 @@ public class ToonCollectionService {
 
     @Transactional
     public void deleteCollection(Long collectionId) {
-        toonCollectionRepository.deleteById(collectionId);
+        ToonCollection collection = toonCollectionRepository.findById(collectionId)
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.COLLECTION_NOT_FOUND, collectionId));
+        toonCollectionRepository.delete(collection);
     }
 
     @Transactional
@@ -83,7 +90,9 @@ public class ToonCollectionService {
     }
 
     @Transactional(readOnly = true)
-    public List<ToonCollection> getCollectionsByMember(Member member) {
+    public List<ToonCollection> getCollectionsByMember(String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         return toonCollectionRepository.findByMember(member);
     }
 }

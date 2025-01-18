@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,7 +44,7 @@ public class ToonCollection {
         joinColumns = @JoinColumn(name = "toon_collection_id"),
         inverseJoinColumns = @JoinColumn(name = "webtoon_id")
     )
-    private List<Webtoon> webtoons;
+    private List<Webtoon> webtoons = new ArrayList<>();
 
     @Builder
     public ToonCollection(Member member, String title) {
