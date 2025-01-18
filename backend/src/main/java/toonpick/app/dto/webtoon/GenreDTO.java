@@ -1,4 +1,4 @@
-package toonpick.app.dto;
+package toonpick.app.dto.webtoon;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthorDTO {
+public class GenreDTO {
     private Long id;
     private String name;
-    private String role;
-    private String link;
-
 }

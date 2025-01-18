@@ -1,7 +1,7 @@
 package toonpick.app.service;
 
 import lombok.RequiredArgsConstructor;
-import toonpick.app.dto.GenreDTO;
+import toonpick.app.dto.webtoon.GenreDTO;
 import toonpick.app.domain.webtoon.Genre;
 import toonpick.app.exception.ErrorCode;
 import toonpick.app.exception.exception.ResourceAlreadyExistsException;
