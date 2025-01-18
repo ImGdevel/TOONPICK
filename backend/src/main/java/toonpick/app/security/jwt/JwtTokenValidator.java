@@ -6,9 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import toonpick.app.security.exception.ExpiredJwtTokenException;
-import toonpick.app.security.exception.InvalidJwtTokenException;
-import toonpick.app.security.exception.MissingJwtTokenException;
+import toonpick.app.exception.ErrorCode;
+import toonpick.app.exception.exception.ExpiredJwtTokenException;
+import toonpick.app.exception.exception.InvalidJwtTokenException;
+import toonpick.app.exception.exception.MissingJwtTokenException;
 import toonpick.app.security.user.CustomUserDetails;
 
 @Component
@@ -28,10 +29,10 @@ public class JwtTokenValidator {
     // Access Token 검증
     public void validateAccessToken(String token) {
         if (jwtTokenProvider.isExpired(token)) {
-            throw new ExpiredJwtTokenException("Access token expired");
+            throw new ExpiredJwtTokenException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
         if (!"access".equals(jwtTokenProvider.getCategory(token))) {
-            throw new InvalidJwtTokenException("Invalid access token category");
+            throw new InvalidJwtTokenException(ErrorCode.ACCESS_TOKEN_INVALID);
         }
     }
 
@@ -51,15 +52,15 @@ public class JwtTokenValidator {
     // Refresh Token 검증
     public void validateRefreshToken(String refreshToken) {
         if (refreshToken == null || refreshToken.isEmpty()) {
-            throw new MissingJwtTokenException("Refresh token is missing.");
+            throw new MissingJwtTokenException(ErrorCode.REFRESH_TOKEN_MISSING);
         }
 
         if (jwtTokenProvider.isExpired(refreshToken)) {
-            throw new ExpiredJwtTokenException("Refresh token expired.");
+            throw new ExpiredJwtTokenException(ErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 
         if (!"refresh".equals(jwtTokenProvider.getCategory(refreshToken))) {
-            throw new InvalidJwtTokenException("Invalid refresh token.");
+            throw new InvalidJwtTokenException(ErrorCode.REFRESH_TOKEN_INVALID);
         }
     }
 

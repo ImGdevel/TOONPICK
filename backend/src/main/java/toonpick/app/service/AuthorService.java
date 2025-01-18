@@ -1,9 +1,11 @@
 package toonpick.app.service;
 
 import lombok.RequiredArgsConstructor;
-import toonpick.app.dto.AuthorDTO;
+import toonpick.app.dto.webtoon.AuthorDTO;
 import toonpick.app.domain.webtoon.Author;
-import toonpick.app.exception.ResourceNotFoundException;
+import toonpick.app.exception.ErrorCode;
+import toonpick.app.exception.exception.ResourceAlreadyExistsException;
+import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.mapper.AuthorMapper;
 import toonpick.app.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
@@ -30,14 +32,14 @@ public class AuthorService {
     @Transactional(readOnly = true)
     public AuthorDTO getAuthor(Long id) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.AUTHOR_NOT_FOUND, id));
         return authorMapper.authorToAuthorDto(author);
     }
 
     @Transactional(readOnly = true)
     public AuthorDTO getAuthorByName(String name) {
         Author author = authorRepository.findByName(name)
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found with name: " + name));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.AUTHOR_NOT_FOUND, name));
         return authorMapper.authorToAuthorDto(author);
     }
 
@@ -49,7 +51,7 @@ public class AuthorService {
     @Transactional
     public AuthorDTO createAuthor(AuthorDTO authorDTO) {
         if (authorRepository.existsByName(authorDTO.getName())) {
-            throw new IllegalArgumentException("Author with name " + authorDTO.getName() + " already exists.");
+            throw new ResourceAlreadyExistsException(ErrorCode.AUTHOR_ALREADY_EXISTS, authorDTO.getName());
         }
 
         Author author = authorMapper.authorDtoToAuthor(authorDTO);
@@ -71,7 +73,7 @@ public class AuthorService {
     @Transactional
     public AuthorDTO updateAuthor(Long id, AuthorDTO authorDTO) {
         Author existingAuthor = authorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.AUTHOR_NOT_FOUND, id));
         existingAuthor.update(
                 authorDTO.getName(),
                 authorDTO.getRole(),
@@ -84,7 +86,7 @@ public class AuthorService {
     @Transactional
     public void deleteAuthor(Long id) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.AUTHOR_NOT_FOUND, id));
         authorRepository.delete(author);
     }
 }

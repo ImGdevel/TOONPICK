@@ -1,4 +1,4 @@
-package toonpick.app.exception;
+package toonpick.app.exception.handler;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.webjars.NotFoundException;
+import toonpick.app.exception.exception.ResourceAlreadyExistsException;
+import toonpick.app.exception.exception.ResourceNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -20,6 +22,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
         LOGGER.error("Resource not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<String> handleResourceAlreadyExists(ResourceAlreadyExistsException ex) {
+        LOGGER.error("Resource already exist: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -43,13 +51,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({OptimisticLockException.class, OptimisticLockingFailureException.class})
     public ResponseEntity<String> handleOptimisticLock(Exception ex) {
         LOGGER.error("Concurrency issue: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                             .body("동시성 문제가 발생했습니다. 다시 시도해주세요.");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception ex) {
         LOGGER.error("Unexpected error: {}", ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 }

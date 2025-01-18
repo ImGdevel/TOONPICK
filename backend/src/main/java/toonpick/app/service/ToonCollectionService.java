@@ -1,10 +1,11 @@
 package toonpick.app.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.domain.toon_collection.ToonCollection;
+import toonpick.app.exception.ErrorCode;
+import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.repository.ToonCollectionRepository;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.webtoon.Webtoon;
@@ -31,25 +32,25 @@ public class ToonCollectionService {
     @Transactional
     public void addWebtoon(Long collectionId, Long webtoonId) {
         ToonCollection collection = toonCollectionRepository.findById(collectionId)
-            .orElseThrow(() -> new EntityNotFoundException("Collection not found"));
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.COLLECTION_NOT_FOUND, collectionId));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
-            .orElseThrow(() -> new EntityNotFoundException("Webtoon not found"));
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, webtoonId));
         collection.addWebtoon(webtoon);
     }
 
     @Transactional
     public void removeWebtoon(Long collectionId, Long webtoonId) {
         ToonCollection collection = toonCollectionRepository.findById(collectionId)
-            .orElseThrow(() -> new EntityNotFoundException("Collection not found"));
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.COLLECTION_NOT_FOUND, collectionId));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
-            .orElseThrow(() -> new EntityNotFoundException("Webtoon not found"));
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, webtoonId));
         collection.removeWebtoon(webtoon);
     }
 
     @Transactional
     public void addMultipleWebtoons(Long collectionId, List<Long> webtoonIds) {
         ToonCollection collection = toonCollectionRepository.findById(collectionId)
-            .orElseThrow(() -> new EntityNotFoundException("Collection not found"));
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.COLLECTION_NOT_FOUND, collectionId));
         List<Webtoon> webtoons = webtoonRepository.findAllById(webtoonIds);
         collection.getWebtoons().addAll(webtoons);
     }
@@ -62,14 +63,14 @@ public class ToonCollectionService {
     @Transactional
     public void updateCollectionTitle(Long collectionId, String newTitle) {
         ToonCollection collection = toonCollectionRepository.findById(collectionId)
-            .orElseThrow(() -> new EntityNotFoundException("Collection not found"));
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.COLLECTION_NOT_FOUND, collectionId));
         collection.updateTitle(newTitle);
     }
 
     @Transactional
     public void removeMultipleWebtoons(Long collectionId, List<Long> webtoonIds) {
         ToonCollection collection = toonCollectionRepository.findById(collectionId)
-            .orElseThrow(() -> new EntityNotFoundException("Collection not found"));
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.COLLECTION_NOT_FOUND, collectionId));
         List<Webtoon> webtoons = webtoonRepository.findAllById(webtoonIds);
         collection.getWebtoons().removeAll(webtoons);
     }
@@ -77,7 +78,7 @@ public class ToonCollectionService {
     @Transactional
     public void clearAllWebtoons(Long collectionId) {
         ToonCollection collection = toonCollectionRepository.findById(collectionId)
-            .orElseThrow(() -> new EntityNotFoundException("Collection not found"));
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.COLLECTION_NOT_FOUND, collectionId));
         collection.clearWebtoons();
     }
 

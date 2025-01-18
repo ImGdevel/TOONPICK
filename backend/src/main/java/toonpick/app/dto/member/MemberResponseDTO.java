@@ -11,5 +11,5 @@ public class MemberResponseDTO {
     private String profilePicture;
     private String email;
     private Boolean isAdultVerified;
-    private String level;
+    private int level;
 }

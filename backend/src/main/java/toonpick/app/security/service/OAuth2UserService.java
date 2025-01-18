@@ -8,7 +8,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import toonpick.app.domain.member.MemberRole;
 import toonpick.app.dto.member.MemberDTO;
-import toonpick.app.dto.member.MemberResponseDTO;
 import toonpick.app.security.user.CustomOAuth2UserDetails;
 import toonpick.app.security.dto.oauth2responseImpl.GoogleResponse;
 import toonpick.app.security.dto.oauth2responseImpl.NaverResponse;

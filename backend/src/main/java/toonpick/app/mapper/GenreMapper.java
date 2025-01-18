@@ -1,6 +1,6 @@
 package toonpick.app.mapper;
 
-import toonpick.app.dto.GenreDTO;
+import toonpick.app.dto.webtoon.GenreDTO;
 import toonpick.app.domain.webtoon.Genre;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

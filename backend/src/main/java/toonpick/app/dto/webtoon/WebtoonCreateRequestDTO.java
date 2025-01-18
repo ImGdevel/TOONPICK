@@ -5,8 +5,6 @@ import lombok.Data;
 import toonpick.app.domain.webtoon.enums.AgeRating;
 import toonpick.app.domain.webtoon.enums.Platform;
 import toonpick.app.domain.webtoon.enums.SerializationStatus;
-import toonpick.app.dto.AuthorDTO;
-import toonpick.app.dto.GenreDTO;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

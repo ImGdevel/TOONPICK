@@ -9,8 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.dto.AuthorDTO;
-import toonpick.app.dto.GenreDTO;
+import toonpick.app.dto.webtoon.AuthorDTO;
+import toonpick.app.dto.webtoon.GenreDTO;
 import toonpick.app.dto.PagedResponseDTO;
 import toonpick.app.dto.WebtoonFilterDTO;
 import toonpick.app.domain.webtoon.Author;
@@ -20,7 +20,9 @@ import toonpick.app.dto.webtoon.WebtoonCreateRequestDTO;
 import toonpick.app.dto.webtoon.WebtoonEpisodeUpdateRequestDTO;
 import toonpick.app.dto.webtoon.WebtoonRequestDTO;
 import toonpick.app.dto.webtoon.WebtoonResponseDTO;
-import toonpick.app.exception.ResourceNotFoundException;
+import toonpick.app.exception.ErrorCode;
+import toonpick.app.exception.exception.ResourceAlreadyExistsException;
+import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.AuthorRepository;
 import toonpick.app.repository.GenreRepository;
@@ -28,7 +30,6 @@ import toonpick.app.repository.WebtoonRepository;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,9 +47,8 @@ public class WebtoonService {
     // 웹툰 추가
     @Transactional
     public WebtoonResponseDTO createWebtoon(WebtoonCreateRequestDTO createRequestDTO) {
-        Optional<Webtoon> existingWebtoon = webtoonRepository.findByExternalId(createRequestDTO.getExternalId());
-        if (existingWebtoon.isPresent()) {
-            return null;
+        if (webtoonRepository.findByExternalId(createRequestDTO.getExternalId()).isPresent()) {
+            throw new ResourceAlreadyExistsException(ErrorCode.WEBTOON_ALREADY_EXISTS, createRequestDTO.getTitle());
         }
 
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(
@@ -83,7 +83,7 @@ public class WebtoonService {
     @Transactional(readOnly = true)
     public WebtoonResponseDTO getWebtoonById(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
         return webtoonMapper.webtoonToWebtoonResponseDto(webtoon);
     }
 
@@ -113,7 +113,7 @@ public class WebtoonService {
     @Transactional
     public WebtoonResponseDTO updateWebtoon(Long id, WebtoonRequestDTO webtoonRequestDTO) {
         Webtoon existingWebtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
 
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(webtoonRequestDTO.getAuthorIds()));
         Set<Genre> genres = new HashSet<>(genreRepository.findAllById(webtoonRequestDTO.getGenreIds()));
@@ -140,7 +140,7 @@ public class WebtoonService {
     @Transactional
     public void updateWebtoonEpisode(Long id, WebtoonEpisodeUpdateRequestDTO updateRequest) {
         Webtoon existingWebtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
 
         existingWebtoon.updateEpisodeCountAndDate(
                 updateRequest.getEpisodeCount(),
@@ -154,7 +154,7 @@ public class WebtoonService {
     @Transactional
     public void deleteWebtoon(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Webtoon not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
         webtoonRepository.delete(webtoon);
     }
 
