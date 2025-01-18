@@ -1,6 +1,7 @@
 package toonpick.app.unit.service;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -14,6 +15,7 @@ import toonpick.app.security.service.JoinService;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("UnitTest")
 class JoinServiceTest {
 
     @Mock
