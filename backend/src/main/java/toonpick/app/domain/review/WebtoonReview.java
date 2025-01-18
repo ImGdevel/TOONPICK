@@ -21,20 +21,21 @@ public class WebtoonReview extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "webtoon_id")
+    @JoinColumn(name = "webtoon_id", nullable = false)
     private Webtoon webtoon;
 
-    @Column(nullable = false)
-    private float rating;
+    @Column(name = "rating", nullable = false)
+    private float rating = 0;
 
-    @Column(length = 1000)
+    @Column(name = "comment", length = 1000)
     private String comment;
 
-    private int likes;
+    @Column(name = "likes")
+    private int likes = 0;
 
     @Builder
     public WebtoonReview(Member member, Webtoon webtoon, float rating, String comment, int likes) {
@@ -44,7 +45,6 @@ public class WebtoonReview extends BaseTimeEntity {
         this.comment = comment;
         this.likes = likes;
     }
-
 
     public void update(float rating, String comment){
         this.rating = rating;
