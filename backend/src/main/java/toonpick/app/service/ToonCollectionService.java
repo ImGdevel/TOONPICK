@@ -62,7 +62,9 @@ public class ToonCollectionService {
 
     @Transactional
     public void deleteCollection(Long collectionId) {
-        toonCollectionRepository.deleteById(collectionId);
+        ToonCollection collection = toonCollectionRepository.findById(collectionId)
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.COLLECTION_NOT_FOUND, collectionId));
+        toonCollectionRepository.delete(collection);
     }
 
     @Transactional

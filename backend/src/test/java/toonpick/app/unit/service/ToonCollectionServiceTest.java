@@ -132,7 +132,7 @@ class ToonCollectionServiceTest {
         when(toonCollectionRepository.findById(1L)).thenReturn(Optional.of(collection));
         when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
 
-        collection.addWebtoon(webtoon);
+        collection.addWebtoon(webtoon); // Adding webtoon to collection
 
         // when
         toonCollectionService.removeWebtoon(1L, 1L);
@@ -180,7 +180,7 @@ class ToonCollectionServiceTest {
         assertTrue(collection.getWebtoons().containsAll(List.of(webtoon)));
     }
 
-    @DisplayName("컬렉션 삭제하는 단위 테스트")
+    @DisplayName("컬렉션 삭제 성공 테스트")
     @Test
     void testDeleteCollection_Success() {
         // given
@@ -190,7 +190,8 @@ class ToonCollectionServiceTest {
         toonCollectionService.deleteCollection(1L);
 
         // then
-        verify(toonCollectionRepository, times(1)).deleteById(1L);
+        verify(toonCollectionRepository, times(1)).findById(1L);
+        verify(toonCollectionRepository, times(1)).delete(collection);
     }
 
     @DisplayName("컬렉션 제목을 변경하는 단위 테스트")
