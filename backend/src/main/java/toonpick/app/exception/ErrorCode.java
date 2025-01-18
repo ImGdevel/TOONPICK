@@ -21,6 +21,7 @@ public enum ErrorCode {
 
     // 21xx : authorization error
     USER_ALREADY_REGISTERED(2103, "User is already registered"),
+    USER_NOT_AUTHENTICATED(2110, "User is not authenticated"),
 
     // 22xx : JWT error
     ACCESS_TOKEN_MISSING(2221, "Access token is missing"),
