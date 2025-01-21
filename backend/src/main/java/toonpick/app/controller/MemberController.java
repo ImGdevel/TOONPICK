@@ -1,6 +1,5 @@
 package toonpick.app.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +48,11 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/profile-picture")
-    public ResponseEntity<String> uploadProfilePicture(@RequestParam("profile") MultipartFile file, Authentication authentication) {
+    @PostMapping("/profile-image")
+    public ResponseEntity<String> uploadProfilePicture(@RequestParam("image") MultipartFile file, Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
         String fileUrl = s3Service.uploadFile(file);
-        memberService.updateProfilePicture(username, fileUrl);
+        memberService.updateProfileImage(username, fileUrl);
         return ResponseEntity.ok(fileUrl);
     }
 

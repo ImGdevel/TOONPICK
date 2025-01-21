@@ -50,11 +50,11 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateProfilePicture(String username, String profilePicture){
+    public void updateProfileImage(String username, String profileImage){
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
-        member.updateProfilePicture(profilePicture);
+        member.updateProfileImage(profileImage);
 
         memberRepository.save(member);
     }
