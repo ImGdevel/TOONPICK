@@ -20,7 +20,7 @@ class MemberTest {
                 .nickname("testNickname")
                 .role(MemberRole.ROLE_USER)
                 .isAdultVerified(false)
-                .profilePicture("default_profile_img.png")
+                .profileImage("default_profile_img.png")
                 .build();
 
         assertThat(member.getUsername()).isEqualTo("testUser");
@@ -33,13 +33,25 @@ class MemberTest {
     void testUpdateProfile() {
         Member member = Member.builder()
                 .nickname("testNickname")
-                .profilePicture("default_profile_img.png")
+                .profileImage("default_profile_img.png")
                 .build();
 
-        member.updateProfile("newNickname", "newProfilePicture.png");
+        member.updateProfile("newNickname");
 
         assertThat(member.getNickname()).isEqualTo("newNickname");
-        assertThat(member.getProfilePicture()).isEqualTo("newProfilePicture.png");
+    }
+
+    @Test
+    @DisplayName("프로필 이미지 업데이트 테스트")
+    void testUpdateProfileImage() {
+        Member member = Member.builder()
+                .nickname("testNickname")
+                .profileImage("default_profile_img.png")
+                .build();
+
+        member.updateProfileImage("new_profile_img.png");
+
+        assertThat(member.getProfileImage()).isEqualTo("new_profile_img.png");
     }
 
     @Test
