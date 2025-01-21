@@ -43,9 +43,18 @@ public class MemberService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
         member.updateProfile(
-                memberProfileRequestDTO.getNickname(),
-                memberProfileRequestDTO.getProfilePicture()
+                memberProfileRequestDTO.getNickname()
         );
+
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void updateProfilePicture(String username, String profilePicture){
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+        member.updateProfilePicture(profilePicture);
 
         memberRepository.save(member);
     }
