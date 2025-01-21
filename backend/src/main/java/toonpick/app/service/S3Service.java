@@ -34,8 +34,11 @@ public class S3Service {
         String fileName = generateFileName(file.getOriginalFilename());
 
         try {
-            amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), null)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+
+            amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata));
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload file to S3", e);
         }
