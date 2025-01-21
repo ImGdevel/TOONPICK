@@ -1,13 +1,15 @@
 package toonpick.app.service;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import toonpick.app.exception.ErrorCode;
 
 
 import java.io.IOException;
@@ -20,6 +22,8 @@ public class S3Service {
     private final AmazonS3 amazonS3;
 
     private final String bucketName;
+
+    private final Logger logger = LoggerFactory.getLogger(S3Service.class);
 
     public S3Service(AmazonS3 amazonS3,
                      @Value("${cloud.aws.s3.bucket}") String bucketName) {
@@ -40,7 +44,10 @@ public class S3Service {
 
             amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata));
         } catch (IOException e) {
-            throw new RuntimeException("Failed to upload file to S3", e);
+            throw new RuntimeException(ErrorCode.IMAGE_UPLOAD_FAILED.getMessage());
+        } catch (AmazonServiceException e){
+            logger.error("{} : {}", ErrorCode.IMAGE_UPLOAD_FAILED_TO_S3, e);
+            throw new RuntimeException(ErrorCode.IMAGE_UPLOAD_FAILED_TO_S3.getMessage());
         }
 
         return amazonS3.getUrl(bucketName, fileName).toString();
