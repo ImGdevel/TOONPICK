@@ -69,6 +69,17 @@ spring:
       initialize-schema: always
       # schema: classpath:org/springframework/batch/core/schema-mysql.sql
 
+cloud:
+  config:
+    import: application-API-KEY.yml
+  aws:
+    credentials:
+      access-key: ${aws.credentials.access-key}
+      secret-key: ${aws.credentials.secret-key}
+    region:
+      static: ${aws.region.static}
+    s3:
+      bucket: ${aws.s3.bucket}
 
 logging:
   level:
