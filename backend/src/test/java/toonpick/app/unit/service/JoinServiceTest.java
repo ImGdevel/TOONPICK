@@ -1,19 +1,21 @@
 package toonpick.app.unit.service;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import toonpick.app.auth.dto.JoinRequest;
-import toonpick.app.member.entity.Member;
-import toonpick.app.member.repository.MemberRepository;
-import toonpick.app.auth.service.JoinService;
+import toonpick.app.security.dto.JoinRequest;
+import toonpick.app.domain.member.Member;
+import toonpick.app.repository.MemberRepository;
+import toonpick.app.security.service.JoinService;
 
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("UnitTest")
 class JoinServiceTest {
 
     @Mock

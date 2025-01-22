@@ -2,7 +2,8 @@ package toonpick.app.unit.entity;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import toonpick.app.member.entity.Member;
+import toonpick.app.domain.member.Member;
+import toonpick.app.domain.member.MemberRole;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,9 +18,9 @@ class MemberTest {
                 .email("test@example.com")
                 .password("password")
                 .nickname("testNickname")
-                .role("ROLE_USER")
+                .role(MemberRole.ROLE_USER)
                 .isAdultVerified(false)
-                .profilePicture("default_profile_img.png")
+                .profileImage("default_profile_img.png")
                 .build();
 
         assertThat(member.getUsername()).isEqualTo("testUser");
@@ -32,13 +33,25 @@ class MemberTest {
     void testUpdateProfile() {
         Member member = Member.builder()
                 .nickname("testNickname")
-                .profilePicture("default_profile_img.png")
+                .profileImage("default_profile_img.png")
                 .build();
 
-        member.updateProfile("newNickname", "newProfilePicture.png");
+        member.updateProfile("newNickname");
 
         assertThat(member.getNickname()).isEqualTo("newNickname");
-        assertThat(member.getProfilePicture()).isEqualTo("newProfilePicture.png");
+    }
+
+    @Test
+    @DisplayName("프로필 이미지 업데이트 테스트")
+    void testUpdateProfileImage() {
+        Member member = Member.builder()
+                .nickname("testNickname")
+                .profileImage("default_profile_img.png")
+                .build();
+
+        member.updateProfileImage("new_profile_img.png");
+
+        assertThat(member.getProfileImage()).isEqualTo("new_profile_img.png");
     }
 
     @Test
