@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.domain.toon_collection.ToonCollection;
+import toonpick.app.dto.ToonCollectionResponseDTO;
 import toonpick.app.exception.ErrorCode;
 import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.app.mapper.ToonCollectionMapper;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.ToonCollectionRepository;
 import toonpick.app.domain.member.Member;
@@ -19,11 +21,12 @@ import java.util.List;
 public class ToonCollectionService {
 
     private final ToonCollectionRepository toonCollectionRepository;
+    private final ToonCollectionMapper toonCollectionMapper;
     private final WebtoonRepository webtoonRepository;
     private final MemberRepository memberRepository;
 
     @Transactional
-    public ToonCollection createCollection(String username, String title) {
+    public ToonCollectionResponseDTO createCollection(String username, String title) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
@@ -31,7 +34,9 @@ public class ToonCollectionService {
             .member(member)
             .title(title)
             .build();
-        return toonCollectionRepository.save(collection);
+        toonCollectionRepository.save(collection);
+
+        return toonCollectionMapper.toonCollectionToToonCollectionResponseDTO(collection);
     }
 
     @Transactional
@@ -90,9 +95,12 @@ public class ToonCollectionService {
     }
 
     @Transactional(readOnly = true)
-    public List<ToonCollection> getCollectionsByMember(String username) {
+    public List<ToonCollectionResponseDTO> getCollectionsByMember(String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
-        return toonCollectionRepository.findByMember(member);
+
+        List<ToonCollection> toonCollections = toonCollectionRepository.findByMember(member);
+
+        return toonCollectionMapper.toonCollectionsToToonCollectionResponseDTOs(toonCollections);
     }
 }

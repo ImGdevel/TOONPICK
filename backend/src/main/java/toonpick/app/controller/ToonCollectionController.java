@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import toonpick.app.domain.toon_collection.ToonCollection;
+import toonpick.app.dto.ToonCollectionResponseDTO;
 import toonpick.app.service.ToonCollectionService;
 import toonpick.app.utils.AuthenticationUtil;
 
@@ -31,13 +31,13 @@ public class ToonCollectionController {
 
     @Operation(summary = "웹툰 컬랙션 생성", description = "회원의 웹툰 새컬렉션을 생성합니다")
     @PostMapping("/create")
-    public ResponseEntity<ToonCollection> createCollection(
+    public ResponseEntity<ToonCollectionResponseDTO> createCollection(
             @Parameter(description = "생성할 컬렉션 제목", required = true)
             @RequestParam String title,
             Authentication authentication
     ) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        ToonCollection collection = toonCollectionService.createCollection(username, title);
+        ToonCollectionResponseDTO collection = toonCollectionService.createCollection(username, title);
         return ResponseEntity.ok(collection);
     }
 
@@ -88,9 +88,9 @@ public class ToonCollectionController {
 
     @Operation(summary = "웹툰 컬랙션 리스트 조회", description = "회원 웹툰 컬렉션의 웹툰 리스트를 조회합니다")
     @GetMapping
-    public ResponseEntity<List<ToonCollection>> getCollections(Authentication authentication) {
+    public ResponseEntity<List<ToonCollectionResponseDTO>> getCollections(Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        List<ToonCollection> collections = toonCollectionService.getCollectionsByMember(username);
+        List<ToonCollectionResponseDTO> collections = toonCollectionService.getCollectionsByMember(username);
         return ResponseEntity.ok(collections);
     }
 }
