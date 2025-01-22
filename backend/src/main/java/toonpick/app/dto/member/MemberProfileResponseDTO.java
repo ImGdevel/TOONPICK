@@ -9,5 +9,5 @@ public class MemberProfileResponseDTO {
     private String username;
     private String nickname;
     private String profilePicture;
-    private String level;
+    private int level;
 }
