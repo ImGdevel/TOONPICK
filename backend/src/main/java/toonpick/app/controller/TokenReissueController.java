@@ -1,6 +1,7 @@
-package toonpick.app.security.controller;
+package toonpick.app.controller;
 
-import jakarta.servlet.http.Cookie;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.security.token.TokenService;
 import toonpick.app.utils.CookieUtils;
 
+@Tag(name = "Security - Token", description = "보안 토큰 재발급 (접근 권한=public)")
 @Controller
 @ResponseBody
 @RequiredArgsConstructor
@@ -27,8 +29,10 @@ public class TokenReissueController {
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenService tokenService;
     private final JwtTokenValidator jwtTokenValidator;
+
     private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
 
+    @Operation(summary = "access 토큰 재발급", description = "refresh 토큰을 통해 access 토큰 재발급")
     @PostMapping("/api/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
         try {
