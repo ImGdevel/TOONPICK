@@ -53,19 +53,18 @@ class MemberServiceTest {
 
         profileRequestDTO = MemberProfileRequestDTO.builder()
                 .nickname("newNickname")
-                .profilePicture("newProfilePicture")
                 .build();
 
         profileResponseDTO = MemberProfileResponseDTO.builder()
                 .username("testuser")
                 .nickname("newNickname")
-                .profilePicture("newProfilePicture")
+                .profilePicture("newProfileImageUrl")
                 .build();
 
         profileDetailsResponseDTO = MemberProfileDetailsResponseDTO.builder()
                 .username("testuser")
                 .nickname("newNickname")
-                .profilePicture("newProfilePicture")
+                .profilePicture("newProfileImageUrl")
                 .email("testuser@example.com")
                 .isAdultVerified(true)
                 .level(0)
@@ -86,7 +85,7 @@ class MemberServiceTest {
         assertNotNull(result);
         assertEquals("testuser", result.getUsername());
         assertEquals("newNickname", result.getNickname());
-        assertEquals("newProfilePicture", result.getProfilePicture());
+        assertEquals("newProfileImageUrl", result.getProfilePicture());
     }
 
     @DisplayName("존재하지 않는 사용자 프로필 조회 예외 단위 테스트")
@@ -113,7 +112,7 @@ class MemberServiceTest {
         assertNotNull(result);
         assertEquals("testuser", result.getUsername());
         assertEquals("newNickname", result.getNickname());
-        assertEquals("newProfilePicture", result.getProfilePicture());
+        assertEquals("newProfileImageUrl", result.getProfilePicture());
         assertEquals("testuser@example.com", result.getEmail());
         assertTrue(result.getIsAdultVerified());
         assertEquals(0, result.getLevel());
@@ -131,7 +130,20 @@ class MemberServiceTest {
         // then
         verify(memberRepository, times(1)).save(member);
         assertEquals("newNickname", member.getNickname());
-        assertEquals("newProfilePicture", member.getProfilePicture());
+    }
+
+    @DisplayName("사용자 프로필 이미지 수정 단위 테스트")
+    @Test
+    void testUpdateProfileImage_Success() {
+        // given
+        when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
+
+        // when
+        memberService.updateProfileImage("testuser", "newProfileImageUrl" );
+
+        // then
+        verify(memberRepository, times(1)).save(member);
+        assertEquals("newProfileImageUrl", member.getProfileImage());
     }
 
     @DisplayName("사용자 패스워드 수정 단위 테스트")
@@ -170,7 +182,7 @@ class MemberServiceTest {
         when(memberMapper.memberToMemberResponseDTO(member)).thenReturn(MemberResponseDTO.builder()
                 .username("testuser")
                 .nickname("newNickname")
-                .profilePicture("newProfilePicture")
+                .profilePicture("newProfileImageUrl")
                 .email("testuser@example.com")
                 .isAdultVerified(true)
                 .level(0)
@@ -183,7 +195,7 @@ class MemberServiceTest {
         assertNotNull(result);
         assertEquals("testuser", result.getUsername());
         assertEquals("newNickname", result.getNickname());
-        assertEquals("newProfilePicture", result.getProfilePicture());
+        assertEquals("newProfileImageUrl", result.getProfilePicture());
         assertEquals("testuser@example.com", result.getEmail());
         assertTrue(result.getIsAdultVerified());
         assertEquals(0, result.getLevel());

@@ -32,8 +32,8 @@ public class Member extends BaseTimeEntity {
     @Column(name = "role")
     private MemberRole role;
 
-    @Column(name = "profile_picture")
-    private String profilePicture;
+    @Column(name = "profile_image")
+    private String profileImage;
 
     @Column(name = "is_adult_verified")
     private Boolean isAdultVerified = false;
@@ -46,19 +46,22 @@ public class Member extends BaseTimeEntity {
 
     @Builder
     public Member(String username, String email, String password, String nickname, MemberRole role,
-                  Boolean isAdultVerified, String profilePicture) {
+                  Boolean isAdultVerified, String profileImage) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.role = role;
         this.isAdultVerified = isAdultVerified;
-        this.profilePicture = profilePicture;
+        this.profileImage = profileImage;
     }
 
-    public void updateProfile(String nickname, String profilePicture) {
+    public void updateProfile(String nickname) {
         this.nickname = nickname;
-        this.profilePicture = profilePicture;
+    }
+
+    public void updateProfileImage(String profilePicture){
+        this.profileImage = profilePicture;
     }
 
     public void changePassword(String newPassword) {

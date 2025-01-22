@@ -41,7 +41,7 @@ public class JoinService {
                 .email(joinRequest.getEmail())
                 .role(MemberRole.ROLE_USER)
                 .isAdultVerified(false)
-                .profilePicture("default_profile_img.png")
+                .profileImage(null)
                 .build();
 
         Member savedMember = memberRepository.save(member);

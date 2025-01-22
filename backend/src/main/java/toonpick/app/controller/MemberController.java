@@ -1,17 +1,22 @@
 package toonpick.app.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import toonpick.app.dto.member.MemberProfileDetailsResponseDTO;
 import toonpick.app.dto.member.MemberProfileRequestDTO;
 import toonpick.app.dto.member.MemberResponseDTO;
+import toonpick.app.service.S3Service;
 import toonpick.app.utils.AuthenticationUtil;
 import toonpick.app.service.MemberService;
 
@@ -22,6 +27,9 @@ public class MemberController {
 
     private final MemberService memberService;
     private final AuthenticationUtil authenticationUtil;
+    private final S3Service s3Service;
+
+    private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     // Member 프로필 조회
     @GetMapping("/profile")
@@ -38,6 +46,14 @@ public class MemberController {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
         memberService.updateProfile(username, memberProfileRequestDTO);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/profile-image")
+    public ResponseEntity<String> uploadProfilePicture(@RequestParam("image") MultipartFile file, Authentication authentication) {
+        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
+        String fileUrl = s3Service.uploadFile(file);
+        memberService.updateProfileImage(username, fileUrl);
+        return ResponseEntity.ok(fileUrl);
     }
 
     // Member 패스워드 변경

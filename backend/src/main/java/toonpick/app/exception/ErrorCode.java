@@ -32,6 +32,12 @@ public enum ErrorCode {
     EXPIRED_REFRESH_TOKEN(2226, "Refresh token has expired"),
     REFRESH_TOKEN_NOT_FOUND(2227, "Refresh token not found in cache"),
 
+    // 3xxx : API/Service error
+
+    // 32xx : image
+    IMAGE_UPLOAD_FAILED( 3230,"Failed to upload file"),
+    IMAGE_UPLOAD_FAILED_TO_S3( 3231,"Failed to upload file to S3"),
+
     // 4xxx : Database error
     DATABASE_ERROR(4000, "Database error occurred"),
     DATA_ACCESS_ERROR(4001, "Error accessing data"),

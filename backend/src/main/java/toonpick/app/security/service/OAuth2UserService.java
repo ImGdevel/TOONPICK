@@ -75,7 +75,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .password("")
                 .email(oAuth2Response.getEmail())
                 .nickname(oAuth2Response.getName())
-                .profilePicture("default_profile_img.png")
+                .profileImage("")
                 .isAdultVerified(false)
                 .role(MemberRole.ROLE_USER)
                 .build();
