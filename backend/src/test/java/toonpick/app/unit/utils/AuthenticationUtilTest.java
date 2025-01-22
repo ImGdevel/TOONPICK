@@ -46,7 +46,7 @@ class AuthenticationUtilTest {
                 () -> authenticationUtil.getUsernameFromAuthentication(null)
         );
 
-        assertEquals("User is not authenticated.", exception.getMessage());
+        assertEquals("User is not authenticated", exception.getMessage());
     }
 
     @DisplayName("Authentication의 Principal이 올바르지 않을 때 예외 테스트")
@@ -62,7 +62,7 @@ class AuthenticationUtilTest {
                 () -> authenticationUtil.getUsernameFromAuthentication(authentication)
         );
 
-        assertEquals("User is not authenticated.", exception.getMessage());
+        assertEquals("User is not authenticated", exception.getMessage());
         verify(authentication, times(1)).getPrincipal();
     }
 }

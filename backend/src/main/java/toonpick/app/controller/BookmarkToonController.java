@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.domain.webtoon.Webtoon;
+import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.service.BookmarkToonsService;
 import toonpick.app.utils.AuthenticationUtil;
 
@@ -53,9 +54,9 @@ public class BookmarkToonController {
 
     @Operation(summary = "북마크 웹툰 리스트 조회", description = "현재 회원의 북마크 웹툰 리스트를 조회합니다")
     @GetMapping
-    public ResponseEntity<List<Webtoon>> getBookmarks(Authentication authentication) {
+    public ResponseEntity<List<WebtoonResponseDTO>> getBookmarks(Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        List<Webtoon> webtoons = bookmarkToonsService.getWebtoonsByUsername(username);
+        List<WebtoonResponseDTO> webtoons = bookmarkToonsService.getWebtoonsByUsername(username);
         return ResponseEntity.ok(webtoons);
     }
 }

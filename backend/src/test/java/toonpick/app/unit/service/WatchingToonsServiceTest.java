@@ -11,12 +11,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.watching_toons.WatchingToons;
 import toonpick.app.domain.webtoon.Webtoon;
+import toonpick.app.domain.webtoon.enums.AgeRating;
+import toonpick.app.domain.webtoon.enums.Platform;
+import toonpick.app.domain.webtoon.enums.SerializationStatus;
+import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.WebtoonRepository;
 import toonpick.app.repository.WatchingToonsRepository;
 import toonpick.app.service.WatchingToonsService;
 
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,12 +42,16 @@ class WatchingToonsServiceTest {
     @Mock
     private WebtoonRepository webtoonRepository;
 
+    @Mock
+    private WebtoonMapper webtoonMapper;
+
     @InjectMocks
     private WatchingToonsService watchingToonsService;
 
     private Member member;
     private Webtoon webtoon;
     private WatchingToons watchingToons;
+    private WebtoonResponseDTO responseDTO;
 
     @BeforeEach
     void setUp() {
@@ -57,6 +67,11 @@ class WatchingToonsServiceTest {
         watchingToons = WatchingToons.builder()
                 .member(member)
                 .webtoon(webtoon)
+                .build();
+
+        responseDTO = WebtoonResponseDTO.builder()
+                .id(1L)
+                .title("Test Webtoon")
                 .build();
     }
 
@@ -143,9 +158,10 @@ class WatchingToonsServiceTest {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
         when(watchingToonsRepository.findWebtoonsByMember(member)).thenReturn(List.of(webtoon));
+        when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
 
         // when
-        List<Webtoon> result = watchingToonsService.getWebtoonsByUsername("testuser");
+        List<WebtoonResponseDTO> result = watchingToonsService.getWebtoonsByUsername("testuser");
 
         // then
         assertNotNull(result);

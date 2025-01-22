@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.domain.webtoon.Webtoon;
+import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.service.WatchingToonsService;
 import toonpick.app.utils.AuthenticationUtil;
 
@@ -53,9 +54,9 @@ public class WatchingToonController {
 
     @Operation(summary = "감상 웹툰 리스트 조회", description = "현재 회원의 감상 중 웹툰 리스트를 조회합니다")
     @GetMapping
-    public ResponseEntity<List<Webtoon>> getWatchingToons(Authentication authentication) {
+    public ResponseEntity<List<WebtoonResponseDTO>> getWatchingToons(Authentication authentication) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        List<Webtoon> webtoons = watchingToonsService.getWebtoonsByUsername(username);
+        List<WebtoonResponseDTO> webtoons = watchingToonsService.getWebtoonsByUsername(username);
         return ResponseEntity.ok(webtoons);
     }
 
