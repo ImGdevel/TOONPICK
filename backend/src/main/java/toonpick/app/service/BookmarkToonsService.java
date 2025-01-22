@@ -1,10 +1,13 @@
 package toonpick.app.service;
 
+import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.domain.bookmark_toons.BookmarkToons;
+import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.exception.ErrorCode;
+import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.BookmarkToonsRepository;
 import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.domain.member.Member;
@@ -13,6 +16,7 @@ import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.repository.WebtoonRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +25,7 @@ public class BookmarkToonsService {
     private final BookmarkToonsRepository bookmarkToonsRepository;
     private final MemberRepository memberRepository;
     private final WebtoonRepository webtoonRepository;
+    private final WebtoonMapper webtoonMapper;
 
     @Transactional
     public boolean addBookmarkToons(String username, Long webtoonId){
@@ -53,11 +58,13 @@ public class BookmarkToonsService {
     }
 
     @Transactional(readOnly = true)
-    public List<Webtoon> getWebtoonsByUsername(String username) {
+    public List<WebtoonResponseDTO> getWebtoonsByUsername(String username) {
          Member member = memberRepository.findByUsername(username)
                 .orElseThrow(()-> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
-
-         return bookmarkToonsRepository.findWebtoonsByMember(member);
+         List<Webtoon> webtoons = bookmarkToonsRepository.findWebtoonsByMember(member);
+         return webtoons.stream()
+                 .map(webtoonMapper::webtoonToWebtoonResponseDto)
+                 .collect(Collectors.toList());
     }
 
 }

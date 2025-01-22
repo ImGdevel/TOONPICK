@@ -11,13 +11,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import toonpick.app.security.controller.TokenReissueController;
+import toonpick.app.controller.TokenReissueController;
 import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.security.token.TokenService;
 import toonpick.app.utils.CookieUtils;
-
-import javax.swing.text.Utilities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;

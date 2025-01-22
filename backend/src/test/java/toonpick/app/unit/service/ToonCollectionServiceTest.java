@@ -11,13 +11,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.toon_collection.ToonCollection;
 import toonpick.app.domain.webtoon.Webtoon;
+import toonpick.app.dto.ToonCollectionResponseDTO;
+import toonpick.app.dto.member.MemberProfileResponseDTO;
+import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.app.mapper.ToonCollectionMapper;
 import toonpick.app.repository.ToonCollectionRepository;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.WebtoonRepository;
 import toonpick.app.service.ToonCollectionService;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,12 +40,16 @@ class ToonCollectionServiceTest {
     @Mock
     private WebtoonRepository webtoonRepository;
 
+    @Mock
+    private ToonCollectionMapper toonCollectionMapper;
+
     @InjectMocks
     private ToonCollectionService toonCollectionService;
 
     private Member member;
     private Webtoon webtoon;
     private ToonCollection collection;
+    private ToonCollectionResponseDTO toonCollectionResponseDTO;
 
     @BeforeEach
     void setUp() {
@@ -59,6 +66,20 @@ class ToonCollectionServiceTest {
                 .member(member)
                 .title("My Collection")
                 .build();
+
+        toonCollectionResponseDTO = ToonCollectionResponseDTO.builder()
+                .title("My Collection")
+                .member(MemberProfileResponseDTO.builder()
+                        .username("testuser")
+                        .nickname("Test Nickname")
+                        .profilePicture("profile.jpg")
+                        .level(1)
+                        .build())
+                .webtoons(List.of(WebtoonResponseDTO.builder()
+                        .id(1L)
+                        .title("Test Webtoon")
+                        .build()))
+                .build();
     }
 
     @DisplayName("컬렉션을 생성하는 단위 테스트")
@@ -67,15 +88,18 @@ class ToonCollectionServiceTest {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
         when(toonCollectionRepository.save(any(ToonCollection.class))).thenReturn(collection);
+        when(toonCollectionMapper.toonCollectionToToonCollectionResponseDTO(any(ToonCollection.class)))
+                .thenReturn(toonCollectionResponseDTO);
 
         // when
-        ToonCollection result = toonCollectionService.createCollection("testuser", "My Collection");
+        ToonCollectionResponseDTO result = toonCollectionService.createCollection("testuser", "My Collection");
 
         // then
         assertNotNull(result);
         assertEquals("My Collection", result.getTitle());
         verify(memberRepository, times(1)).findByUsername("testuser");
         verify(toonCollectionRepository, times(1)).save(any(ToonCollection.class));
+        verify(toonCollectionMapper, times(1)).toonCollectionToToonCollectionResponseDTO(any(ToonCollection.class));
     }
 
     @DisplayName("컬렉션 생성시 회원이 존재하지 않으면 예외가 발생하는 단위 테스트")
@@ -257,9 +281,11 @@ class ToonCollectionServiceTest {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
         when(toonCollectionRepository.findByMember(member)).thenReturn(List.of(collection));
+        when(toonCollectionMapper.toonCollectionsToToonCollectionResponseDTOs(anyList()))
+                .thenReturn(List.of(toonCollectionResponseDTO));
 
         // when
-        List<ToonCollection> result = toonCollectionService.getCollectionsByMember("testuser");
+        List<ToonCollectionResponseDTO> result = toonCollectionService.getCollectionsByMember("testuser");
 
         // then
         assertNotNull(result);
