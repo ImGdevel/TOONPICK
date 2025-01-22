@@ -1,6 +1,10 @@
 package toonpick.app.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,26 +15,33 @@ import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.dto.WebtoonReviewDTO;
 import toonpick.app.service.WebtoonReviewService;
 
-@RequiredArgsConstructor
+@Tag(name = "Webtoon", description = "웹툰 리뷰 관련 API (접근 권한 : Admin)")
 @RestController
 @RequestMapping("/api/admin/reviews")
-public class AdminReviewController {
+@RequiredArgsConstructor
+public class AdminWebtoonReviewController {
 
     private final WebtoonReviewService webtoonReviewService;
 
     // todo : Admin 사용 가능한 API
     // todo : 추후 @PreAuthorize("hasRole('ADMIN')") 어노테이션을 추가할 것
 
-    // 특정 리뷰 조회
+    @Operation(summary = "리뷰 삭제", description = "리뷰를 조회합니다 (관리자 권한)")
     @GetMapping("/{reviewId}")
-    public ResponseEntity<WebtoonReviewDTO> getReview(@PathVariable Long reviewId) {
+    public ResponseEntity<WebtoonReviewDTO> getReview(
+            @Parameter(description = "조회할 리뷰 id")
+            @PathVariable Long reviewId
+    ) {
         WebtoonReviewDTO reviewDTO = webtoonReviewService.getReview(reviewId);
         return reviewDTO != null ? ResponseEntity.ok(reviewDTO) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    // 리뷰 강제 삭제 (관리자 권한)
+    @Operation(summary = "리뷰 삭제", description = "등록된 리뷰를 삭제합니다 (관리자 권한)")
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
+    public ResponseEntity<Void> deleteReview(
+            @Parameter(description = "삭제할 리뷰 id")
+            @PathVariable Long reviewId
+    ) {
         webtoonReviewService.deleteReview(reviewId);
         return ResponseEntity.noContent().build();
     }
