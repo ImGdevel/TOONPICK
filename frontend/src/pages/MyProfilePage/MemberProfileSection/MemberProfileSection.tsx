@@ -26,6 +26,7 @@ const MemberProfileSection: React.FC<MemberProfileSectionProps> = ({ memberProfi
 
   const handleEditProfile = () => {
     // TODO: 프로필 수정 기능 추가
+    navigate('/profile/edit');
   };
 
   const handleMoreOptions = () => {
