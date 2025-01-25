@@ -89,6 +89,9 @@ public class Webtoon {
     @Column(name = "publish_start_date")
     private LocalDate publishStartDate;
 
+    @Column(name = "publish_last_date")
+    private LocalDate publishLastDate;
+
     @Column(name = "last_update_date")
     private LocalDate lastUpdatedDate;
 
@@ -136,6 +139,7 @@ public class Webtoon {
                    int episodeCount,
                    float platformRating,
                    LocalDate publishStartDate,
+                   LocalDate publishLastDate,
                    LocalDate lastUpdatedDate,
                    Set<Author> authors,
                    Set<Genre> genres) {
@@ -152,13 +156,17 @@ public class Webtoon {
         this.platformRating = platformRating;
         this.episodeCount = episodeCount;
         this.publishStartDate = publishStartDate;
+        this.publishLastDate = publishLastDate;
         this.lastUpdatedDate = lastUpdatedDate;
         this.authors = authors != null ? authors : new HashSet<>();
         this.genres = genres != null ? genres : new HashSet<>();
     }
 
-    public void updateEpisodeCountAndDate(int episodeCount, LocalDate lastUpdatedDate) {
+    public void updateEpisodeCountAndDate(int episodeCount,
+                                          LocalDate publishLastDate,
+                                          LocalDate lastUpdatedDate) {
         this.episodeCount = episodeCount;
+        this.publishLastDate = publishLastDate;
         this.lastUpdatedDate = lastUpdatedDate;
     }
 

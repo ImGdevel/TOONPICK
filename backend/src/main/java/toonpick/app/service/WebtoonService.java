@@ -144,6 +144,7 @@ public class WebtoonService {
 
         existingWebtoon.updateEpisodeCountAndDate(
                 updateRequest.getEpisodeCount(),
+                updateRequest.getLastUpdatedDate(),
                 updateRequest.getLastUpdatedDate()
         );
 
