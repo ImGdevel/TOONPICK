@@ -43,8 +43,6 @@ const MyProfilePage: React.FC = () => {
           MemberService.getFavorites(),
         ]);
 
-        console.log(profile.data);
-
         setState({
           memberProfile: profile.data || null,
           bookmarks: bookmarks.data || [],
