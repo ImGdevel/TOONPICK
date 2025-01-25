@@ -1,5 +1,6 @@
 package toonpick.app.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,7 +25,7 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
            "    (w.serializationStatus = 'ONGOING' AND w.dayOfWeek = :tomorrow) " +
            "    OR w.serializationStatus = 'HIATUS'" +
            ")")
-    List<WebtoonUpdateRequest> findWebtoonsForUpdate(@Param("today") LocalDate today, @Param("tomorrow") DayOfWeek tomorrow);
+    List<WebtoonUpdateRequest> findWebtoonsForUpdate(@Param("today") LocalDate today, @Param("tomorrow") DayOfWeek tomorrow, Pageable pageable);
 
     @Modifying
     @Transactional

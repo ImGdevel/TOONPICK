@@ -35,7 +35,7 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step webtoonUpdateStep(
+    public Step processWebtoonsStep(
             ItemReader<WebtoonUpdateRequest> itemReader,
             ItemProcessor<WebtoonUpdateRequest, Webtoon> itemProcessor,
             ItemWriter<Webtoon> itemWriter
@@ -64,4 +64,8 @@ public class BatchConfig {
                 .build();
     }
 
+    @Bean
+    public ItemReader<WebtoonUpdateRequest> webtoonItemReader() {
+        return new WebtoonItemReader(webtoonRepository);
+    }
 }
