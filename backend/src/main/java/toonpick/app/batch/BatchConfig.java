@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import toonpick.app.domain.webtoon.Webtoon;
-import toonpick.app.dto.WebtoonUpdateRequest;
+import toonpick.app.dto.webtoon.WebtoonUpdateRequest;
 import toonpick.app.repository.WebtoonRepository;
 
 @Configuration
@@ -36,13 +36,13 @@ public class BatchConfig {
 
     @Bean
     public Step webtoonUpdateStep(
-            ItemReader<Webtoon> itemReader,
-            ItemProcessor<Webtoon, Webtoon> itemProcessor,
+            ItemReader<WebtoonUpdateRequest> itemReader,
+            ItemProcessor<WebtoonUpdateRequest, Webtoon> itemProcessor,
             ItemWriter<Webtoon> itemWriter
     ){
 
         return new StepBuilder("processWebtoonsStep", jobRepository)
-                .<Webtoon, Webtoon>chunk(10, platformTransactionManager)
+                .<WebtoonUpdateRequest, Webtoon>chunk(10, platformTransactionManager)
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)
@@ -51,13 +51,13 @@ public class BatchConfig {
 
     @Bean
     public Step retryFailedWebtoonsStep(
-            ItemReader<Webtoon> itemReader,
-            ItemProcessor<Webtoon, Webtoon> itemProcessor,
+            ItemReader<WebtoonUpdateRequest> itemReader,
+            ItemProcessor<WebtoonUpdateRequest, Webtoon> itemProcessor,
             ItemWriter<Webtoon> itemWriter
     ){
 
         return new StepBuilder("retryFailedWebtoonsStep", jobRepository)
-                .<Webtoon, Webtoon>chunk(10, platformTransactionManager)
+                .<WebtoonUpdateRequest, Webtoon>chunk(10, platformTransactionManager)
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)
