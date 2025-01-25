@@ -2,6 +2,7 @@
   padding: 10px;
   position: relative;
   overflow: hidden;
+  min-height: 220px; /* 기본 높이 설정 */
 }
 
 .carousel {
@@ -20,12 +21,17 @@
   color: #888;
   font-size: 18px;
   margin-top: 20px;
+  width: 100%;
 }
 
 .navigation {
   display: flex;
-  justify-content: center;
-  margin-top: 10px;
+  justify-content: space-between;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .navButton {
@@ -33,10 +39,9 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  margin: 0 10px;
+  pointer-events: auto;
 }
 
 .navButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+  display: none;
 }

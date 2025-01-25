@@ -11,7 +11,7 @@ interface WebtoonListProps {
 
 const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, size = 220, showTags = true }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 4;
+  const itemsPerPage = 5;
   const totalPages = Math.ceil(webtoons.length / itemsPerPage);
 
   const handleNext = () => {
@@ -26,30 +26,39 @@ const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, size = 220, showTag
     }
   };
 
-
   return (
     <div className={styles.webtoonList}>
       <div
         className={styles.carousel}
-        style={{ transform: `translateX(-${currentPage * (size + 10) * 5 }px)` }}
+        style={{ transform: `translateX(-${currentPage * (size + 10) * 5}px)`, minHeight: `${size}px` }}
       >
-        {webtoons.map((webtoon) => (
-          <WebtoonCard
-            key={webtoon.id}
-            webtoon={webtoon}
-            showTags={showTags}
-            size={size}
-          />
-        ))}
+        {webtoons.length > 0 ? (
+          webtoons.map((webtoon) => (
+            <WebtoonCard
+              key={webtoon.id}
+              webtoon={webtoon}
+              showTags={showTags}
+              size={size}
+            />
+          ))
+        ) : (
+          <div className={styles.emptyMessage}>웹툰이 없습니다.</div>
+        )}
       </div>
-      <div className={styles.navigation}>
-        <button onClick={handlePrev} disabled={currentPage === 0} className={styles.navButton}>
-          ◀
-        </button>
-        <button onClick={handleNext} disabled={currentPage === totalPages - 1} className={styles.navButton}>
-          ▶
-        </button>
-      </div>
+      {webtoons.length > itemsPerPage && (
+        <div className={styles.navigation}>
+          {currentPage > 0 && (
+            <button onClick={handlePrev} className={styles.navButton}>
+              ◀
+            </button>
+          )}
+          {currentPage < totalPages - 1 && (
+            <button onClick={handleNext} className={styles.navButton}>
+              ▶
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };
