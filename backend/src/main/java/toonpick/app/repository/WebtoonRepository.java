@@ -18,14 +18,13 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
    Optional<Webtoon> findByExternalId(String externalId);
 
    // 쿼리 설명 : 연재중인 웹툰중 업데이트 요일이거나 휴재중인 웹툰 중 오늘 업데이트 되지 않은 웹툰 반환
-    @Query("SELECT new com.example.dto.WebtoonUpdateRequest(w.id, w.title, w.link, w.platform, w.serializationStatus) " +
-           "FROM Webtoon w " +
+    @Query("SELECT w FROM Webtoon w " +
            "WHERE w.lastUpdatedDate < :today " +
            "AND (" +
            "    (w.serializationStatus = 'ONGOING' AND w.dayOfWeek = :tomorrow) " +
            "    OR w.serializationStatus = 'HIATUS'" +
            ")")
-    List<WebtoonUpdateRequest> findWebtoonsForUpdate(@Param("today") LocalDate today, @Param("tomorrow") DayOfWeek tomorrow, Pageable pageable);
+    List<Webtoon> findWebtoonsForUpdate(@Param("today") LocalDate today, @Param("tomorrow") DayOfWeek tomorrow, Pageable pageable);
 
     @Modifying
     @Transactional

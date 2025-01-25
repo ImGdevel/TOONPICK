@@ -5,19 +5,23 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.dto.webtoon.WebtoonUpdateRequest;
+import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.WebtoonRepository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class WebtoonItemReader implements ItemReader<WebtoonUpdateRequest> {
 
     private final WebtoonRepository webtoonRepository;
+    private final WebtoonMapper webtoonMapper;
     private int currentPage = 0;
     private final int pageSize = 100;
     private List<WebtoonUpdateRequest> currentBatch;
@@ -36,7 +40,11 @@ public class WebtoonItemReader implements ItemReader<WebtoonUpdateRequest> {
         DayOfWeek tomorrow = today.plusDays(1).getDayOfWeek();
 
         Pageable pageable = PageRequest.of(currentPage++, pageSize);
-        currentBatch = webtoonRepository.findWebtoonsForUpdate(today, tomorrow, pageable);
+
+        List<Webtoon> webtoons = webtoonRepository.findWebtoonsForUpdate(today, tomorrow, pageable);
+        currentBatch = webtoons.stream()
+                .map(webtoonMapper::webtoonToWebtoonUpdateRequest)
+                .collect(Collectors.toList());
 
         if (currentBatch != null && !currentBatch.isEmpty()) {
             iterator = currentBatch.iterator();

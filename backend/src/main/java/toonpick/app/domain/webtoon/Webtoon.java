@@ -2,6 +2,8 @@ package toonpick.app.domain.webtoon;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -59,6 +61,7 @@ public class Webtoon {
     private String titleWithoutSpaces;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "platform", nullable = false, length = 8)
     private Platform platform;
 
@@ -66,7 +69,8 @@ public class Webtoon {
     private DayOfWeek dayOfWeek;
 
     @NotNull
-    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 10)
     private SerializationStatus serializationStatus;
 
     @NotNull

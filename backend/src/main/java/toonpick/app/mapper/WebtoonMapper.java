@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import toonpick.app.dto.webtoon.WebtoonResponseDTO;
+import toonpick.app.dto.webtoon.WebtoonUpdateRequest;
 
 @Mapper(componentModel = "spring")
 public interface WebtoonMapper {
@@ -13,4 +14,6 @@ public interface WebtoonMapper {
     @Mapping(source = "authors", target = "authors")
     @Mapping(source = "genres", target = "genres")
     WebtoonResponseDTO webtoonToWebtoonResponseDto(Webtoon webtoon);
+
+    WebtoonUpdateRequest webtoonToWebtoonUpdateRequest(Webtoon webtoon);
 }
