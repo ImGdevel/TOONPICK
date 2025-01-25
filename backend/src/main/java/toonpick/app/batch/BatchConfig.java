@@ -6,9 +6,15 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
+import toonpick.app.domain.webtoon.Webtoon;
+import toonpick.app.dto.WebtoonUpdateRequest;
 import toonpick.app.repository.WebtoonRepository;
 
 @Configuration
@@ -21,10 +27,40 @@ public class BatchConfig {
     private final WebtoonRepository webtoonRepository;
 
     @Bean
-    public Job webtoonUpdate(Step webtoonUpdateStep, Step retryFailedStep){
+    public Job webtoonUpdate(Step processWebtoonsStep, Step retryFailedWebtoonsStep){
         return new JobBuilder("webtoonUpdateJob", jobRepository)
-                .start(webtoonUpdateStep)
-                .next(retryFailedStep)
+                .start(processWebtoonsStep)
+                .next(retryFailedWebtoonsStep)
+                .build();
+    }
+
+    @Bean
+    public Step webtoonUpdateStep(
+            ItemReader<Webtoon> itemReader,
+            ItemProcessor<Webtoon, Webtoon> itemProcessor,
+            ItemWriter<Webtoon> itemWriter
+    ){
+
+        return new StepBuilder("processWebtoonsStep", jobRepository)
+                .<Webtoon, Webtoon>chunk(10, platformTransactionManager)
+                .reader(itemReader)
+                .processor(itemProcessor)
+                .writer(itemWriter)
+                .build();
+    }
+
+    @Bean
+    public Step retryFailedWebtoonsStep(
+            ItemReader<Webtoon> itemReader,
+            ItemProcessor<Webtoon, Webtoon> itemProcessor,
+            ItemWriter<Webtoon> itemWriter
+    ){
+
+        return new StepBuilder("retryFailedWebtoonsStep", jobRepository)
+                .<Webtoon, Webtoon>chunk(10, platformTransactionManager)
+                .reader(itemReader)
+                .processor(itemProcessor)
+                .writer(itemWriter)
                 .build();
     }
 
