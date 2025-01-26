@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebtoonItemProcessor implements ItemProcessor<List<WebtoonUpdateRequest>, List<WebtoonUpdateResult>> {
 
-    private final AwsLambdaClient awsLambdaService;
+    private final AwsLambdaService awsLambdaService;
 
     @Override
     public List<WebtoonUpdateResult> process(List<WebtoonUpdateRequest> items) throws Exception {
