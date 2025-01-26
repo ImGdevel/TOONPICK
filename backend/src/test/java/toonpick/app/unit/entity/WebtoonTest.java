@@ -74,7 +74,7 @@ class WebtoonTest {
     @Test
     void testUpdateEpisodeCountAndDate() {
         // when
-        webtoon.updateEpisodeCountAndDate(15, LocalDate.of(2023, 3, 1));
+        webtoon.updateEpisodeCountAndDate(15, LocalDate.of(2023, 3, 1), LocalDate.of(2023, 3, 1));
 
         // then
         assertEquals(15, webtoon.getEpisodeCount());
