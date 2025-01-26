@@ -6,12 +6,17 @@ import org.springframework.stereotype.Component;
 import toonpick.app.dto.webtoon.WebtoonUpdateRequest;
 import toonpick.app.dto.webtoon.WebtoonUpdateResult;
 
+import java.util.List;
+
 @Component
-public class WebtoonItemProcessor implements ItemProcessor<WebtoonUpdateRequest, WebtoonUpdateResult> {
+@RequiredArgsConstructor
+public class WebtoonItemProcessor implements ItemProcessor<List<WebtoonUpdateRequest>, List<WebtoonUpdateResult>> {
+
+    private final AwsLambdaClient awsLambdaService;
 
     @Override
-    public WebtoonUpdateResult process(WebtoonUpdateRequest item) throws Exception {
-        // todo :
-        return null;
+    public List<WebtoonUpdateResult> process(List<WebtoonUpdateRequest> items) throws Exception {
+        // 100개의 데이터(batch)를 Lambda로 전송
+        return awsLambdaService.invoke(items);
     }
 }

@@ -12,9 +12,14 @@ import org.springframework.transaction.PlatformTransactionManager;
 import toonpick.app.dto.webtoon.WebtoonUpdateRequest;
 import toonpick.app.dto.webtoon.WebtoonUpdateResult;
 
+import java.util.List;
+
 @Configuration
 @RequiredArgsConstructor
 public class WebtoonUpdateBatch {
+
+    private static final String JOB_NAME = "webtoonUpdateJob";
+    private static final String STEP_NAME = "processWebtoonsStep";
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager platformTransactionManager;
@@ -24,34 +29,19 @@ public class WebtoonUpdateBatch {
     private final WebtoonItemWriter itemWriter;
 
     @Bean
-    public Job webtoonUpdate(Step processWebtoonsStep, Step retryFailedWebtoonsStep){
-        return new JobBuilder("webtoonUpdateJob", jobRepository)
+    public Job webtoonUpdate(Step processWebtoonsStep) {
+        return new JobBuilder(JOB_NAME, jobRepository)
                 .start(processWebtoonsStep)
-                //.next(retryFailedWebtoonsStep) todo : 실패에 대한 재시도 작업은 일단 보류 한다.
                 .build();
     }
 
     @Bean
-    public Step processWebtoonsStep(){
-
-        return new StepBuilder("processWebtoonsStep", jobRepository)
-                .<WebtoonUpdateRequest, WebtoonUpdateResult>chunk(10, platformTransactionManager)
+    public Step processWebtoonsStep() {
+        return new StepBuilder(STEP_NAME, jobRepository)
+                .<List<WebtoonUpdateRequest>, List<WebtoonUpdateResult>>chunk(1, platformTransactionManager)
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)
                 .build();
     }
-
-    // todo : 실패에 대한 재시도 작업은 일단 보류 한다.
-    @Bean
-    public Step retryFailedWebtoonsStep(){
-
-        return new StepBuilder("retryFailedWebtoonsStep", jobRepository)
-                .<WebtoonUpdateRequest, WebtoonUpdateResult>chunk(10, platformTransactionManager)
-                .reader(itemReader)
-                .processor(itemProcessor)
-                .writer(itemWriter)
-                .build();
-    }
-
 }
