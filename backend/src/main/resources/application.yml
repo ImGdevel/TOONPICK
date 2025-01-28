@@ -87,4 +87,7 @@ logging:
       springframework: DEBUG
       hibernate:
         SQL: DEBUG
+  file:
+    name: logs/application.log
+    max-size: 10MB
 
