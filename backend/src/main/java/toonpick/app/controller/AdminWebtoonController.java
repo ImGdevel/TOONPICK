@@ -18,6 +18,8 @@ import toonpick.app.dto.webtoon.WebtoonRequestDTO;
 import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.service.WebtoonService;
 
+import java.util.List;
+
 @Tag(name = "Webtoon", description = "웹툰 관련 API (접근 권한 : Admin)")
 @RestController
 @RequestMapping("/api/admin/webtoons")
@@ -28,6 +30,26 @@ public class AdminWebtoonController {
 
     // todo : Admin 사용 가능한 API
     // todo : 추후 @PreAuthorize("hasRole('ADMIN')") 어노테이션을 추가할 것
+
+    @Operation(summary = "웹툰 등록", description = "새로운 웹툰을 등록합니다 (관리자 권한)")
+    @PostMapping
+    public ResponseEntity<WebtoonResponseDTO> createWebtoon(
+            @Parameter(description = "등록할 웹툰 from")
+            @RequestBody WebtoonCreateRequestDTO webtoonDTO
+    ) {
+        WebtoonResponseDTO createdWebtoon = webtoonService.createWebtoon(webtoonDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdWebtoon);
+    }
+
+    @Operation(summary = "여러 웹툰 등록", description = "새로운 웹툰들을 등록합니다 (관리자 권한)")
+    @PostMapping("/data")
+    public ResponseEntity<WebtoonResponseDTO> createWebtoons(
+            @Parameter(description = "등록할 웹툰 포맷 리스트")
+            @RequestBody List<WebtoonCreateRequestDTO> webtoonDTOs
+    ) {
+        webtoonDTOs.stream().map((webtoonDTO)->webtoonService.createWebtoon(webtoonDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
     @Operation(summary = "웹툰 업데이트", description = "등록된 웹툰 정보를 업데이트 합니다 (관리자 권한)")
     @PutMapping("/{id}")
@@ -41,11 +63,6 @@ public class AdminWebtoonController {
         return ResponseEntity.ok(updatedWebtoon);
     }
 
-    @PostMapping
-    public ResponseEntity<WebtoonResponseDTO> createWebtoon(@RequestBody WebtoonCreateRequestDTO webtoonDTO) {
-        WebtoonResponseDTO createdWebtoon = webtoonService.createWebtoon(webtoonDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdWebtoon);
-    }
 
     @Operation(summary = "웹툰 삭제", description = "등록된 웹툰을 삭제합니다 (관리자 권한)")
     @DeleteMapping("/{id}")
