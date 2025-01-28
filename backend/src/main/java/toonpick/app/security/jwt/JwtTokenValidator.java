@@ -54,13 +54,11 @@ public class JwtTokenValidator {
         if (refreshToken == null || refreshToken.isEmpty()) {
             throw new MissingJwtTokenException(ErrorCode.REFRESH_TOKEN_MISSING);
         }
-
+        if (!"refresh".equals(jwtTokenProvider.getCategory(refreshToken))) {
+            throw new InvalidJwtTokenException(ErrorCode.REFRESH_TOKEN_INVALID, jwtTokenProvider.getCategory(refreshToken));
+        }
         if (jwtTokenProvider.isExpired(refreshToken)) {
             throw new ExpiredJwtTokenException(ErrorCode.EXPIRED_REFRESH_TOKEN);
-        }
-
-        if (!"refresh".equals(jwtTokenProvider.getCategory(refreshToken))) {
-            throw new InvalidJwtTokenException(ErrorCode.REFRESH_TOKEN_INVALID);
         }
     }
 

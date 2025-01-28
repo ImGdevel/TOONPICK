@@ -1,5 +1,6 @@
 package toonpick.app.security.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,11 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.AuthenticationException;
 
+import toonpick.app.exception.ErrorCode;
+import toonpick.app.exception.exception.CustomAuthenticationException;
 import toonpick.app.security.dto.LoginRequest;
 import toonpick.app.security.handler.LoginFailureHandler;
 import toonpick.app.security.handler.LoginSuccessHandler;
@@ -44,9 +48,18 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             return authenticationManager.authenticate(authenticationToken);
+        } catch (BadCredentialsException e) {
+            logger.error(ErrorCode.INVALID_CREDENTIALS.getMessage());
+            throw new CustomAuthenticationException(ErrorCode.INVALID_CREDENTIALS);
+        } catch (JsonProcessingException e) {
+            logger.error(ErrorCode.INVALID_JSON_FORMAT.getMessage());
+            throw new CustomAuthenticationException(ErrorCode.INVALID_JSON_FORMAT);
+        } catch (IOException e) {
+            logger.error(ErrorCode.REQUEST_BODY_READ_ERROR.getMessage());
+            throw new CustomAuthenticationException(ErrorCode.REQUEST_BODY_READ_ERROR);
         } catch (Exception e) {
-            logger.error("Failed to parse authentication request body", e);
-            throw new AuthenticationServiceException("Failed to parse authentication request body", e);
+            logger.error(ErrorCode.UNKNOWN_ERROR.getMessage(), e);
+            throw new CustomAuthenticationException(ErrorCode.UNKNOWN_ERROR, e);
         }
     }
 
