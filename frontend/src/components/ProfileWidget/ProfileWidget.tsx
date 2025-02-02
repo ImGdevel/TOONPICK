@@ -1,10 +1,9 @@
 import React, { useEffect, useCallback } from 'react';
+import { MemberProfile } from '@models/member';
 import styles from './ProfileWidget.module.css';
 
 interface ProfileWidgetProps {
-  userProfilePic: string;
-  userName: string;
-  userEmail: string;
+  memberProfile: MemberProfile | null;
   onNavigate: (path: string) => void;
   onLogout: () => void;
   isWidgetOpen: boolean;
@@ -14,9 +13,7 @@ interface ProfileWidgetProps {
 }
 
 const ProfileWidget: React.FC<ProfileWidgetProps> = ({
-  userProfilePic,
-  userName,
-  userEmail,
+  memberProfile,
   onNavigate,
   onLogout,
   isWidgetOpen,
@@ -24,8 +21,13 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
   profileButtonRef,
   profileWidgetRef,
 }) => {
-  const handleButtonClick = (action: () => void) => {
+  const handleButtonClick = (action: () => void, closeWidget: () => void) => (event: React.MouseEvent) => {
+    event.stopPropagation();
     action();
+    closeWidget();
+  };
+
+  const closeProfileWidget = () => {
     setProfileWidgetOpen(false);
   };
 
@@ -34,7 +36,7 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
     const isProfileWidgetClick = profileWidgetRef.current && profileWidgetRef.current.contains(event.target as Node);
 
     if (!isProfileClick && !isProfileWidgetClick) {
-      setProfileWidgetOpen(false);
+      closeProfileWidget();
     }
   }, [profileButtonRef, profileWidgetRef, setProfileWidgetOpen]);
 
@@ -45,6 +47,8 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
     };
   }, [handleClickOutside]);
 
+  const defaultProfilePicture = '/image/profile/user.png';
+
   return (
     <div
       id="profileWidget"
@@ -52,31 +56,34 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
       style={{ pointerEvents: isWidgetOpen ? 'auto' : 'none' }}
       ref={profileWidgetRef}
     >
-      <img src={userProfilePic} alt="User Profile" className={styles.widgetProfilePicture} />
+      <img 
+        src={memberProfile?.profilePicture || defaultProfilePicture}
+        alt="User Profile" 
+        className={styles.widgetProfilePicture} 
+      />
       <div className={styles.userInfo}>
-        <p>{userName}</p>
-        <p>{userEmail}</p>
+        <p>{memberProfile?.nickname || '게스트 사용자'}</p>
       </div>
       <button
-        onClick={() => handleButtonClick(() => onNavigate('/mypage'))}
+        onClick={handleButtonClick(() => onNavigate('/mypage'), closeProfileWidget)}
         className={styles.widgetButton}
       >
         마이페이지
       </button>
       <button
-        onClick={() => handleButtonClick(() => onNavigate('/profile-edit'))}
+        onClick={handleButtonClick(() => onNavigate('/profile-edit'), closeProfileWidget)}
         className={styles.widgetButton}
       >
         프로필 수정
       </button>
       <button
-        onClick={() => handleButtonClick(() => onNavigate('/my-webtoons'))}
+        onClick={handleButtonClick(() => onNavigate('/my-webtoons'), closeProfileWidget)}
         className={styles.widgetButton}
       >
         나의 웹툰 리스트
       </button>
       <button
-        onClick={() => handleButtonClick(onLogout)}
+        onClick={handleButtonClick(onLogout, closeProfileWidget)}
         className={styles.widgetButton}
       >
         로그아웃

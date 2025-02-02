@@ -28,6 +28,12 @@ const SignInPage: React.FC = () => {
     setError('');
     setIsLoading(true);
 
+    if (!formData.username || !formData.password) {
+      setError('아이디와 비밀번호를 입력해주세요.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await AuthService.login(formData.username, formData.password, login);
       if (response.success) {
@@ -66,7 +72,6 @@ const SignInPage: React.FC = () => {
             placeholder="아이디"
             value={formData.username}
             onChange={handleChange}
-            required
           />
         </div>
 
@@ -77,7 +82,6 @@ const SignInPage: React.FC = () => {
             placeholder="비밀번호"
             value={formData.password}
             onChange={handleChange}
-            required
           />
         </div>
 
@@ -101,9 +105,9 @@ const SignInPage: React.FC = () => {
         </div>
 
         <div className={styles.socialLogin}>
-          <SocialLoginButton provider="google" onClick={() => handleSocialLogin('google')} />
-          <SocialLoginButton provider="kakao" onClick={() => handleSocialLogin('kakao')} />
-          <SocialLoginButton provider="naver" onClick={() => handleSocialLogin('naver')} />
+          <SocialLoginButton provider="google" onClick={() => handleSocialLogin('google')} type="button" />
+          <SocialLoginButton provider="kakao" onClick={() => handleSocialLogin('kakao')} type="button" />
+          <SocialLoginButton provider="naver" onClick={() => handleSocialLogin('naver')} type="button" />
         </div>
 
         <div className={styles.links}>

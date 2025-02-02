@@ -18,6 +18,10 @@ public enum ErrorCode {
     PERMISSION_DENIED(1002, "Permission denied"),
 
     // 2xxx : Security error
+    AUTHENTICATION_FAILED(2000, "Authentication failed"),
+    INVALID_CREDENTIALS(2001, "Invalid username or password"),
+    INVALID_JSON_FORMAT(2002, "Invalid JSON format in request"),
+    REQUEST_BODY_READ_ERROR(2003, "Failed to read authentication request body"),
 
     // 21xx : authorization error
     USER_ALREADY_REGISTERED(2103, "User is already registered"),
