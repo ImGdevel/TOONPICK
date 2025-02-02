@@ -11,12 +11,12 @@ services:
       - ./logs:/app/logs
     environment:
       LOG_FILE: /app/logs/application.log
-      SPRING_DATASOURCE_META_URL: jdbc:mariadb://toonpick-db-meta:3306/meta?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_META_USERNAME: root
-      SPRING_DATASOURCE_META_PASSWORD: 1234
       SPRING_DATASOURCE_DATA_URL: jdbc:mariadb://toonpick-db:3306/toonpick-database?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_DATA_USERNAME: root
       SPRING_DATASOURCE_DATA_PASSWORD: 1234
+      SPRING_DATASOURCE_META_URL: jdbc:mariadb://toonpick-db-meta:3306/meta?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_META_USERNAME: root
+      SPRING_DATASOURCE_META_PASSWORD: 1234
     restart: always
     depends_on:
       mariadb:
