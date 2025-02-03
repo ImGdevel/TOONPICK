@@ -1,0 +1,41 @@
+name: TOONPICK CD (Docker Hub)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v3
+
+      - name: Docker Build 및 Push (Docker Hub)
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          REPOSITORY: "toonpick-service-app"
+        run: |
+          docker build -t $DOCKER_HUB_USERNAME/$REPOSITORY:latest ./backend
+          echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+          docker push $DOCKER_HUB_USERNAME/$REPOSITORY:latest
+
+      - name: EC2에 SSH 접속하여 배포 실행
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # 기존 컨테이너 중지 및 삭제
+            docker stop toonpick-service-app || true
+            docker rm toonpick-service-app || true
+
+            # 최신 이미지 다운로드
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/toonpick-service-app:latest
+
+            # 새 컨테이너 실행
+            docker run -d --name toonpick-service-app -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/toonpick-service-app:latest
