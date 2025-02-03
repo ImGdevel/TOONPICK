@@ -43,7 +43,7 @@ jobs:
 
       # 5️. 빌드된 JAR 파일을 Artifacts로 저장
       - name: Upload JAR Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-jar
           path: backend/build/libs/*.jar
