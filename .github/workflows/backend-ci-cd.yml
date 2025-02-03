@@ -1,0 +1,77 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v3
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Gradle 실행 권한 부여
+        run: chmod +x gradlew
+
+      - name: 프로젝트 빌드
+        run: ./gradlew build -x test
+
+      - name: 테스트 실행
+        run: ./gradlew test
+
+      - name: 빌드 결과 업로드 (Artifact)
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-build
+          path: backend/build/libs/*.jar
+
+  docker:
+    needs: build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v3
+
+      - name: Docker 로그인
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Docker 이미지 빌드 및 푸시
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
+
+  deploy:
+    needs: docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH로 서버 접속 및 배포
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/toonpick-service-app:latest
+            docker stop toonpick-service-app || true
+            docker rm toonpick-service-app || true
+            docker run -d -p 8080:8080 --env-file /home/${{ secrets.SSH_USER }}/.backend_env --name toonpick-service-app ${{ secrets.DOCKER_USERNAME }}/toonpick-service-app:latest
