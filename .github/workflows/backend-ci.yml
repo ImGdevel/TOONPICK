@@ -40,15 +40,37 @@ jobs:
         run: |
           ./gradlew clean build -x test --no-daemon --parallel --configure-on-demand
 
+      - name: 빌드 결과 검증 (JAR 파일 확인)
+        run: |
+          echo "=== Gradle Build 완료 후 JAR 파일 위치 확인 ==="
+          find backend/build/libs -type f -name "*.jar"
+          ls -al backend/build/libs
+
+      - name: 빌드된 JAR 파일 업로드 (아티팩트 저장)
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/build/libs/toonpick-0.0.1-SNAPSHOT.jar
+
   docker:
     needs: build
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
       - name: 저장소 체크아웃
         uses: actions/checkout@v3
 
+      - name: 빌드된 JAR 파일 다운로드 (아티팩트 복원)
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/build/libs
+
+      - name: JAR 파일 위치 확인
+        run: |
+          echo "=== JAR 파일 위치 ==="
+          find backend -name "*.jar"
+        
       - name: Docker Build & Push
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -58,9 +80,22 @@ jobs:
         run: |
           echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
           
-          # 최신 버전 태그 + latest 태그 동시 Push
-          docker build -t $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG ./backend
-          docker build -t $DOCKER_HUB_USERNAME/$REPOSITORY:latest ./backend
+          echo "=== Docker Build 시작 ==="
+          echo "현재 작업 디렉토리:"
+          pwd
+          
+          echo "=== 현재 디렉토리 내 파일 목록 ==="
+          ls -al backend
+
+          echo "=== 현재 디렉토리 내 파일 목록 ==="
+          ls -al backend/build/libs
+
+          echo "=== JAR 파일이 존재하는지 확인 ==="
+          ls -al backend || echo "JAR 파일이 존재하지 않습니다."
+
+          echo "=== Docker Build 수행 ==="
+          docker build -t $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG -f backend/Dockerfile .
+          docker build -t $DOCKER_HUB_USERNAME/$REPOSITORY:latest -f backend/Dockerfile .
           
           docker push $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG
           docker push $DOCKER_HUB_USERNAME/$REPOSITORY:latest
