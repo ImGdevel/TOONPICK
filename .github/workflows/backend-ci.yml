@@ -1,4 +1,4 @@
-name: TOONPICK Backend CI
+name: TOONPICK Backend CI Pipeline
 
 on:
   push:
@@ -21,10 +21,10 @@ jobs:
       - name: JDK 17 설정
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: 'corretto'
           java-version: '17'
 
-      - name: Gradle 캐시 설정 (빌드 속도 최적화)
+      - name: Gradle 캐시 설정 (빌드 최적화)
         uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
@@ -35,7 +35,32 @@ jobs:
       - name: Gradle 실행 권한 추가
         run: chmod +x backend/gradlew
 
-      - name: Gradle 빌드
+      - name: Gradle 빌드 및 테스트
+        working-directory: backend
         run: |
-          cd backend
           ./gradlew clean build -x test --no-daemon --parallel --configure-on-demand
+
+  docker:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v3
+
+      - name: Docker Build & Push
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          REPOSITORY: "toonpick-service-app"
+          IMAGE_TAG: "v0.1.${{ github.run_number }}"
+        run: |
+          echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+          
+          # 최신 버전 태그 + latest 태그 동시 Push
+          docker build -t $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG ./backend
+          docker build -t $DOCKER_HUB_USERNAME/$REPOSITORY:latest ./backend
+          
+          docker push $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG
+          docker push $DOCKER_HUB_USERNAME/$REPOSITORY:latest

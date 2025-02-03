@@ -1,29 +1,17 @@
-name: TOONPICK Backend CD
+name: TOONPICK Backend CD Pipeline
 
 on:
-  push:
-    branches:
-      - main
-      - develop
+  workflow_run:
+    workflows: ["TOONPICK Backend CI Pipeline"]
+    types:
+      - completed
 
 jobs:
   deploy:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
 
     steps:
-      - name: 저장소 체크아웃
-        uses: actions/checkout@v3
-
-      - name: Docker Build 및 Push
-        env:
-          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          REPOSITORY: "toonpick-service-app"
-        run: |
-          docker build -t $DOCKER_HUB_USERNAME/$REPOSITORY:latest ./backend
-          echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-          docker push $DOCKER_HUB_USERNAME/$REPOSITORY:latest
-
       - name: EC2에 SSH 접속하여 배포 실행
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -31,13 +19,13 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/TOONPICK  # 프로젝트 디렉터리 이동
+            cd ~/TOONPICK
 
-            # 최신 이미지 Pull
+            echo "최신 Docker Image Pull & 배포 시작..."
+
+            docker stop toonpick-service-app || true
+            docker rm toonpick-service-app || true
+            
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/toonpick-service-app:latest
-
-            # 기존 컨테이너 중지 및 삭제
-            docker-compose down
-
-            # 최신 컨테이너 실행
+            
             docker-compose up -d
