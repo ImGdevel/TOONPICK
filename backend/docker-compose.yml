@@ -17,7 +17,7 @@ services:
       redis:
         condition: service_started
     networks:
-      - backend 
+      - backend
 
   mariadb:
     image: mariadb:10.5
@@ -29,13 +29,14 @@ services:
     volumes:
       - mariadb-data:/var/lib/mysql
     networks:
-      - backend 
+      - backend
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "--host=localhost", "--user=root", "--password=1234"]
       interval: 30s
       retries: 5
       timeout: 10s
       start_period: 30s
+    restart: always
 
   mariadb-meta:
     image: mariadb:10.5
@@ -54,6 +55,7 @@ services:
       retries: 5
       timeout: 10s
       start_period: 30s
+    restart: always
 
   redis:
     image: redis:6.0
@@ -61,7 +63,8 @@ services:
     ports:
       - "6380:6379"
     networks:
-      - backend 
+      - backend
+    restart: always
 
 volumes:
   mariadb-data:

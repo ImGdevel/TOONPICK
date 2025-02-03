@@ -18,7 +18,7 @@ jobs:
       - name: 저장소 체크아웃
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }} 
 
       - name: JDK 17 설정
         uses: actions/setup-java@v3
@@ -62,7 +62,7 @@ jobs:
       - name: 저장소 체크아웃
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }} 
 
       - name: 빌드된 JAR 파일 다운로드 (아티팩트 복원)
         uses: actions/download-artifact@v4
@@ -88,3 +88,9 @@ jobs:
 
           docker push $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG
           docker push $DOCKER_HUB_USERNAME/$REPOSITORY:latest
+
+      - name: CD Pipeline 실행 트리거
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: "backend-cd.yml"
+          token: ${{ secrets.PAT_TOKEN }} 
