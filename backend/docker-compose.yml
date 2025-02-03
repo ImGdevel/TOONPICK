@@ -1,22 +1,13 @@
 services:
   spring-app:
-    image: toonpick-service-app:0.0.1
+    image: $DOCKER_HUB_USERNAME/toonpick-service-app:latest
     container_name: toonpick-service-app
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     volumes:
       - ./logs:/app/logs
-    environment:
-      LOG_FILE: /app/logs/application.log
-      SPRING_DATASOURCE_DATA_URL: jdbc:mariadb://toonpick-db:3306/toonpick-database?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_DATA_USERNAME: root
-      SPRING_DATASOURCE_DATA_PASSWORD: 1234
-      SPRING_DATASOURCE_META_URL: jdbc:mariadb://toonpick-db-meta:3306/meta?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_META_USERNAME: root
-      SPRING_DATASOURCE_META_PASSWORD: 1234
+    env_file:
+      - .env
     restart: always
     depends_on:
       mariadb:
@@ -31,9 +22,8 @@ services:
   mariadb:
     image: mariadb:10.5
     container_name: toonpick-db
-    environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: toonpick-database
+    env_file:
+      - .env
     ports:
       - "3306:3306"
     volumes:
@@ -50,9 +40,8 @@ services:
   mariadb-meta:
     image: mariadb:10.5
     container_name: toonpick-db-meta
-    environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: meta
+    env_file:
+      - .env
     ports:
       - "3307:3306"
     volumes:

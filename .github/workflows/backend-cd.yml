@@ -1,4 +1,4 @@
-name: TOONPICK CD (Docker Hub)
+name: TOONPICK Backend CD
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
       - name: 저장소 체크아웃
         uses: actions/checkout@v3
 
-      - name: Docker Build 및 Push (Docker Hub)
+      - name: Docker Build 및 Push
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
@@ -30,12 +30,13 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # 기존 컨테이너 중지 및 삭제
-            docker stop toonpick-service-app || true
-            docker rm toonpick-service-app || true
+            cd ~/TOONPICK  # 프로젝트 디렉터리 이동
 
-            # 최신 이미지 다운로드
+            # 최신 이미지 Pull
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/toonpick-service-app:latest
 
-            # 새 컨테이너 실행
-            docker run -d --name toonpick-service-app -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/toonpick-service-app:latest
+            # 기존 컨테이너 중지 및 삭제
+            docker-compose down
+
+            # 최신 컨테이너 실행
+            docker-compose up -d
