@@ -25,10 +25,7 @@ export const AuthService = {
   },
 
   // 회원가입
-  signup: async (username: string, password: string, confirmPassword: string): Promise<Response> => {
-    if (password !== confirmPassword) {
-      return { success: false, message: 'Passwords do not match.' };
-    }
+  signup: async (username: string, email: string ,password: string): Promise<Response> => {
     try {
       const joinPayload = {
         username,

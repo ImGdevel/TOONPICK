@@ -1,10 +1,13 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import AuthService from '@services/AuthService';
+import MemberService from '@services/MemberService';
+import { MemberProfile } from '@models/member';
 
 interface AuthContextType {
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
+  memberProfile: MemberProfile | null;
 }
 
 interface AuthProviderProps {
@@ -15,31 +18,37 @@ export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
   login: () => {},
   logout: () => {},
+  memberProfile: null,
 });
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(AuthService.isLoggedIn());
+  const [memberProfile, setMemberProfile] = useState<MemberProfile | null>(null);
 
   useEffect(() => {
     setIsLoggedIn(AuthService.isLoggedIn());
-    console.log("Initial isLoggedIn:", isLoggedIn);
+    if (isLoggedIn) {
+      const fetchMemberProfile = async () => {
+        const profile = await MemberService.getMemberProfile();
+        setMemberProfile(profile.data || null);
+      };
+      fetchMemberProfile();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isLoggedIn]);
 
   const login = (): void => {
     setIsLoggedIn(true);
-    console.log("login isLoggedIn:", isLoggedIn);
   };
 
   const logout = (): void => {
     AuthService.logout();
-    console.log("logout");
     setIsLoggedIn(false);
-    console.log("logout isLoggedIn:", isLoggedIn);
+    setMemberProfile(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, memberProfile }}>
       {children}
     </AuthContext.Provider>
   );

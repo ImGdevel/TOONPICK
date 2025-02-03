@@ -5,10 +5,11 @@ import styles from './WebtoonList.module.css';
 
 interface WebtoonListProps {
   webtoons: Webtoon[];
+  size?: number;
   showTags?: boolean;
 }
 
-const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, showTags = true }) => {
+const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, size = 220, showTags = true }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
   const totalPages = Math.ceil(webtoons.length / itemsPerPage);
@@ -25,32 +26,39 @@ const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, showTags = true }) 
     }
   };
 
-  const startIndex = currentPage * itemsPerPage;
-  const currentWebtoons = webtoons.slice(startIndex, startIndex + itemsPerPage);
-
   return (
     <div className={styles.webtoonList}>
-      {currentWebtoons.length > 0 ? (
-        <div className={styles.carousel}>
-          {currentWebtoons.map((webtoon) => (
+      <div
+        className={styles.carousel}
+        style={{ transform: `translateX(-${currentPage * (size + 10) * 5}px)`, minHeight: `${size}px` }}
+      >
+        {webtoons.length > 0 ? (
+          webtoons.map((webtoon) => (
             <WebtoonCard
               key={webtoon.id}
               webtoon={webtoon}
               showTags={showTags}
+              size={size}
             />
-          ))}
-        </div>
-      ) : (
-        <p className={styles.emptyMessage}>웹툰이 없습니다.</p>
-      )}
-      <div className={styles.navigation}>
-        <button onClick={handlePrev} disabled={currentPage === 0} className={styles.navButton}>
-          ◀
-        </button>
-        <button onClick={handleNext} disabled={currentPage === totalPages - 1} className={styles.navButton}>
-          ▶
-        </button>
+          ))
+        ) : (
+          <div className={styles.emptyMessage}>웹툰이 없습니다.</div>
+        )}
       </div>
+      {webtoons.length > itemsPerPage && (
+        <div className={styles.navigation}>
+          {currentPage > 0 && (
+            <button onClick={handlePrev} className={styles.navButton}>
+              ◀
+            </button>
+          )}
+          {currentPage < totalPages - 1 && (
+            <button onClick={handleNext} className={styles.navButton}>
+              ▶
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

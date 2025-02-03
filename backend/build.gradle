@@ -7,6 +7,10 @@ plugins {
 group = 'toonpick'
 version = '0.0.1-SNAPSHOT'
 
+bootJar {
+    archiveFileName = "toonpick-${version}.jar"
+}
+
 java {
 	sourceCompatibility = '17'
 }

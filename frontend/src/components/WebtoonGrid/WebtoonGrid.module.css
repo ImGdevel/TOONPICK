@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .gridItem {
@@ -10,4 +10,5 @@
   flex-direction: column;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
+  align-items: center;
 }

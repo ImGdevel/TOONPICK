@@ -14,6 +14,7 @@ import SocialLoginCallbackPage from '@pages/auth/SocialLoginCallbackPage';
 import NewWebtoonsPage from '@pages/NewWebtoonsPage';
 import OngoingWebtoonsPage from '@pages/OngoingWebtoonsPage';
 import CompletedWebtoonsPage from '@pages/CompletedWebtoonsPage';
+import ProfileEditPage from '@pages/ProfileEditPage';
 import ErrorPage from '@pages/ErrorPage/ErrorPage';
 
 const App: React.FC = () => {
@@ -33,6 +34,7 @@ const App: React.FC = () => {
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/mypage" element={<MyProfilePage />} />
+            <Route path="/profile/edit" element={<ProfileEditPage />} />
             <Route path="/refresh" element={<SocialLoginCallbackPage />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>

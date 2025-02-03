@@ -1,0 +1,85 @@
+services:
+  spring-app:
+    image: toonpick-service-app:0.0.1
+    container_name: toonpick-service-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      LOG_FILE: /app/logs/application.log
+      SPRING_DATASOURCE_DATA_URL: jdbc:mariadb://toonpick-db:3306/toonpick-database?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_DATA_USERNAME: root
+      SPRING_DATASOURCE_DATA_PASSWORD: 1234
+      SPRING_DATASOURCE_META_URL: jdbc:mariadb://toonpick-db-meta:3306/meta?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_META_USERNAME: root
+      SPRING_DATASOURCE_META_PASSWORD: 1234
+    restart: always
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      mariadb-meta:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - backend 
+
+  mariadb:
+    image: mariadb:10.5
+    container_name: toonpick-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: toonpick-database
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - backend 
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--host=localhost", "--user=root", "--password=1234"]
+      interval: 30s
+      retries: 5
+      timeout: 10s
+      start_period: 30s
+
+  mariadb-meta:
+    image: mariadb:10.5
+    container_name: toonpick-db-meta
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: meta
+    ports:
+      - "3307:3306"
+    volumes:
+      - mariadb-meta-data:/var/lib/mysql
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--host=localhost", "--user=root", "--password=1234"]
+      interval: 30s
+      retries: 5
+      timeout: 10s
+      start_period: 30s
+
+  redis:
+    image: redis:6.0
+    container_name: toonpick-redis
+    ports:
+      - "6380:6379"
+    networks:
+      - backend 
+
+volumes:
+  mariadb-data:
+    driver: local
+  mariadb-meta-data:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge

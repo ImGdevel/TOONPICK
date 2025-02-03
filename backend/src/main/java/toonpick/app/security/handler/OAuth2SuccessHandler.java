@@ -32,11 +32,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = authentication.getAuthorities().stream().
                 findFirst().map(GrantedAuthority::getAuthority).orElse("");
 
-        String refreshToken = tokenService.issueAccessToken(username, role);
-        String accessToken = tokenService.issueRefreshToken(username, role);
-
-        response.setHeader("Authorization", "Bearer " + accessToken);
-        response.addCookie(CookieUtils.createEmptyCookie(refreshToken));
+        String refreshToken = tokenService.issueRefreshToken(username, role);
+        response.addCookie(CookieUtils.createRefreshCookie(refreshToken));
         response.setStatus(HttpStatus.OK.value());
         logger.info("USER LOGIN SUCCESS (username-{})", username);
 

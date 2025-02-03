@@ -43,8 +43,6 @@ const MyProfilePage: React.FC = () => {
           MemberService.getFavorites(),
         ]);
 
-        console.log(profile.data);
-
         setState({
           memberProfile: profile.data || null,
           bookmarks: bookmarks.data || [],
@@ -74,12 +72,20 @@ const MyProfilePage: React.FC = () => {
             <MemberProfileSection memberProfile={state.memberProfile} />
             <section className={styles.bookmarks}>
               <h2>북마크</h2>
-              <WebtoonList webtoons={state.bookmarks} />
+              <WebtoonList 
+                webtoons={state.bookmarks} 
+                size={180}
+                showTags={false}
+              />
             </section>
 
             <section className={styles.favorites}>
               <h2>좋아요</h2>
-              <WebtoonList webtoons={state.favorites} />
+              <WebtoonList 
+                webtoons={state.favorites} 
+                size={180}
+                showTags={false}
+              />
             </section>
           </div>
         ) : (
