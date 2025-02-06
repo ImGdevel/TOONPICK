@@ -3,7 +3,7 @@ server:
 
 spring:
   config:
-    import: application-API-KEY.yml
+    import: optional:file:application-API-KEY.yml
 
   datasource:
     data:
@@ -18,8 +18,8 @@ spring:
       password: ${SPRING_DATASOURCE_META_PASSWORD}
 
   redis:
-    host: redis
-    port: 6380
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
     timeout: 10000ms
     jedis:
       enabled: false
@@ -29,9 +29,9 @@ spring:
       enabled: always
 
   jwt:
-    secret: ${jwt.secret}
-    access-token-expiration: 1800000
-    refresh-token-expiration: 259200000
+    secret: ${JWT_SECRET}
+    access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+    refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
 
   security:
     oauth2:
@@ -39,8 +39,8 @@ spring:
         registration:
           google:
             client-name: google
-            client-id: ${oauth.google.client-id}
-            client-secret: ${oauth.google.client-secret}
+            client-id: ${OAUTH_GOOGLE_CLIENT_ID}
+            client-secret: ${OAUTH_GOOGLE_CLIENT_SECRET}
             redirect-uri: http://localhost:8080/login/oauth2/code/google
             authorization-grant-type: authorization_code
             scope:
@@ -48,8 +48,8 @@ spring:
               - email
           naver:
             client-name: naver
-            client-id: ${oauth.naver.client-id}
-            client-secret: ${oauth.naver.client-secret}
+            client-id: ${OAUTH_NAVER_CLIENT_ID}
+            client-secret: ${OAUTH_NAVER_CLIENT_SECRET}
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope:
@@ -71,15 +71,15 @@ spring:
 
 cloud:
   config:
-    import: application-API-KEY.yml
+    import: optional:file:application-API-KEY.yml
   aws:
     credentials:
-      access-key: ${aws.credentials.access-key}
-      secret-key: ${aws.credentials.secret-key}
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
     region:
-      static: ${aws.region.static}
+      static: ${AWS_REGION}
     s3:
-      bucket: ${aws.s3.bucket}
+      bucket: ${AWS_S3_BUCKET}
 
 logging:
   level:
@@ -88,6 +88,6 @@ logging:
       hibernate:
         SQL: DEBUG
   file:
-    name: logs/application.log
+    name: ${LOG_FILE}
     max-size: 10MB
 

@@ -28,4 +28,17 @@ public class HelloController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/api/public/ping2")
+    private ResponseEntity<Map<String, Object>> testPing2() {
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("status", "success");
+        response.put("message", "TOONPICK 서비스가 정상적으로 작동 중입니다. 2");
+        response.put("timestamp", LocalDateTime.now());
+
+        logger.info("Ping 요청이 들어왔습니다. 2 응답: {}", response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
