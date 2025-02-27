@@ -4,4 +4,4 @@
 *.jar
 *.log
 .DS_Store
-
+*.env

@@ -1,0 +1,69 @@
+name: "보안 취약성 신고 (Security Vulnerability Report)"
+description: "보안 취약성을 발견했을 경우 이슈를 통해 보고하세요."
+title: "[Security] 취약점 제목 입력"
+labels: ["security", "bug"]
+assignees:
+  - security-team
+body:
+  - type: markdown
+    attributes:
+      value: "## 🚨 보안 취약성 신고"
+
+  - type: textarea
+    id: details
+    attributes:
+      label: "🔍 취약성 개요"
+      description: "발견한 취약점에 대한 개요를 설명하세요."
+      placeholder: "예: JWT 토큰이 만료된 후에도 계속 인증이 가능함"
+    validations:
+      required: true
+
+  - type: textarea
+    id: severity
+    attributes:
+      label: "⚠️ 심각도"
+      description: "취약점의 심각도를 선택하세요."
+      value: |
+        - [ ] 🟥 Critical (심각한 보안 위협)
+        - [ ] 🟧 High (중대한 보안 취약점)
+        - [ ] 🟨 Medium (보안 개선 필요)
+        - [ ] 🟩 Low (경미한 취약점)
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "🛠️ 재현 방법"
+      description: "취약점을 어떻게 재현할 수 있는지 설명하세요."
+      placeholder: |
+        1. `https://example.com/login` 페이지로 이동
+        2. 만료된 JWT 토큰으로 API 요청
+        3. 정상 응답이 반환됨 (취약점 발생)
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: "✅ 기대 동작"
+      description: "올바른 보안 동작이 무엇인지 설명하세요."
+      placeholder: "예: 만료된 JWT 토큰이 사용되었을 경우 401 Unauthorized 응답을 반환해야 함."
+    validations:
+      required: true
+
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: "🛡️ 보안 조치 방안"
+      description: "어떤 조치가 필요한지 제안하세요."
+      placeholder: "예: JWT 토큰의 만료 여부를 검증하는 로직 추가 필요."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: "📌 추가 정보"
+      description: "관련된 문서, 참고 링크, 추가 사항이 있으면 작성하세요."
+      placeholder: "예: OWASP 보안 가이드라인 링크"

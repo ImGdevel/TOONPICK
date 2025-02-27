@@ -42,3 +42,4 @@ logs/info.log
 ### Secret Key ###
 application-secrets.yml
 application-API-KEY.yml
+*.env

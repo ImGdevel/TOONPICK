@@ -8,6 +8,8 @@ services:
       - ./logs:/app/logs
     env_file:
       - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
     restart: always
     depends_on:
       mariadb:

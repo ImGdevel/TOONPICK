@@ -1,0 +1,43 @@
+name: "문서 업데이트 (Documentation Update)"
+description: "문서 수정 또는 업데이트 요청 시 사용하는 템플릿입니다."
+title: "[Docs] 문서 수정 제목 입력"
+labels: ["documentation"]
+assignees:
+  - docs-team
+body:
+  - type: markdown
+    attributes:
+      value: "## 📖 문서 업데이트 요청"
+
+  - type: textarea
+    id: document-section
+    attributes:
+      label: "📌 수정할 문서 섹션"
+      description: "어느 문서의 어떤 부분을 수정해야 하는지 작성하세요."
+      placeholder: "예: README.md의 설치 가이드 섹션"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: "🎯 수정이 필요한 이유"
+      description: "왜 문서를 업데이트해야 하는지 설명하세요."
+      placeholder: "예: 설치 방법이 변경되어 기존 문서 내용이 정확하지 않음."
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested-changes
+    attributes:
+      label: "✍️ 제안하는 변경 내용"
+      description: "어떤 내용을 추가하거나 수정해야 하는지 작성하세요."
+      placeholder: "예: `yarn install` 대신 `pnpm install` 사용"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: "📌 추가 정보"
+      description: "관련 문서 링크 등을 포함하세요."
