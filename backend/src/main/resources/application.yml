@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    default: dev
 
   redis:
     timeout: 10000ms
