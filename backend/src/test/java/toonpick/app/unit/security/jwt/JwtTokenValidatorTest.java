@@ -2,34 +2,41 @@ package toonpick.app.unit.security.jwt;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import toonpick.app.exception.exception.ExpiredJwtTokenException;
+import toonpick.app.exception.exception.InvalidJwtTokenException;
 import toonpick.app.security.jwt.JwtTokenProvider;
 import toonpick.app.security.jwt.JwtTokenValidator;
 
-@SpringBootTest
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
 class JwtTokenValidatorTest {
 
-    @Autowired
-    private JwtTokenValidator jwtTokenValidator;
-
-    @Autowired
+    @Mock
     private JwtTokenProvider jwtTokenProvider;
+
+    @InjectMocks
+    private JwtTokenValidator jwtTokenValidator;
 
     @Test
     @DisplayName("AccessToken 유효성 검증")
     void testValidateAccessToken() {
         String username = "testUser";
         String role = "USER";
+        String accessToken = "validAccessToken";
 
-        String accessToken = jwtTokenProvider.createAccessToken(username, role);
+        when(jwtTokenProvider.isExpired(accessToken)).thenReturn(false);
+        when(jwtTokenProvider.getCategory(accessToken)).thenReturn("access");
 
-        Assertions.assertDoesNotThrow(() -> jwtTokenValidator.validateAccessToken(accessToken));
+        assertDoesNotThrow(() -> jwtTokenValidator.validateAccessToken(accessToken));
     }
 
     @Test
@@ -37,10 +44,13 @@ class JwtTokenValidatorTest {
     void testValidateRefreshToken() {
         String username = "testUser";
         String role = "USER";
+        String refreshToken = "validRefreshToken"; // 임의의 유효한 refresh 토큰 값 설정
 
-        String refreshToken = jwtTokenProvider.createRefreshToken(username, role);
+        // JwtTokenProvider의 메소드 mock 설정
+        when(jwtTokenProvider.isExpired(refreshToken)).thenReturn(false);
+        when(jwtTokenProvider.getCategory(refreshToken)).thenReturn("refresh");
 
-        Assertions.assertDoesNotThrow(() -> jwtTokenValidator.validateRefreshToken(refreshToken));
+        assertDoesNotThrow(() -> jwtTokenValidator.validateRefreshToken(refreshToken));
     }
 
     @Test
@@ -50,7 +60,7 @@ class JwtTokenValidatorTest {
 
         String extractedToken = jwtTokenValidator.extractAccessToken(header);
 
-        Assertions.assertEquals("sample-access-token", extractedToken);
+        assertEquals("sample-access-token", extractedToken);
     }
 
     @Test
@@ -60,30 +70,30 @@ class JwtTokenValidatorTest {
 
         String extractedToken = jwtTokenValidator.extractAccessToken(header);
 
-        Assertions.assertNull(extractedToken);
+        assertNull(extractedToken);
     }
 
     @Test
     @DisplayName("RefreshToken 쿠키에서 추출")
     void testExtractRefreshTokenFromCookies() {
         Cookie cookie = new Cookie("refresh", "sample-refresh-token");
-        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(mockRequest.getCookies()).thenReturn(new Cookie[]{cookie});
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        when(mockRequest.getCookies()).thenReturn(new Cookie[]{cookie});
 
         String refreshToken = jwtTokenValidator.extractRefreshTokenFromCookies(mockRequest);
 
-        Assertions.assertEquals("sample-refresh-token", refreshToken);
+        assertEquals("sample-refresh-token", refreshToken);
     }
 
     @Test
     @DisplayName("쿠키에서 RefreshToken 없을 때 검증")
     void testExtractRefreshTokenFromCookiesWhenMissing() {
-        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(mockRequest.getCookies()).thenReturn(new Cookie[]{});
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        when(mockRequest.getCookies()).thenReturn(new Cookie[]{});
 
         String refreshToken = jwtTokenValidator.extractRefreshTokenFromCookies(mockRequest);
 
-        Assertions.assertNull(refreshToken);
+        assertNull(refreshToken);
     }
 
     @Test
@@ -91,13 +101,35 @@ class JwtTokenValidatorTest {
     void testGetUserDetails() {
         String username = "testUser";
         String role = "USER";
+        String token = "validAccessToken";
 
-        String token = jwtTokenProvider.createAccessToken(username, role);
+        when(jwtTokenProvider.getUsername(token)).thenReturn(username);
+        when(jwtTokenProvider.getRole(token)).thenReturn(role);
 
         UserDetails userDetails = jwtTokenValidator.getUserDetails(token);
 
-        Assertions.assertNotNull(userDetails);
-        Assertions.assertEquals(username, userDetails.getUsername());
-        Assertions.assertEquals(role, userDetails.getAuthorities().iterator().next().getAuthority());
+        assertNotNull(userDetails);
+        assertEquals(username, userDetails.getUsername());
+        assertEquals(role, userDetails.getAuthorities().iterator().next().getAuthority());
+    }
+
+    @Test
+    @DisplayName("AccessToken 만료 예외 처리")
+    void testValidateExpiredAccessToken() {
+        String accessToken = "expiredAccessToken";
+
+        when(jwtTokenProvider.isExpired(accessToken)).thenReturn(true);
+
+        assertThrows(ExpiredJwtTokenException.class, () -> jwtTokenValidator.validateAccessToken(accessToken));
+    }
+
+    @Test
+    @DisplayName("잘못된 RefreshToken 처리")
+    void testValidateInvalidRefreshToken() {
+        String refreshToken = "invalidRefreshToken";
+
+        when(jwtTokenProvider.getCategory(refreshToken)).thenReturn("invalid");
+
+        assertThrows(InvalidJwtTokenException.class, () -> jwtTokenValidator.validateRefreshToken(refreshToken));
     }
 }

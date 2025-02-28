@@ -1,37 +1,38 @@
 package toonpick.app.unit.security.jwt;
 
 import io.jsonwebtoken.Jwts;
-import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import toonpick.app.security.jwt.JwtTokenProvider;
-import toonpick.app.utils.CookieUtils;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-@SpringBootTest
+import io.jsonwebtoken.security.Keys;
+import org.junit.jupiter.api.BeforeEach;
+
+@ExtendWith(MockitoExtension.class)
 class JwtTokenProviderTest {
 
-    private final SecretKey secretKey;
-
-    public JwtTokenProviderTest(@Value("${spring.jwt.secret}") String secret) {
-        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-    }
-
-    @Autowired
     private JwtTokenProvider jwtTokenProvider;
+    private final String secretKeyString = "test_secret_key_dsakjfhaiuefabeiwfaidiae";
+    private final SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes(StandardCharsets.UTF_8));
+
+    private final long accessTokenExpiration = 3600000;
+    private final long refreshTokenExpiration = 604800000;
+
+    @BeforeEach
+    void setUp() {
+        jwtTokenProvider = new JwtTokenProvider(secretKeyString, accessTokenExpiration, refreshTokenExpiration);
+    }
 
     @Test
     @DisplayName("AccessToken 생성 및 유효성 검증")
     void testCreateAccessTokenAndValidate() {
-        Long userId = 1L;
         String username = "testUser";
         String role = "USER";
 
@@ -46,7 +47,6 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("RefreshToken 생성 및 만료 임박 여부 확인")
     void testIsRefreshTokenAboutToExpire() {
-        Long userId = 1L;
         String username = "testUser";
         String role = "USER";
 
@@ -79,7 +79,6 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("토큰의 Claims에서 특정 값 추출")
     void testGetClaims() {
-        Long userId = 1L;
         String username = "testUser";
         String role = "USER";
 
@@ -102,5 +101,4 @@ class JwtTokenProviderTest {
         Assertions.assertNotNull(expiration);
         Assertions.assertTrue(expiration.after(new Date()));
     }
-
 }
