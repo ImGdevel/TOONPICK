@@ -1,19 +1,21 @@
 package toonpick.app.unit.service;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import toonpick.app.exception.exception.UserAlreadyRegisteredException;
 import toonpick.app.security.dto.JoinRequest;
 import toonpick.app.domain.member.Member;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.security.service.JoinService;
 
 import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("UnitTest")
 class JoinServiceTest {
@@ -47,12 +49,14 @@ class JoinServiceTest {
     @Test
     @DisplayName("중복된 사용자 이름으로 유저 생성 실패")
     void testRegisterNewMemberDuplicateUsername() {
-        JoinRequest joinRequest = new JoinRequest("testUser", "test@example.com", "password");
+        String username = "test@example.com";
+        JoinRequest joinRequest = new JoinRequest(username, username, "password");
 
-        when(memberRepository.existsByUsername("testUser")).thenReturn(true);
+        Mockito.when(memberRepository.existsByUsername(username)).thenReturn(true);
 
-        assertThatThrownBy(() -> joinService.registerNewMember(joinRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Username testUser already exists.");
+        // 예외가 발생해야 함
+        Assertions.assertThrows(UserAlreadyRegisteredException.class, () -> {
+            joinService.registerNewMember(joinRequest);
+        });
     }
 }
