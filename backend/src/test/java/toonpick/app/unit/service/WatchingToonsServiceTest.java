@@ -11,9 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.watching_toons.WatchingToons;
 import toonpick.app.domain.webtoon.Webtoon;
-import toonpick.app.domain.webtoon.enums.AgeRating;
-import toonpick.app.domain.webtoon.enums.Platform;
-import toonpick.app.domain.webtoon.enums.SerializationStatus;
 import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
@@ -22,7 +19,6 @@ import toonpick.app.repository.WebtoonRepository;
 import toonpick.app.repository.WatchingToonsRepository;
 import toonpick.app.service.WatchingToonsService;
 
-import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
 
