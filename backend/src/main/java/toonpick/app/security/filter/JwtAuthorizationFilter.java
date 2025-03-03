@@ -32,7 +32,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     // todo : 추후 다른 대안을 모색하거나 선택된 방법 이외의 코드는 제거할 것
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         // todo : 방법 1. 인증이 필요 없는 경로 건너뛰기 (임시)
