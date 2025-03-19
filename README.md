@@ -1,6 +1,6 @@
 <div align="center">
   <picture>
-    <img src="https://raw.githubusercontent.com/ImGdevel/TOONPICK/main/docs/toonpick-header.png" alt="ToonPick 서비스 헤더" width="600">
+    <img src="https://raw.githubusercontent.com/ImGdevel/TOONPICK/main/docs/toonpick-header.png" alt="ToonPick 서비스 헤더" width="100%">
   </picture>
 </div>
 
@@ -24,9 +24,18 @@
 
 ## 🛠️ 기술 스택  
 
+
 <div align="center">
+  <h3> Web Service </h3>
   <picture>
-    <img src="https://raw.githubusercontent.com/ImGdevel/TOONPICK/main/docs/toonpick-skill-stack.png" alt="ToonPick 기술 스택" width="800">
+    <img src="https://github.com/ImGdevel/TOONPICK/blob/main/docs/toonpick-skill-stack-web.png" alt="ToonPick 기술 스택" width="900">
+  </picture>
+</div>  
+
+<div align="center">
+  <h3> Infra & DevOps </h3>
+  <picture>
+    <img src="https://github.com/ImGdevel/TOONPICK/blob/main/docs/toonpick-skill-stack-infra.png" alt="ToonPick 기술 스택" width="900">
   </picture>
 </div>  
 
@@ -38,7 +47,7 @@
 
 <div align="center">
   <picture>
-    <img src="https://raw.githubusercontent.com/ImGdevel/TOONPICK/main/docs/toonpick-service-architecture.png" alt="ToonPick 서비스 아키텍처" width="1000">
+    <img src="https://raw.githubusercontent.com/ImGdevel/TOONPICK/main/docs/toonpick-service-architecture.png" alt="ToonPick 서비스 아키텍처" width="900">
   </picture>
 </div>  
 
