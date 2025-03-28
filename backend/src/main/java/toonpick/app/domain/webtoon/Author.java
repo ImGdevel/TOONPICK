@@ -1,6 +1,7 @@
 package toonpick.app.domain.webtoon;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,12 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @NotNull
+    @Column(name = "uid", nullable = false, unique = true)
+    private String uid;
+
+    @NotNull
+    @Column(name = "name", nullable = false)
     private String name;
 
     private String role;
@@ -24,7 +30,8 @@ public class Author {
     private String link;
 
     @Builder
-    public Author(String name, String role, String link) {
+    public Author(String uid, String name, String role, String link) {
+        this.uid = uid;
         this.name = name;
         this.role = role;
         this.link = link;

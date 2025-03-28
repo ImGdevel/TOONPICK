@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toonpick.app.domain.webtoon.Genre;
 import toonpick.app.dto.webtoon.GenreDTO;
-import toonpick.app.exception.exception.ResourceAlreadyExistsException;
 import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.mapper.GenreMapper;
 import toonpick.app.repository.GenreRepository;
@@ -97,54 +96,39 @@ class GenreServiceTest {
         verify(genreRepository, times(1)).findById(1L);
     }
 
-    @DisplayName("새로운 장르를 생성하는 단위 테스트")
-    @Test
-    void testCreateGenre_Success() {
-        // given
-        given(genreRepository.existsByName("Action")).willReturn(false);
-        given(genreMapper.genreDtoToGenre(genreDTO)).willReturn(genre);
-        given(genreRepository.save(genre)).willReturn(genre);
-        given(genreMapper.genreToGenreDto(genre)).willReturn(genreDTO);
-
-        // when
-        GenreDTO result = genreService.createGenre(genreDTO);
-
-        // then
-        assertNotNull(result);
-        assertEquals("Action", result.getName());
-        verify(genreRepository, times(1)).existsByName("Action");
-        verify(genreRepository, times(1)).save(genre);
-        verify(genreMapper, times(1)).genreToGenreDto(genre);
-    }
-
-    @DisplayName("이미 존재하는 장르를 생성하려고 할 때 예외 발생")
-    @Test
-    void testCreateGenre_AlreadyExists() {
-        // given
-        given(genreRepository.existsByName("Action")).willReturn(true);
-
-        // when & then
-        assertThrows(ResourceAlreadyExistsException.class, () -> genreService.createGenre(genreDTO));
-        verify(genreRepository, times(1)).existsByName("Action");
-    }
-
     @DisplayName("장르를 생성하거나 찾는 단위 테스트")
     @Test
     void testFindOrCreateGenre_WhenNotExists() {
         // given
         given(genreRepository.findByName("Action")).willReturn(Optional.empty());
-        given(genreMapper.genreDtoToGenre(genreDTO)).willReturn(genre);
-        given(genreRepository.save(genre)).willReturn(genre);
+        given(genreRepository.save(any(Genre.class))).willReturn(genre);
         given(genreMapper.genreToGenreDto(genre)).willReturn(genreDTO);
 
         // when
-        GenreDTO result = genreService.findOrCreateGenre(genreDTO);
+        GenreDTO result = genreService.findOrCreateGenreDTO("Action");
 
         // then
         assertNotNull(result);
         assertEquals("Action", result.getName());
         verify(genreRepository, times(1)).findByName("Action");
-        verify(genreRepository, times(1)).save(genre);
+        verify(genreRepository, times(1)).save(any(Genre.class));
+        verify(genreMapper, times(1)).genreToGenreDto(genre);
+    }
+
+    @DisplayName("이미 존재하는 장르를 찾거나 생성하는 단위 테스트")
+    @Test
+    void testFindOrCreateGenre_WhenExists() {
+        // given
+        given(genreRepository.findByName("Action")).willReturn(Optional.of(genre));
+        given(genreMapper.genreToGenreDto(genre)).willReturn(genreDTO);
+
+        // when
+        GenreDTO result = genreService.findOrCreateGenreDTO("Action");
+
+        // then
+        assertNotNull(result);
+        assertEquals("Action", result.getName());
+        verify(genreRepository, times(1)).findByName("Action");
         verify(genreMapper, times(1)).genreToGenreDto(genre);
     }
 

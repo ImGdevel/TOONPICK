@@ -108,7 +108,6 @@ class WebtoonServiceTest {
     @DisplayName("웹툰 생성 유닛 테스트")
     @Test
     void testCreateWebtoon_Success() {
-        // given
         when(webtoonRepository.findByExternalId(createRequestDTO.getExternalId())).thenReturn(Optional.empty());
         when(webtoonRepository.save(any(Webtoon.class))).thenReturn(webtoon);
         when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
@@ -119,7 +118,9 @@ class WebtoonServiceTest {
         // then
         assertNotNull(result);
         assertEquals("Test Webtoon", result.getTitle());
+        verify(webtoonRepository, times(1)).findByExternalId(createRequestDTO.getExternalId());
         verify(webtoonRepository, times(1)).save(any(Webtoon.class));
+        verify(webtoonMapper, times(1)).webtoonToWebtoonResponseDto(webtoon);
     }
 
     @DisplayName("웹툰 중복 생성 예외 유닛 테스트")

@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toonpick.app.domain.webtoon.Author;
 import toonpick.app.dto.webtoon.AuthorDTO;
-import toonpick.app.exception.exception.ResourceAlreadyExistsException;
 import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.mapper.AuthorMapper;
 import toonpick.app.repository.AuthorRepository;
@@ -42,6 +41,7 @@ class AuthorServiceTest {
     @BeforeEach
     void setUp() {
         author = Author.builder()
+                .uid("1234")
                 .name("Test Author")
                 .role("Writer")
                 .link("http://example.com")
@@ -49,6 +49,7 @@ class AuthorServiceTest {
 
         authorDTO = AuthorDTO.builder()
                 .id(1L)
+                .uid("1234")
                 .name("Test Author")
                 .role("Writer")
                 .link("http://example.com")
@@ -127,34 +128,41 @@ class AuthorServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> authorService.getAuthorByName("Test Author"));
     }
 
-    @DisplayName("작가를 생성하는 단위 테스트")
+    @DisplayName("작가를 생성하거나 조회하는 단위 테스트")
     @Test
-    void testCreateAuthor_Success() {
+    void testFindOrCreateAuthor_Success() {
         // given
-        when(authorRepository.existsByName("Test Author")).thenReturn(false);
+        when(authorRepository.findByUid(authorDTO.getUid())).thenReturn(Optional.empty());
         when(authorMapper.authorDtoToAuthor(authorDTO)).thenReturn(author);
         when(authorRepository.save(author)).thenReturn(author);
         when(authorMapper.authorToAuthorDto(author)).thenReturn(authorDTO);
 
         // when
-        AuthorDTO result = authorService.createAuthor(authorDTO);
+        AuthorDTO result = authorService.findOrCreateAuthorDTO(authorDTO);
 
         // then
         assertNotNull(result);
         assertEquals("Test Author", result.getName());
-        verify(authorRepository, times(1)).existsByName("Test Author");
+        verify(authorRepository, times(1)).findByUid(authorDTO.getUid());
         verify(authorRepository, times(1)).save(author);
         verify(authorMapper, times(1)).authorToAuthorDto(author);
     }
 
-    @DisplayName("이미 존재하는 작가를 생성하려고 할 때 예외가 발생하는 단위 테스트")
+    @DisplayName("이미 존재하는 작가를 조회하는 단위 테스트")
     @Test
-    void testCreateAuthor_AlreadyExists() {
+    void testFindOrCreateAuthor_AlreadyExists() {
         // given
-        when(authorRepository.existsByName("Test Author")).thenReturn(true);
+        when(authorRepository.findByUid(authorDTO.getUid())).thenReturn(Optional.of(author));
+        when(authorMapper.authorToAuthorDto(author)).thenReturn(authorDTO);
 
-        // when & then
-        assertThrows(ResourceAlreadyExistsException.class, () -> authorService.createAuthor(authorDTO));
+        // when
+        AuthorDTO result = authorService.findOrCreateAuthorDTO(authorDTO);
+
+        // then
+        assertNotNull(result);
+        assertEquals("Test Author", result.getName());
+        verify(authorRepository, times(1)).findByUid(authorDTO.getUid());
+        verify(authorMapper, times(1)).authorToAuthorDto(author);
     }
 
     @DisplayName("작가를 업데이트하는 단위 테스트")

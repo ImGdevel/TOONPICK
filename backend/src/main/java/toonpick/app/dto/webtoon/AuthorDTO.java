@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AuthorDTO {
     private Long id;
+    private String uid;
     private String name;
     private String role;
     private String link;

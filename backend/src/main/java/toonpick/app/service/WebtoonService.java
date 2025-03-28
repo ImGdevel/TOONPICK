@@ -42,6 +42,9 @@ public class WebtoonService {
     private final GenreRepository genreRepository;
     private final WebtoonMapper webtoonMapper;
 
+    private final AuthorService authorService;
+    private final GenreService genreService;
+
     private static final Logger logger = LoggerFactory.getLogger(WebtoonService.class);
 
     // 웹툰 추가
@@ -51,11 +54,13 @@ public class WebtoonService {
             throw new ResourceAlreadyExistsException(ErrorCode.WEBTOON_ALREADY_EXISTS, createRequestDTO.getTitle());
         }
 
-        Set<Author> authors = new HashSet<>(authorRepository.findAllById(
-                createRequestDTO.getAuthors().stream().map(AuthorDTO::getId).collect(Collectors.toSet())));
+        Set<Author> authors = createRequestDTO.getAuthors().stream()
+                .map(authorService::findOrCreateAuthorEntity)
+                .collect(Collectors.toSet());
 
-        Set<Genre> genres = new HashSet<>(genreRepository.findAllById(
-                createRequestDTO.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet())));
+        Set<Genre> genres = createRequestDTO.getGenres().stream()
+                .map(genreService::findOrCreateGenreEntity)
+                .collect(Collectors.toSet());
 
         Webtoon newWebtoon = Webtoon.builder()
                 .externalId(createRequestDTO.getExternalId())

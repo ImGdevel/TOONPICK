@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import toonpick.app.dto.webtoon.AuthorDTO;
 import toonpick.app.domain.webtoon.Author;
 import toonpick.app.exception.ErrorCode;
-import toonpick.app.exception.exception.ResourceAlreadyExistsException;
 import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.mapper.AuthorMapper;
 import toonpick.app.repository.AuthorRepository;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,31 +41,16 @@ public class AuthorService {
         return authorMapper.authorToAuthorDto(author);
     }
 
-    @Transactional(readOnly = true)
-    public Optional<AuthorDTO> findAuthorByName(String name) {
-        return authorRepository.findByName(name).map(authorMapper::authorToAuthorDto);
+    @Transactional
+    public Author findOrCreateAuthorEntity(AuthorDTO authorDTO) {
+        return authorRepository.findByUid(authorDTO.getUid())
+                .orElseGet(() -> authorRepository.save(authorMapper.authorDtoToAuthor(authorDTO)));
     }
 
     @Transactional
-    public AuthorDTO createAuthor(AuthorDTO authorDTO) {
-        if (authorRepository.existsByName(authorDTO.getName())) {
-            throw new ResourceAlreadyExistsException(ErrorCode.AUTHOR_ALREADY_EXISTS, authorDTO.getName());
-        }
-
-        Author author = authorMapper.authorDtoToAuthor(authorDTO);
-        author = authorRepository.save(author);
+    public AuthorDTO findOrCreateAuthorDTO(AuthorDTO authorDTO) {
+        Author author = findOrCreateAuthorEntity(authorDTO);
         return authorMapper.authorToAuthorDto(author);
-    }
-
-    @Transactional
-    public AuthorDTO findOrCreateAuthor(AuthorDTO authorDTO) {
-        return authorRepository.findByName(authorDTO.getName())
-                .map(authorMapper::authorToAuthorDto)
-                .orElseGet(() -> {
-                    Author author = authorMapper.authorDtoToAuthor(authorDTO);
-                    author = authorRepository.save(author);
-                    return authorMapper.authorToAuthorDto(author);
-                });
     }
 
     @Transactional
