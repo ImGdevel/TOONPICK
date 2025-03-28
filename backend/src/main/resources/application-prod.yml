@@ -58,3 +58,13 @@ spring:
         static: ${AWS_REGION}
       s3:
         bucket: ${AWS_S3_BUCKET}
+      sqs:
+        queue:
+          request:
+            name: ${AWS_SQS_UPDATE_REQUEST_QUEUE_NAME}
+            url: ${AWS_SQS_UPDATE_REQUEST_QUEUE_URL}
+          response:
+            name: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_NAME}
+            url: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_URL}
+        auto-create: false
+        enabled: false
