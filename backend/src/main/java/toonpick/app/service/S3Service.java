@@ -1,56 +1,57 @@
 package toonpick.app.service;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import toonpick.app.exception.ErrorCode;
-
 
 import java.io.IOException;
 import java.util.UUID;
 
-
 @Service
 public class S3Service {
 
-    private final AmazonS3 amazonS3;
-
+    private final S3Client s3Client;
     private final String bucketName;
-
+    private final Region region;
     private final Logger logger = LoggerFactory.getLogger(S3Service.class);
 
-    public S3Service(AmazonS3 amazonS3,
-                     @Value("${cloud.aws.s3.bucket}") String bucketName) {
-        this.amazonS3 = amazonS3;
+    public S3Service(S3Client s3Client,
+                     @Value("${spring.cloud.aws.s3.bucket}") String bucketName,
+                     @Value("${spring.cloud.aws.region.static}") String region) {
+        this.s3Client = s3Client;
         this.bucketName = bucketName;
+        this.region = Region.of(region);
     }
 
     /**
-     * aws s3에 image upload (범용)
+     * AWS S3에 이미지 업로드 (범용)
      */
     public String uploadFile(MultipartFile file) {
         String fileName = generateFileName(file.getOriginalFilename());
 
         try {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(file.getContentType());
-            metadata.setContentLength(file.getSize());
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileName)
+                    .contentType(file.getContentType())
+                    .build();
 
-            amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata));
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
         } catch (IOException e) {
             throw new RuntimeException(ErrorCode.IMAGE_UPLOAD_FAILED.getMessage());
-        } catch (AmazonServiceException e){
+        } catch (Exception e) {
             logger.error("{} : {}", ErrorCode.IMAGE_UPLOAD_FAILED_TO_S3, e);
             throw new RuntimeException(ErrorCode.IMAGE_UPLOAD_FAILED_TO_S3.getMessage());
         }
 
-        return amazonS3.getUrl(bucketName, fileName).toString();
+        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region.id(), fileName);
     }
 
     private String generateFileName(String originalFilename) {
