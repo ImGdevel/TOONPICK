@@ -1,5 +1,14 @@
 project(':module-application:application-api') {
     dependencies {
+
+        implementation project(':module-domain')
+        implementation project(':module-domain:domain-common')
+        implementation project(':module-domain:domain-member')
+        implementation project(':module-domain:domain-webtoon')
+        implementation project(':module-domain:domain-review')
+        implementation project(':module-domain:domain-toon-collection')
+        implementation project(':module-domain:domain-member-engagement')
+
         implementation project(':module-common')
     }
 }

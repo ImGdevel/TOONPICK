@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import toonpick.app.dto.member.MemberProfileDetailsResponseDTO;
-import toonpick.app.dto.member.MemberProfileRequestDTO;
-import toonpick.app.dto.member.MemberResponseDTO;
+import toonpick.dto.MemberProfileDetailsResponseDTO;
+import toonpick.dto.MemberProfileRequestDTO;
+import toonpick.dto.MemberResponseDTO;
 import toonpick.app.infra.aws.s3.S3Service;
 import toonpick.app.utils.AuthenticationUtil;
-import toonpick.app.service.MemberService;
+import toonpick.service.MemberService;
 
 @Tag(name = "Member", description = "회원 관련 API (접근 권한 : Private)")
 @RestController

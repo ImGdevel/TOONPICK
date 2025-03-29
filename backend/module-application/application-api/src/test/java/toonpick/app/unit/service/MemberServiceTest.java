@@ -10,14 +10,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toonpick.app.domain.member.Member;
 import toonpick.app.domain.member.MemberRole;
-import toonpick.app.dto.member.MemberProfileDetailsResponseDTO;
-import toonpick.app.dto.member.MemberProfileRequestDTO;
-import toonpick.app.dto.member.MemberProfileResponseDTO;
-import toonpick.app.dto.member.MemberResponseDTO;
+import toonpick.dto.MemberProfileDetailsResponseDTO;
+import toonpick.dto.MemberProfileRequestDTO;
+import toonpick.dto.MemberProfileResponseDTO;
+import toonpick.dto.MemberResponseDTO;
 import toonpick.exception.ResourceNotFoundException;
-import toonpick.app.mapper.MemberMapper;
-import toonpick.app.repository.MemberRepository;
-import toonpick.app.service.MemberService;
+import toonpick.mapper.MemberMapper;
+import toonpick.repository.MemberRepository;
+import toonpick.service.MemberService;
 
 import java.util.Optional;
 

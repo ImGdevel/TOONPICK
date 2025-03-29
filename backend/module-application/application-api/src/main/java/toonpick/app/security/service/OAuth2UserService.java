@@ -6,15 +6,15 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import toonpick.app.domain.member.MemberRole;
-import toonpick.app.dto.member.MemberDTO;
+import toonpick.dto.MemberDTO;
 import toonpick.app.security.user.CustomOAuth2UserDetails;
 import toonpick.app.security.dto.oauth2responseImpl.GoogleResponse;
 import toonpick.app.security.dto.oauth2responseImpl.NaverResponse;
 import toonpick.app.security.dto.OAuth2Response;
-import toonpick.app.domain.member.Member;
-import toonpick.app.mapper.MemberMapper;
-import toonpick.app.repository.MemberRepository;
+import toonpick.entity.Member;
+import toonpick.entity.MemberRole;
+import toonpick.mapper.MemberMapper;
+import toonpick.repository.MemberRepository;
 
 import java.util.Map;
 

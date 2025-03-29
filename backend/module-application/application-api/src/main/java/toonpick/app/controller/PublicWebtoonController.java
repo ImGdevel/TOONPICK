@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import toonpick.app.dto.PagedResponseDTO;
-import toonpick.app.dto.WebtoonFilterDTO;
-import toonpick.app.dto.webtoon.WebtoonResponseDTO;
-import toonpick.app.service.WebtoonService;
+import toonpick.dto.PagedResponseDTO;
+import toonpick.dto.WebtoonFilterDTO;
+import toonpick.dto.WebtoonResponseDTO;
+import toonpick.service.WebtoonService;
+
 
 @Tag(name = "Webtoon", description = "웹툰 정보 조회 및 필터링 API (접근 권한 : Public)")
 @RestController

@@ -12,8 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import toonpick.app.domain.webtoon.Author;
 import toonpick.app.dto.webtoon.AuthorDTO;
 import toonpick.exception.ResourceNotFoundException;
-import toonpick.app.mapper.AuthorMapper;
-import toonpick.app.repository.AuthorRepository;
+import toonpick.mapper.AuthorMapper;
+import toonpick.repository.AuthorRepository;
 import toonpick.app.service.AuthorService;
 
 import java.util.List;

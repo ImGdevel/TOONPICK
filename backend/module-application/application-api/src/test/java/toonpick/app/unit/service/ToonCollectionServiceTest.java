@@ -12,12 +12,12 @@ import toonpick.app.domain.member.Member;
 import toonpick.app.domain.toon_collection.ToonCollection;
 import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.dto.ToonCollectionResponseDTO;
-import toonpick.app.dto.member.MemberProfileResponseDTO;
+import toonpick.dto.MemberProfileResponseDTO;
 import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.exception.ResourceNotFoundException;
 import toonpick.app.mapper.ToonCollectionMapper;
 import toonpick.app.repository.ToonCollectionRepository;
-import toonpick.app.repository.MemberRepository;
+import toonpick.repository.MemberRepository;
 import toonpick.app.repository.WebtoonRepository;
 import toonpick.app.service.ToonCollectionService;
 

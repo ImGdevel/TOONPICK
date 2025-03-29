@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import toonpick.app.dto.ToonCollectionResponseDTO;
-import toonpick.app.service.ToonCollectionService;
+
 import toonpick.app.utils.AuthenticationUtil;
+import toonpick.dto.ToonCollectionResponseDTO;
+import toonpick.service.ToonCollectionService;
 
 import java.util.List;
 

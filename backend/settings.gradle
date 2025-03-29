@@ -2,4 +2,21 @@ rootProject.name = 'toonpick'
 
 include 'module-application'
 include 'module-application:application-api'
+
+
+
 include 'module-common'
+include 'module-domain'
+include 'module-domain:domain-member'
+findProject(':module-domain:domain-member')?.name = 'domain-member'
+include 'module-domain:domain-webtoon'
+findProject(':module-domain:domain-webtoon')?.name = 'domain-webtoon'
+include 'module-domain:domain-common'
+findProject(':module-domain:domain-common')?.name = 'domain-common'
+include 'module-domain:domain-review'
+findProject(':module-domain:domain-review')?.name = 'domain-review'
+include 'module-domain:domain-member-engagement'
+findProject(':module-domain:domain-member-engagement')?.name = 'domain-member-engagement'
+include 'module-domain:domain-toon-collection'
+findProject(':module-domain:domain-toon-collection')?.name = 'domain-toon-collection'
+

@@ -2,8 +2,9 @@ package toonpick.app.unit.entity;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import toonpick.app.domain.member.Member;
-import toonpick.app.domain.member.MemberRole;
+import toonpick.entity.Member;
+import toonpick.entity.MemberRole;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 

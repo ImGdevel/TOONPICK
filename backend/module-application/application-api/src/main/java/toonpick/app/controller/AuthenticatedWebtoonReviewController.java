@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toonpick.app.utils.AuthenticationUtil;
-import toonpick.app.dto.WebtoonReviewCreateDTO;
-import toonpick.app.dto.WebtoonReviewDTO;
-import toonpick.app.service.WebtoonReviewService;
+import toonpick.dto.WebtoonReviewCreateDTO;
+import toonpick.dto.WebtoonReviewDTO;
+import toonpick.service.WebtoonReviewService;
 
 import java.util.List;
 import java.util.Optional;

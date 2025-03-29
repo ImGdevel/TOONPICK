@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import toonpick.app.security.dto.JoinRequest;
 import toonpick.app.domain.member.Member;
-import toonpick.app.repository.MemberRepository;
+import toonpick.repository.MemberRepository;
 import toonpick.app.security.service.JoinService;
 
 import static org.mockito.Mockito.*;

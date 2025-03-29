@@ -4,8 +4,9 @@ import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import toonpick.app.dto.webtoon.WebtoonUpdateBatchRequestDTO;
-import toonpick.app.dto.webtoon.WebtoonUpdateRequestDTO;
+import toonpick.app.dto.WebtoonUpdateBatchRequestDTO;
+import toonpick.dto.WebtoonUpdateRequestDTO;
+
 
 @Slf4j
 @Service

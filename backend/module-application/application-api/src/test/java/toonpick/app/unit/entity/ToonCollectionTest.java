@@ -4,9 +4,10 @@ package toonpick.app.unit.entity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import toonpick.app.domain.member.Member;
-import toonpick.app.domain.toon_collection.ToonCollection;
-import toonpick.app.domain.webtoon.Webtoon;
+import toonpick.entity.Member;
+import toonpick.entity.ToonCollection;
+import toonpick.entity.Webtoon;
+
 
 import java.util.List;
 

@@ -5,8 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import toonpick.app.dto.webtoon.WebtoonUpdateBatchRequestDTO;
-import toonpick.app.dto.webtoon.WebtoonUpdateRequestDTO;
+import toonpick.app.dto.WebtoonUpdateBatchRequestDTO;
+import toonpick.dto.WebtoonUpdateRequestDTO;
+
 
 import java.util.List;
 import java.util.UUID;

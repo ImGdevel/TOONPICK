@@ -3,8 +3,8 @@ package toonpick.app.security.user;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import toonpick.app.domain.member.Member;
-import toonpick.app.domain.member.MemberRole;
+import toonpick.entity.Member;
+
 
 import java.util.Collection;
 import java.util.Collections;

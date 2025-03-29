@@ -8,12 +8,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import toonpick.app.domain.webtoon.Genre;
-import toonpick.app.dto.webtoon.GenreDTO;
+
+import toonpick.dto.GenreDTO;
+import toonpick.entity.Genre;
 import toonpick.exception.ResourceNotFoundException;
-import toonpick.app.mapper.GenreMapper;
-import toonpick.app.repository.GenreRepository;
-import toonpick.app.service.GenreService;
+import toonpick.mapper.GenreMapper;
+import toonpick.repository.GenreRepository;
+import toonpick.service.GenreService;
+
 
 import java.util.List;
 import java.util.Optional;

@@ -11,18 +11,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import toonpick.app.domain.member.Member;
-import toonpick.app.domain.review.ReviewLike;
-import toonpick.app.domain.review.WebtoonReview;
-import toonpick.app.domain.webtoon.Webtoon;
-import toonpick.app.dto.PagedResponseDTO;
-import toonpick.app.dto.WebtoonReviewCreateDTO;
-import toonpick.app.dto.WebtoonReviewDTO;
-import toonpick.app.repository.MemberRepository;
-import toonpick.app.repository.ReviewLikeRepository;
-import toonpick.app.repository.WebtoonRepository;
-import toonpick.app.repository.WebtoonReviewRepository;
-import toonpick.app.service.WebtoonReviewService;
+
+import toonpick.entity.Member;
+import toonpick.entity.ReviewLike;
+
+import toonpick.dto.PagedResponseDTO;
+import toonpick.dto.WebtoonReviewCreateDTO;
+import toonpick.dto.WebtoonReviewDTO;
+import toonpick.entity.Webtoon;
+import toonpick.entity.WebtoonReview;
+import toonpick.repository.MemberRepository;
+import toonpick.repository.ReviewLikeRepository;
+import toonpick.repository.WebtoonRepository;
+import toonpick.repository.WebtoonReviewRepository;
+import toonpick.service.WebtoonReviewService;
+
 
 import java.util.List;
 import java.util.Optional;

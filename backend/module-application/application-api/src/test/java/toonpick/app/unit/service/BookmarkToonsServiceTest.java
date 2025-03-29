@@ -8,16 +8,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import toonpick.app.domain.bookmark_toons.BookmarkToons;
-import toonpick.app.domain.member.Member;
-import toonpick.app.domain.webtoon.Webtoon;
-import toonpick.app.dto.webtoon.WebtoonResponseDTO;
+import toonpick.dto.WebtoonResponseDTO;
+import toonpick.entity.BookmarkToons;
+import toonpick.entity.Member;
+import toonpick.entity.Webtoon;
 import toonpick.exception.ResourceNotFoundException;
-import toonpick.app.mapper.WebtoonMapper;
-import toonpick.app.repository.BookmarkToonsRepository;
-import toonpick.app.repository.MemberRepository;
-import toonpick.app.repository.WebtoonRepository;
-import toonpick.app.service.BookmarkToonsService;
+import toonpick.mapper.WebtoonMapper;
+import toonpick.repository.BookmarkToonsRepository;
+import toonpick.repository.MemberRepository;
+import toonpick.repository.WebtoonRepository;
+import toonpick.service.BookmarkToonsService;
+
 
 import java.util.List;
 import java.util.Optional;

@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.domain.member.MemberRole;
+import toonpick.entity.Member;
+import toonpick.entity.MemberRole;
 import toonpick.type.ErrorCode;
 import toonpick.app.security.dto.JoinRequest;
 import toonpick.exception.UserAlreadyRegisteredException;
-import toonpick.app.domain.member.Member;
-import toonpick.app.repository.MemberRepository;
+import toonpick.repository.MemberRepository;
 
 import java.util.Random;
 

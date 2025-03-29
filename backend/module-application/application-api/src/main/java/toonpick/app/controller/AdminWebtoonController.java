@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import toonpick.app.dto.webtoon.WebtoonCreateRequestDTO;
-import toonpick.app.dto.webtoon.WebtoonRequestDTO;
-import toonpick.app.dto.webtoon.WebtoonResponseDTO;
-import toonpick.app.service.WebtoonService;
+import toonpick.dto.WebtoonCreateRequestDTO;
+import toonpick.dto.WebtoonRequestDTO;
+import toonpick.dto.WebtoonResponseDTO;
+import toonpick.service.WebtoonService;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Tag(name = "Webtoon", description = "웹툰 관련 API (접근 권한 : Admin)")
 @RestController

@@ -8,18 +8,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import toonpick.app.domain.webtoon.*;
-import toonpick.app.domain.webtoon.enums.AgeRating;
-import toonpick.app.domain.webtoon.enums.Platform;
-import toonpick.app.domain.webtoon.enums.SerializationStatus;
-import toonpick.app.dto.webtoon.*;
+
+import toonpick.dto.WebtoonCreateRequestDTO;
+import toonpick.dto.WebtoonRequestDTO;
+import toonpick.dto.WebtoonResponseDTO;
+import toonpick.entity.Webtoon;
+import toonpick.enums.AgeRating;
+import toonpick.enums.Platform;
+import toonpick.enums.SerializationStatus;
 import toonpick.exception.ResourceAlreadyExistsException;
 import toonpick.exception.ResourceNotFoundException;
-import toonpick.app.mapper.WebtoonMapper;
-import toonpick.app.repository.AuthorRepository;
-import toonpick.app.repository.GenreRepository;
-import toonpick.app.repository.WebtoonRepository;
-import toonpick.app.service.WebtoonService;
+
+import toonpick.mapper.WebtoonMapper;
+import toonpick.repository.AuthorRepository;
+import toonpick.repository.GenreRepository;
+import toonpick.repository.WebtoonRepository;
+import toonpick.service.WebtoonService;
+
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
