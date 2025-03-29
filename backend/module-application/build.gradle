@@ -1,0 +1,6 @@
+project(':module-application:application-api') {
+    dependencies {
+        implementation project(':module-common')
+    }
+}
+

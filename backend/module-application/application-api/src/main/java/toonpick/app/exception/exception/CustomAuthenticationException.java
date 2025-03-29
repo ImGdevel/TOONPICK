@@ -1,9 +1,8 @@
 package toonpick.app.exception.exception;
 
-import lombok.Getter;
+
 import toonpick.app.exception.ErrorCode;
 
-@Getter
 public class CustomAuthenticationException extends RuntimeException {
     private final ErrorCode errorCode;
 

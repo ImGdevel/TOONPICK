@@ -1,1 +1,5 @@
-rootProject.name = 'TOONPICK'
+rootProject.name = 'toonpick'
+
+include 'module-application'
+include 'module-application:application-api'
+include 'module-common'

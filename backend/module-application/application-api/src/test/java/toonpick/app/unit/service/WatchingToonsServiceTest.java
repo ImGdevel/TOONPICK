@@ -8,21 +8,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import toonpick.app.domain.bookmark_toons.BookmarkToons;
 import toonpick.app.domain.member.Member;
+import toonpick.app.domain.watching_toons.WatchingToons;
 import toonpick.app.domain.webtoon.Webtoon;
-import toonpick.app.domain.webtoon.enums.AgeRating;
-import toonpick.app.domain.webtoon.enums.Platform;
-import toonpick.app.domain.webtoon.enums.SerializationStatus;
 import toonpick.app.dto.webtoon.WebtoonResponseDTO;
 import toonpick.app.exception.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
-import toonpick.app.repository.BookmarkToonsRepository;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.WebtoonRepository;
-import toonpick.app.service.BookmarkToonsService;
+import toonpick.app.repository.WatchingToonsRepository;
+import toonpick.app.service.WatchingToonsService;
 
-import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
-class BookmarkToonsServiceTest {
+class WatchingToonsServiceTest {
 
     @Mock
-    private BookmarkToonsRepository bookmarkToonsRepository;
+    private WatchingToonsRepository watchingToonsRepository;
 
     @Mock
     private MemberRepository memberRepository;
@@ -46,11 +42,11 @@ class BookmarkToonsServiceTest {
     private WebtoonMapper webtoonMapper;
 
     @InjectMocks
-    private BookmarkToonsService bookmarkToonsService;
+    private WatchingToonsService watchingToonsService;
 
     private Member member;
     private Webtoon webtoon;
-    private BookmarkToons bookmarkToons;
+    private WatchingToons watchingToons;
     private WebtoonResponseDTO responseDTO;
 
     @BeforeEach
@@ -64,7 +60,7 @@ class BookmarkToonsServiceTest {
                 .title("Test Webtoon")
                 .build();
 
-        bookmarkToons = BookmarkToons.builder()
+        watchingToons = WatchingToons.builder()
                 .member(member)
                 .webtoon(webtoon)
                 .build();
@@ -75,92 +71,93 @@ class BookmarkToonsServiceTest {
                 .build();
     }
 
-    @DisplayName("웹툰을 북마크 추가하는 단위 테스트")
+    @DisplayName("웹툰을 추가하는 단위 테스트")
     @Test
-    void testAddBookmarkToons_Success() {
+    void testAddWatchingToons_Success() {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
         when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
-        when(bookmarkToonsRepository.save(any(BookmarkToons.class))).thenReturn(bookmarkToons);
+        when(watchingToonsRepository.save(any(WatchingToons.class))).thenReturn(watchingToons);
 
         // when
-        boolean result = bookmarkToonsService.addBookmarkToons("testuser", 1L);
+        boolean result = watchingToonsService.addWatchingToons("testuser", 1L);
 
         // then
         assertTrue(result);
         verify(memberRepository, times(1)).findByUsername("testuser");
         verify(webtoonRepository, times(1)).findById(1L);
-        verify(bookmarkToonsRepository, times(1)).save(any(BookmarkToons.class));
+        verify(watchingToonsRepository, times(1)).save(any(WatchingToons.class));
     }
 
-    @DisplayName("웹툰 북마크 추가시 회원이 존재하지 않으면 예외가 발생하는 단위 테스트")
+
+    @DisplayName("웹툰 추가시 회원이 존재하지 않으면 예외가 발생하는 단위 테스트")
     @Test
-    void testAddBookmarkToons_MemberNotFound() {
+    void testAddWatchingToons_MemberNotFound() {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> bookmarkToonsService.addBookmarkToons("testuser", 1L));
+        assertThrows(ResourceNotFoundException.class, () -> watchingToonsService.addWatchingToons("testuser", 1L));
     }
 
-    @DisplayName("웹툰 북마크 추가시 웹툰이 존재하지 않으면 예외가 발생하는 단위 테스트")
+    @DisplayName("웹툰 추가시 웹툰이 존재하지 않으면 예외가 발생하는 단위 테스트")
     @Test
-    void testAddBookmarkToons_WebtoonNotFound() {
+    void testAddWatchingToons_WebtoonNotFound() {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
         when(webtoonRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> bookmarkToonsService.addBookmarkToons("testuser", 1L));
+        assertThrows(ResourceNotFoundException.class, () -> watchingToonsService.addWatchingToons("testuser", 1L));
     }
 
-    @DisplayName("웹툰 북마크 삭제하는 단위 테스트")
+    @DisplayName("웹툰을 삭제하는 단위 테스트")
     @Test
-    void testRemoveBookmarkToons_Success() {
+    void testRemoveWatchingToons_Success() {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
         when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
-        when(bookmarkToonsRepository.findByMemberAndWebtoon(member, webtoon)).thenReturn(Optional.of(bookmarkToons));
+        when(watchingToonsRepository.findByMemberAndWebtoon(member, webtoon)).thenReturn(Optional.of(watchingToons));
 
         // when
-        boolean result = bookmarkToonsService.removeBookmarkToons("testuser", 1L);
+        boolean result = watchingToonsService.removeWatchingToons("testuser", 1L);
 
         // then
         assertTrue(result);
-        verify(bookmarkToonsRepository, times(1)).delete(bookmarkToons);
+        verify(watchingToonsRepository, times(1)).delete(watchingToons);
     }
 
-    @DisplayName("웹툰 북마크 삭제시 회원이 존재하지 않으면 예외가 발생하는 단위 테스트")
+    @DisplayName("웹툰 삭제시 회원이 존재하지 않으면 예외가 발생하는 단위 테스트")
     @Test
-    void testRemoveBookmarkToons_MemberNotFound() {
+    void testRemoveWatchingToons_MemberNotFound() {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> bookmarkToonsService.removeBookmarkToons("testuser", 1L));
+        assertThrows(ResourceNotFoundException.class, () -> watchingToonsService.removeWatchingToons("testuser", 1L));
     }
 
-    @DisplayName("웹툰 북마크 삭제시 웹툰이 존재하지 않으면 예외가 발생하는 단위 테스트")
+    @DisplayName("웹툰 삭제시 웹툰이 존재하지 않으면 예외가 발생하는 단위 테스트")
     @Test
-    void testRemoveBookmarkToons_WebtoonNotFound() {
+    void testRemoveWatchingToons_WebtoonNotFound() {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
         when(webtoonRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> bookmarkToonsService.removeBookmarkToons("testuser", 1L));
+        assertThrows(ResourceNotFoundException.class, () -> watchingToonsService.removeWatchingToons("testuser", 1L));
     }
 
-    @DisplayName("웹툰 북마크 조회하는 단위 테스트")
+    @DisplayName("웹툰을 조회하는 단위 테스트")
     @Test
     void testGetWebtoonsByUsername_Success() {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
-        when(bookmarkToonsRepository.findWebtoonsByMember(member)).thenReturn(List.of(webtoon));
+        when(watchingToonsRepository.findWebtoonsByMember(member)).thenReturn(List.of(webtoon));
         when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
 
         // when
-        List<WebtoonResponseDTO> result = bookmarkToonsService.getWebtoonsByUsername("testuser");
+        List<WebtoonResponseDTO> result = watchingToonsService.getWebtoonsByUsername("testuser");
 
         // then
         assertNotNull(result);
@@ -168,13 +165,13 @@ class BookmarkToonsServiceTest {
         assertEquals("Test Webtoon", result.get(0).getTitle());
     }
 
-    @DisplayName("웹툰 북마크 조회시 회원이 존재하지 않으면 예외가 발생하는 단위 테스트")
+    @DisplayName("웹툰 조회시 회원이 존재하지 않으면 예외가 발생하는 단위 테스트")
     @Test
     void testGetWebtoonsByUsername_MemberNotFound() {
         // given
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> bookmarkToonsService.getWebtoonsByUsername("testuser"));
+        assertThrows(ResourceNotFoundException.class, () -> watchingToonsService.getWebtoonsByUsername("testuser"));
     }
 }
