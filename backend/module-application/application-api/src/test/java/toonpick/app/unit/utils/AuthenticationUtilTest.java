@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
-import toonpick.app.security.user.CustomUserDetails;
-import toonpick.app.utils.AuthenticationUtil;
+import toonpick.user.CustomUserDetails;
+import toonpick.utils.AuthenticationUtil;
 
 
 import static org.junit.jupiter.api.Assertions.*;

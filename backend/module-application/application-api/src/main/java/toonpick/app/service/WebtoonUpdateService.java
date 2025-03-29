@@ -4,16 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toonpick.app.infra.aws.sqs.WebtoonSqsSender;
+import toonpick.app.dto.WebtoonUpdateBatchRequestDTO;
 import toonpick.dto.WebtoonUpdateRequestDTO;
 import toonpick.entity.Webtoon;
 import toonpick.enums.SerializationStatus;
 import toonpick.mapper.WebtoonMapper;
 import toonpick.repository.WebtoonRepository;
+import toonpick.service.SQSMessageSender;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -21,7 +23,7 @@ import java.util.List;
 public class WebtoonUpdateService {
 
     private final WebtoonRepository webtoonRepository;
-    private final WebtoonSqsSender webtoonSqsSender;
+    private final SQSMessageSender webtoonSqsSender;
     private final WebtoonMapper webtoonMapper;
 
     private static final int BATCH_SIZE = 1000;
@@ -49,7 +51,13 @@ public class WebtoonUpdateService {
                 .map(webtoonMapper::webtoonToWebtoonUpdateRequestDTO)
                 .toList();
 
-            webtoonSqsSender.sendMessages(requests);
+            WebtoonUpdateBatchRequestDTO batchRequest = WebtoonUpdateBatchRequestDTO.builder()
+                .requestId(UUID.randomUUID().toString())
+                .totalCount(requests.size())
+                .webtoons(requests)
+                .build();
+
+            webtoonSqsSender.sendMessage(batchRequest);
             totalSent += requests.size();
         }
 

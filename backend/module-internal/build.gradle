@@ -1,0 +1,43 @@
+project(':module-internal:client-auth') {
+    dependencies {
+        implementation project(':module-common')
+    }
+}
+
+project(':module-internal:client-storage') {
+    dependencies {
+        implementation project(':module-common')
+    }
+}
+
+project(':module-internal:core-exception') {
+    dependencies {
+        implementation project(':module-common')
+    }
+}
+
+project(':module-internal:core-security') {
+    dependencies {
+        implementation project(':module-common')
+        implementation project(':module-domain:domain-member')
+        implementation project(':module-domain:domain-common')
+    }
+}
+
+project(':module-internal:core-web') {
+    dependencies {
+        implementation project(':module-common')
+    }
+}
+
+project(':module-internal:event-sqs') {
+    dependencies {
+        implementation project(':module-common')
+    }
+}
+
+project(':module-internal:event-webhook') {
+    dependencies {
+        implementation project(':module-common')
+    }
+}

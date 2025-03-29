@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
-import toonpick.app.utils.CookieUtils;
+import toonpick.utils.CookieUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 

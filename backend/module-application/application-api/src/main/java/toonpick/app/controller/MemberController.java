@@ -19,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import toonpick.dto.MemberProfileDetailsResponseDTO;
 import toonpick.dto.MemberProfileRequestDTO;
 import toonpick.dto.MemberResponseDTO;
-import toonpick.app.infra.aws.s3.S3Service;
-import toonpick.app.utils.AuthenticationUtil;
+import toonpick.service.AwsS3StorageService;
+import toonpick.utils.AuthenticationUtil;
 import toonpick.service.MemberService;
 
 @Tag(name = "Member", description = "회원 관련 API (접근 권한 : Private)")
@@ -31,7 +31,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final AuthenticationUtil authenticationUtil;
-    private final S3Service s3Service;
+    private final AwsS3StorageService awsS3StorageService;
 
     private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
@@ -73,7 +73,7 @@ public class MemberController {
             Authentication authentication
     ) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        String fileUrl = s3Service.uploadFile(file);
+        String fileUrl = awsS3StorageService.uploadFile(file);
         memberService.updateProfileImage(username, fileUrl);
         return ResponseEntity.ok(fileUrl);
     }

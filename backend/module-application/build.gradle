@@ -9,6 +9,12 @@ project(':module-application:application-api') {
         implementation project(':module-domain:domain-toon-collection')
         implementation project(':module-domain:domain-member-engagement')
 
+        implementation project(':module-internal')
+        implementation project(':module-internal:client-storage')
+        implementation project(':module-internal:core-security')
+        implementation project(':module-internal:core-exception')
+        implementation project(':module-internal:event-sqs')
+
         implementation project(':module-common')
     }
 }

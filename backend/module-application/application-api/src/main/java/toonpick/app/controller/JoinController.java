@@ -10,8 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import toonpick.app.security.dto.JoinRequest;
-import toonpick.app.security.service.JoinService;
+import toonpick.dto.JoinRequest;
+import toonpick.service.JoinService;
 
 @Tag(name = "Join", description = "회원가입 (접근 권한 : Private)")
 @Controller

@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import toonpick.exception.ExpiredJwtTokenException;
 import toonpick.exception.InvalidJwtTokenException;
 import toonpick.exception.MissingJwtTokenException;
-import toonpick.app.security.jwt.JwtTokenProvider;
-import toonpick.app.security.jwt.JwtTokenValidator;
-import toonpick.app.security.token.TokenService;
-import toonpick.app.utils.CookieUtils;
+import toonpick.jwt.JwtTokenProvider;
+import toonpick.jwt.JwtTokenValidator;
+import toonpick.token.TokenService;
+import toonpick.utils.CookieUtils;
 
 @Tag(name = "Security - Token", description = "보안 토큰 재발급 (접근 권한=public)")
 @Controller

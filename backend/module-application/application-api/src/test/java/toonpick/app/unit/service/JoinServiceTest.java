@@ -7,10 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import toonpick.app.security.dto.JoinRequest;
+import toonpick.dto.JoinRequest;
 import toonpick.app.domain.member.Member;
 import toonpick.repository.MemberRepository;
-import toonpick.app.security.service.JoinService;
+import toonpick.service.JoinService;
 
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
