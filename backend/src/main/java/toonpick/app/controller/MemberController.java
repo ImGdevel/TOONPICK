@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import toonpick.app.dto.member.MemberProfileDetailsResponseDTO;
 import toonpick.app.dto.member.MemberProfileRequestDTO;
 import toonpick.app.dto.member.MemberResponseDTO;
-import toonpick.app.service.S3Service;
+import toonpick.app.infra.aws.s3.S3Service;
 import toonpick.app.utils.AuthenticationUtil;
 import toonpick.app.service.MemberService;
 

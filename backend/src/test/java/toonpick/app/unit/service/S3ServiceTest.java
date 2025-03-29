@@ -8,12 +8,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 import toonpick.app.exception.ErrorCode;
-import toonpick.app.service.S3Service;
+import toonpick.app.infra.aws.s3.S3Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

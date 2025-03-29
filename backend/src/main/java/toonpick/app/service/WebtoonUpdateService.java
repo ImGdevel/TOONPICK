@@ -1,19 +1,15 @@
 package toonpick.app.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.domain.webtoon.enums.SerializationStatus;
-import toonpick.app.dto.webtoon.WebtoonUpdateBatchRequestDTO;
 import toonpick.app.dto.webtoon.WebtoonUpdateRequestDTO;
 import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.WebtoonRepository;
-import toonpick.app.sqs.WebtoonSqsSender;
+import toonpick.app.infra.aws.sqs.WebtoonSqsSender;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

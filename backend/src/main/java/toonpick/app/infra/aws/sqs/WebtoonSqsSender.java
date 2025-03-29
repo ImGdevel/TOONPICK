@@ -1,4 +1,4 @@
-package toonpick.app.sqs;
+package toonpick.app.infra.aws.sqs;
 
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.RequiredArgsConstructor;
