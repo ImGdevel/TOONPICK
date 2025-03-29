@@ -1,6 +1,6 @@
-package toonpick.app.exception.exception;
+package toonpick.exception;
 
-import toonpick.app.exception.ErrorCode;
+import toonpick.type.ErrorCode;
 
 /**
  * 요청에서 Jwt 토큰을 찾을 수 없는 경우 예외

@@ -7,9 +7,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toonpick.app.domain.member.MemberRole;
-import toonpick.app.exception.ErrorCode;
+import toonpick.type.ErrorCode;
 import toonpick.app.security.dto.JoinRequest;
-import toonpick.app.exception.exception.UserAlreadyRegisteredException;
+import toonpick.exception.UserAlreadyRegisteredException;
 import toonpick.app.domain.member.Member;
 import toonpick.app.repository.MemberRepository;
 

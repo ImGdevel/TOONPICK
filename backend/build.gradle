@@ -2,24 +2,37 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.4'
 }
 
-subprojects {
-    apply plugin: 'java'
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.2.1"
+    }
+}
 
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
     group = 'toonpick'
     version = '0.0.1-SNAPSHOT'
 
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+
     java {
         sourceCompatibility = '17'
-    }
-
-    // 모든 서브 프로젝트에 공통으로 적용될 저장소 설정
-    repositories {
-        mavenCentral()
     }
 
     configurations {
         compileOnly {
             extendsFrom annotationProcessor
         }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }

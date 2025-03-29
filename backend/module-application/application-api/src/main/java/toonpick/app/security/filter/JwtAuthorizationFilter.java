@@ -11,10 +11,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
-import toonpick.app.exception.exception.ExpiredJwtTokenException;
-import toonpick.app.exception.exception.MissingJwtTokenException;
+import toonpick.exception.ExpiredJwtTokenException;
+import toonpick.exception.MissingJwtTokenException;
 import toonpick.app.security.jwt.JwtTokenValidator;
-import toonpick.app.exception.exception.InvalidJwtTokenException;
+import toonpick.exception.InvalidJwtTokenException;
 import toonpick.app.utils.ErrorResponseSender;
 
 import java.io.IOException;

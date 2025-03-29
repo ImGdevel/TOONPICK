@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toonpick.app.domain.webtoon.Genre;
 import toonpick.app.dto.webtoon.GenreDTO;
-import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.exception.ResourceNotFoundException;
 import toonpick.app.mapper.GenreMapper;
 import toonpick.app.repository.GenreRepository;
 import toonpick.app.service.GenreService;

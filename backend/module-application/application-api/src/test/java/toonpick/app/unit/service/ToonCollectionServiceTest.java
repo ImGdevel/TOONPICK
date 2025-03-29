@@ -14,7 +14,7 @@ import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.dto.ToonCollectionResponseDTO;
 import toonpick.app.dto.member.MemberProfileResponseDTO;
 import toonpick.app.dto.webtoon.WebtoonResponseDTO;
-import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.exception.ResourceNotFoundException;
 import toonpick.app.mapper.ToonCollectionMapper;
 import toonpick.app.repository.ToonCollectionRepository;
 import toonpick.app.repository.MemberRepository;

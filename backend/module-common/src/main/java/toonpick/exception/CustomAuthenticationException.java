@@ -1,7 +1,7 @@
-package toonpick.app.exception.exception;
+package toonpick.exception;
 
 
-import toonpick.app.exception.ErrorCode;
+import toonpick.type.ErrorCode;
 
 public class CustomAuthenticationException extends RuntimeException {
     private final ErrorCode errorCode;

@@ -1,4 +1,4 @@
-package toonpick.app.exception.exception;
+package toonpick.exception;
 
 /**
  * JWT 토큰 예외

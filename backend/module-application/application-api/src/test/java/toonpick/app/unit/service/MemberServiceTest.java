@@ -14,7 +14,7 @@ import toonpick.app.dto.member.MemberProfileDetailsResponseDTO;
 import toonpick.app.dto.member.MemberProfileRequestDTO;
 import toonpick.app.dto.member.MemberProfileResponseDTO;
 import toonpick.app.dto.member.MemberResponseDTO;
-import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.exception.ResourceNotFoundException;
 import toonpick.app.mapper.MemberMapper;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.service.MemberService;

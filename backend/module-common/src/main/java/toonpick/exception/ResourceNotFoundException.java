@@ -1,6 +1,6 @@
-package toonpick.app.exception.exception;
+package toonpick.exception;
 
-import toonpick.app.exception.ErrorCode;
+import toonpick.type.ErrorCode;
 
 /**
  * 요청한 자원을 찾을 수 없음

@@ -1,4 +1,4 @@
-package toonpick.app.exception;
+package toonpick.type;
 
 import lombok.AccessLevel;
 import lombok.Getter;

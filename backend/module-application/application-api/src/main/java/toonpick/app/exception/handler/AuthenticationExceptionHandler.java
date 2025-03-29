@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import toonpick.app.exception.exception.CustomAuthenticationException;
-import toonpick.app.exception.exception.UserAlreadyRegisteredException;
+import toonpick.exception.CustomAuthenticationException;
+import toonpick.exception.UserAlreadyRegisteredException;
 
 import java.nio.file.AccessDeniedException;
 

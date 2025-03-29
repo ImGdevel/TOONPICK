@@ -1,6 +1,6 @@
-package toonpick.app.exception.exception;
+package toonpick.exception;
 
-import toonpick.app.exception.ErrorCode;
+import toonpick.type.ErrorCode;
 
 /**
  * 저장된 리프레시 토큰을 찾을 수 없을 경우 예외

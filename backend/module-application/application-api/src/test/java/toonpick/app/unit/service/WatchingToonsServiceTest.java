@@ -12,7 +12,7 @@ import toonpick.app.domain.member.Member;
 import toonpick.app.domain.watching_toons.WatchingToons;
 import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.dto.webtoon.WebtoonResponseDTO;
-import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.exception.ResourceNotFoundException;
 import toonpick.app.mapper.WebtoonMapper;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.WebtoonRepository;

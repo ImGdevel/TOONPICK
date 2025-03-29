@@ -3,7 +3,7 @@ package toonpick.app.utils;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import toonpick.app.exception.ErrorCode;
+import toonpick.type.ErrorCode;
 import toonpick.app.security.user.CustomUserDetails;
 
 @Component

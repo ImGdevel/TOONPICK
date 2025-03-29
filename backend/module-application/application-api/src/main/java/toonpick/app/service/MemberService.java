@@ -8,8 +8,8 @@ import toonpick.app.dto.member.MemberProfileRequestDTO;
 import toonpick.app.dto.member.MemberProfileResponseDTO;
 import toonpick.app.dto.member.MemberResponseDTO;
 import toonpick.app.domain.member.Member;
-import toonpick.app.exception.ErrorCode;
-import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.type.ErrorCode;
+import toonpick.exception.ResourceNotFoundException;
 import toonpick.app.mapper.MemberMapper;
 import toonpick.app.repository.MemberRepository;
 

@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.webjars.NotFoundException;
-import toonpick.app.exception.exception.ResourceAlreadyExistsException;
-import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.exception.ResourceAlreadyExistsException;
+import toonpick.exception.ResourceNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

@@ -16,8 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.AuthenticationException;
 
-import toonpick.app.exception.ErrorCode;
-import toonpick.app.exception.exception.CustomAuthenticationException;
+import toonpick.type.ErrorCode;
+import toonpick.exception.CustomAuthenticationException;
 import toonpick.app.security.dto.LoginRequest;
 import toonpick.app.security.handler.LoginFailureHandler;
 import toonpick.app.security.handler.LoginSuccessHandler;

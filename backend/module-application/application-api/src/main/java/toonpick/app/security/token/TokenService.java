@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import toonpick.app.exception.ErrorCode;
-import toonpick.app.exception.exception.RefreshTokenNotFoundException;
+import toonpick.type.ErrorCode;
+import toonpick.exception.RefreshTokenNotFoundException;
 import toonpick.app.security.jwt.JwtTokenValidator;
 import toonpick.app.security.jwt.JwtTokenProvider;
 

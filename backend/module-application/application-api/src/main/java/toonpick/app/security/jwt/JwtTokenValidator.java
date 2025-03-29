@@ -6,10 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import toonpick.app.exception.ErrorCode;
-import toonpick.app.exception.exception.ExpiredJwtTokenException;
-import toonpick.app.exception.exception.InvalidJwtTokenException;
-import toonpick.app.exception.exception.MissingJwtTokenException;
+import toonpick.type.ErrorCode;
+import toonpick.exception.ExpiredJwtTokenException;
+import toonpick.exception.InvalidJwtTokenException;
+import toonpick.exception.MissingJwtTokenException;
 import toonpick.app.security.user.CustomUserDetails;
 
 @Component

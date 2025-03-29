@@ -12,7 +12,7 @@ import toonpick.app.domain.webtoon.Webtoon;
 import toonpick.app.domain.review.WebtoonReview;
 import toonpick.app.domain.webtoon.enums.Platform;
 import toonpick.app.domain.webtoon.enums.SerializationStatus;
-import toonpick.app.exception.exception.ResourceNotFoundException;
+import toonpick.exception.ResourceNotFoundException;
 import toonpick.app.repository.MemberRepository;
 import toonpick.app.repository.WebtoonRepository;
 import toonpick.app.repository.WebtoonReviewRepository;

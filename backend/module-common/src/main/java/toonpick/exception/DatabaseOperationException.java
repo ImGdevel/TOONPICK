@@ -1,6 +1,6 @@
-package toonpick.app.exception.exception;
+package toonpick.exception;
 
-import toonpick.app.exception.ErrorCode;
+import toonpick.type.ErrorCode;
 
 /**
  * 데이터베이스 작업 중 발생한 예외

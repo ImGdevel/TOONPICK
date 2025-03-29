@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
-import toonpick.app.exception.ErrorCode;
+import toonpick.type.ErrorCode;
 import toonpick.app.infra.aws.s3.S3Service;
 
 import java.io.ByteArrayInputStream;
