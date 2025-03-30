@@ -29,3 +29,12 @@ logging:
   file:
     name: logs/application.log
     max-size: 10MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
