@@ -1,4 +1,4 @@
-dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
 }

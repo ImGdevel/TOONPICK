@@ -1,12 +1,15 @@
-plugins {
-    id 'org.springframework.boot' version '3.2.2' apply false
-    id 'io.spring.dependency-management' version '1.1.4'
-}
+buildscript {
+    ext {
+        springBootVersion = '3.2.2'
+    }
 
-dependencyManagement {
-    imports {
-        // Spring Boot BOM을 사용하여 의존성 버전 관리
-        mavenBom "org.springframework.boot:spring-boot-dependencies:3.2.1"
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:1.1.2"
     }
 }
 
@@ -15,32 +18,26 @@ subprojects {
     version = '0.0.1-SNAPSHOT'
 
     apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
-    java {
-        sourceCompatibility = '17'
-    }
-
-    configurations {
-        compileOnly {
-            extendsFrom annotationProcessor
-        }
-    }
+    sourceCompatibility = '17'
 
     repositories {
         mavenCentral()
         maven { url 'https://jitpack.io' }
     }
 
+    dependencies {
+        // Lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        // Testing
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
     test {
         useJUnitPlatform()
     }
-
-    // 의존성 설정
-    dependencies {
-        // Lombok 의존성 추가
-        compileOnly 'org.projectlombok:lombok:1.18.30'
-        annotationProcessor 'org.projectlombok:lombok:1.18.30'
-    }
 }
-
