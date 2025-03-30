@@ -22,12 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Tag(name = "Webtoon", description = "웹툰 관련 API (접근 권한 : Admin)")
 @RestController
 @RequestMapping("/api/admin/webtoons")
@@ -57,30 +51,6 @@ public class AdminWebtoonController {
     public ResponseEntity<WebtoonResponseDTO> createWebtoon(@RequestBody WebtoonCreateRequestDTO webtoonDTO) {
         WebtoonResponseDTO createdWebtoon = webtoonService.createWebtoon(webtoonDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWebtoon);
-    }
-
-    @PostMapping("/batch")
-    public ResponseEntity<Map<String, Object>> createWebtoons(@RequestBody @Valid List<WebtoonCreateRequestDTO> requestDTOs) {
-        List<WebtoonResponseDTO> successList = new ArrayList<>();
-        List<String> failedList = new ArrayList<>();
-
-        logger.info("request size : {}", requestDTOs.size());
-        for (WebtoonCreateRequestDTO dto : requestDTOs) {
-            try {
-                WebtoonResponseDTO responseDTO = webtoonService.createWebtoon(dto);
-                successList.add(responseDTO);
-            } catch (Exception e) {
-                failedList.add("Failed to process webtoon: " + dto.getTitle() + " - " + e.getMessage());
-            }
-        }
-
-        logger.info("success : {} , failed : {}", successList.size(), failedList.size());
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", successList);
-        result.put("failed", failedList);
-
-        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(result);
     }
 
 

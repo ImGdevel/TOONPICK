@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    default: dev
+
+  redis:
+    timeout: 10000ms
+    jedis:
+      enabled: false
+
+  output:
+    ansi:
+      enabled: always
+
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
+      hibernate:
+        SQL: DEBUG
+  file:
+    name: logs/application.log
+    max-size: 10MB

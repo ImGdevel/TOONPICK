@@ -18,3 +18,45 @@ project(':module-application:toonpick-app-api') {
         implementation project(':module-common')
     }
 }
+
+project(':module-application:toonpick-app-batch') {
+    dependencies {
+
+        implementation project(':module-domain')
+        implementation project(':module-domain:domain-common')
+        implementation project(':module-domain:domain-member')
+        implementation project(':module-domain:domain-webtoon')
+        implementation project(':module-domain:domain-review')
+        implementation project(':module-domain:domain-toon-collection')
+        implementation project(':module-domain:domain-member-engagement')
+
+        implementation project(':module-internal')
+        implementation project(':module-internal:client-storage')
+        implementation project(':module-internal:core-security')
+        implementation project(':module-internal:core-exception')
+        implementation project(':module-internal:event-sqs')
+
+        implementation project(':module-common')
+    }
+}
+
+project(':module-application:toonpick-app-worker') {
+    dependencies {
+
+        implementation project(':module-domain')
+        implementation project(':module-domain:domain-common')
+        implementation project(':module-domain:domain-member')
+        implementation project(':module-domain:domain-webtoon')
+        implementation project(':module-domain:domain-review')
+        implementation project(':module-domain:domain-toon-collection')
+        implementation project(':module-domain:domain-member-engagement')
+
+        implementation project(':module-internal')
+        implementation project(':module-internal:client-storage')
+        implementation project(':module-internal:core-security')
+        implementation project(':module-internal:core-exception')
+        implementation project(':module-internal:event-sqs')
+
+        implementation project(':module-common')
+    }
+}
