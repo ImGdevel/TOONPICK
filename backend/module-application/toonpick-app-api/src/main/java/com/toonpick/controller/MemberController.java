@@ -4,6 +4,7 @@ import com.toonpick.dto.MemberProfileDetailsResponseDTO;
 import com.toonpick.dto.MemberProfileRequestDTO;
 import com.toonpick.dto.MemberResponseDTO;
 import com.toonpick.service.AwsS3StorageService;
+import com.toonpick.service.MemberProfileService;
 import com.toonpick.service.MemberService;
 import com.toonpick.utils.AuthenticationUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,8 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberProfileService memberProfileService;
     private final AuthenticationUtil authenticationUtil;
-    private final AwsS3StorageService awsS3StorageService;
 
     private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
@@ -73,8 +74,7 @@ public class MemberController {
             Authentication authentication
     ) {
         String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        String fileUrl = awsS3StorageService.uploadFile(file);
-        memberService.updateProfileImage(username, fileUrl);
+        String fileUrl = memberProfileService.uploadProfileImage(username, file);
         return ResponseEntity.ok(fileUrl);
     }
 

@@ -6,7 +6,6 @@ import com.toonpick.dto.MemberProfileResponseDTO;
 import com.toonpick.dto.MemberResponseDTO;
 import com.toonpick.mapper.MemberMapper;
 import com.toonpick.repository.MemberRepository;
-import com.toonpick.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

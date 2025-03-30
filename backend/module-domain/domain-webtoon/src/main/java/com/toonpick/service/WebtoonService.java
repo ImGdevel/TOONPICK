@@ -46,17 +46,22 @@ public class WebtoonService {
 
     private static final Logger logger = LoggerFactory.getLogger(WebtoonService.class);
 
-    // 웹툰 추가
+    /**
+    새로운 웹툰 추가
+     */
     @Transactional
     public WebtoonResponseDTO createWebtoon(WebtoonCreateRequestDTO createRequestDTO) {
+        // 이미 등록된 웹툰인지 확인
         if (webtoonRepository.findByExternalId(createRequestDTO.getExternalId()).isPresent()) {
             throw new ResourceAlreadyExistsException(ErrorCode.WEBTOON_ALREADY_EXISTS, createRequestDTO.getTitle());
         }
 
+        // todo : 해당 로직은 응용 모듈로 이동 시킬 것
         Set<Author> authors = createRequestDTO.getAuthors().stream()
                 .map(authorService::findOrCreateAuthorEntity)
                 .collect(Collectors.toSet());
 
+        // todo : 해당 로직은 응용 모듈로 이동 시킬 것
         Set<Genre> genres = createRequestDTO.getGenres().stream()
                 .map(genreService::findOrCreateGenreEntity)
                 .collect(Collectors.toSet());
@@ -83,7 +88,9 @@ public class WebtoonService {
         return webtoonMapper.webtoonToWebtoonResponseDto(savedWebtoon);
     }
 
-    // Id 기반으로 웹툰 가져오기
+    /**
+     * id 기반으로 웹툰 조회
+     */
     @Transactional(readOnly = true)
     public WebtoonResponseDTO getWebtoonById(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
@@ -91,7 +98,9 @@ public class WebtoonService {
         return webtoonMapper.webtoonToWebtoonResponseDto(webtoon);
     }
 
-    // 필터 옵션에 따라 웹툰 가져오기
+    /**
+     * Filter 옵션 및 page 에 맞춰 Webtoon 가져오기
+     */
     @Transactional(readOnly = true)
     public PagedResponseDTO<WebtoonResponseDTO> getWebtoonsOptions(
             WebtoonFilterDTO filter, int page, int size, String sortBy, String sortDir) {
@@ -113,7 +122,9 @@ public class WebtoonService {
                 .build();
     }
 
-    // 웹툰 세부 내용 업데이트
+    /**
+     * 기존 웹툰 업데이트
+     */
     @Transactional
     public WebtoonResponseDTO updateWebtoon(Long id, WebtoonRequestDTO webtoonRequestDTO) {
         Webtoon existingWebtoon = webtoonRepository.findById(id)
@@ -141,7 +152,9 @@ public class WebtoonService {
     }
 
 
-    // 웹툰 삭제
+    /**
+     * 웹툰 삭제
+     */
     @Transactional
     public void deleteWebtoon(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
