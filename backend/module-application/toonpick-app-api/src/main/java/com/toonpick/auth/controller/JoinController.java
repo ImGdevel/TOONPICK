@@ -1,4 +1,4 @@
-package com.toonpick.controller;
+package com.toonpick.auth.controller;
 
 import com.toonpick.dto.JoinRequest;
 import com.toonpick.service.JoinService;

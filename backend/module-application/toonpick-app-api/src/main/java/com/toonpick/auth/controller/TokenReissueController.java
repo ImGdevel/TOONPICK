@@ -1,4 +1,4 @@
-package com.toonpick.controller;
+package com.toonpick.auth.controller;
 
 import com.toonpick.exception.ExpiredJwtTokenException;
 import com.toonpick.exception.InvalidJwtTokenException;

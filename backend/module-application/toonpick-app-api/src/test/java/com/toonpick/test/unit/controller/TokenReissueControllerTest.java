@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.toonpick.controller.TokenReissueController;
+import com.toonpick.auth.controller.TokenReissueController;
 import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.jwt.JwtTokenValidator;
 import com.toonpick.token.TokenService;
