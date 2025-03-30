@@ -11,7 +11,7 @@ dependencyManagement {
 }
 
 subprojects {
-    group = 'toonpick'
+    group = 'com.toonpick'
     version = '0.0.1-SNAPSHOT'
 
     apply plugin: 'java'

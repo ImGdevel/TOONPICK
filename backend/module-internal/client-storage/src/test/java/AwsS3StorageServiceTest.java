@@ -10,8 +10,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import toonpick.type.ErrorCode;
-import toonpick.service.AwsS3StorageService;
+import com.toonpick.type.ErrorCode;
+import com.toonpick.service.AwsS3StorageService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
