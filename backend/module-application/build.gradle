@@ -1,4 +1,4 @@
-project(':module-application:application-api') {
+project(':module-application:toonpick-app-api') {
     dependencies {
 
         implementation project(':module-domain')
@@ -18,4 +18,3 @@ project(':module-application:application-api') {
         implementation project(':module-common')
     }
 }
-
