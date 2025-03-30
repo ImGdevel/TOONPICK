@@ -1,40 +1,40 @@
 project(':module-domain:domain-member') {
-
     dependencies {
         implementation project(':module-common')
         implementation project(':module-domain:domain-common')
     }
+    bootJar.enabled = false
 }
 
 project(':module-domain:domain-review') {
-
     dependencies {
         implementation project(':module-domain:domain-member')
         implementation project(':module-domain:domain-webtoon')
         implementation project(':module-domain:domain-common')
         implementation project(':module-common')
     }
+    bootJar.enabled = false
 }
 
 
 project(':module-domain:domain-webtoon') {
-
     dependencies {
         implementation project(':module-domain:domain-member')
         implementation project(':module-domain:domain-common')
 
         implementation project(':module-common')
     }
+    bootJar.enabled = false
 }
 
 project(':module-domain:domain-member-engagement') {
-
     dependencies {
         implementation project(':module-domain:domain-member')
         implementation project(':module-domain:domain-common')
         implementation project(':module-domain:domain-webtoon')
         implementation project(':module-common')
     }
+    bootJar.enabled = false
 }
 
 project(':module-domain:domain-toon-collection') {
@@ -44,4 +44,5 @@ project(':module-domain:domain-toon-collection') {
         implementation project(':module-domain:domain-webtoon')
         implementation project(':module-common')
     }
+    bootJar.enabled = false
 }

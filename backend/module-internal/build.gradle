@@ -1,19 +1,30 @@
+sourceSets {
+    main {
+        java {
+            srcDirs = []
+        }
+    }
+}
+
 project(':module-internal:client-auth') {
     dependencies {
         implementation project(':module-common')
     }
+    bootJar.enabled = false
 }
 
 project(':module-internal:client-storage') {
     dependencies {
         implementation project(':module-common')
     }
+    bootJar.enabled = false
 }
 
 project(':module-internal:core-exception') {
     dependencies {
         implementation project(':module-common')
     }
+    bootJar.enabled = false
 }
 
 project(':module-internal:core-security') {
@@ -22,22 +33,26 @@ project(':module-internal:core-security') {
         implementation project(':module-domain:domain-member')
         implementation project(':module-domain:domain-common')
     }
+    bootJar.enabled = false
 }
 
 project(':module-internal:core-web') {
     dependencies {
         implementation project(':module-common')
     }
+    bootJar.enabled = false
 }
 
 project(':module-internal:event-sqs') {
     dependencies {
         implementation project(':module-common')
     }
+    bootJar.enabled = false
 }
 
 project(':module-internal:event-webhook') {
     dependencies {
         implementation project(':module-common')
     }
+    bootJar.enabled = false
 }

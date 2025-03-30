@@ -9,7 +9,7 @@ buildscript {
 
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath "io.spring.gradle:dependency-management-plugin:1.1.2"
+        classpath "io.spring.gradle:dependency-management-plugin:1.1.4"
     }
 }
 
@@ -35,9 +35,27 @@ subprojects {
 
         // Testing
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation platform('org.junit:junit-bom:5.10.0')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
     }
 
     test {
         useJUnitPlatform()
     }
+}
+
+project(':module-application') {
+    bootJar.enabled = false
+}
+
+project(':module-domain') {
+    bootJar.enabled = false
+}
+
+project(':module-internal') {
+    bootJar.enabled = false
+}
+
+project(':module-common') {
+    bootJar.enabled = false
 }
