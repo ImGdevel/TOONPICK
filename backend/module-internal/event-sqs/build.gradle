@@ -1,0 +1,11 @@
+
+dependencies {
+    // Cloud AWS
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
+    implementation 'software.amazon.awssdk:sqs:2.20.131'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

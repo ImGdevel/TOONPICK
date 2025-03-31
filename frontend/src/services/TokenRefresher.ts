@@ -60,7 +60,7 @@ const TokenRefresher = {
    */
   refreshAccessToken: async (): Promise<string> => {
     try {
-      const response = await api.post('/api/reissue', {}, { withCredentials: true });
+      const response = await api.post('/reissue', {}, { withCredentials: true });
       const newAccessToken = TokenManager.extractAccessTokenFromHeader(response.headers);
 
       if (newAccessToken) {
