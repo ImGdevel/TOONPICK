@@ -2,6 +2,7 @@ import { api, Response } from '@api';
 import TokenManager from '@services/TokenManager';
 import TokenRefresher from '@services/TokenRefresher';
 import Logger from '@utils/Logger';
+import Cookies from 'js-cookie';
 
 export const AuthService = {
   // 로그인
@@ -44,8 +45,8 @@ export const AuthService = {
   // 로그아웃
   logout: async (logoutCallback?: () => void): Promise<Response> => {
     try {
-      await api.post('/logout');
       TokenManager.clearAccessToken();
+      await api.post('/logout');
       logoutCallback?.();
       return { success: true };
     } catch (error: any) {
@@ -62,9 +63,17 @@ export const AuthService = {
 
   // 소셜 로그인
   socialLogin: (provider: string): void => {
-    const loginUrl = `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/oauth2/authorization/${provider}`;
-    window.location.href = loginUrl;
+      const redirectUri = window.location.origin + '/login-success';
+  
+      // redirect_uri를 쿠키에 저장 (유효기간: 5분)
+      Cookies.set('redirect_uri', redirectUri, { path: '/', expires: 1 / 288 });
+  
+      // OAuth2 로그인 요청 (redirect_uri는 URL에서 제거)
+      const loginUrl = `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/oauth2/authorization/${provider}`;
+      window.location.href = loginUrl;
   },
+  
+
 
   // 소셜 로그인 콜백 처리
   handleSocialLoginCallback: async (loginCallback?: () => void): Promise<Response> => {

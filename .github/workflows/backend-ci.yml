@@ -6,7 +6,6 @@ on:
       - main
       - develop
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -42,14 +41,14 @@ jobs:
       - name: 빌드 결과 검증 (JAR 파일 확인)
         run: |
           echo "=== Gradle Build 완료 후 JAR 파일 위치 확인 ==="
-          find backend/build/libs -type f -name "*.jar"
-          ls -al backend/build/libs
+          find backend/module-application/toonpick-app-api/build/libs -type f -name "*.jar"
+          ls -al backend/module-application/toonpick-app-api/build/libs
 
       - name: 빌드된 JAR 파일 업로드 (아티팩트 저장)
         uses: actions/upload-artifact@v4
         with:
           name: backend-jar
-          path: backend/build/libs/toonpick-0.0.1-SNAPSHOT.jar
+          path: backend/module-application/toonpick-app-api/build/libs/toonpick-0.0.1-SNAPSHOT.jar
 
   docker:
     needs: build
@@ -66,7 +65,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-jar
-          path: backend/build/libs
+          path: backend/module-application/toonpick-app-api/build/libs
 
       - name: Docker Build & Push
         env:
@@ -91,4 +90,4 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: "backend-cd.yml"
-          token: ${{ secrets.PAT_TOKEN }} 
+          token: ${{ secrets.PAT_TOKEN }}

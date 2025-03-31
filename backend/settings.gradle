@@ -1,1 +1,51 @@
-rootProject.name = 'TOONPICK'
+rootProject.name = 'toonpick'
+
+// 애플리케이션 모듈
+include 'module-application'
+
+include 'module-application:toonpick-app-api'
+findProject(':module-application:toonpick-app-api')?.name = 'toonpick-app-api'
+include 'module-application:toonpick-app-batch'
+findProject(':module-application:toonpick-app-batch')?.name = 'toonpick-app-batch'
+include 'module-application:toonpick-app-worker'
+findProject(':module-application:toonpick-app-worker')?.name = 'toonpick-app-worker'
+include 'module-application:toonpick-app-admin'
+findProject(':module-application:toonpick-app-admin')?.name = 'toonpick-app-admin'
+
+// 도데인 모듈
+include 'module-domain'
+
+include 'module-domain:domain-member'
+findProject(':module-domain:domain-member')?.name = 'domain-member'
+include 'module-domain:domain-webtoon'
+findProject(':module-domain:domain-webtoon')?.name = 'domain-webtoon'
+include 'module-domain:domain-common'
+findProject(':module-domain:domain-common')?.name = 'domain-common'
+include 'module-domain:domain-review'
+findProject(':module-domain:domain-review')?.name = 'domain-review'
+include 'module-domain:domain-member-engagement'
+findProject(':module-domain:domain-member-engagement')?.name = 'domain-member-engagement'
+include 'module-domain:domain-toon-collection'
+findProject(':module-domain:domain-toon-collection')?.name = 'domain-toon-collection'
+
+// 내부 모듈
+include 'module-internal'
+
+include 'module-internal:core-security'
+findProject(':module-internal:core-security')?.name = 'core-security'
+include 'module-internal:core-exception'
+findProject(':module-internal:core-exception')?.name = 'core-exception'
+include 'module-internal:client-storage'
+findProject(':module-internal:client-storage')?.name = 'client-storage'
+include 'module-internal:event-sqs'
+findProject(':module-internal:event-sqs')?.name = 'event-sqs'
+include 'module-internal:event-webhook'
+findProject(':module-internal:event-webhook')?.name = 'event-webhook'
+include 'module-internal:client-auth'
+findProject(':module-internal:client-auth')?.name = 'client-auth'
+include 'module-internal:core-web'
+findProject(':module-internal:core-web')?.name = 'core-web'
+
+// 공통 모듈
+include 'module-common'
+
