@@ -35,7 +35,7 @@ const App: React.FC = () => {
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/mypage" element={<MyProfilePage />} />
             <Route path="/profile/edit" element={<ProfileEditPage />} />
-            <Route path="/refresh" element={<SocialLoginCallbackPage />} />
+            <Route path="/login-success" element={<SocialLoginCallbackPage />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>
         </main>

@@ -32,6 +32,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestUri = request.getRequestURI();
+        logger.info("url: {}", requestUri);
 
         try {
             // 요청 헤더에서 Access Token 확인
