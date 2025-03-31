@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - main
   pull_request:
     branches:
       - main
@@ -51,3 +52,4 @@ jobs:
         with:
           name: backend-jar
           path: backend/module-application/toonpick-app-api/build/libs/toonpick-0.0.1-SNAPSHOT.jar
+          retention-days: 3
