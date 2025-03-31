@@ -44,8 +44,8 @@ export const AuthService = {
   // 로그아웃
   logout: async (logoutCallback?: () => void): Promise<Response> => {
     try {
-      await api.post('/logout');
       TokenManager.clearAccessToken();
+      await api.post('/logout');
       logoutCallback?.();
       return { success: true };
     } catch (error: any) {

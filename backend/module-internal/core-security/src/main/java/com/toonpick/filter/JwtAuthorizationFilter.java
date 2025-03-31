@@ -27,20 +27,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
-    // todo : 문제 상황) 인증 헤더 검증은 언제 이루어져야하는가?
-    // todo : 방법1과 아래 방법2를 비교하여 어떤 방법이 가장 효율적인지 체크할 것
-    // todo : 추후 다른 대안을 모색하거나 선택된 방법 이외의 코드는 제거할 것
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // todo : 방법 1. 인증이 필요 없는 경로 건너뛰기 (임시)
         String requestUri = request.getRequestURI();
-        if (requestUri.startsWith("/oauth2/") || requestUri.startsWith("/api/public/") || requestUri.equals("/login")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         try {
             // 요청 헤더에서 Access Token 확인
@@ -61,7 +52,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
 
         } catch (ExpiredJwtTokenException | InvalidJwtTokenException | MissingJwtTokenException e){
-            // todo : 방법 2. 잘못된 JWT의 경우 세션 정보를 지우고 다음 필터로 전송
             logger.warn("Invalid JWT Token {}", e.getMessage());
             SecurityContextHolder.clearContext();
         } catch (Exception e) {

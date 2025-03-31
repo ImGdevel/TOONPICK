@@ -22,17 +22,26 @@ public class TokenService {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
+    /**
+     * Access Token 발급
+     */
     public String issueAccessToken(String username, String role){
         String newAccessToken = jwtTokenProvider.createAccessToken(username, role);
         return newAccessToken;
     }
 
+    /**
+     * Refresh Token 발급
+     */
     public String issueRefreshToken(String username, String role){
         String newRefreshToken = jwtTokenProvider.createRefreshToken(username,role);
         saveRefreshToken(username, newRefreshToken);
         return newRefreshToken;
     }
 
+    /**
+     * Access Token 재발급
+     */
     public String reissueAccessToken(String refreshToken) {
         // Refresh 토큰 유효 검증
         refreshTokenRepository.findById(refreshToken)
@@ -48,6 +57,9 @@ public class TokenService {
         return newAccessToken;
     }
 
+    /**
+     * Refresh Token 재발급
+     */
     public String reissueRefreshToken(String refreshToken) {
         // Refresh 토큰 유효 검증
         refreshTokenRepository.findById(refreshToken)
@@ -58,7 +70,7 @@ public class TokenService {
         String username = jwtTokenProvider.getUsername(refreshToken);
         String role = jwtTokenProvider.getRole(refreshToken);
 
-        String newRefreshToken = jwtTokenProvider.createAccessToken(username, role);
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(username, role);
 
         // Refresh Token 저장소에 갱신
         deleteRefreshToken(refreshToken);

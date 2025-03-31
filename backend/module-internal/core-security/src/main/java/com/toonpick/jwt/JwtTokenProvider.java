@@ -3,6 +3,8 @@ package com.toonpick.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,8 @@ public class JwtTokenProvider {
     private final long accessTokenExpiration;
 
     private final long refreshTokenExpiration;
+
+    private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     public JwtTokenProvider(@Value("${spring.jwt.secret}") String secret,
                             @Value("${spring.jwt.access-token-expiration}") long accessTokenExpiration,

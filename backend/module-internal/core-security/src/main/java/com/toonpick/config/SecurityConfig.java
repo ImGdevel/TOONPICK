@@ -7,6 +7,7 @@ import com.toonpick.handler.LoginFailureHandler;
 import com.toonpick.handler.LoginSuccessHandler;
 import com.toonpick.handler.LogoutHandler;
 import com.toonpick.handler.OAuth2SuccessHandler;
+import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.service.OAuth2UserService;
 import com.toonpick.utils.ErrorResponseSender;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,8 @@ public class SecurityConfig {
     private final LogoutHandler logoutHandler;
     private final ErrorResponseSender errorResponseSender;
 
+    private final JwtTokenProvider jwtTokenProvider;
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -67,9 +70,11 @@ public class SecurityConfig {
                 .successHandler(oAuth2SuccessHandler)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/join", "/reissue", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/api/**").permitAll()
-                .requestMatchers("/hello").hasRole("USER")
+                .requestMatchers("/", "/login", "/join", "/logout", "/reissue", "/oauth2/*", "/api/public/*").permitAll()
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
+                .requestMatchers("/api/secure/*").hasRole("USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
+                .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterAt(

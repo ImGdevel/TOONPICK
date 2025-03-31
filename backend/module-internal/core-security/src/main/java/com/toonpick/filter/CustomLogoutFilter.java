@@ -1,7 +1,10 @@
 
 package com.toonpick.filter;
 
+import com.toonpick.exception.ExpiredJwtTokenException;
+import com.toonpick.exception.InvalidJwtTokenException;
 import com.toonpick.handler.LogoutHandler;
+import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.utils.ErrorResponseSender;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,6 +13,8 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.GenericFilterBean;
 import com.toonpick.jwt.JwtTokenValidator;
 
@@ -22,6 +27,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
     private final JwtTokenValidator tokenValidator;
     private final LogoutHandler logoutHandler;
     private final ErrorResponseSender errorResponseSender;
+
+    private final Logger logger = LoggerFactory.getLogger(CustomLogoutFilter.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -41,9 +48,14 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         try {
-            // 쿠키에서 Refresh Token 추출및 검증
             String refreshToken = tokenValidator.extractRefreshTokenFromCookies(httpRequest);
-            tokenValidator.validateRefreshToken(refreshToken);
+            if (refreshToken != null) {
+                try {
+                    tokenValidator.validateRefreshToken(refreshToken);
+                } catch (InvalidJwtTokenException | ExpiredJwtTokenException e) {
+                    logger.warn("Ignoring invalid/expired refresh token during logout: {}", e.getMessage());
+                }
+            }
 
             // 로그아웃
             logoutHandler.handleLogout(refreshToken, httpResponse);

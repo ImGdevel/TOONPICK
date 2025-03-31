@@ -33,7 +33,7 @@ public class TokenReissueController {
     private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
 
     @Operation(summary = "access 토큰 재발급", description = "refresh 토큰을 통해 access 토큰 재발급")
-    @PostMapping("/api/reissue")
+    @PostMapping("/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
         try {
             // 쿠키에서 refresh token 추출 및 검증
