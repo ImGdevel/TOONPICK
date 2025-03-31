@@ -1,6 +1,14 @@
 package com.toonpick.test.integration.service;
 
+import com.toonpick.entity.Member;
+import com.toonpick.entity.Webtoon;
+import com.toonpick.entity.WebtoonReview;
+import com.toonpick.enums.Platform;
+import com.toonpick.enums.SerializationStatus;
+import com.toonpick.exception.ResourceNotFoundException;
 import com.toonpick.repository.MemberRepository;
+import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.repository.WebtoonReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import com.toonpick.dto.WebtoonReviewCreateDTO;
 import com.toonpick.dto.WebtoonReviewDTO;
-import toonpick.test.domain.member.Member;
-import toonpick.test.domain.webtoon.Webtoon;
-import toonpick.test.domain.review.WebtoonReview;
-import toonpick.entity.enums.Platform;
-import toonpick.entity.enums.SerializationStatus;
-import com.toonpick.exception.ResourceNotFoundException;
-import toonpick.test.repository.WebtoonRepository;
-import toonpick.test.repository.WebtoonReviewRepository;
 import com.toonpick.service.WebtoonReviewService;
 
 import java.time.DayOfWeek;
