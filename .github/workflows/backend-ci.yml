@@ -33,7 +33,7 @@ jobs:
       - name: Gradle 실행 권한 추가
         run: chmod +x backend/gradlew
 
-      - name: Gradle 빌드
+      - name: Gradle 빌드 및 테스트
         working-directory: backend
         run: |
           ./gradlew clean build -x test --no-daemon --parallel --configure-on-demand
@@ -49,45 +49,3 @@ jobs:
         with:
           name: backend-jar
           path: backend/module-application/toonpick-app-api/build/libs/toonpick-0.0.1-SNAPSHOT.jar
-
-  docker:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 저장소 체크아웃
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.PAT_TOKEN }} 
-
-      - name: 빌드된 JAR 파일 다운로드 (아티팩트 복원)
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-jar
-          path: backend/module-application/toonpick-app-api/build/libs
-
-      - name: Docker Build & Push
-        env:
-          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          REPOSITORY: "toonpick-service-app"
-          IMAGE_TAG: "v0.1.${{ github.run_number }}"
-        run: |
-          echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-          
-          echo "=== Docker Build 시작 ==="
-          docker build \
-            --cache-from $DOCKER_HUB_USERNAME/$REPOSITORY:latest \
-            -t $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG \
-            -t $DOCKER_HUB_USERNAME/$REPOSITORY:latest \
-            -f backend/Dockerfile .
-
-          docker push $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG
-          docker push $DOCKER_HUB_USERNAME/$REPOSITORY:latest
-
-      - name: CD Pipeline 실행 트리거
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: "backend-cd.yml"
-          token: ${{ secrets.PAT_TOKEN }}
