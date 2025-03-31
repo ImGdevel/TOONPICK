@@ -49,5 +49,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-jar
-          path: backend/module-application/toonpick-app-api/build/libs/*.jar
+          path: backend/module-application/toonpick-app-api/build/libs/toonpick-0.0.1-SNAPSHOT.jar
           retention-days: 3
