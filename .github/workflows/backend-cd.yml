@@ -9,74 +9,71 @@ on:
         default: 'latest'
 
 jobs:
-  trigger-ci:
-    runs-on: ubuntu-latest
-    steps:
-      - name: CI 파이프라인 트리거
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.PAT_TOKEN }}
-          script: |
-            async function main() {
-              const workflowId = 141793296;
-              const response = await github.rest.actions.createWorkflowDispatch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: workflowId,
-                ref: 'main'
-              });
-              console.log('CI 파이프라인 트리거 완료:', response.status);
-            }
-            main();
-
-  wait-for-ci:
-    runs-on: ubuntu-latest
-    needs: trigger-ci
-    steps:
-      - name: CI 완료 대기
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.PAT_TOKEN }}
-          script: |
-            async function main() {
-              const workflowId = 141793296;
-              while (true) {
-                const runs = await github.rest.actions.listWorkflowRuns({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  workflow_id: workflowId,
-                  branch: 'main',
-                  status: 'in_progress'
-                });
-                if (runs.data.workflow_runs.length === 0) {
-                  console.log('CI 파이프라인 완료!');
-                  break;
-                }
-                console.log('CI 파이프라인 실행 중...');
-                await new Promise(r => setTimeout(r, 10000));
-              }
-            }
-            main();
-
-  docker-build-and-push:
-    needs: wait-for-ci
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: 저장소 체크아웃
         uses: actions/checkout@v3
         with:
+          token: ${{ secrets.PAT_TOKEN }} 
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+      - name: Gradle 캐시 설정 (빌드 최적화)
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Gradle 실행 권한 추가
+        run: chmod +x backend/gradlew
+
+      - name: Gradle 빌드 및 테스트
+        working-directory: backend
+        run: |
+          ./gradlew clean build -x test --no-daemon --parallel --configure-on-demand
+
+      - name: 빌드 결과 검증 (JAR 파일 확인)
+        run: |
+          echo "=== Gradle Build 완료 후 JAR 파일 위치 확인 ==="
+          find backend/module-application/toonpick-app-api/build/libs -type f -name "*.jar"
+          ls -al backend/module-application/toonpick-app-api/build/libs
+
+      - name: 빌드된 JAR 파일 업로드 (아티팩트 저장)
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/module-application/toonpick-app-api/build/libs/*.jar
+          retention-days: 3
+
+
+  docker-build-and-push:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v3
+        with:
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: 빌드된 JAR 파일 다운로드 (아티팩트 복원)
+      - name: 빌드된 JAR 파일 다운로드 (올바른 실행 ID 사용)
         uses: actions/download-artifact@v4
         with:
           name: backend-jar
           path: backend/module-application/toonpick-app-api/build/libs
+          repository: ImGdevel/TOONPICK
+          run-id: ${{ needs.wait-for-ci.outputs.ci_run_id }}
 
       - name: 다운로드된 JAR 파일 확인
         run: ls -al backend/module-application/toonpick-app-api/build/libs
-
+  
       - name: Docker Build & Push
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -95,6 +92,7 @@ jobs:
 
           docker push $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG
           docker push $DOCKER_HUB_USERNAME/$REPOSITORY:latest
+
 
   deploy:
     needs: docker-build-and-push
