@@ -1,10 +1,9 @@
 name: TOONPICK Backend CD Pipeline
 
 on:
-  workflow_run:
-    workflows: ["TOONPICK Backend CI Pipeline"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -60,6 +59,8 @@ jobs:
             cd ~/TOONPICK
 
             echo "최신 Docker Image Pull & 배포 시작..."
+            docker-compose down
+
             docker pull $DOCKER_HUB_USERNAME/toonpick-service-app:latest
 
-            docker-compose up -d
+            docker-compose up -d --force-recreate

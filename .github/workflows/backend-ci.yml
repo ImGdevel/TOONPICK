@@ -3,8 +3,10 @@ name: TOONPICK Backend CI Pipeline
 on:
   push:
     branches:
-      - main
       - develop
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
