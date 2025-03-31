@@ -8,9 +8,47 @@ on:
         required: true
         default: 'latest'
 
-
 jobs:
+  trigger-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CI 파이프라인 트리거
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const response = await github.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'CI.yaml',
+              ref: 'main'
+            });
+            console.log('CI 파이프라인 트리거 완료:', response.status);
+
+  wait-for-ci:
+    runs-on: ubuntu-latest
+    needs: trigger-ci
+    steps:
+      - name: CI 완료 대기
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const run = await github.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'CI.yaml',
+              branch: 'main',
+              status: 'in_progress'
+            });
+            while (run.data.workflow_runs.length > 0) {
+              console.log('CI 파이프라인 실행 중... 대기 중');
+              await new Promise(r => setTimeout(r, 10000));  # 10초 대기
+            }
+            console.log('CI 파이프라인 완료!');
+
   docker-build-and-push:
+    needs: wait-for-ci
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +68,7 @@ jobs:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
           REPOSITORY: "toonpick-service-app"
-          IMAGE_TAG: "v0.1.${{ github.run_number }}"
+          IMAGE_TAG: "${{ github.event.inputs.version }}"
         run: |
           echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
 
@@ -65,5 +103,6 @@ jobs:
             docker-compose down
 
             docker pull $DOCKER_HUB_USERNAME/toonpick-service-app:latest
+            docker pull $DOCKER_HUB_USERNAME/toonpick-service-app:${{ github.event.inputs.version }}
 
             docker-compose up -d --force-recreate

@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -51,5 +52,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-jar
-          path: backend/module-application/toonpick-app-api/build/libs/toonpick-0.0.1-SNAPSHOT.jar
+          path: backend/module-application/toonpick-app-api/build/libs/*.jar
           retention-days: 3
