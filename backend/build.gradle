@@ -50,12 +50,15 @@ project(':module-application') {
 
 project(':module-domain') {
     bootJar.enabled = false
+    jar.enabled = true
 }
 
 project(':module-internal') {
     bootJar.enabled = false
+    jar.enabled = true
 }
 
 project(':module-common') {
     bootJar.enabled = false
+    jar.enabled = true
 }

@@ -59,13 +59,13 @@ class MemberServiceTest {
         profileResponseDTO = MemberProfileResponseDTO.builder()
                 .username("testuser")
                 .nickname("newNickname")
-                .profilePicture("newProfileImageUrl")
+                .profileImage("newProfileImageUrl")
                 .build();
 
         profileDetailsResponseDTO = MemberProfileDetailsResponseDTO.builder()
                 .username("testuser")
                 .nickname("newNickname")
-                .profilePicture("newProfileImageUrl")
+                .profileImage("newProfileImageUrl")
                 .email("testuser@example.com")
                 .isAdultVerified(true)
                 .level(0)
@@ -86,7 +86,7 @@ class MemberServiceTest {
         assertNotNull(result);
         assertEquals("testuser", result.getUsername());
         assertEquals("newNickname", result.getNickname());
-        assertEquals("newProfileImageUrl", result.getProfilePicture());
+        assertEquals("newProfileImageUrl", result.getProfileImage());
     }
 
     @DisplayName("존재하지 않는 사용자 프로필 조회 예외 단위 테스트")
@@ -113,7 +113,7 @@ class MemberServiceTest {
         assertNotNull(result);
         assertEquals("testuser", result.getUsername());
         assertEquals("newNickname", result.getNickname());
-        assertEquals("newProfileImageUrl", result.getProfilePicture());
+        assertEquals("newProfileImageUrl", result.getProfileImage());
         assertEquals("testuser@example.com", result.getEmail());
         assertTrue(result.getIsAdultVerified());
         assertEquals(0, result.getLevel());
@@ -183,7 +183,7 @@ class MemberServiceTest {
         when(memberMapper.memberToMemberResponseDTO(member)).thenReturn(MemberResponseDTO.builder()
                 .username("testuser")
                 .nickname("newNickname")
-                .profilePicture("newProfileImageUrl")
+                .profileImage("newProfileImageUrl")
                 .email("testuser@example.com")
                 .isAdultVerified(true)
                 .level(0)
@@ -196,7 +196,7 @@ class MemberServiceTest {
         assertNotNull(result);
         assertEquals("testuser", result.getUsername());
         assertEquals("newNickname", result.getNickname());
-        assertEquals("newProfileImageUrl", result.getProfilePicture());
+        assertEquals("newProfileImageUrl", result.getProfileImage());
         assertEquals("testuser@example.com", result.getEmail());
         assertTrue(result.getIsAdultVerified());
         assertEquals(0, result.getLevel());

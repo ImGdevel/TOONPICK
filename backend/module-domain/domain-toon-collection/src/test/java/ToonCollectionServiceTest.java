@@ -70,7 +70,7 @@ class ToonCollectionServiceTest {
                 .member(MemberProfileResponseDTO.builder()
                         .username("testuser")
                         .nickname("Test Nickname")
-                        .profilePicture("profile.jpg")
+                        .profileImage("profile.jpg")
                         .level(1)
                         .build())
                 .webtoons(List.of(WebtoonResponseDTO.builder()

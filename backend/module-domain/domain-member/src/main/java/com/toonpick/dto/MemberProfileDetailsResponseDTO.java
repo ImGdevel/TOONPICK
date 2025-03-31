@@ -8,7 +8,7 @@ import lombok.Data;
 public class MemberProfileDetailsResponseDTO {
     private String username;
     private String nickname;
-    private String profilePicture;
+    private String profileImage;
     private String email;
     private Boolean isAdultVerified;
     private int level;

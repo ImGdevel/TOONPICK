@@ -8,6 +8,6 @@ import lombok.Data;
 public class MemberProfileResponseDTO {
     private String username;
     private String nickname;
-    private String profilePicture;
+    private String profileImage;
     private int level;
 }
