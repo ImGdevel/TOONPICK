@@ -24,7 +24,7 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
 
-      - name: Gradle 캐시 설정 (빌드 최적화)
+      - name: Gradle 캐시 설정 / 빌드 최적화
         uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
@@ -39,12 +39,6 @@ jobs:
         working-directory: backend
         run: |
           ./gradlew clean build -x test --no-daemon --parallel --configure-on-demand
-
-      - name: 빌드 결과 검증 (JAR 파일 확인)
-        run: |
-          echo "=== Gradle Build 완료 후 JAR 파일 위치 확인 ==="
-          find backend/module-application/toonpick-app-api/build/libs -type f -name "*.jar"
-          ls -al backend/module-application/toonpick-app-api/build/libs
 
       - name: 빌드된 JAR 파일 업로드 (아티팩트 저장)
         uses: actions/upload-artifact@v4
@@ -63,17 +57,12 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: 빌드된 JAR 파일 다운로드 (올바른 실행 ID 사용)
+      - name: 빌드된 JAR 파일 다운로드
         uses: actions/download-artifact@v4
         with:
           name: backend-jar
           path: backend/module-application/toonpick-app-api/build/libs
-          repository: ImGdevel/TOONPICK
-          run-id: ${{ needs.wait-for-ci.outputs.ci_run_id }}
 
-      - name: 다운로드된 JAR 파일 확인
-        run: ls -al backend/module-application/toonpick-app-api/build/libs
-  
       - name: Docker Build & Push
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -99,10 +88,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: EC2에 SSH 접속하여 배포 실행
+      - name: AWS 자격증명 설정
+        run: |
+          mkdir -p ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+
+          echo "[default]" > ~/.aws/config
+          echo "region = ap-northeast-2" >> ~/.aws/config
+
+      - name: 새로운 EC2 인스턴스 생성
+        run: |
+          INSTANCE_ID=$(aws ec2 run-instances \
+            --region ap-northeast-2 \
+            --image-id ${{ secrets.BASE_AMI_ID }} \
+            --instance-type t2.micro \
+            --key-name ${{ secrets.EC2_KEY }} \
+            --security-group-ids ${{ secrets.SECURITY_GROUP_ID }} \
+            --subnet-id ${{ secrets.SUBNET_ID }} \
+            --query 'Instances[?State.Name==`pending`].InstanceId' \
+            --output text)
+
+          echo "INSTANCE_ID=${INSTANCE_ID}" >> $GITHUB_ENV
+          echo "새로운 EC2 인스턴스 생성 완료: ${INSTANCE_ID}"
+
+      - name: 새로운 EC2 인스턴스 public IP 획득
+        run: |
+          sleep 30  # 인스턴스 생성 대기
+          
+          NEW_INSTANCE_IP=$(aws ec2 describe-instances \
+            --instance-ids $INSTANCE_ID \
+            --query 'Reservations[0].Instances[0].PublicIpAddress' \
+            --output text)
+
+          echo "NEW_INSTANCE_IP=${NEW_INSTANCE_IP}" >> $GITHUB_ENV
+          echo "새로운 인스턴스 IP: ${NEW_INSTANCE_IP}"
+
+      - name: 새로운 EC2에 SSH 접속하여 배포 실행
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{ env.NEW_INSTANCE_IP }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
@@ -111,12 +137,48 @@ jobs:
 
             cd ~/TOONPICK
 
-            echo "기존 컨테이너 중지 및 제거..."
-            docker-compose down || true
-
             echo "최신 Docker Image Pull..."
             docker pull $DOCKER_HUB_USERNAME/toonpick-service-app:latest
-            docker pull $DOCKER_HUB_USERNAME/toonpick-service-app:${{ github.event.inputs.version }}
 
-            echo "Docker 컨테이너 재배포..."
+            echo "Docker 컨테이너 실행..."
             docker-compose up -d --force-recreate
+
+      - name: 새로운 AMI 생성
+        run: |
+          NEW_AMI_ID=$(aws ec2 create-image \
+            --instance-id $INSTANCE_ID \
+            --name "ToonPick-AMI-${{ github.run_id }}" \
+            --no-reboot \
+            --query 'ImageId' \
+            --output text)
+
+          echo "NEW_AMI_ID=${NEW_AMI_ID}" >> $GITHUB_ENV
+          echo "새로운 AMI 생성 완료: ${NEW_AMI_ID}"
+
+      - name: 임시 EC2 인스턴스 중지 및 종료
+        run: |
+          echo "AMI 생성이 완료되었으므로 임시 인스턴스를 종료합니다."
+          
+          aws ec2 terminate-instances --instance-ids $INSTANCE_ID
+          
+          echo "임시 인스턴스 종료 요청 완료: ${INSTANCE_ID}"
+
+      - name: 시작 템플릿(Launch Template) 업데이트
+        run: |
+          NEW_VERSION=$(aws ec2 create-launch-template-version \
+            --launch-template-id ${{ secrets.LAUNCH_TEMPLATE_ID }} \
+            --version-description "Updated AMI" \
+            --source-version 1 \
+            --launch-template-data "{\"ImageId\":\"${{ env.NEW_AMI_ID }}\"}" \
+            --query 'LaunchTemplateVersion.VersionNumber' \
+            --output text)
+
+          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+          echo "새로운 Launch Template 버전 생성 완료: ${NEW_VERSION}"
+
+      - name: Auto Scaling 그룹 업데이트
+        run: |
+          aws autoscaling update-auto-scaling-group \
+            --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
+            --launch-template LaunchTemplateId=${{ secrets.LAUNCH_TEMPLATE_ID }},Version=$NEW_VERSION
+  
