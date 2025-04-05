@@ -1,20 +1,20 @@
 package com.toonpick.service;
 
 import com.toonpick.dto.MemberDTO;
+import com.toonpick.dto.OAuth2Response;
 import com.toonpick.dto.oauth2responseImpl.GoogleResponse;
 import com.toonpick.dto.oauth2responseImpl.NaverResponse;
 import com.toonpick.entity.Member;
 import com.toonpick.enums.MemberRole;
 import com.toonpick.mapper.MemberMapper;
 import com.toonpick.repository.MemberRepository;
+import com.toonpick.user.CustomOAuth2UserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import com.toonpick.user.CustomOAuth2UserDetails;
-import com.toonpick.dto.OAuth2Response;
 
 import java.util.Map;
 

@@ -6,7 +6,7 @@ import com.toonpick.entity.RefreshToken;
 
 public interface RefreshTokenRepository extends CrudRepository<RefreshToken, String> {
 
-    void deleteByToken(String token);
+    void deleteById(String token);
 
     Iterable<RefreshToken> findAll();
 }

@@ -67,11 +67,11 @@ public class Member extends BaseTimeEntity {
     private LocalDateTime lastLoginAt;
 
     // 로그인 실패 횟수
-    @Column(name = "login_fail_count")
+    @Column(name = "login_fail_count", nullable = false)
     private int loginFailCount = 0;
 
     // 이메일 인증 여부
-    @Column(name = "is_email_verified")
+    @Column(name = "is_email_verified", nullable = false)
     private boolean isEmailVerified = false;
 
     // 정보 제공 동의

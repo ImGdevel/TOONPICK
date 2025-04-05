@@ -1,5 +1,6 @@
 package com.toonpick.service;
 
+import com.toonpick.dto.JoinRequest;
 import com.toonpick.entity.Member;
 import com.toonpick.enums.MemberRole;
 import com.toonpick.exception.UserAlreadyRegisteredException;
@@ -11,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.toonpick.dto.JoinRequest;
 
 import java.util.Random;
 

@@ -30,7 +30,7 @@ public class RefreshTokenService {
      * 리프레시 토큰 삭제
      */
     public void deleteToken(String token) {
-        refreshTokenRepository.deleteByToken(token);
+        refreshTokenRepository.deleteById(token);
     }
 
     /**
