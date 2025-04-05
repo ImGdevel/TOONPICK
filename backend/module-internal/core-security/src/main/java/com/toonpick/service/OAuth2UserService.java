@@ -4,7 +4,7 @@ import com.toonpick.dto.MemberDTO;
 import com.toonpick.dto.oauth2responseImpl.GoogleResponse;
 import com.toonpick.dto.oauth2responseImpl.NaverResponse;
 import com.toonpick.entity.Member;
-import com.toonpick.entity.MemberRole;
+import com.toonpick.enums.MemberRole;
 import com.toonpick.mapper.MemberMapper;
 import com.toonpick.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

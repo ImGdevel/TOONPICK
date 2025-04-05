@@ -1,7 +1,7 @@
 package entity;
 
 import com.toonpick.entity.Member;
-import com.toonpick.entity.MemberRole;
+import com.toonpick.enums.MemberRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

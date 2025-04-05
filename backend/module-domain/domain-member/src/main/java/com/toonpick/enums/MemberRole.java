@@ -1,4 +1,4 @@
-package com.toonpick.entity;
+package com.toonpick.enums;
 
 import lombok.AccessLevel;
 import lombok.Getter;

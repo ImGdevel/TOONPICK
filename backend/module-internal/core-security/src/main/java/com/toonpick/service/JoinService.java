@@ -1,7 +1,7 @@
 package com.toonpick.service;
 
 import com.toonpick.entity.Member;
-import com.toonpick.entity.MemberRole;
+import com.toonpick.enums.MemberRole;
 import com.toonpick.exception.UserAlreadyRegisteredException;
 import com.toonpick.repository.MemberRepository;
 import com.toonpick.type.ErrorCode;
