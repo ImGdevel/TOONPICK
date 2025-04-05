@@ -6,10 +6,9 @@ import com.toonpick.filter.LoginAuthenticationFilter;
 import com.toonpick.handler.LoginFailureHandler;
 import com.toonpick.handler.LoginSuccessHandler;
 import com.toonpick.handler.LogoutHandler;
+import com.toonpick.handler.OAuth2SuccessHandler;
 import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.toonpick.utils.ErrorResponseSender;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -40,7 +38,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtTokenValidator jwtTokenValidator;
     private final DefaultOAuth2UserService oAuth2UserService;
-    private final SimpleUrlAuthenticationSuccessHandler oAuth2SuccessHandler;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
     private final LogoutHandler logoutHandler;
@@ -51,8 +49,8 @@ public class SecurityConfig {
             AuthenticationConfiguration authenticationConfiguration,
             JwtTokenValidator jwtTokenValidator,
             DefaultOAuth2UserService oAuth2UserService,
-            @Qualifier("OAuth2SuccessHandler") SimpleUrlAuthenticationSuccessHandler oAuth2SuccessHandler,
-            @Qualifier("loginSuccessHandler") LoginSuccessHandler loginSuccessHandler,
+            OAuth2SuccessHandler oAuth2SuccessHandler,
+            LoginSuccessHandler loginSuccessHandler,
             LoginFailureHandler loginFailureHandler,
             LogoutHandler logoutHandler,
             ErrorResponseSender errorResponseSender,

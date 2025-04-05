@@ -1,5 +1,7 @@
-package com.toonpick.auth;
+package com.toonpick.auth.handler;
 
+import com.toonpick.auth.CustomOAuth2UserDetails;
+import com.toonpick.handler.OAuth2SuccessHandler;
 import com.toonpick.jwt.TokenIssuer;
 import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import jakarta.servlet.ServletException;
@@ -19,12 +21,12 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class OAuth2SuccessHandlerImpl extends SimpleUrlAuthenticationSuccessHandler implements OAuth2SuccessHandler {
 
     private final TokenIssuer tokenIssuer;
     private final HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(OAuth2SuccessHandlerImpl.class);
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

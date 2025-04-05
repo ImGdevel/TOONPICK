@@ -6,6 +6,7 @@ import com.toonpick.exception.CustomAuthenticationException;
 import com.toonpick.handler.LoginSuccessHandler;
 import com.toonpick.type.ErrorCode;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -64,13 +65,13 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         // 로그인 성공
         successHandler.onAuthenticationSuccess(request, response, authentication);
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         // 로그인 실패
         failureHandler.onAuthenticationFailure(request, response, failed);
     }

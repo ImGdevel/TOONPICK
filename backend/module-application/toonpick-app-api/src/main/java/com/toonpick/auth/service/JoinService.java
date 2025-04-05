@@ -1,4 +1,4 @@
-package com.toonpick.service;
+package com.toonpick.auth.service;
 
 import com.toonpick.dto.JoinRequest;
 import com.toonpick.entity.Member;
