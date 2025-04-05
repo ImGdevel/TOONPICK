@@ -1,4 +1,4 @@
-package com.toonpick.handler;
+package com.toonpick.auth;
 
 import com.toonpick.jwt.TokenIssuer;
 import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import com.toonpick.user.CustomOAuth2UserDetails;
 import com.toonpick.utils.CookieUtils;
 
 import java.io.IOException;

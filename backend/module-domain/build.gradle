@@ -5,6 +5,15 @@ project(':module-domain:domain-common') {
     bootJar.enabled = false
 }
 
+project(':module-domain:domain-auth') {
+    dependencies {
+        implementation project(':module-common')
+        implementation project(':module-domain:domain-common')
+        implementation project(':module-domain:domain-member')
+    }
+    bootJar.enabled = false
+}
+
 
 project(':module-domain:domain-member') {
     dependencies {

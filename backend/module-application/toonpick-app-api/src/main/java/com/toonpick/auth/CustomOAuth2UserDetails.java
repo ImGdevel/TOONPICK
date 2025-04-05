@@ -1,4 +1,4 @@
-package com.toonpick.user;
+package com.toonpick.auth;
 
 import com.toonpick.dto.MemberDTO;
 import org.springframework.security.core.GrantedAuthority;
