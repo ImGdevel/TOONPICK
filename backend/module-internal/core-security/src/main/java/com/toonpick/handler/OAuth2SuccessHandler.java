@@ -1,5 +1,6 @@
 package com.toonpick.handler;
 
+import com.toonpick.jwt.TokenIssuer;
 import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,7 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import com.toonpick.user.CustomOAuth2UserDetails;
-import com.toonpick.token.TokenService;
 import com.toonpick.utils.CookieUtils;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final TokenService tokenService;
+    private final TokenIssuer tokenIssuer;
     private final HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
@@ -38,7 +38,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .orElse("");
 
         // 토큰 발급 및 쿠키 저장
-        String refreshToken = tokenService.issueRefreshToken(username, role);
+        String refreshToken = tokenIssuer.issueRefreshToken(username, role);
         response.addCookie(CookieUtils.createRefreshCookie(refreshToken));
 
         // 쿠키에서 redirect_uri 가져오기 (없으면 기본값 사용)

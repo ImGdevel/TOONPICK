@@ -5,7 +5,7 @@ import com.toonpick.exception.InvalidJwtTokenException;
 import com.toonpick.exception.MissingJwtTokenException;
 import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.jwt.JwtTokenValidator;
-import com.toonpick.token.TokenService;
+import com.toonpick.jwt.TokenIssuer;
 import com.toonpick.utils.CookieUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TokenReissueController {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final TokenService tokenService;
+    private final TokenIssuer tokenIssuer;
     private final JwtTokenValidator jwtTokenValidator;
 
     private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
@@ -41,12 +41,12 @@ public class TokenReissueController {
             jwtTokenValidator.validateRefreshToken(refreshToken);
 
             // 새로운 Access 토큰 발급
-            String newAccessToken = tokenService.reissueAccessToken(refreshToken);
+            String newAccessToken = tokenIssuer.reissueAccessToken(refreshToken);
             response.setHeader("Authorization", "Bearer " + newAccessToken);
 
             // Refresh 토큰 갱신 필요 여부 확인 및 갱신
             if (jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)) {
-                String newRefreshToken = tokenService.reissueRefreshToken(refreshToken);
+                String newRefreshToken = tokenIssuer.reissueRefreshToken(refreshToken);
                 response.addCookie(CookieUtils.createRefreshCookie(newRefreshToken));
             }
 

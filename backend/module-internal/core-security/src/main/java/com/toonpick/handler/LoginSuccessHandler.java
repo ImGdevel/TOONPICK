@@ -1,5 +1,6 @@
 package com.toonpick.handler;
 
+import com.toonpick.jwt.TokenIssuer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import com.toonpick.token.TokenService;
 import com.toonpick.utils.CookieUtils;
 
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final TokenService tokenService;
+    private final TokenIssuer tokenIssuer;
 
     private static final Logger logger = LoggerFactory.getLogger(LoginSuccessHandler.class);
 
@@ -31,8 +31,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
-        String accessToken = tokenService.issueAccessToken(username, role);
-        String refreshToken = tokenService.issueRefreshToken(username, role);
+        String accessToken = tokenIssuer.issueAccessToken(username, role);
+        String refreshToken = tokenIssuer.issueRefreshToken(username, role);
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(CookieUtils.createRefreshCookie(refreshToken));

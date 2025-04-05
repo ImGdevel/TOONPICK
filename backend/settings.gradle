@@ -48,4 +48,6 @@ findProject(':module-internal:core-web')?.name = 'core-web'
 
 // 공통 모듈
 include 'module-common'
+include 'module-domain:domain-auth'
+findProject(':module-domain:domain-auth')?.name = 'domain-auth'
 

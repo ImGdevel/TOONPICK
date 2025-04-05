@@ -1,10 +1,9 @@
-package com.toonpick.token;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
+package com.toonpick.entity;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 @Builder
 @Getter

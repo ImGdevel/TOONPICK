@@ -1,6 +1,7 @@
-package com.toonpick.token;
+package com.toonpick.auth.service;
 
 import com.toonpick.exception.RefreshTokenNotFoundException;
+import com.toonpick.jwt.TokenIssuer;
 import com.toonpick.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -8,15 +9,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.jwt.JwtTokenValidator;
-
-import java.util.Date;
+import com.toonpick.service.RefreshTokenService;
 
 
 @Service
 @RequiredArgsConstructor
-public class TokenService {
+public class TokenService implements TokenIssuer {
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenValidator jwtTokenValidator;
 
@@ -25,18 +25,17 @@ public class TokenService {
     /**
      * Access Token 발급
      */
-    public String issueAccessToken(String username, String role){
-        String newAccessToken = jwtTokenProvider.createAccessToken(username, role);
-        return newAccessToken;
+    public String issueAccessToken(String username, String role) {
+        return jwtTokenProvider.createAccessToken(username, role);
     }
 
     /**
      * Refresh Token 발급
      */
-    public String issueRefreshToken(String username, String role){
-        String newRefreshToken = jwtTokenProvider.createRefreshToken(username,role);
-        saveRefreshToken(username, newRefreshToken);
-        return newRefreshToken;
+    public String issueRefreshToken(String username, String role) {
+        String refreshToken = jwtTokenProvider.createRefreshToken(username, role);
+        refreshTokenService.saveToken(refreshToken, username, jwtTokenProvider.getExpiration(refreshToken).toString());
+        return refreshToken;
     }
 
     /**
@@ -44,7 +43,7 @@ public class TokenService {
      */
     public String reissueAccessToken(String refreshToken) {
         // Refresh 토큰 유효 검증
-        refreshTokenRepository.findById(refreshToken)
+        refreshTokenService.findByToken(refreshToken)
                 .orElseThrow(() -> new RefreshTokenNotFoundException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
         jwtTokenValidator.validateRefreshToken(refreshToken);
 
@@ -52,9 +51,7 @@ public class TokenService {
         String username = jwtTokenProvider.getUsername(refreshToken);
         String role = jwtTokenProvider.getRole(refreshToken);
 
-        String newAccessToken = jwtTokenProvider.createAccessToken(username, role);
-
-        return newAccessToken;
+        return jwtTokenProvider.createAccessToken(username, role);
     }
 
     /**
@@ -62,7 +59,7 @@ public class TokenService {
      */
     public String reissueRefreshToken(String refreshToken) {
         // Refresh 토큰 유효 검증
-        refreshTokenRepository.findById(refreshToken)
+        refreshTokenService.findByToken(refreshToken)
                 .orElseThrow(() -> new RefreshTokenNotFoundException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
         jwtTokenValidator.validateRefreshToken(refreshToken);
 
@@ -73,29 +70,16 @@ public class TokenService {
         String newRefreshToken = jwtTokenProvider.createRefreshToken(username, role);
 
         // Refresh Token 저장소에 갱신
-        deleteRefreshToken(refreshToken);
-        saveRefreshToken(username, newRefreshToken);
+        refreshTokenService.deleteToken(refreshToken);
+        refreshTokenService.saveToken(newRefreshToken, username, jwtTokenProvider.getExpiration(newRefreshToken).toString());
 
         return newRefreshToken;
     }
 
-    public void saveRefreshToken(String username, String refresh) {
-        Date expirationDate = jwtTokenProvider.getExpiration(refresh);
-        RefreshToken refreshToken = RefreshToken.builder()
-                .token(refresh)
-                .username(username)
-                .expiration(expirationDate.toString())
-                .build();
-
-        refreshTokenRepository.save(refreshToken);
-
-    }
-
+    /**
+     * 토큰 삭제
+     */
     public void deleteRefreshToken(String refreshToken) {
-        refreshTokenRepository.findById(refreshToken)
-                .orElseThrow(() -> new RefreshTokenNotFoundException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
-
-        refreshTokenRepository.deleteById(refreshToken);
+        refreshTokenService.deleteToken(refreshToken);
     }
-
 }
