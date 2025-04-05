@@ -9,6 +9,7 @@ import com.toonpick.handler.LogoutHandler;
 import com.toonpick.handler.OAuth2SuccessHandler;
 import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.toonpick.utils.ErrorResponseSender;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -44,28 +46,6 @@ public class SecurityConfig {
     private final LogoutHandler logoutHandler;
     private final ErrorResponseSender errorResponseSender;
     private final HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository;
-
-    public SecurityConfig(
-            AuthenticationConfiguration authenticationConfiguration,
-            JwtTokenValidator jwtTokenValidator,
-            DefaultOAuth2UserService oAuth2UserService,
-            OAuth2SuccessHandler oAuth2SuccessHandler,
-            LoginSuccessHandler loginSuccessHandler,
-            LoginFailureHandler loginFailureHandler,
-            LogoutHandler logoutHandler,
-            ErrorResponseSender errorResponseSender,
-            HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository
-    ) {
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtTokenValidator = jwtTokenValidator;
-        this.oAuth2UserService = oAuth2UserService;
-        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
-        this.loginSuccessHandler = loginSuccessHandler;
-        this.loginFailureHandler = loginFailureHandler;
-        this.logoutHandler = logoutHandler;
-        this.errorResponseSender = errorResponseSender;
-        this.authorizationRequestRepository = authorizationRequestRepository;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
