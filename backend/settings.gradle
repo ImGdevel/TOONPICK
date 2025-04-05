@@ -50,4 +50,6 @@ findProject(':module-internal:core-web')?.name = 'core-web'
 include 'module-common'
 include 'module-domain:domain-auth'
 findProject(':module-domain:domain-auth')?.name = 'domain-auth'
+include 'module-application:toonpick-app-auth'
+findProject(':module-application:toonpick-app-auth')?.name = 'toonpick-app-auth'
 
