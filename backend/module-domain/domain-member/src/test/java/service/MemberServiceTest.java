@@ -5,7 +5,7 @@ import com.toonpick.dto.MemberProfileRequestDTO;
 import com.toonpick.dto.MemberProfileResponseDTO;
 import com.toonpick.dto.MemberResponseDTO;
 import com.toonpick.entity.Member;
-import com.toonpick.entity.MemberRole;
+import com.toonpick.enums.MemberRole;
 import com.toonpick.mapper.MemberMapper;
 import com.toonpick.repository.MemberRepository;
 import com.toonpick.service.MemberService;
@@ -200,6 +200,143 @@ class MemberServiceTest {
         assertEquals("testuser@example.com", result.getEmail());
         assertTrue(result.getIsAdultVerified());
         assertEquals(0, result.getLevel());
+    }
+
+    @DisplayName("로그인 성공 시 마지막 로그인 시간 설정 및 실패 카운트 초기화")
+    @Test
+    void testLoginSuccess() {
+        Member member = Member.builder()
+                .username("testuser")
+                .email("test@example.com")
+                .role(MemberRole.ROLE_USER)
+                .build();
+
+        member.login();
+
+        assertNotNull(member.getLastLoginAt());
+        assertEquals(0, member.getLoginFailCount());
+    }
+
+    @DisplayName("로그인 실패 시 실패 카운트 증가")
+    @Test
+    void testLoginFailIncreasesCount() {
+        Member member = Member.builder().build();
+
+        member.loginFail();
+        member.loginFail();
+
+        assertEquals(2, member.getLoginFailCount());
+    }
+
+    @DisplayName("로그인 실패 카운트 초기화")
+    @Test
+    void testResetLoginFailCount() {
+        Member member = Member.builder().build();
+
+        member.loginFail();
+        member.resetLoginFailCount();
+
+        assertEquals(0, member.getLoginFailCount());
+    }
+
+    @DisplayName("이메일 인증 처리")
+    @Test
+    void testVerifyEmail() {
+        Member member = Member.builder().build();
+
+        member.verifyEmail();
+
+        assertTrue(member.isEmailVerified());
+    }
+
+    @DisplayName("개인정보 제공 동의 시 동의 시간 저장")
+    @Test
+    void testAgreeTerms() {
+        Member member = Member.builder().build();
+
+        member.agreeTerms();
+
+        assertNotNull(member.getAgreedTermsAt());
+    }
+
+    @DisplayName("닉네임 변경")
+    @Test
+    void testUpdateProfile() {
+        Member member = Member.builder().build();
+
+        member.updateProfile("newNickname");
+
+        assertEquals("newNickname", member.getNickname());
+    }
+
+    @DisplayName("프로필 이미지 변경")
+    @Test
+    void testUpdateProfileImage() {
+        Member member = Member.builder().build();
+
+        member.updateProfileImage("url");
+
+        assertEquals("url", member.getProfileImage());
+    }
+
+    @DisplayName("비밀번호 변경")
+    @Test
+    void testChangePassword() {
+        Member member = Member.builder().build();
+
+        member.changePassword("newPassword");
+
+        assertEquals("newPassword", member.getPassword());
+    }
+
+    @DisplayName("성인 인증 처리")
+    @Test
+    void testVerifyAdult() {
+        Member member = Member.builder().build();
+
+        member.verifyAdult();
+
+        assertTrue(member.getIsAdultVerified());
+    }
+
+    @DisplayName("계정 활성화 처리")
+    @Test
+    void testActivateAccount() {
+        Member member = Member.builder().build();
+
+        member.activateAccount();
+
+        assertEquals("ACTIVE", member.getStatus().name());
+    }
+
+    @DisplayName("휴면 계정 처리")
+    @Test
+    void testSuspendAccount() {
+        Member member = Member.builder().build();
+
+        member.suspendAccount();
+
+        assertEquals("SUSPENDED", member.getStatus().name());
+    }
+
+    @DisplayName("계정 삭제 처리")
+    @Test
+    void testDeactivateAccount() {
+        Member member = Member.builder().build();
+
+        member.deactivateAccount();
+
+        assertEquals("DELETED", member.getStatus().name());
+    }
+
+    @DisplayName("레벨 업데이트 처리")
+    @Test
+    void testUpdateLevel() {
+        Member member = Member.builder().build();
+
+        member.updateLevel(5);
+
+        assertEquals(5, member.getLevel());
     }
 
 }
