@@ -3,6 +3,8 @@ rootProject.name = 'toonpick'
 // 애플리케이션 모듈
 include 'module-application'
 
+include 'module-application:toonpick-app-auth'
+findProject(':module-application:toonpick-app-auth')?.name = 'toonpick-app-auth'
 include 'module-application:toonpick-app-api'
 findProject(':module-application:toonpick-app-api')?.name = 'toonpick-app-api'
 include 'module-application:toonpick-app-batch'
@@ -31,6 +33,8 @@ findProject(':module-domain:domain-toon-collection')?.name = 'domain-toon-collec
 // 내부 모듈
 include 'module-internal'
 
+include 'module-domain:domain-auth'
+findProject(':module-domain:domain-auth')?.name = 'domain-auth'
 include 'module-internal:core-security'
 findProject(':module-internal:core-security')?.name = 'core-security'
 include 'module-internal:core-exception'
@@ -45,11 +49,9 @@ include 'module-internal:client-auth'
 findProject(':module-internal:client-auth')?.name = 'client-auth'
 include 'module-internal:core-web'
 findProject(':module-internal:core-web')?.name = 'core-web'
+include 'module-internal:core-web-support'
+findProject(':module-internal:core-web-support')?.name = 'core-web-support'
 
 // 공통 모듈
 include 'module-common'
-include 'module-domain:domain-auth'
-findProject(':module-domain:domain-auth')?.name = 'domain-auth'
-include 'module-application:toonpick-app-auth'
-findProject(':module-application:toonpick-app-auth')?.name = 'toonpick-app-auth'
 
