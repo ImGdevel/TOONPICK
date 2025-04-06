@@ -1,14 +1,15 @@
-package service;
+package com.toonpick.test.unit.member.service;
 
-import com.toonpick.dto.MemberProfileDetailsResponseDTO;
-import com.toonpick.dto.MemberProfileRequestDTO;
-import com.toonpick.dto.MemberProfileResponseDTO;
-import com.toonpick.dto.MemberResponseDTO;
+
 import com.toonpick.entity.Member;
 import com.toonpick.enums.MemberRole;
-import com.toonpick.mapper.MemberMapper;
+import com.toonpick.member.mapper.MemberMapper;
+import com.toonpick.member.request.MemberProfileRequestDTO;
+import com.toonpick.member.response.MemberProfileDetailsResponseDTO;
+import com.toonpick.member.response.MemberProfileResponseDTO;
+import com.toonpick.member.response.MemberResponseDTO;
+import com.toonpick.member.service.MemberService;
 import com.toonpick.repository.MemberRepository;
-import com.toonpick.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

@@ -1,8 +1,11 @@
-package unit;
-
+package com.toonpick.test.unit.webtoon.service;
 
 import com.toonpick.dto.AuthorDTO;
 import com.toonpick.entity.Author;
+import com.toonpick.exception.ResourceNotFoundException;
+import com.toonpick.repository.AuthorRepository;
+import com.toonpick.webtoon.mapper.AuthorMapper;
+import com.toonpick.webtoon.service.AuthorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -11,10 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.toonpick.exception.ResourceNotFoundException;
-import com.toonpick.mapper.AuthorMapper;
-import com.toonpick.repository.AuthorRepository;
-import com.toonpick.service.AuthorService;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,5 +1,12 @@
-package unit;
+package com.toonpick.test.unit.webtoon.service;
 
+
+import com.toonpick.dto.GenreDTO;
+import com.toonpick.entity.Genre;
+import com.toonpick.exception.ResourceNotFoundException;
+import com.toonpick.repository.GenreRepository;
+import com.toonpick.webtoon.mapper.GenreMapper;
+import com.toonpick.webtoon.service.GenreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -9,15 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.toonpick.dto.GenreDTO;
-import com.toonpick.entity.Genre;
-import com.toonpick.exception.ResourceNotFoundException;
-import com.toonpick.mapper.GenreMapper;
-import com.toonpick.repository.GenreRepository;
-import com.toonpick.service.GenreService;
-
-
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,24 +48,6 @@ class GenreServiceTest {
                 .id(1L)
                 .name("Action")
                 .build();
-    }
-
-    @DisplayName("모든 장르를 조회하는 단위 테스트")
-    @Test
-    void testGetAllGenres() {
-        // given
-        given(genreRepository.findAll()).willReturn(List.of(genre));
-        given(genreMapper.genreToGenreDto(genre)).willReturn(genreDTO);
-
-        // when
-        List<GenreDTO> result = genreService.getAllGenres();
-
-        // then
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals("Action", result.get(0).getName());
-        verify(genreRepository, times(1)).findAll();
-        verify(genreMapper, times(1)).genreToGenreDto(genre);
     }
 
     @DisplayName("ID로 장르를 조회하는 단위 테스트")
@@ -138,24 +118,27 @@ class GenreServiceTest {
     @Test
     void testDeleteGenre_Success() {
         // given
-        given(genreRepository.findById(1L)).willReturn(Optional.of(genre));
+        given(genreRepository.findByName("Action")).willReturn(Optional.of(genre));
 
         // when
-        genreService.deleteGenre(1L);
+        genreService.deleteGenre("Action");
 
         // then
-        verify(genreRepository, times(1)).findById(1L);
+        verify(genreRepository, times(1)).findByName("Action");
         verify(genreRepository, times(1)).delete(genre);
     }
+
 
     @DisplayName("삭제하려는 장르가 존재하지 않을 때 예외 발생")
     @Test
     void testDeleteGenre_NotFound() {
         // given
-        given(genreRepository.findById(1L)).willReturn(Optional.empty());
+        given(genreRepository.findByName("Action")).willReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> genreService.deleteGenre(1L));
-        verify(genreRepository, times(1)).findById(1L);
+        assertThrows(ResourceNotFoundException.class, () -> genreService.deleteGenre("Action"));
+        verify(genreRepository, times(1)).findByName("Action");
+        verify(genreRepository, never()).delete(any());
     }
+
 }

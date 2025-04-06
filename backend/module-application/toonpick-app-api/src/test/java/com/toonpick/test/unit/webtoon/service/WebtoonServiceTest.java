@@ -1,5 +1,18 @@
-package unit;
+package com.toonpick.test.unit.webtoon.service;
 
+import com.toonpick.entity.Webtoon;
+import com.toonpick.enums.AgeRating;
+import com.toonpick.enums.Platform;
+import com.toonpick.enums.SerializationStatus;
+import com.toonpick.exception.ResourceAlreadyExistsException;
+import com.toonpick.exception.ResourceNotFoundException;
+import com.toonpick.repository.AuthorRepository;
+import com.toonpick.repository.GenreRepository;
+import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.webtoon.mapper.WebtoonMapper;
+import com.toonpick.webtoon.request.WebtoonRequestDTO;
+import com.toonpick.webtoon.response.WebtoonResponseDTO;
+import com.toonpick.webtoon.service.WebtoonService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -9,21 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.toonpick.dto.WebtoonCreateRequestDTO;
-import com.toonpick.dto.WebtoonRequestDTO;
-import com.toonpick.dto.WebtoonResponseDTO;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.enums.AgeRating;
-import com.toonpick.enums.Platform;
-import com.toonpick.enums.SerializationStatus;
-import com.toonpick.exception.ResourceAlreadyExistsException;
-import com.toonpick.exception.ResourceNotFoundException;
 
-import com.toonpick.mapper.WebtoonMapper;
-import com.toonpick.repository.AuthorRepository;
-import com.toonpick.repository.GenreRepository;
-import com.toonpick.repository.WebtoonRepository;
-import com.toonpick.service.WebtoonService;
 
 
 import java.time.DayOfWeek;
@@ -53,31 +52,12 @@ class WebtoonServiceTest {
     private WebtoonService webtoonService;
 
     private Webtoon webtoon;
-    private WebtoonCreateRequestDTO createRequestDTO;
     private WebtoonResponseDTO responseDTO;
 
     @BeforeEach
     void setUp() {
         webtoon = Webtoon.builder()
                 .id(1L)
-                .externalId("ext123")
-                .title("Test Webtoon")
-                .platform(Platform.NAVER)
-                .dayOfWeek(DayOfWeek.MONDAY)
-                .thumbnailUrl("http://example.com/thumb.jpg")
-                .link("http://example.com/webtoon")
-                .ageRating(AgeRating.ADULT)
-                .description("Test Description")
-                .serializationStatus(SerializationStatus.ONGOING)
-                .episodeCount(10)
-                .platformRating(4.5f)
-                .publishStartDate(LocalDate.now())
-                .lastUpdatedDate(LocalDate.now())
-                .authors(new HashSet<>())
-                .genres(new HashSet<>())
-                .build();
-
-        createRequestDTO = WebtoonCreateRequestDTO.builder()
                 .externalId("ext123")
                 .title("Test Webtoon")
                 .platform(Platform.NAVER)
@@ -108,34 +88,6 @@ class WebtoonServiceTest {
                 .episodeCount(10)
                 .platformRating(4.5f)
                 .build();
-    }
-
-    @DisplayName("웹툰 생성 유닛 테스트")
-    @Test
-    void testCreateWebtoon_Success() {
-        when(webtoonRepository.findByExternalId(createRequestDTO.getExternalId())).thenReturn(Optional.empty());
-        when(webtoonRepository.save(any(Webtoon.class))).thenReturn(webtoon);
-        when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
-
-        // when
-        WebtoonResponseDTO result = webtoonService.createWebtoon(createRequestDTO);
-
-        // then
-        assertNotNull(result);
-        assertEquals("Test Webtoon", result.getTitle());
-        verify(webtoonRepository, times(1)).findByExternalId(createRequestDTO.getExternalId());
-        verify(webtoonRepository, times(1)).save(any(Webtoon.class));
-        verify(webtoonMapper, times(1)).webtoonToWebtoonResponseDto(webtoon);
-    }
-
-    @DisplayName("웹툰 중복 생성 예외 유닛 테스트")
-    @Test
-    void testCreateWebtoon_AlreadyExists() {
-        // given
-        when(webtoonRepository.findByExternalId(createRequestDTO.getExternalId())).thenReturn(Optional.of(webtoon));
-
-        // when & then
-        assertThrows(ResourceAlreadyExistsException.class, () -> webtoonService.createWebtoon(createRequestDTO));
     }
 
     @DisplayName("Id로 웹툰 조회 유닛 테스트")

@@ -2,7 +2,7 @@ package com.toonpick.auth.service;
 
 
 import com.toonpick.dto.OAuth2ResponseFactory;
-import com.toonpick.auth.CustomOAuth2UserDetails;
+import com.toonpick.auth.user.CustomOAuth2UserDetails;
 import com.toonpick.dto.MemberDTO;
 import com.toonpick.dto.OAuth2Response;
 import com.toonpick.entity.Member;
