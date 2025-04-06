@@ -1,3 +1,6 @@
+package com.toonpick.test.unit.auth.service;
+
+import com.toonpick.auth.service.JoinService;
 import com.toonpick.entity.Member;
 import com.toonpick.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -8,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.toonpick.dto.JoinRequest;
-import com.toonpick.service.JoinService;
 
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

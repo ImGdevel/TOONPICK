@@ -1,3 +1,6 @@
+package com.toonpick.test.unit.auth.service;
+
+import com.toonpick.auth.service.TokenService;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.jwt.JwtTokenValidator;
-import com.toonpick.token.TokenService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;

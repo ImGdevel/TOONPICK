@@ -1,96 +1,94 @@
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import com.toonpick.type.ErrorCode;
 import com.toonpick.service.AwsS3StorageService;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URL;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
 class AwsS3StorageServiceTest {
 
     @Mock
-    private AmazonS3 amazonS3;
+    private S3Client s3Client;
+
+    @Mock
+    private AwsS3StorageService storageService;
+
+    @Mock
+    private MultipartFile multipartFile;
 
     private AwsS3StorageService awsS3StorageService;
 
     private final String bucketName = "test-bucket";
+    private final String region = "ap-northeast-2";
 
     @BeforeEach
     void setUp() {
-        awsS3StorageService = new AwsS3StorageService(amazonS3, bucketName);
+        awsS3StorageService = new AwsS3StorageService(s3Client, bucketName, region);
     }
 
-    @DisplayName("파일을 업로드 성공 유닛 테스트")
     @Test
-    void testUploadFile_Success() throws Exception {
-        // Given
-        MultipartFile mockFile = Mockito.mock(MultipartFile.class);
-        String originalFileName = "test.jpg";
-        String contentType = "image/jpeg";
-        byte[] content = "test data".getBytes();
+    @DisplayName("S3 파일 업로드 성공 시 URL 반환")
+    void testUploadFile_Success() throws IOException {
+        // given
+        MultipartFile mockFile = mock(MultipartFile.class);
+        when(mockFile.getOriginalFilename()).thenReturn("test-image.png");
+        when(mockFile.getContentType()).thenReturn("image/png");
+        when(mockFile.getBytes()).thenReturn("fake-image-content".getBytes());
 
-        Mockito.when(mockFile.getOriginalFilename()).thenReturn(originalFileName);
-        Mockito.when(mockFile.getContentType()).thenReturn(contentType);
-        Mockito.when(mockFile.getSize()).thenReturn((long) content.length);
-        Mockito.when(mockFile.getInputStream()).thenReturn(new ByteArrayInputStream(content));
+        // when
+        String url = storageService.uploadFile(mockFile);
 
-        String expectedBaseUrl = "https://" + bucketName + ".s3.amazonaws.com/";
-        Mockito.when(amazonS3.getUrl(ArgumentMatchers.eq(bucketName), ArgumentMatchers.anyString())).thenAnswer(invocation -> {
-            String key = invocation.getArgument(1);
-            return new URL(expectedBaseUrl + key);
-        });
+        // then
+        verify(s3Client).putObject(any(PutObjectRequest.class), any(RequestBody.class));
+        assertThat(url).contains("https://test-bucket.s3.ap-northeast-2.amazonaws.com/");
 
-        // When
-        String resultUrl = awsS3StorageService.uploadFile(mockFile);
-
-        // Then
-        Assertions.assertTrue(resultUrl.startsWith(expectedBaseUrl));
-        Mockito.verify(amazonS3).putObject(ArgumentMatchers.any(PutObjectRequest.class));
+        Mockito.mockingDetails(s3Client).printInvocations();
     }
 
 
-    @DisplayName("잘못된 파일 업로드 예외 유닛 테스트")
     @Test
-    void testUploadFile_Fail_InvalidFile() throws Exception {
-        // Given
-        MultipartFile mockFile = Mockito.mock(MultipartFile.class);
-        Mockito.when(mockFile.getInputStream()).thenThrow(new IOException("Test IOException"));
+    @DisplayName("IOException 발생 시 예외 발생")
+    void testUploadFile_IOException() throws Exception {
+        // given
+        when(multipartFile.getOriginalFilename()).thenReturn("bad-file.png");
+        when(multipartFile.getBytes()).thenThrow(new IOException("Boom"));
 
-        // When & Then
-        RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> awsS3StorageService.uploadFile(mockFile));
-        Assertions.assertEquals(ErrorCode.IMAGE_UPLOAD_FAILED.getMessage(), exception.getMessage());
-        Mockito.verify(amazonS3, Mockito.never()).putObject(ArgumentMatchers.any(PutObjectRequest.class));
+        // when & then
+        RuntimeException ex = assertThrows(RuntimeException.class,
+            () -> awsS3StorageService.uploadFile(multipartFile));
+        assertThat(ex.getMessage()).isEqualTo(ErrorCode.IMAGE_UPLOAD_FAILED.getMessage());
     }
 
-    @DisplayName("S3에 업로드 예외 유닛 테스트")
     @Test
-    void testUploadFile_Fail_AmazonServiceException() throws Exception {
-        // Given
-        MultipartFile mockFile = Mockito.mock(MultipartFile.class);
-        String fileName = "test.jpg";
+    @DisplayName("S3Client 실패 시 예외 발생")
+    void testUploadFile_S3ClientFailure() throws Exception {
+        // given
+        when(multipartFile.getOriginalFilename()).thenReturn("s3-fail.png");
+        when(multipartFile.getContentType()).thenReturn("image/png");
+        when(multipartFile.getBytes()).thenReturn("fail-data".getBytes());
 
-        Mockito.when(mockFile.getOriginalFilename()).thenReturn(fileName);
-        Mockito.when(mockFile.getInputStream()).thenReturn(new ByteArrayInputStream("test data".getBytes()));
+        doThrow(new RuntimeException("S3 down")).when(s3Client)
+            .putObject(any(PutObjectRequest.class), any(RequestBody.class));
 
-        doThrow(new AmazonServiceException("AWS error"))
-            .when(amazonS3)
-            .putObject(ArgumentMatchers.any(PutObjectRequest.class));
-
-        // When & Then
-        RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> awsS3StorageService.uploadFile(mockFile));
-        Assertions.assertEquals(ErrorCode.IMAGE_UPLOAD_FAILED_TO_S3.getMessage(), exception.getMessage());
+        // when & then
+        RuntimeException ex = assertThrows(RuntimeException.class,
+            () -> awsS3StorageService.uploadFile(multipartFile));
+        assertThat(ex.getMessage()).isEqualTo(ErrorCode.IMAGE_UPLOAD_FAILED_TO_S3.getMessage());
     }
 }

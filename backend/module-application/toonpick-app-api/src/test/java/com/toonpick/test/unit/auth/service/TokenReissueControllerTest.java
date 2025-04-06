@@ -1,3 +1,6 @@
+package com.toonpick.test.unit.auth.service;
+
+import com.toonpick.auth.service.TokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import com.toonpick.auth.controller.TokenReissueController;
 import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.jwt.JwtTokenValidator;
-import com.toonpick.token.TokenService;
 import com.toonpick.utils.CookieUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
