@@ -1,12 +1,12 @@
 package com.toonpick.member.controller;
 
 import com.toonpick.annotation.CurrentUser;
-import com.toonpick.member.response.MemberProfileDetailsResponseDTO;
 import com.toonpick.member.request.MemberProfileRequestDTO;
+import com.toonpick.member.response.MemberProfileDetailsResponseDTO;
 import com.toonpick.member.response.MemberResponseDTO;
-import com.toonpick.webtoon.service.MemberProfileService;
 import com.toonpick.member.service.MemberService;
 import com.toonpick.user.CustomUserDetails;
+import com.toonpick.webtoon.service.MemberProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
