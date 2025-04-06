@@ -1,6 +1,6 @@
 package com.toonpick.user;
 
-import com.toonpick.entity.Member;
+import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-
 
 public class CustomUserDetails implements UserDetails {
 
@@ -20,16 +19,8 @@ public class CustomUserDetails implements UserDetails {
     private final boolean isCredentialsNonExpired;
     private final boolean isEnabled;
 
-    public CustomUserDetails(Member member) {
-        this.username = member.getUsername();
-        this.password = member.getPassword();
-        this.role = member.getRole().toString();
-        this.isAccountNonExpired = true;
-        this.isAccountNonLocked = true;
-        this.isCredentialsNonExpired = true;
-        this.isEnabled = true;
-    }
 
+    @Builder
     public CustomUserDetails(String username, String password, String role) {
         this.username = username;
         this.password = password;
