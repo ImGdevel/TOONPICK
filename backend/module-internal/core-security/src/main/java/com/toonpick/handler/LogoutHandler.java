@@ -1,5 +1,6 @@
 package com.toonpick.handler;
 
+import com.toonpick.utils.CookieUtils;
 import com.toonpick.jwt.TokenIssuer;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.toonpick.utils.CookieUtils;
 
 @Component
 @RequiredArgsConstructor
