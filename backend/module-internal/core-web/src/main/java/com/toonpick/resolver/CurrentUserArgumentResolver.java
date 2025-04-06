@@ -1,10 +1,10 @@
 package com.toonpick.resolver;
 
 import com.toonpick.annotation.CurrentUser;
-import com.toonpick.user.CustomUserDetails;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -17,7 +17,8 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(CurrentUser.class) && CustomUserDetails.class.isAssignableFrom(parameter.getParameterType());
+        // 어노테이션이 CurrentUser && 클래스 타입이 UserDetails 혹은 하위 클래스
+        return parameter.hasParameterAnnotation(CurrentUser.class) && UserDetails.class.isAssignableFrom(parameter.getParameterType());
     }
 
     @Override

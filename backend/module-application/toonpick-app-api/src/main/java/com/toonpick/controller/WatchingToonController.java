@@ -1,7 +1,9 @@
 package com.toonpick.controller;
 
+import com.toonpick.annotation.CurrentUser;
 import com.toonpick.dto.WebtoonResponseDTO;
 import com.toonpick.service.WatchingToonsService;
+import com.toonpick.user.CustomUserDetails;
 import com.toonpick.utils.AuthenticationUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,17 +27,15 @@ import java.util.List;
 public class WatchingToonController {
 
     private final WatchingToonsService watchingToonsService;
-    private final AuthenticationUtil authenticationUtil;
 
     @Operation(summary = "감상 웹툰 리스트에 추가", description = "회원의 감상 중 웹툰 리스트에 해당 웹툰을 추가합니다")
     @PostMapping("/{webtoonId}")
     public ResponseEntity<Boolean> addWatchingToon(
             @Parameter(description = "리스트에 추가할 웹툰 id")
             @PathVariable Long webtoonId,
-            Authentication authentication
+            @CurrentUser CustomUserDetails user
     ){
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        boolean result = watchingToonsService.addWatchingToons(username, webtoonId);
+        boolean result = watchingToonsService.addWatchingToons(user.getUsername(), webtoonId);
         return ResponseEntity.ok(result);
     }
 
@@ -44,18 +44,18 @@ public class WatchingToonController {
     public ResponseEntity<Boolean> removeWatchingToon(
             @Parameter(description = "리스트에 추가할 웹툰 id")
             @PathVariable Long webtoonId,
-            Authentication authentication
+            @CurrentUser CustomUserDetails user
     ){
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        boolean result = watchingToonsService.removeWatchingToons(username, webtoonId);
+        boolean result = watchingToonsService.removeWatchingToons(user.getUsername(), webtoonId);
         return ResponseEntity.ok(result);
     }
 
     @Operation(summary = "감상 웹툰 리스트 조회", description = "현재 회원의 감상 중 웹툰 리스트를 조회합니다")
     @GetMapping
-    public ResponseEntity<List<WebtoonResponseDTO>> getWatchingToons(Authentication authentication) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        List<WebtoonResponseDTO> webtoons = watchingToonsService.getWebtoonsByUsername(username);
+    public ResponseEntity<List<WebtoonResponseDTO>> getWatchingToons(
+            @CurrentUser CustomUserDetails user
+    ) {
+        List<WebtoonResponseDTO> webtoons = watchingToonsService.getWebtoonsByUsername(user.getUsername());
         return ResponseEntity.ok(webtoons);
     }
 

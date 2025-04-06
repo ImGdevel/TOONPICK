@@ -1,7 +1,9 @@
 package com.toonpick.controller;
 
+import com.toonpick.annotation.CurrentUser;
 import com.toonpick.dto.WebtoonResponseDTO;
 import com.toonpick.service.BookmarkToonsService;
+import com.toonpick.user.CustomUserDetails;
 import com.toonpick.utils.AuthenticationUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,17 +27,15 @@ import java.util.List;
 public class BookmarkToonController {
 
     private final BookmarkToonsService bookmarkToonsService;
-    private final AuthenticationUtil authenticationUtil;
 
     @Operation(summary = "북마크 웹툰 추가", description = "회원의 북마크 웹툰 리스트에 해당 웹툰을 추가합니다")
     @PostMapping("/{webtoonId}")
     public ResponseEntity<Boolean> addBookmark(
             @Parameter(description = "리스트에 추가할 웹툰 id")
             @RequestParam Long webtoonId,
-            Authentication authentication
+            @CurrentUser CustomUserDetails user
     ) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        boolean result = bookmarkToonsService.addBookmarkToons(username, webtoonId);
+        boolean result = bookmarkToonsService.addBookmarkToons(user.getUsername(), webtoonId);
         return ResponseEntity.ok(result);
     }
 
@@ -44,18 +44,18 @@ public class BookmarkToonController {
     public ResponseEntity<Boolean> removeBookmark(
             @Parameter(description = "리스트에 제거할 웹툰 id")
             @RequestParam Long webtoonId,
-            Authentication authentication
+            @CurrentUser CustomUserDetails user
     ) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        boolean result = bookmarkToonsService.removeBookmarkToons(username, webtoonId);
+        boolean result = bookmarkToonsService.removeBookmarkToons(user.getUsername(), webtoonId);
         return ResponseEntity.ok(result);
     }
 
     @Operation(summary = "북마크 웹툰 리스트 조회", description = "현재 회원의 북마크 웹툰 리스트를 조회합니다")
     @GetMapping
-    public ResponseEntity<List<WebtoonResponseDTO>> getBookmarks(Authentication authentication) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        List<WebtoonResponseDTO> webtoons = bookmarkToonsService.getWebtoonsByUsername(username);
+    public ResponseEntity<List<WebtoonResponseDTO>> getBookmarks(
+            @CurrentUser CustomUserDetails user
+    ) {
+        List<WebtoonResponseDTO> webtoons = bookmarkToonsService.getWebtoonsByUsername(user.getUsername());
         return ResponseEntity.ok(webtoons);
     }
 }

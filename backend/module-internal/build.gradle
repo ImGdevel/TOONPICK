@@ -38,7 +38,6 @@ project(':module-internal:core-security') {
 project(':module-internal:core-web') {
     dependencies {
         implementation project(':module-common')
-        implementation project(':module-internal:core-security')
         implementation project(':module-internal:core-web-support')
     }
     bootJar.enabled = false
