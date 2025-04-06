@@ -3,6 +3,7 @@ project(':module-application:toonpick-app-api') {
         //임시로 전부 추가 (필요한 의존성만 추가하도록 할 것!)
         implementation project(':module-domain')
         implementation project(':module-domain:domain-common')
+        implementation project(':module-domain:domain-auth')
         implementation project(':module-domain:domain-member')
         implementation project(':module-domain:domain-webtoon')
         implementation project(':module-domain:domain-review')
@@ -10,6 +11,8 @@ project(':module-application:toonpick-app-api') {
         implementation project(':module-domain:domain-member-engagement')
 
         implementation project(':module-internal')
+        implementation project(':module-internal:core-web')
+        implementation project(':module-internal:core-web-support')
         implementation project(':module-internal:client-storage')
         implementation project(':module-internal:core-security')
         implementation project(':module-internal:core-exception')

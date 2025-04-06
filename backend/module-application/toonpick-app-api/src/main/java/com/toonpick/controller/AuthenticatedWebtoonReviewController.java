@@ -1,6 +1,7 @@
 package com.toonpick.controller;
 
-import com.toonpick.utils.AuthenticationUtil;
+import com.toonpick.annotation.CurrentUser;
+import com.toonpick.user.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -8,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,16 +31,15 @@ import java.util.Optional;
 public class AuthenticatedWebtoonReviewController {
 
     private final WebtoonReviewService webtoonReviewService;
-    private final AuthenticationUtil authenticationUtil;
 
     @Operation(summary = "새로운 리뷰 생성", description = "새로운 리뷰를 작성합니다")
     @PostMapping("/{webtoonId}")
     public ResponseEntity<WebtoonReviewDTO> createReview(
             @Parameter(description = "리뷰 작성 포맷", required = true)
             @RequestBody WebtoonReviewCreateDTO reviewCreateDTO,
-            Authentication authentication) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO, username);
+            @CurrentUser CustomUserDetails user
+    ) {
+        WebtoonReviewDTO createdReview = webtoonReviewService.createReview(reviewCreateDTO, user.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
 
@@ -51,8 +50,8 @@ public class AuthenticatedWebtoonReviewController {
             @PathVariable Long reviewId,
             @Parameter(description = "수정할 review 포맷")
             @RequestBody WebtoonReviewCreateDTO reviewCreateDTO,
-            Authentication authentication) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication); // todo : 인증 여부만 확인
+            @CurrentUser CustomUserDetails user
+    ) {
         WebtoonReviewDTO updatedReview = webtoonReviewService.updateReview(reviewId, reviewCreateDTO);
         return ResponseEntity.ok(updatedReview);
     }
@@ -62,8 +61,8 @@ public class AuthenticatedWebtoonReviewController {
     public ResponseEntity<Void> deleteReview(
             @Parameter(description = "삭제할 리뷰 id")
             @PathVariable Long reviewId,
-            Authentication authentication) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication); // todo : 인증 여부만 확인
+            @CurrentUser CustomUserDetails user
+    ) {
         webtoonReviewService.deleteReview(reviewId);
         return ResponseEntity.noContent().build();
     }
@@ -74,9 +73,9 @@ public class AuthenticatedWebtoonReviewController {
     public ResponseEntity<Void> toggleLike(
             @Parameter(description = "좋아요를 토글할 리뷰 id")
             @PathVariable Long reviewId,
-            Authentication authentication) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        webtoonReviewService.toggleLike(username, reviewId);
+            @CurrentUser CustomUserDetails user
+    ) {
+        webtoonReviewService.toggleLike(user.getUsername(), reviewId);
         return ResponseEntity.ok().build();
     }
 
@@ -86,9 +85,9 @@ public class AuthenticatedWebtoonReviewController {
     public ResponseEntity<WebtoonReviewDTO> getUserReviewForWebtoon(
             @Parameter(description = "조회할 웹툰 id")
             @PathVariable Long webtoonId,
-            Authentication authentication) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        Optional<WebtoonReviewDTO> reviewOpt = webtoonReviewService.getUserReviewForWebtoon(username, webtoonId); // todo : 왜 이렇게 만듬 ? 검증할 것
+            @CurrentUser CustomUserDetails user
+    ) {
+        Optional<WebtoonReviewDTO> reviewOpt = webtoonReviewService.getUserReviewForWebtoon(user.getUsername(), webtoonId); // todo : 왜 이렇게 만듬 ? 검증할 것
         return reviewOpt.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
@@ -98,9 +97,9 @@ public class AuthenticatedWebtoonReviewController {
     public ResponseEntity<List<Long>> getLikedReviews(
             @Parameter(description = "조회할 웹툰")
             @PathVariable Long webtoonId,
-            Authentication authentication) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        List<Long> likedReviewIds = webtoonReviewService.getLikedReviewIds(username, webtoonId);
+            @CurrentUser CustomUserDetails user
+    ) {
+        List<Long> likedReviewIds = webtoonReviewService.getLikedReviewIds(user.getUsername(), webtoonId);
         return ResponseEntity.ok(likedReviewIds);
     }
 }

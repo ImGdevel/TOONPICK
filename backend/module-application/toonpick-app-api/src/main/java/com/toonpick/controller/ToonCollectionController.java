@@ -1,14 +1,14 @@
 package com.toonpick.controller;
 
+import com.toonpick.annotation.CurrentUser;
 import com.toonpick.dto.ToonCollectionResponseDTO;
 import com.toonpick.service.ToonCollectionService;
-import com.toonpick.utils.AuthenticationUtil;
+import com.toonpick.user.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,17 +27,15 @@ import java.util.List;
 public class ToonCollectionController {
 
     private final ToonCollectionService toonCollectionService;
-    private final AuthenticationUtil authenticationUtil;
 
     @Operation(summary = "웹툰 컬랙션 생성", description = "회원의 웹툰 새컬렉션을 생성합니다")
     @PostMapping("/create")
     public ResponseEntity<ToonCollectionResponseDTO> createCollection(
             @Parameter(description = "생성할 컬렉션 제목", required = true)
             @RequestParam String title,
-            Authentication authentication
+            @CurrentUser CustomUserDetails user
     ) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        ToonCollectionResponseDTO collection = toonCollectionService.createCollection(username, title);
+        ToonCollectionResponseDTO collection = toonCollectionService.createCollection(user.getUsername(), title);
         return ResponseEntity.ok(collection);
     }
 
@@ -59,7 +57,8 @@ public class ToonCollectionController {
             @Parameter(description = "추가될 컬렉션 id", required = true)
             @PathVariable Long collectionId,
             @Parameter(description = "추가할 웹툰 id", required = true)
-            @PathVariable Long webtoonId) {
+            @PathVariable Long webtoonId
+    ) {
         toonCollectionService.removeWebtoon(collectionId, webtoonId);
         return ResponseEntity.ok().build();
     }
@@ -88,9 +87,10 @@ public class ToonCollectionController {
 
     @Operation(summary = "웹툰 컬랙션 리스트 조회", description = "회원 웹툰 컬렉션의 웹툰 리스트를 조회합니다")
     @GetMapping
-    public ResponseEntity<List<ToonCollectionResponseDTO>> getCollections(Authentication authentication) {
-        String username = authenticationUtil.getUsernameFromAuthentication(authentication);
-        List<ToonCollectionResponseDTO> collections = toonCollectionService.getCollectionsByMember(username);
+    public ResponseEntity<List<ToonCollectionResponseDTO>> getCollections(
+            @CurrentUser CustomUserDetails user
+    ) {
+        List<ToonCollectionResponseDTO> collections = toonCollectionService.getCollectionsByMember(user.getUsername());
         return ResponseEntity.ok(collections);
     }
 }

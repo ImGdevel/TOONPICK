@@ -4,7 +4,6 @@ package com.toonpick.filter;
 import com.toonpick.exception.ExpiredJwtTokenException;
 import com.toonpick.exception.InvalidJwtTokenException;
 import com.toonpick.handler.LogoutHandler;
-import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.utils.ErrorResponseSender;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

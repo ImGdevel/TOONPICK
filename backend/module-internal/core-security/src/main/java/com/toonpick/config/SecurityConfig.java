@@ -7,9 +7,7 @@ import com.toonpick.handler.LoginFailureHandler;
 import com.toonpick.handler.LoginSuccessHandler;
 import com.toonpick.handler.LogoutHandler;
 import com.toonpick.handler.OAuth2SuccessHandler;
-import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.toonpick.service.OAuth2UserService;
 import com.toonpick.utils.ErrorResponseSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,9 +19,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -42,13 +39,12 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtTokenValidator jwtTokenValidator;
-    private final OAuth2UserService oAuth2UserService;
+    private final DefaultOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
-    private final LoginSuccessHandler successHandler;
-    private final LoginFailureHandler failureHandler;
+    private final LoginSuccessHandler loginSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
     private final LogoutHandler logoutHandler;
     private final ErrorResponseSender errorResponseSender;
-
     private final HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository;
 
     @Bean
@@ -86,7 +82,7 @@ public class SecurityConfig {
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterAt(
-                new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), successHandler, failureHandler),
+                new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), loginSuccessHandler, loginFailureHandler),
                 UsernamePasswordAuthenticationFilter.class
             )
             .addFilterBefore(
