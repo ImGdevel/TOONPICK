@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class WebtoonReviewDTO {
     private Long id;
     private Long webtoonId;
-    private MemberProfileResponseDTO memberId;
+    private MemberDTO memberId;
     private float rating;
     private String comment;
     private int likes;

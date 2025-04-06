@@ -7,7 +7,7 @@ import com.toonpick.dto.MemberDTO;
 import com.toonpick.dto.OAuth2Response;
 import com.toonpick.entity.Member;
 import com.toonpick.enums.MemberRole;
-import com.toonpick.mapper.MemberMapper;
+import com.toonpick.member.mapper.MemberMapper;
 import com.toonpick.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
