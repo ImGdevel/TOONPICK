@@ -43,6 +43,13 @@ project(':module-internal:core-web') {
     bootJar.enabled = false
 }
 
+project(':module-internal:core-web-support') {
+    dependencies {
+        implementation project(':module-common')
+    }
+    bootJar.enabled = false
+}
+
 project(':module-internal:event-sqs') {
     dependencies {
         implementation project(':module-common')
