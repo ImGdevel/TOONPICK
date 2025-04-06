@@ -30,8 +30,6 @@ project(':module-internal:core-exception') {
 project(':module-internal:core-security') {
     dependencies {
         implementation project(':module-common')
-        implementation project(':module-domain:domain-member')
-        implementation project(':module-domain:domain-common')
     }
     bootJar.enabled = false
 }
