@@ -38,6 +38,8 @@ out/
 
 ### Log ###
 logs/info.log
+*.log
+*.gz
 
 ### Secret Key ###
 application-secrets.yml
