@@ -1,21 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from '@components/Header';
+import Header from '@components/header';
 
-import { AuthProvider } from '@contexts/AuthContext';
-import { ModalProvider } from '@contexts/ModalContext';
+import { AuthProvider } from '@contexts/auth-context';
+import { ModalProvider } from '@contexts/modal-context';
 
-import HomePage from '@pages/HomePage';
-import SignInPage from '@pages/auth/SignInPage';
-import SignUpPage from '@pages/auth/SignUpPage';
-import WebtoonDetailPage from '@pages/WebtoonDetailPage';
-import MyProfilePage from '@pages/MyProfilePage';
-import SocialLoginCallbackPage from '@pages/auth/SocialLoginCallbackPage';
-import NewWebtoonsPage from '@pages/NewWebtoonsPage';
-import OngoingWebtoonsPage from '@pages/OngoingWebtoonsPage';
-import CompletedWebtoonsPage from '@pages/CompletedWebtoonsPage';
-import ProfileEditPage from '@pages/ProfileEditPage';
-import ErrorPage from '@pages/ErrorPage/ErrorPage';
+import HomePage from '@pages/home';
+import SignInPage from '@pages/auth/signin';
+import SignUpPage from '@pages/auth/signup';
+import WebtoonDetailPage from '@pages/webtoon/webtoon-details';
+import MyProfilePage from '@pages/user/profile';
+import SocialLoginCallbackPage from '@pages/auth/sociallogin-callback-page';
+import NewWebtoonsPage from '@pages/webtoon/new-webtoons';
+import OngoingWebtoonsPage from '@pages/webtoon/ongoing-webtoons';
+import CompletedWebtoonsPage from '@pages/webtoon/completed-webtoons';
+import ProfileEditPage from '@pages/user/profile-edit';
+import ErrorPage from '@pages/error';
 
 const App: React.FC = () => {
   return (
