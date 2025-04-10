@@ -56,3 +56,61 @@
   gap: 1rem;
   margin-top: 20px;
 }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: #ff4444;
+}
+
+/* 섹션 공통 스타일 */
+.section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 0.5rem;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .section {
+    padding: 1rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+}
