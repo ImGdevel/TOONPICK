@@ -3,6 +3,7 @@ import styles from './MemberProfileSection.module.css';
 import { useNavigate } from 'react-router-dom';
 import { MemberProfile } from '@models/member';
 import { FaHeart, FaEdit, FaEllipsisH } from 'react-icons/fa';
+import { Routes } from '@constants/routes';
 import AchievementItem from '@components/achievement-item';
 import LevelDisplay from '@components/level-display';
 
@@ -26,7 +27,7 @@ const MemberProfileSection: React.FC<MemberProfileSectionProps> = ({ memberProfi
 
   const handleEditProfile = () => {
     // TODO: 프로필 수정 기능 추가
-    navigate('/profile/edit');
+    navigate(Routes.USER_PROFILE_EDIT);
   };
 
   const handleMoreOptions = () => {

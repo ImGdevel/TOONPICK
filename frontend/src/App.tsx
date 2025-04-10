@@ -16,6 +16,7 @@ import OngoingWebtoonsPage from '@pages/webtoon/ongoing-webtoons';
 import CompletedWebtoonsPage from '@pages/webtoon/completed-webtoons';
 import ProfileEditPage from '@pages/user/profile-edit';
 import ErrorPage from '@pages/error';
+import { Routes as RoutePaths } from '@constants/routes';
 
 const App: React.FC = () => {
   return (
@@ -25,18 +26,24 @@ const App: React.FC = () => {
         <Header />
         <main style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '20px' }}>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/webtoon/new" element={<NewWebtoonsPage />} />
-            <Route path="/webtoon/ongoing" element={<OngoingWebtoonsPage />} />
-            <Route path="/webtoon/completed" element={<CompletedWebtoonsPage />} />
+            <Route path={RoutePaths.HOME} element={<HomePage />} />
+
+            {/* 웹툰 관련 페이지 */}
+            <Route path={RoutePaths.WEBTOON_NEW} element={<NewWebtoonsPage />} />
+            <Route path={RoutePaths.WEBTOON_ONGOING} element={<OngoingWebtoonsPage />} />
+            <Route path={RoutePaths.WEBTOON_COMPLETED} element={<CompletedWebtoonsPage />} />
             <Route path="/webtoon/:id" element={<WebtoonDetailPage />} />
-            <Route path="/login" element={<SignInPage />} />
-            <Route path="/signin" element={<SignInPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/mypage" element={<MyProfilePage />} />
-            <Route path="/profile/edit" element={<ProfileEditPage />} />
-            <Route path="/login-success" element={<SocialLoginCallbackPage />} />
-            <Route path="*" element={<ErrorPage />} />
+
+            {/* Auth 관련 페이지 */}
+            <Route path="/auth/login" element={<SignInPage />} />
+            <Route path="/auth/signin" element={<SignInPage />} />
+            <Route path="/auth//signup" element={<SignUpPage />} />
+            <Route path="/auth//login-success" element={<SocialLoginCallbackPage />} />
+
+            {/* 유저 관련 페이지 */}
+            <Route path={RoutePaths.USER_PROFILE} element={<MyProfilePage />} />
+            <Route path={RoutePaths.USER_PROFILE_EDIT} element={<ProfileEditPage />} />
+            <Route path={RoutePaths.ERROR} element={<ErrorPage />} />
           </Routes>
         </main>
       </Router>

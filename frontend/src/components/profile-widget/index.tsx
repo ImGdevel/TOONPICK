@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { MemberProfile } from '@models/member';
+import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 
 interface ProfileWidgetProps {
@@ -65,19 +66,19 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
         <p>{memberProfile?.nickname || '게스트 사용자'}</p>
       </div>
       <button
-        onClick={handleButtonClick(() => onNavigate('/mypage'), closeProfileWidget)}
+        onClick={handleButtonClick(() => onNavigate(Routes.USER_PROFILE), closeProfileWidget)}
         className={styles.widgetButton}
       >
         마이페이지
       </button>
       <button
-        onClick={handleButtonClick(() => onNavigate('/profile-edit'), closeProfileWidget)}
+        onClick={handleButtonClick(() => onNavigate(Routes.USER_PROFILE_EDIT), closeProfileWidget)}
         className={styles.widgetButton}
       >
         프로필 수정
       </button>
       <button
-        onClick={handleButtonClick(() => onNavigate('/my-webtoons'), closeProfileWidget)}
+        onClick={handleButtonClick(() => onNavigate(Routes.HOME), closeProfileWidget)}
         className={styles.widgetButton}
       >
         나의 웹툰 리스트

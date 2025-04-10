@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '@contexts/auth-context';
+import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 import AuthService from '@services/auth-service';
 
@@ -31,7 +32,7 @@ const SignUpPage: React.FC = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/');
+      navigate(Routes.HOME);
     }
   }, [isLoggedIn, navigate]);
 
@@ -65,7 +66,7 @@ const SignUpPage: React.FC = () => {
       );
 
       if (response.success) {
-        navigate('/login');
+        navigate(Routes.LOGIN);
       }else{
         setError('회원가입에 실패했습니다. 다시 시도해주세요.' + response.message);
       }

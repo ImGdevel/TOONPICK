@@ -1,6 +1,7 @@
 import React, { useContext, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Route, useNavigate } from 'react-router-dom';
 import { AuthContext } from '@contexts/auth-context';
+import { Routes } from '@constants/routes';
 import ProfileWidget from '@components/profile-widget';
 import Menu from '@components/top-menu';
 import Search from '@components/search-bar';
@@ -17,7 +18,7 @@ const Header: React.FC = () => {
 
   const handleLogout = async (): Promise<void> => {
     logout();
-    navigate('/login');
+    navigate(Routes.LOGIN);
   };
 
   const toggleTheme = (): void => {
@@ -33,7 +34,7 @@ const Header: React.FC = () => {
   return (
     <header className={styles.header}>
       <div className={styles.headerTitle}>
-        <h1 onClick={() => navigate('/')}>TOONPICK</h1>
+        <h1 onClick={() => navigate(Routes.HOME)}>TOONPICK</h1>
 
         <Menu navigate={navigate} />
 
@@ -66,7 +67,7 @@ const Header: React.FC = () => {
                 />
               </>
             ) : (
-              <button onClick={() => navigate('/login')} className={styles.loginButton}>Login</button>
+              <button onClick={() => navigate(Routes.LOGIN)} className={styles.loginButton}>Login</button>
             )}
           </div>
         </div>
