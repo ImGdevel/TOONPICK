@@ -104,3 +104,16 @@
   cursor: pointer;
 }
 
+.navLink {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.navLink:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+

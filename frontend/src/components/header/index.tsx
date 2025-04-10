@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from 'react';
-import { Route, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '@contexts/auth-context';
-import { Routes } from '@constants/routes';
+import { Routes as RoutePaths } from '@constants/routes';
 import ProfileWidget from '@components/profile-widget';
 import Menu from '@components/top-menu';
 import Search from '@components/search-bar';
@@ -18,7 +18,7 @@ const Header: React.FC = () => {
 
   const handleLogout = async (): Promise<void> => {
     logout();
-    navigate(Routes.LOGIN);
+    navigate(RoutePaths.LOGIN);
   };
 
   const toggleTheme = (): void => {
@@ -34,7 +34,7 @@ const Header: React.FC = () => {
   return (
     <header className={styles.header}>
       <div className={styles.headerTitle}>
-        <h1 onClick={() => navigate(Routes.HOME)}>TOONPICK</h1>
+        <h1 onClick={() => navigate(RoutePaths.HOME)}>TOONPICK</h1>
 
         <Menu navigate={navigate} />
 
@@ -67,9 +67,11 @@ const Header: React.FC = () => {
                 />
               </>
             ) : (
-              <button onClick={() => navigate(Routes.LOGIN)} className={styles.loginButton}>Login</button>
+              <button onClick={() => navigate(RoutePaths.LOGIN)} className={styles.loginButton}>Login</button>
             )}
           </div>
+
+          <Link to={RoutePaths.WEBTOON_RATING_LIST} className={styles.navLink}>웹툰 평가</Link>
         </div>
       </div>
     </header>

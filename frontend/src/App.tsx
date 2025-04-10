@@ -16,6 +16,7 @@ import OngoingWebtoonsPage from '@pages/webtoon/ongoing-webtoons';
 import CompletedWebtoonsPage from '@pages/webtoon/completed-webtoons';
 import ProfileEditPage from '@pages/user/profile-edit';
 import ErrorPage from '@pages/error';
+import WebtoonRatingListPage from '@pages/webtoon/rating-list';
 import { Routes as RoutePaths } from '@constants/routes';
 
 const App: React.FC = () => {
@@ -33,6 +34,7 @@ const App: React.FC = () => {
             <Route path={RoutePaths.WEBTOON_ONGOING} element={<OngoingWebtoonsPage />} />
             <Route path={RoutePaths.WEBTOON_COMPLETED} element={<CompletedWebtoonsPage />} />
             <Route path={RoutePaths.WEBTOON_DETAIL(':id')} element={<WebtoonDetailPage />} />
+            <Route path={RoutePaths.WEBTOON_RATING_LIST} element={<WebtoonRatingListPage />} />
 
             {/* Auth 관련 페이지 */}
             <Route path={RoutePaths.LOGIN} element={<SignInPage />} />
