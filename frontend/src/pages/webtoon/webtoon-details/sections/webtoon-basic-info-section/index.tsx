@@ -34,10 +34,10 @@ const WebtoonBasicInfoSection: React.FC<WebtoonBasicInfoSectionProps> = ({ webto
 
   // 설명 텍스트가 200자 이상인 경우 자르기
   const descriptionText = webtoon.description || '설명이 없습니다.';
-  const shouldTruncate = descriptionText.length > 200;
+  const shouldTruncate = descriptionText.length > 100;
   const displayText = isDescriptionExpanded || !shouldTruncate 
     ? descriptionText 
-    : `${descriptionText.substring(0, 200)}...`;
+    : `${descriptionText.substring(0, 100)}...`;
 
   return (
     <section className={styles.section}>
@@ -92,7 +92,7 @@ const WebtoonBasicInfoSection: React.FC<WebtoonBasicInfoSectionProps> = ({ webto
           <div className={styles.authors}>
             <span className={styles.label}>작가:</span>
             <span className={styles.value}>
-              {webtoon.authors.map(author => author.name).join(', ')}
+              {webtoon.authors ? webtoon.authors.map(author => author.name).join(', ') : '정보 없음'}
             </span>
           </div>
           
@@ -104,11 +104,11 @@ const WebtoonBasicInfoSection: React.FC<WebtoonBasicInfoSectionProps> = ({ webto
           <div className={styles.genres}>
             <span className={styles.label}>장르:</span>
             <div className={styles.genreTags}>
-              {webtoon.genres.map(genre => (
+              {webtoon.genres ? webtoon.genres.map(genre => (
                 <span key={genre.id} className={styles.genreTag}>
                   {genre.name}
                 </span>
-              ))}
+              )) : '정보 없음'}
             </div>
           </div>
           
