@@ -1,56 +1,75 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Webtoon } from '@models/webtoon';
-import WebtoonService from '@services/webtoon-service';
-import WebtoonBasicInfoSection from './sections/webtoon-basic-info-section';
-import WebtoonRatingSection from './sections/webtoon-rating-section';
-import WebtoonAnalysisSection from './sections/webtoon-analysis-section';
-import WebtoonRecommendationSection from './sections/webtoon-recommendation-section';
 import styles from './style.module.css';
+
+import WebtoonService from '@services/webtoon-service';
+import WebtoonReviewService from '@services/webtoon-review-service';
+import { Webtoon } from '@models/webtoon';
+import { Review } from '@models/review';
+
+import WebtoonDetailsSection from './sections/webtoon-details-section';
+import WebtoonRatingSection from './sections/webtoon-rating-section';
+import UserInteractionSection from './sections/member-interaction-section';
 
 const WebtoonDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [webtoon, setWebtoon] = useState<Webtoon | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [averageRating, setAverageRating] = useState<number>(0);
 
   useEffect(() => {
     const fetchWebtoon = async () => {
       try {
-        setLoading(true);
         if (!id) return;
-
-        const webtoonData = await WebtoonService.getWebtoonById(parseInt(id));
-        setWebtoon(webtoonData);
+        
+        const response = await WebtoonService.getWebtoonById(parseInt(id));
+        
+        if (response?.success && response.data) {
+          setWebtoon(response.data);
+          
+          const reviewResponse = await WebtoonReviewService.getReviewsByWebtoon(parseInt(id));
+          if (reviewResponse?.success && reviewResponse.data) {
+            const totalRating = reviewResponse.data.reduce((acc, review) => acc + review.rating, 0);
+            const avgRating = totalRating / reviewResponse.data.length || 0;
+            setAverageRating(avgRating);
+            setReviews(reviewResponse.data);
+          }
+        }
       } catch (error) {
-        console.error('Failed to fetch webtoon:', error);
-        setError('웹툰 정보를 불러오는데 실패했습니다.');
-      } finally {
-        setLoading(false);
+        console.error('Error fetching webtoon data:', error);
       }
     };
 
     fetchWebtoon();
   }, [id]);
 
-  if (loading) {
-    return <div className={styles.loading}>로딩 중...</div>;
-  }
+  const handleLike = async (reviewId: number) => {
+    const response = await WebtoonReviewService.toggleLikeForReview(reviewId);
+    if (response.success) {
+      // 좋아요 상태 업데이트 로직 추가 필요
+      // 예: 리뷰 목록에서 해당 리뷰의 좋아요 수를 업데이트
+    }
+  };
 
-  if (error) {
-    return <div className={styles.error}>{error}</div>;
-  }
+  const handleReport = (reviewId: number) => {
+    // 리포트 처리 로직 추가 필요
+    // 예: 리포트 모달 열기
+  };
 
   if (!webtoon) {
-    return <div className={styles.error}>웹툰을 찾을 수 없습니다.</div>;
+    return <div>로딩중...</div>;
   }
 
   return (
-    <div className={styles.container}>
-      <WebtoonBasicInfoSection webtoon={webtoon} />
-      <WebtoonRatingSection webtoon={webtoon} />
-      <WebtoonAnalysisSection webtoon={webtoon} />
-      <WebtoonRecommendationSection webtoon={webtoon} />
+    <div className={styles.webtoonDetailPage}>
+      <WebtoonDetailsSection webtoon={webtoon} />
+      <WebtoonRatingSection 
+        averageRating={averageRating} 
+        reviews={reviews} 
+        onLike={handleLike} 
+        onReport={handleReport} 
+      />
+      <UserInteractionSection webtoonId={webtoon.id} />
     </div>
   );
 };

@@ -1,23 +1,11 @@
 .webtoonDetailPage {
   width: 100%;
-  max-width: 1200px;
+  padding: 48px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem;
   background-color: var(--card-background-color);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 768px) {
-  .webtoonDetailPage {
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .webtoonDetailPage {
-    padding: 0.5rem;
-  }
 }
 
 /* 평가 섹션 */
@@ -67,28 +55,4 @@
   display: flex;
   gap: 1rem;
   margin-top: 20px;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-  font-size: 1.2rem;
-  color: var(--color-text-secondary);
-}
-
-.error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-  font-size: 1.2rem;
-  color: var(--color-error);
 }
