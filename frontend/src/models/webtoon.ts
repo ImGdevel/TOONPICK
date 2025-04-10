@@ -1,22 +1,66 @@
-import { Platform, SerializationStatus, AgeRating, DayOfWeek } from '@models/enum';
-import { Author } from '@models/author';
-import { Genre } from '@models/genre';
+export enum Platform {
+  NAVER = 'NAVER',
+  KAKAO = 'KAKAO',
+  KAKAOPAGE = 'KAKAOPAGE',
+  LEZHIN = 'LEZHIN',
+  BOMTOON = 'BOMTOON',
+  OTHER = 'OTHER'
+}
+
+export enum SerializationStatus {
+  ONGOING = 'ONGOING',
+  COMPLETED = 'COMPLETED',
+  HIATUS = 'HIATUS'
+}
 
 export interface Webtoon {
   id: number;
-  thumbnailUrl: string;
   title: string;
-  isAdult: boolean;
-  status: string;
-  publishDay: string;
+  thumbnailUrl: string;
   platform: Platform;
+  isAdult: boolean;
+  status: SerializationStatus;
+  publishDay: string;
   authors: Author[];
   description: string;
   genres: Genre[];
   totalRatings: number;
   averageRating: number;
-  analysisData?: any;
-  similarWebtoons?: any[];
+  analysisData: AnalysisData;
+  similarWebtoons: SimilarWebtoon[];
+}
+
+export interface Author {
+  id: number;
+  name: string;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface AnalysisData {
+  genreDistribution: { genre: string; percentage: number }[];
+  audienceAge: { age: string; percentage: number }[];
+  genderDistribution: { gender: string; percentage: number }[];
+  plotComplexity: number;
+  characterDevelopment: number;
+  worldBuilding: number;
+  pacing: number;
+  dialogueQuality: number;
+  artStyle: number;
+}
+
+export interface SimilarWebtoon {
+  id: number;
+  title: string;
+  thumbnailUrl: string;
+  platform: Platform;
+  status: SerializationStatus;
+  isAdult: boolean;
+  averageRating: number;
+  genres: Genre[];
 }
 
 export interface WebtoonResponse<T = any> {
@@ -25,4 +69,12 @@ export interface WebtoonResponse<T = any> {
   total?: number;
   message?: string;
   error?: string;
+}
+
+export interface MemberProfile {
+  id: number;
+  username: string;
+  email: string;
+  nickname: string;
+  profileImage: string;
 }
