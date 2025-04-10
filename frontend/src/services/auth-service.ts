@@ -1,7 +1,8 @@
 import { api, Response } from '@api';
-import TokenManager from '@/services/token-manager';
-import TokenRefresher from '@/services/token-refresher';
-import Logger from '@/utils/logger';
+import { Routes } from '@constants/routes'
+import TokenManager from '@services/token-manager';
+import TokenRefresher from '@services/token-refresher';
+import Logger from '@utils/logger';
 import Cookies from 'js-cookie';
 
 export const AuthService = {
@@ -63,7 +64,7 @@ export const AuthService = {
 
   // 소셜 로그인
   socialLogin: (provider: string): void => {
-      const redirectUri = window.location.origin + '/login-success';
+      const redirectUri = window.location.origin + Routes.LOGIN_CALLBACK;
   
       // redirect_uri를 쿠키에 저장 (유효기간: 5분)
       Cookies.set('redirect_uri', redirectUri, { path: '/', expires: 1 / 288 });

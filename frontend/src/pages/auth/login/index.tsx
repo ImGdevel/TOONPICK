@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '@contexts/auth-context';
+import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 import AuthService from '@services/auth-service';
 import SocialLoginButton from '@components/social-login-button';
@@ -15,7 +16,7 @@ const SignInPage: React.FC = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/');
+      navigate(Routes.HOME);
     }
   }, [isLoggedIn, navigate]);
 
@@ -38,7 +39,7 @@ const SignInPage: React.FC = () => {
     try {
       const response = await AuthService.login(formData.username, formData.password, login);
       if (response.success) {
-        navigate('/');
+        navigate(Routes.HOME);
       }
     } catch (err: any) {
       const errorMessage =

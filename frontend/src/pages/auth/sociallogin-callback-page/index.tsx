@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '@contexts/auth-context';
+import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 import TokenRefresher from '@services/token-refresher';
 
@@ -18,7 +19,7 @@ const SocialLoginCallbackPage: React.FC = () => {
 
         if (accessToken) {
           login();
-          navigate('/');
+          navigate(Routes.HOME);
         } else {
           throw new Error('Access Token이 없습니다.');
         }

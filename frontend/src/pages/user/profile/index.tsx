@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '@contexts/auth-context';
+import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 
 import MemberService from '@services/member-service';
@@ -33,7 +34,7 @@ const MyProfilePage: React.FC = () => {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      navigate('/login');
+      navigate(Routes.HOME);
       return;
     }
     const fetchUserData = async () => {
