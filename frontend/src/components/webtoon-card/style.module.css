@@ -2,27 +2,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: var(--card-background-color);
-  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
   text-decoration: none;
+  overflow: hidden;
 }
 
 .webtoonCard:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
   text-decoration: none;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .thumbnailContainer {
   position: relative;
-  padding-top: 120%;
   width: 100%;
+  padding-top: 120%;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border-radius: 8px;
 }
 
 .thumbnailImage {
@@ -32,29 +31,34 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.webtoonCard:hover .thumbnailImage {
+  transform: scale(1.05);
 }
 
 .webtoonInfo {
   width: 100%;
-  padding: 16px;
-  padding-top: 0px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-grow: 1;
-  margin-top: 12px;
+  background-color: var(--card-background-color);
 }
 
 .webtoonTitle {
-  font-size: 17px;
-  line-height: 1.1;
-  font-weight: bold;
-  height: 2.2em;
-  overflow: hidden;
-  white-space: normal;
-  text-overflow: ellipsis;
-  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text-color);
+  text-align: center;
+  margin-bottom: 8px;
+  line-height: 1.2;
+  height: 2.4em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .webtoonMeta {
@@ -62,29 +66,43 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-top: 8px;
+  font-size: 14px;
 }
 
 .webtoonAuthor {
-  font-size: 14px;
   color: var(--author-color);
-  flex: 7;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
 }
 
 .webtoonRating {
-  font-size: 14px;
-  margin: 0px 5px;
-  flex: 3;
-  text-align: right;
   color: var(--rating-color);
+  font-weight: 600;
+  margin-left: 8px;
 }
 
 .tagsContainer {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
   z-index: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 4px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .webtoonCard {
+    width: 100%;
+  }
+
+  .webtoonTitle {
+    font-size: 14px;
+  }
+
+  .webtoonMeta {
+    font-size: 12px;
+  }
 }

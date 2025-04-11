@@ -26,8 +26,8 @@ export interface Webtoon {
   genres: Genre[];
   totalRatings: number;
   averageRating: number;
-  analysisData: AnalysisData;
   similarWebtoons: SimilarWebtoon[];
+  analysisData?: WebtoonAnalysisData | null;
 }
 
 export interface Author {
@@ -38,18 +38,6 @@ export interface Author {
 export interface Genre {
   id: number;
   name: string;
-}
-
-export interface AnalysisData {
-  genreDistribution: { genre: string; percentage: number }[];
-  audienceAge: { age: string; percentage: number }[];
-  genderDistribution: { gender: string; percentage: number }[];
-  plotComplexity: number;
-  characterDevelopment: number;
-  worldBuilding: number;
-  pacing: number;
-  dialogueQuality: number;
-  artStyle: number;
 }
 
 export interface SimilarWebtoon {
@@ -77,4 +65,42 @@ export interface MemberProfile {
   email: string;
   nickname: string;
   profileImage: string;
+}
+
+export interface WebtoonAnalysisData {
+  totalViews: number;
+  totalSubscribers: number;
+  averageViewTime: number; // 분 단위
+  completionRate: number; // 완독률 (%)
+  readerDemographics: {
+    ageGroups: { age: string; percentage: number }[];
+    genderDistribution: { gender: string; percentage: number }[];
+    regionDistribution: { region: string; percentage: number }[];
+  };
+  ratingDistribution: { rating: number; count: number }[];
+  reviewSentiment: {
+    positive: number;
+    neutral: number;
+    negative: number;
+  };
+  contentAnalysis: {
+    genreDistribution: { genre: string; percentage: number }[];
+    tagDistribution: { tag: string; count: number }[];
+    characterPopularity: { character: string; popularity: number }[];
+  };
+  growthMetrics: {
+    dailyViews: { date: string; count: number }[];
+    dailySubscribers: { date: string; count: number }[];
+    dailyComments: { date: string; count: number }[];
+  };
+  platformComparison: {
+    platform: string;
+    averageRating: number;
+    totalViews: number;
+  }[];
+  predictionMetrics: {
+    expectedGrowth: number; // 예상 성장률 (%)
+    retentionRate: number; // 유지율 (%)
+    churnRate: number; // 이탈률 (%)
+  };
 }

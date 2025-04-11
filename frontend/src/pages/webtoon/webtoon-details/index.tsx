@@ -4,8 +4,8 @@ import { Webtoon } from '@models/webtoon';
 import WebtoonService from '@services/webtoon-service';
 import WebtoonBasicInfoSection from './sections/webtoon-basic-info-section';
 import WebtoonRatingSection from './sections/webtoon-rating-section';
-// import WebtoonAnalysisSection from './sections/webtoon-analysis-section';
-// import WebtoonRecommendationSection from './sections/webtoon-recommendation-section';
+import WebtoonAnalysisSection from './sections/webtoon-analysis-section';
+import WebtoonRecommendationSection from './sections/webtoon-recommendation-section';
 import styles from './style.module.css';
 
 const WebtoonDetailPage: React.FC = () => {
@@ -53,8 +53,8 @@ const WebtoonDetailPage: React.FC = () => {
     <div className={styles.container}>
       <WebtoonBasicInfoSection webtoon={webtoon} />
       <WebtoonRatingSection webtoon={webtoon} />
-      {/* <WebtoonAnalysisSection webtoon={webtoon} />
-      <WebtoonRecommendationSection webtoon={webtoon} /> */}
+      <WebtoonAnalysisSection webtoon={webtoon} />
+      <WebtoonRecommendationSection webtoon={webtoon} />
     </div>
   );
 };
