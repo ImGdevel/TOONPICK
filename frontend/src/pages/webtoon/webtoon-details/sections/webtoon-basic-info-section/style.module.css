@@ -1,0 +1,218 @@
+.section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 0.5rem;
+}
+
+.contentContainer {
+  display: flex;
+  gap: 2rem;
+}
+
+.leftSection {
+  flex: 0 0 300px;
+}
+
+.rightSection {
+  flex: 1;
+}
+
+.thumbnailContainer {
+  position: relative;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.thumbnail {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.badgeContainer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.adultBadge, .completedBadge, .hiatusBadge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: white;
+}
+
+.adultBadge {
+  background-color: #ff4444;
+}
+
+.completedBadge {
+  background-color: #4caf50;
+}
+
+.hiatusBadge {
+  background-color: #ff9800;
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.readButton, .bookmarkButton {
+  padding: 0.8rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.readButton {
+  background-color: #3f51b5;
+  color: white;
+}
+
+.readButton:hover {
+  background-color: #303f9f;
+}
+
+.bookmarkButton {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.bookmarkButton:hover {
+  background-color: #e0e0e0;
+}
+
+.bookmarked {
+  background-color: #ffeb3b;
+  color: #333;
+  border: 1px solid #fbc02d;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.platform, .authors, .publishDay, .genres, .description {
+  margin-bottom: 1rem;
+}
+
+.label {
+  font-weight: bold;
+  color: #666;
+  margin-right: 0.5rem;
+}
+
+.value {
+  color: #333;
+}
+
+.genreTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.genreTag {
+  padding: 4px 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.descriptionText {
+  margin-top: 0.5rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+.expandButton {
+  background: none;
+  border: none;
+  color: #3f51b5;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 0.5rem;
+  padding: 0;
+}
+
+.expandButton:hover {
+  text-decoration: underline;
+}
+
+.readingProgress {
+  margin-top: 1.5rem;
+}
+
+.progressBar {
+  height: 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 4px;
+}
+
+.progressText {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .contentContainer {
+    flex-direction: column;
+  }
+  
+  .leftSection {
+    flex: 0 0 auto;
+    max-width: 250px;
+    margin: 0 auto 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  
+  .platform, .authors, .publishDay, .genres, .description {
+    text-align: center;
+  }
+  
+  .genreTags {
+    justify-content: center;
+  }
+} 
