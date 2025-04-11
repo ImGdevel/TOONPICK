@@ -10,28 +10,24 @@ interface WebtoonListProps {
 }
 
 const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, size = 220, showTags = true }) => {
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 5;
-  const totalPages = Math.ceil(webtoons.length / itemsPerPage);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const itemsToShow = 5; // 한 번에 보여줄 웹툰 수
 
   const handleNext = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage(currentPage + 1);
+    if (currentIndex < webtoons.length - itemsToShow) {
+      setCurrentIndex(currentIndex + 1);
     }
   };
 
   const handlePrev = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
     }
   };
 
   return (
     <div className={styles.webtoonList}>
-      <div
-        className={styles.carousel}
-        style={{ transform: `translateX(-${currentPage * (size + 10) * 5}px)`, minHeight: `${size}px` }}
-      >
+      <div className={styles.carousel} style={{ transform: `translateX(-${currentIndex * (size + 10)}px)` }}>
         {webtoons.length > 0 ? (
           webtoons.map((webtoon) => (
             <WebtoonCard
@@ -45,20 +41,14 @@ const WebtoonList: React.FC<WebtoonListProps> = ({ webtoons, size = 220, showTag
           <div className={styles.emptyMessage}>웹툰이 없습니다.</div>
         )}
       </div>
-      {webtoons.length > itemsPerPage && (
-        <div className={styles.navigation}>
-          {currentPage > 0 && (
-            <button onClick={handlePrev} className={styles.navButton}>
-              ◀
-            </button>
-          )}
-          {currentPage < totalPages - 1 && (
-            <button onClick={handleNext} className={styles.navButton}>
-              ▶
-            </button>
-          )}
-        </div>
-      )}
+      <div className={styles.navigation}>
+        <button onClick={handlePrev} className={`${styles.navButton} ${currentIndex === 0 ? styles.disabled : ''}`}>
+          ◀
+        </button>
+        <button onClick={handleNext} className={`${styles.navButton} ${currentIndex >= webtoons.length - itemsToShow ? styles.disabled : ''}`}>
+          ▶
+        </button>
+      </div>
     </div>
   );
 };

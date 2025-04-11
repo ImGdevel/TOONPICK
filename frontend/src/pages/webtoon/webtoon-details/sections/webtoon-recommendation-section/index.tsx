@@ -2,6 +2,7 @@ import React from 'react';
 import { Webtoon, Platform, SerializationStatus } from '@models/webtoon';
 import styles from './style.module.css';
 import WebtoonCard from '@components/webtoon-card';
+import WebtoonList from '@components/webtoon-list';
 
 interface WebtoonRecommendationSectionProps {
   webtoon: Webtoon;
@@ -32,6 +33,86 @@ const WebtoonRecommendationSection: React.FC<WebtoonRecommendationSectionProps> 
         analysisData: null,
         similarWebtoons: []
       },
+      {
+        id: 4,
+        title: '랜덤 추천 웹툰 1',
+        thumbnailUrl: 'https://via.placeholder.com/150',
+        platform: Platform.KAKAOPAGE,
+        status: SerializationStatus.ONGOING,
+        isAdult: false,
+        publishDay: '목',
+        authors: [{ id: 3, name: '작가3' }],
+        description: '랜덤 추천 웹툰 1의 설명입니다.',
+        genres: [{ id: 1, name: '판타지' }],
+        totalRatings: 900,
+        averageRating: 4.2,
+        analysisData: null,
+        similarWebtoons: []
+      },
+      {
+        id: 4,
+        title: '랜덤 추천 웹툰 1',
+        thumbnailUrl: 'https://via.placeholder.com/150',
+        platform: Platform.KAKAOPAGE,
+        status: SerializationStatus.ONGOING,
+        isAdult: false,
+        publishDay: '목',
+        authors: [{ id: 3, name: '작가3' }],
+        description: '랜덤 추천 웹툰 1의 설명입니다.',
+        genres: [{ id: 1, name: '판타지' }],
+        totalRatings: 900,
+        averageRating: 4.2,
+        analysisData: null,
+        similarWebtoons: []
+      },
+      {
+        id: 4,
+        title: '랜덤 추천 웹툰 1',
+        thumbnailUrl: 'https://via.placeholder.com/150',
+        platform: Platform.KAKAOPAGE,
+        status: SerializationStatus.ONGOING,
+        isAdult: false,
+        publishDay: '목',
+        authors: [{ id: 3, name: '작가3' }],
+        description: '랜덤 추천 웹툰 1의 설명입니다.',
+        genres: [{ id: 1, name: '판타지' }],
+        totalRatings: 900,
+        averageRating: 4.2,
+        analysisData: null,
+        similarWebtoons: []
+      },
+      {
+        id: 4,
+        title: '랜덤 추천 웹툰 1',
+        thumbnailUrl: 'https://via.placeholder.com/150',
+        platform: Platform.KAKAOPAGE,
+        status: SerializationStatus.ONGOING,
+        isAdult: false,
+        publishDay: '목',
+        authors: [{ id: 3, name: '작가3' }],
+        description: '랜덤 추천 웹툰 1의 설명입니다.',
+        genres: [{ id: 1, name: '판타지' }],
+        totalRatings: 900,
+        averageRating: 4.2,
+        analysisData: null,
+        similarWebtoons: []
+      },
+      {
+        id: 4,
+        title: '랜덤 추천 웹툰 1',
+        thumbnailUrl: 'https://via.placeholder.com/150',
+        platform: Platform.KAKAOPAGE,
+        status: SerializationStatus.ONGOING,
+        isAdult: false,
+        publishDay: '목',
+        authors: [{ id: 3, name: '작가3' }],
+        description: '랜덤 추천 웹툰 1의 설명입니다.',
+        genres: [{ id: 1, name: '판타지' }],
+        totalRatings: 900,
+        averageRating: 4.2,
+        analysisData: null,
+        similarWebtoons: []
+      }
       // ... 더 많은 유사 웹툰
     ],
     userSimilarWebtoons: [
@@ -98,61 +179,25 @@ const WebtoonRecommendationSection: React.FC<WebtoonRecommendationSectionProps> 
       {/* 통합 유사도 웹툰 */}
       <div className={styles.recommendationSection}>
         <h3 className={styles.subtitle}>이 웹툰과 비슷한 웹툰</h3>
-        <div className={styles.webtoonGrid}>
-          {recommendations.similarWebtoons.map(webtoon => (
-            <WebtoonCard
-              key={webtoon.id}
-              webtoon={webtoon}
-              showTags={true}
-              size={210}
-            />
-          ))}
-        </div>
+        <WebtoonList webtoons={recommendations.sameAuthorWebtoons} />
       </div>
 
       {/* 유저 유사도 웹툰 */}
       <div className={styles.recommendationSection}>
         <h3 className={styles.subtitle}>이 웹툰을 좋아하는 사람들이 함께 본 웹툰</h3>
-        <div className={styles.webtoonGrid}>
-          {recommendations.userSimilarWebtoons.map(webtoon => (
-            <WebtoonCard
-              key={webtoon.id}
-              webtoon={webtoon}
-              showTags={true}
-              size={210}
-            />
-          ))}
-        </div>
+        <WebtoonList webtoons={recommendations.userSimilarWebtoons} />
       </div>
 
       {/* 동일 작가 웹툰 */}
       <div className={styles.recommendationSection}>
         <h3 className={styles.subtitle}>같은 작가의 다른 웹툰</h3>
-        <div className={styles.webtoonGrid}>
-          {recommendations.sameAuthorWebtoons.map(webtoon => (
-            <WebtoonCard
-              key={webtoon.id}
-              webtoon={webtoon}
-              showTags={true}
-              size={210}
-            />
-          ))}
-        </div>
+        <WebtoonList webtoons={recommendations.similarWebtoons} />
       </div>
 
       {/* 랜덤 추천 웹툰 */}
       <div className={styles.recommendationSection}>
         <h3 className={styles.subtitle}>이런 웹툰은 어떠세요?</h3>
-        <div className={styles.webtoonGrid}>
-          {recommendations.randomWebtoons.map(webtoon => (
-            <WebtoonCard
-              key={webtoon.id}
-              webtoon={webtoon}
-              showTags={true}
-              size={210}
-            />
-          ))}
-        </div>
+        <WebtoonList webtoons={recommendations.randomWebtoons} />
       </div>
     </section>
   );
