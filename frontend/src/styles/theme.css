@@ -6,6 +6,7 @@
   --icon-color: #333333; 
   --login-button-color: #333333; 
   --body-background-color: #f0f2f5; 
+  --notification-border-color: rgba(0, 0, 0, 0.1);
   --body-text-color: #333333; 
   --form-background-color: #ffffff; 
   --form-input-background-color: #f9f9f9; 
@@ -28,6 +29,7 @@
   --input-text-color: white; 
   --icon-color: white; 
   --login-button-color: white; 
+  --notification-border-color: rgba(255, 255, 255, 0.1);
   --body-background-color: #161616; 
   --body-text-color: white; 
   --form-background-color: #2d2d2d; 

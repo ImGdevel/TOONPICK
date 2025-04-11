@@ -45,13 +45,15 @@
   top: 100%;
   right: 0;
   width: 320px;
-  max-height: 400px;
-  background-color: var(--background-color);
+  height: 350px;
+  background-color: var(--card-background-color);
   border-radius: 8px;
+  border: 1px solid var(--notification-border-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .notificationList {
@@ -102,11 +104,12 @@
   padding: 0.75rem;
   background-color: var(--hover-color);
   border: none;
-  border-top: 1px solid var(--border-color);
+  border-top:1px solid var(--notification-border-color);
   cursor: pointer;
   color: var(--text-color);
   font-size: 0.875rem;
   transition: background-color 0.2s;
+  
 }
 
 .settingsButton:hover {
@@ -117,4 +120,4 @@
   .notificationDropdown {
     width: 280px;
   }
-} 
+}

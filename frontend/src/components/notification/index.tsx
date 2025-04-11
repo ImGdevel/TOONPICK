@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { FiBell, FiSettings } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { Routes as RoutePaths } from '@constants/routes';
@@ -37,7 +37,32 @@ const NotificationComponent: React.FC = () => {
         webtoonId: 456,
         isRead: false,
         createdAt: '2024-03-20T09:30:00'
+      },
+      {
+        id: 3,
+        type: 'update',
+        message: '구독 중인 웹툰이 업데이트 되었습니다.',
+        webtoonId: 45622,
+        isRead: false,
+        createdAt: '2024-03-20T09:30:00'
+      },
+      {
+        id: 4,
+        type: 'update',
+        message: '구독 중인 웹툰이 업데이트 되었습니다.',
+        webtoonId: 45622,
+        isRead: false,
+        createdAt: '2024-03-20T09:30:00'
+      },
+      {
+        id: 5,
+        type: 'update',
+        message: '구독 중인 웹툰이 업데이트 되었습니다.',
+        webtoonId: 45622,
+        isRead: false,
+        createdAt: '2024-03-20T09:30:00'
       }
+
     ]);
   }, []);
 
@@ -52,20 +77,23 @@ const NotificationComponent: React.FC = () => {
         n.id === notification.id ? { ...n, isRead: true } : n
       )
     );
+    setIsOpen(false);
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+  const handleClickOutside = useCallback((event: MouseEvent): void => {
+    const isNotificationClick = notificationRef.current && notificationRef.current.contains(event.target as Node);
+
+    if (!isNotificationClick) {
       setIsOpen(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('click', handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
 
   return (
     <div className={styles.notificationContainer} ref={notificationRef}>
@@ -101,7 +129,10 @@ const NotificationComponent: React.FC = () => {
           </div>
           <button 
             className={styles.settingsButton}
-            onClick={() => navigate(RoutePaths.NOTIFICATION_SETTINGS)}
+            onClick={() => {
+              navigate(RoutePaths.NOTIFICATION_SETTINGS);
+              setIsOpen(false);
+            }}
           >
             <FiSettings className={styles.icon} size={16} />
             알림 설정
@@ -112,4 +143,4 @@ const NotificationComponent: React.FC = () => {
   );
 };
 
-export default NotificationComponent; 
+export default NotificationComponent;
