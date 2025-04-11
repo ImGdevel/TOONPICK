@@ -4,98 +4,96 @@ import { AuthContext } from '@contexts/auth-context';
 import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 
+import ProfileCard from './sections/profile-card';
+import WebtoonListSection from './sections/webtoon-list';
+import PreferenceCard from './sections/preference-card';
+import ReviewSection from './sections/review-section';
+import ReadingHistorySection from './sections/reading-history';
+import AchievementSection from './sections/achievement';
+
 import MemberService from '@services/member-service';
-import WebtoonList from '@components/webtoon-list';
 import Spinner from '@components/spinner';
-import { Webtoon } from '@models/webtoon';
-import { MemberProfile } from '@models/member';
 
-import MemberProfileSection from './componets/MemberProfileSection';
-
-
-export interface MyPageState {
-  memberProfile: MemberProfile | null;
-  bookmarks: Webtoon[];
-  favorites: Webtoon[];
-  isLoading: boolean;
-  error: string | null; 
-}
-
-const MyProfilePage: React.FC = () => {
-  const { isLoggedIn } = useContext(AuthContext);
+const UserProfilePage: React.FC = () => {
+  const { isLoggedIn, memberProfile } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [state, setState] = useState<MyPageState>({
-    memberProfile: null,
-    bookmarks: [],
-    favorites: [],
-    isLoading: true,
-    error: null
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn) {
-      navigate(Routes.HOME);
+      navigate(Routes.LOGIN);
       return;
     }
+
+    console.log(memberProfile)
+
     const fetchUserData = async () => {
       try {
-        const [profile, bookmarks, favorites] = await Promise.all([
-          MemberService.getMemberProfile(),
-          MemberService.getFavorites(), // todo : 북마크로 변경할 것
-          MemberService.getFavorites(),
-        ]);
-
-        setState({
-          memberProfile: profile.data || null,
-          bookmarks: bookmarks.data || [],
-          favorites: favorites.data || [],
-          isLoading: false,
-          error: null
-        });
+        setIsLoading(true);
+        // TODO: API 연동
+        setIsLoading(false);
       } catch (error) {
-        setState(prev => ({
-          ...prev,
-          isLoading: false,
-          error: '사용자 데이터를 불러오는데 실패했습니다.'
-        }));
+        setError('사용자 데이터를 불러오는데 실패했습니다.');
+        setIsLoading(false);
       }
     };
 
     fetchUserData();
   }, [isLoggedIn, navigate]);
 
-  if (state.error) return <div>{state.error}</div>;
+  if (error) return <div className={styles.error}>{error}</div>;
+  if (isLoading) return <Spinner />;
 
   return (
-    <div className={styles.myPage}>
+    <div className={styles.profilePage}>
+      <div className={styles.mainContent}>
+        {memberProfile ? (
+          <>
+            <ProfileCard memberProfile={memberProfile} />
+            <div className={styles.gridLayout}>
+              <div className={styles.leftColumn}>
+                <WebtoonListSection
+                  title="내가 보고 있는 웹툰"
+                  webtoons={memberProfile?.readingHistory?.map(h => h.webtoon) || []}
+                  showMoreLink={Routes.READING_HISTORY}
+                />
 
-      {!state.isLoading ? (
-          <div>
-            <MemberProfileSection memberProfile={state.memberProfile} />
-            <section className={styles.bookmarks}>
-              <h2>북마크</h2>
-              <WebtoonList 
-                webtoons={state.bookmarks} 
-                size={180}
-                showTags={false}
-              />
-            </section>
+                <WebtoonListSection
+                  title="내 명작 웹툰"
+                  webtoons={memberProfile?.masterpieceWebtoons || []}
+                  showMoreLink={Routes.MASTERPIECE_WEBTOONS}
+                />
 
-            <section className={styles.favorites}>
-              <h2>좋아요</h2>
-              <WebtoonList 
-                webtoons={state.favorites} 
-                size={180}
-                showTags={false}
-              />
-            </section>
-          </div>
+                <PreferenceCard
+                  genrePreferences={memberProfile?.preferences?.genrePreferences || []}
+                  emotionalTags={memberProfile?.preferences?.emotionalTags || []}
+                  aiTags={memberProfile?.preferences?.aiTags || []}
+                />
+              </div>
+
+              <div className={styles.rightColumn}>
+                <ReviewSection
+                  reviews={memberProfile?.reviews || []}
+                  topReviews={memberProfile?.topReviews || []}
+                />
+
+                <ReadingHistorySection
+                  readingHistory={memberProfile?.readingHistory || []}
+                />
+
+                <AchievementSection
+                  badges={memberProfile?.badges || []}
+                />
+              </div>
+            </div>
+          </>
         ) : (
-          <Spinner />
-        )
-      }
+          <div className={styles.error}>프로필 정보를 불러오는 중입니다.</div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default MyProfilePage; 
+export default UserProfilePage; 

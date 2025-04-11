@@ -11,5 +11,7 @@ export const Routes = {
     USER_PROFILE: '/user/profile',
     USER_PROFILE_EDIT: '/user/profile/edit',
     NOTIFICATION_SETTINGS: '/user/notification-settings',
+    READING_HISTORY: '/user/reading-history',
+    MASTERPIECE_WEBTOONS: '/user/masterpiece-webtoons',
     ERROR: '*',
   };

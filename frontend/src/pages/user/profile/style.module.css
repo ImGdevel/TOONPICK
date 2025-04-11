@@ -15,3 +15,66 @@
 .reviews {
   margin-bottom: 40px;
 }
+
+.profilePage {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+  background: var(--body-background-color);
+  min-height: 100vh;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.gridLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.leftColumn,
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.error {
+  color: var(--error-color);
+  text-align: center;
+  padding: var(--spacing-lg);
+  font-size: 16px;
+  background: var(--card-gradient);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 1024px) {
+  .gridLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .profilePage {
+    padding: var(--spacing-md);
+  }
+
+  .mainContent {
+    gap: var(--spacing-lg);
+  }
+
+  .gridLayout {
+    gap: var(--spacing-md);
+  }
+
+  .leftColumn,
+  .rightColumn {
+    gap: var(--spacing-md);
+  }
+}

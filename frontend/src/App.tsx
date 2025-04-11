@@ -18,6 +18,8 @@ import ProfileEditPage from '@pages/user/profile-edit';
 import ErrorPage from '@pages/error';
 import WebtoonRatingListPage from '@pages/webtoon/rating-list';
 import NotificationSettingsPage from '@pages/user/notification-settings';
+import ReadingHistoryPage from '@pages/user/reading-history';
+import MasterpieceWebtoonsPage from '@pages/user/masterpiece-webtoons';
 import { Routes as RoutePaths } from '@constants/routes';
 
 const App: React.FC = () => {
@@ -47,6 +49,8 @@ const App: React.FC = () => {
               <Route path={RoutePaths.USER_PROFILE_EDIT} element={<ProfileEditPage />} />
               <Route path={RoutePaths.NOTIFICATION_SETTINGS} element={<NotificationSettingsPage />} />
               <Route path={RoutePaths.ERROR} element={<ErrorPage />} />
+              <Route path={RoutePaths.READING_HISTORY} element={<ReadingHistoryPage />} />
+              <Route path={RoutePaths.MASTERPIECE_WEBTOONS} element={<MasterpieceWebtoonsPage />} />
             </Routes>
           </main>
         </Router>
