@@ -17,11 +17,11 @@ const WebtoonReviewCard: React.FC<WebtoonReviewCardProps> = ({ review, onLike, o
       <div className={styles.reviewHeader}>
         <div className={styles.userInfo}>
           <img
-            src={review.memberId.profilePicture}
-            alt={`${review.memberId.nickname} profile`}
+            src={review.profilePicture}
+            alt={`${review.userName} profile`}
             className={styles.profilePicture}
           />
-          <span className={styles.nickname}>{review.memberId.nickname}</span>
+          <span className={styles.nickname}>{review.userName}</span>
         </div>
         <StarRating rating={review.rating} interactive={false} textColor="black" />
         <div className={styles.actions}>

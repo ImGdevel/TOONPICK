@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Webtoon } from '@models/webtoon';
 import WebtoonService from '@services/webtoon-service';
 import WebtoonBasicInfoSection from './sections/webtoon-basic-info-section';
-// import WebtoonRatingSection from './sections/webtoon-rating-section';
+import WebtoonRatingSection from './sections/webtoon-rating-section';
 // import WebtoonAnalysisSection from './sections/webtoon-analysis-section';
 // import WebtoonRecommendationSection from './sections/webtoon-recommendation-section';
 import styles from './style.module.css';
@@ -52,8 +52,8 @@ const WebtoonDetailPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <WebtoonBasicInfoSection webtoon={webtoon} />
-      {/* <WebtoonRatingSection webtoon={webtoon} />
-      <WebtoonAnalysisSection webtoon={webtoon} />
+      <WebtoonRatingSection webtoon={webtoon} />
+      {/* <WebtoonAnalysisSection webtoon={webtoon} />
       <WebtoonRecommendationSection webtoon={webtoon} /> */}
     </div>
   );

@@ -1,20 +1,18 @@
 export interface Review {
   id: number;
   webtoonId: number;
-  memberId: {
-    username: string;
-    nickname: string;
-    profilePicture: string;
-  };
+  userId: string;
+  userName: string;
+  profilePicture: string;
   rating: number;
   comment: string;
   likes: number;
-  createdDate: string;
-  modifiedDate: string;
+  createdAt: string;
+  modifiedAt: string;
 }
 
 export interface ReviewRequest {
   webtoonId: number;
   rating: number;
   comment: string;
-} 
+}
