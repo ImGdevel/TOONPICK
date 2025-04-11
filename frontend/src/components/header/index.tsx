@@ -5,6 +5,8 @@ import { Routes as RoutePaths } from '@constants/routes';
 import ProfileWidget from '@components/profile-widget';
 import Menu from '@components/top-menu';
 import Search from '@components/search-bar';
+import NotificationComponent from '@components/notification';
+import { FiSun, FiMoon } from 'react-icons/fi';
 import styles from './style.module.css';
 
 const Header: React.FC = () => {
@@ -12,6 +14,7 @@ const Header: React.FC = () => {
   const { isLoggedIn, logout, memberProfile } = useContext(AuthContext);
   const [isProfileWidgetOpen, setProfileWidgetOpen] = useState<boolean>(false);
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
+  const [isNotificationOpen, setNotificationOpen] = useState<boolean>(false);
 
   const profileButtonRef = useRef<HTMLButtonElement>(null);
   const profileWidgetRef = useRef<HTMLDivElement>(null);
@@ -31,6 +34,10 @@ const Header: React.FC = () => {
     setProfileWidgetOpen((prev) => !prev);
   };
 
+  const toggleNotification = (): void => {
+    setNotificationOpen((prev) => !prev);
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.headerTitle}>
@@ -39,7 +46,22 @@ const Header: React.FC = () => {
         <Menu navigate={navigate} />
 
         <div className={styles.rightSection}>
-          <Search navigate={navigate} isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} />
+          <Search navigate={navigate} />
+
+          <button onClick={toggleTheme} className={styles.iconButton}>
+            {isDarkTheme ? (
+              <FiSun className={styles.icon} color="white" size={24} />
+            ) : (
+              <FiMoon className={styles.icon} color="white" size={24} />
+            )}
+          </button>
+
+          
+
+          <NotificationComponent />
+
+          <Link to={RoutePaths.WEBTOON_RATING_LIST} className={styles.navLink}>웹툰 평가</Link>
+
 
           <div className={styles.profileContainer}>
             {isLoggedIn ? (
@@ -71,7 +93,6 @@ const Header: React.FC = () => {
             )}
           </div>
 
-          <Link to={RoutePaths.WEBTOON_RATING_LIST} className={styles.navLink}>웹툰 평가</Link>
         </div>
       </div>
     </header>
