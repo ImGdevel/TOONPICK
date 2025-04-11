@@ -1,47 +1,93 @@
 .profileWidget {
   position: absolute;
-  background-color: #fff;
-  color: #333;
+  top: 100%;
+  right: 0;
+  width: 280px;
+  background-color: var(--card-background-color);
   border-radius: 12px;
-  width: 250px;
-  height: auto;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--notification-border-color);
   z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  top: 50px;
-  left: -180px;
   display: none;
+  margin-top: 8px;
 }
 
 .profileWidget.open {
+  display: block;
+}
+
+.profileHeader {
+  padding: 16px;
   display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--notification-border-color);
 }
 
-.widgetProfilePicture {
-  width: 70px;
-  height: 70px;
+.profileImage {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  border: 2px solid #ddd;
+  object-fit: cover;
+  border: 2px solid var(--notification-border-color);
 }
 
-.userInfo {
-  margin: 15px 0;
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.widgetButton {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 12px;
-  margin: 8px 0;
-  cursor: pointer;
-  border-radius: 6px;
+.username {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.email {
+  color: var(--text-secondary-color);
+  font-size: 0.875rem;
+}
+
+.menuList {
+  padding: 8px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   width: 100%;
-  transition: background-color 0.3s;
+  padding: 12px;
+  border-radius: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
 }
 
-.widgetButton:hover {
-  background-color: #0056b3;
+.menuItem:hover {
+  background-color: var(--hover-color);
+}
+
+.menuIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary-color);
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--notification-border-color);
+  margin: 8px 0;
+}
+
+.logoutButton {
+  color: var(--error-color);
+}
+
+.logoutButton .menuIcon {
+  color: var(--error-color);
 }

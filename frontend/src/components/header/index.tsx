@@ -8,6 +8,7 @@ import Search from '@components/search-bar';
 import NotificationComponent from '@components/notification';
 import { FiSun, FiMoon } from 'react-icons/fi';
 import styles from './style.module.css';
+import ProfileIcon from '@components/profile-icon';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Header: React.FC = () => {
   const [isProfileWidgetOpen, setProfileWidgetOpen] = useState<boolean>(false);
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
   const [isNotificationOpen, setNotificationOpen] = useState<boolean>(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const profileButtonRef = useRef<HTMLButtonElement>(null);
   const profileWidgetRef = useRef<HTMLDivElement>(null);
@@ -38,6 +40,10 @@ const Header: React.FC = () => {
     setNotificationOpen((prev) => !prev);
   };
 
+  const toggleProfile = () => {
+    setIsProfileOpen(prev => !prev);
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.headerTitle}>
@@ -56,36 +62,24 @@ const Header: React.FC = () => {
             )}
           </button>
 
-          
-
           <NotificationComponent />
 
           <Link to={RoutePaths.WEBTOON_RATING_LIST} className={styles.navLink}>웹툰 평가</Link>
-
 
           <div className={styles.profileContainer}>
             {isLoggedIn ? (
               <>
                 <button
-                  id="profileToggle"
                   ref={profileButtonRef}
                   className={styles.profileButton}
-                  onClick={toggleProfileWidget}
+                  onClick={toggleProfile}
                 >
-                  <img
-                    src={memberProfile?.profilePicture || "https://via.placeholder.com/40"}
-                    alt="User Profile"
-                    className={styles.profilePicture}
-                  />
+                  <ProfileIcon />
                 </button>
                 <ProfileWidget
-                  memberProfile={memberProfile}
-                  onNavigate={navigate}
-                  onLogout={handleLogout}
-                  isWidgetOpen={isProfileWidgetOpen}
-                  setProfileWidgetOpen={setProfileWidgetOpen}
-                  profileButtonRef={profileButtonRef}
-                  profileWidgetRef={profileWidgetRef}
+                  isOpen={isProfileOpen}
+                  onClose={() => setIsProfileOpen(false)}
+                  buttonRef={profileButtonRef}
                 />
               </>
             ) : (

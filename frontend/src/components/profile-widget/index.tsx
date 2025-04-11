@@ -1,94 +1,92 @@
-import React, { useEffect, useCallback } from 'react';
-import { MemberProfile } from '@models/member';
+import React, { useCallback, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '@contexts/auth-context';
 import { Routes } from '@constants/routes';
+import { FiUser, FiSettings, FiBook, FiLogOut } from 'react-icons/fi';
 import styles from './style.module.css';
 
 interface ProfileWidgetProps {
-  memberProfile: MemberProfile | null;
-  onNavigate: (path: string) => void;
-  onLogout: () => void;
-  isWidgetOpen: boolean;
-  setProfileWidgetOpen: (isOpen: boolean) => void;
-  profileButtonRef: React.RefObject<HTMLButtonElement>;
-  profileWidgetRef: React.RefObject<HTMLDivElement>;
+  isOpen: boolean;
+  onClose: () => void;
+  buttonRef: React.RefObject<HTMLButtonElement>;
 }
 
 const ProfileWidget: React.FC<ProfileWidgetProps> = ({
-  memberProfile,
-  onNavigate,
-  onLogout,
-  isWidgetOpen,
-  setProfileWidgetOpen,
-  profileButtonRef,
-  profileWidgetRef,
+  isOpen,
+  onClose,
+  buttonRef,
 }) => {
-  const handleButtonClick = (action: () => void, closeWidget: () => void) => (event: React.MouseEvent) => {
-    event.stopPropagation();
-    action();
-    closeWidget();
-  };
+  const navigate = useNavigate();
+  const { memberProfile, logout } = useContext(AuthContext);
+  const widgetRef = React.useRef<HTMLDivElement>(null);
 
-  const closeProfileWidget = () => {
-    setProfileWidgetOpen(false);
-  };
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    const isButtonClick = buttonRef.current?.contains(event.target as Node);
+    const isWidgetClick = widgetRef.current?.contains(event.target as Node);
 
-  const handleClickOutside = useCallback((event: MouseEvent): void => {
-    const isProfileClick = profileButtonRef.current && profileButtonRef.current.contains(event.target as Node);
-    const isProfileWidgetClick = profileWidgetRef.current && profileWidgetRef.current.contains(event.target as Node);
-
-    if (!isProfileClick && !isProfileWidgetClick) {
-      closeProfileWidget();
+    if (!isButtonClick && !isWidgetClick) {
+      onClose();
     }
-  }, [profileButtonRef, profileWidgetRef, setProfileWidgetOpen]);
+  }, [buttonRef, onClose]);
 
-  useEffect(() => {
-    window.addEventListener('click', handleClickOutside);
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-    };
+  React.useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [handleClickOutside]);
 
-  const defaultProfilePicture = '/image/profile/user.png';
+  const handleAction = (action: () => void) => {
+    action();
+    onClose();
+  };
 
   return (
     <div
-      id="profileWidget"
-      className={`${styles.profileWidget} ${isWidgetOpen ? styles.open : ''}`}
-      style={{ pointerEvents: isWidgetOpen ? 'auto' : 'none' }}
-      ref={profileWidgetRef}
+      ref={widgetRef}
+      className={`${styles.profileWidget} ${isOpen ? styles.open : ''}`}
     >
-      <img 
-        src={memberProfile?.profilePicture || defaultProfilePicture}
-        alt="User Profile" 
-        className={styles.widgetProfilePicture} 
-      />
-      <div className={styles.userInfo}>
-        <p>{memberProfile?.nickname || '게스트 사용자'}</p>
+      <div className={styles.profileHeader}>
+        <img
+          src={memberProfile?.profilePicture || '/image/profile/user.png'}
+          alt="Profile"
+          className={styles.profileImage}
+        />
+        <div className={styles.profileInfo}>
+          <span className={styles.username}>{memberProfile?.nickname || '게스트'}</span>
+          <span className={styles.email}>{memberProfile?.nickname || ''}</span>
+        </div>
       </div>
-      <button
-        onClick={handleButtonClick(() => onNavigate(Routes.USER_PROFILE), closeProfileWidget)}
-        className={styles.widgetButton}
-      >
-        마이페이지
-      </button>
-      <button
-        onClick={handleButtonClick(() => onNavigate(Routes.USER_PROFILE_EDIT), closeProfileWidget)}
-        className={styles.widgetButton}
-      >
-        프로필 수정
-      </button>
-      <button
-        onClick={handleButtonClick(() => onNavigate(Routes.HOME), closeProfileWidget)}
-        className={styles.widgetButton}
-      >
-        나의 웹툰 리스트
-      </button>
-      <button
-        onClick={handleButtonClick(onLogout, closeProfileWidget)}
-        className={styles.widgetButton}
-      >
-        로그아웃
-      </button>
+
+      <div className={styles.menuList}>
+        <button
+          className={styles.menuItem}
+          onClick={() => handleAction(() => navigate(Routes.USER_PROFILE))}
+        >
+          <FiUser className={styles.menuIcon} />
+          <span>마이페이지</span>
+        </button>
+        <button
+          className={styles.menuItem}
+          onClick={() => handleAction(() => navigate(Routes.USER_PROFILE_EDIT))}
+        >
+          <FiSettings className={styles.menuIcon} />
+          <span>프로필 설정</span>
+        </button>
+        <button
+          className={styles.menuItem}
+          onClick={() => handleAction(() => navigate(Routes.HOME))}
+        >
+          <FiBook className={styles.menuIcon} />
+          <span>나의 웹툰</span>
+        </button>
+        <div className={styles.divider} />
+        <button
+          className={`${styles.menuItem} ${styles.logoutButton}`}
+          onClick={() => handleAction(logout)}
+        >
+          <FiLogOut className={styles.menuIcon} />
+          <span>로그아웃</span>
+        </button>
+      </div>
     </div>
   );
 };
