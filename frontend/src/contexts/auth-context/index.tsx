@@ -16,7 +16,8 @@ type AuthAction =
   | { type: 'LOGIN_SUCCESS'; payload: MemberProfile } // 로그인 성공
   | { type: 'LOGIN_FAILURE'; payload: string } // 로그인 실패
   | { type: 'LOGOUT' } // 로그아웃
-  | { type: 'SET_MEMBER_PROFILE'; payload: MemberProfile }; // 회원 프로필 설정
+  | { type: 'SET_MEMBER_PROFILE'; payload: MemberProfile } // 회원 프로필 설정
+  | { type: 'SOCIAL_LOGIN_SUCCESS'; payload: MemberProfile }; // 소셜 로그인 성공 액션 추가
 
 // 초기 상태 정의
 const initialState: AuthState = {
@@ -36,6 +37,8 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
       return { ...state, isLoggedIn: false, memberProfile: null, error: null };
     case 'SET_MEMBER_PROFILE':
       return { ...state, memberProfile: action.payload };
+    case 'SOCIAL_LOGIN_SUCCESS':
+      return { ...state, isLoggedIn: true, memberProfile: action.payload, error: null };
     default:
       return state; // 기본 상태 반환
   }
@@ -47,14 +50,18 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<void>; // 로그인 함수
   logout: () => void; // 로그아웃 함수
   setMemberProfile: (profile: MemberProfile) => void; // 회원 프로필 설정 함수
+  socialLoginSuccess: () => Promise<MemberProfile>; // 소셜 로그인 성공 함수 추가
 }
 
 // 인증 컨텍스트 생성
 const defaultAuthContext: AuthContextType = {
-  state: { isLoggedIn: false, memberProfile: null, error: null },
+  state: initialState,
   login: async () => {},
   logout: () => {},
-  setMemberProfile: (profile: MemberProfile) => {},
+  setMemberProfile: () => {},
+  socialLoginSuccess: async () => {
+    throw new Error('AuthContext not initialized');
+  },
 };
 
 export const AuthContext = createContext<AuthContextType>(defaultAuthContext);
@@ -118,9 +125,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     dispatch({ type: 'SET_MEMBER_PROFILE', payload: profile }); // 상태 업데이트
   };
 
+  const socialLoginSuccess = async () => {
+    try {
+      const profile = await MemberService.getMemberProfile();
+      if (profile.data) {
+        dispatch({ type: 'SOCIAL_LOGIN_SUCCESS', payload: profile.data });
+        return profile.data;
+      } else {
+        throw new Error('회원 프로필을 가져올 수 없습니다.');
+      }
+    } catch (error) {
+      dispatch({ type: 'LOGIN_FAILURE', payload: error instanceof Error ? error.message : '회원 프로필 조회 중 오류가 발생했습니다.' });
+      throw error;
+    }
+  };
+
   // 컨텍스트 제공
   return (
-    <AuthContext.Provider value={{ state, login, logout, setMemberProfile }}>
+    <AuthContext.Provider value={{ state, login, logout, setMemberProfile, socialLoginSuccess }}>
       {children}
     </AuthContext.Provider>
   );
