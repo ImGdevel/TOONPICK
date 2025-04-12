@@ -20,7 +20,10 @@ import WebtoonRatingListPage from '@pages/webtoon/rating-list';
 import NotificationSettingsPage from '@pages/user/notification-settings';
 import ReadingHistoryPage from '@pages/user/reading-history';
 import MasterpieceWebtoonsPage from '@pages/user/masterpiece-webtoons';
+import AdultVerificationPage from '@pages/user/adult-verification';
+
 import { Routes as RoutePaths } from '@constants/routes';
+
 
 const App: React.FC = () => {
   return (
@@ -51,6 +54,7 @@ const App: React.FC = () => {
               <Route path={RoutePaths.ERROR} element={<ErrorPage />} />
               <Route path={RoutePaths.READING_HISTORY} element={<ReadingHistoryPage />} />
               <Route path={RoutePaths.MASTERPIECE_WEBTOONS} element={<MasterpieceWebtoonsPage />} />
+              <Route path={RoutePaths.ADULT_VERIFICATION} element={<AdultVerificationPage/>} />
             </Routes>
           </main>
         </Router>

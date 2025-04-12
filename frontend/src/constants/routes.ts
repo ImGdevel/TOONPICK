@@ -13,5 +13,7 @@ export const Routes = {
     NOTIFICATION_SETTINGS: '/user/notification-settings',
     READING_HISTORY: '/user/reading-history',
     MASTERPIECE_WEBTOONS: '/user/masterpiece-webtoons',
+    ADULT_VERIFICATION: '/user/adult-verification',
+    PASSWORD_CHANGE: '/user/password-change',
     ERROR: '*',
-  };
+} as const;
