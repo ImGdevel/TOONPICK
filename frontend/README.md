@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# 🧾 Frontend Naming & Directory Convention Guide
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+본 문서는 React + TypeScript 프로젝트에서 사용하는 명명 및 디렉터리 구조에 대한 컨벤션을 정의합니다.  
+코드 일관성을 유지하고 협업 효율을 높이기 위함입니다.
 
-## Available Scripts
+<br>
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 1. 디렉터리 구조
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+| 디렉터리       | 설명                                      |
+| -------------- | ----------------------------------------- |
+| `components/`  | 재사용 가능한 UI 컴포넌트 모음             |
+| `pages/`       | 라우트 단위 페이지 컴포넌트               |
+| `hooks/`       | 커스텀 훅 모음                            |
+| `services/`    | API 호출 또는 비즈니스 로직 분리          |
+| `types/`       | 공통 타입 정의                           |
+| `utils/`       | 유틸 함수 모음                           |
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+폴더명은 **kebab-case** 사용
 
-### `npm test`
+<br>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 2. 파일명 규칙
 
-### `npm run build`
+| 유형            | 컨벤션                           | 예시                     |
+| --------------- | -------------------------------- | ------------------------ |
+| 일반 파일       | `kebab-case`                     | `user-service.ts`         |
+| 컴포넌트 파일    | `kebab-case.tsx` 혹은 `PascalCase.tsx` | `user-card.tsx` or `UserCard.tsx` |
+| 스타일 파일      | 컴포넌트와 동일한 이름 + `.module.css` | `user-card.module.css`    |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<br>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 3. 네이밍 컨벤션
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 네이밍 컨벤션
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| 항목             | 규칙                               | 예시                     |
+| ---------------- | ---------------------------------- | ------------------------ |
+| 변수명           | `camelCase`                        | `userName`, `isLoading`   |
+| 함수명           | `camelCase`                        | `handleClick`, `fetchUserData` |
+| 클래스명         | `PascalCase`                       | `UserService`, `UserCard` |
+| 컴포넌트명       | `PascalCase`                       | `UserCard`, `WebtoonList` |
+| 파일/폴더명      | `kebab-case`                       | `user-card.tsx`, `user-service.ts` |
+| 상태 변수        | `camelCase` + 상태 prefix         | `isOpen`, `hasError`      |
