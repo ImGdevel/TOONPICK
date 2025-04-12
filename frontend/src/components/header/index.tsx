@@ -12,7 +12,7 @@ import ProfileIcon from '@components/profile-icon';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, logout, memberProfile } = useContext(AuthContext);
+  const { state, logout } = useContext(AuthContext);
   const [isProfileWidgetOpen, setProfileWidgetOpen] = useState<boolean>(false);
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
   const [isNotificationOpen, setNotificationOpen] = useState<boolean>(false);
@@ -67,7 +67,7 @@ const Header: React.FC = () => {
           <Link to={RoutePaths.WEBTOON_RATING_LIST} className={styles.navLink}>웹툰 평가</Link>
 
           <div className={styles.profileContainer}>
-            {isLoggedIn ? (
+            {state.isLoggedIn ? (
               <>
                 <button
                   ref={profileButtonRef}

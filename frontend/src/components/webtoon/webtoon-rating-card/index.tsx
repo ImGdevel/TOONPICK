@@ -17,12 +17,12 @@ interface WebtoonRatingCardProps {
 const WebtoonRatingCard: React.FC<WebtoonRatingCardProps> = ({ webtoon, onClick }) => {
   const [rating, setRating] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const { isLoggedIn } = useContext(AuthContext);
+  const { state } = useContext(AuthContext);
   const { showLoginRequiredModal } = useModal();
   const navigate = useNavigate();
 
   const handleRatingChange = async (newRating: number) => {
-    if (!isLoggedIn) {
+    if (!state.isLoggedIn) {
       showLoginRequiredModal();
       return;
     }

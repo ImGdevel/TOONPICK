@@ -7,13 +7,13 @@ import Spinner from '@components/spinner';
 import styles from './style.module.css';
 
 const ReadingHistoryPage: React.FC = () => {
-  const { isLoggedIn, memberProfile } = useContext(AuthContext);
+  const { state } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!state.isLoggedIn) {
       navigate(Routes.LOGIN);
       return;
     }
@@ -30,7 +30,7 @@ const ReadingHistoryPage: React.FC = () => {
     };
 
     fetchReadingHistory();
-  }, [isLoggedIn, navigate]);
+  }, [state.isLoggedIn, navigate]); 
 
   if (error) return <div className={styles.error}>{error}</div>;
   if (isLoading) return <Spinner />;
@@ -39,9 +39,9 @@ const ReadingHistoryPage: React.FC = () => {
     <div className={styles.page}>
       <h1 className={styles.title}>감상 기록</h1>
       <div className={styles.content}>
-        {memberProfile?.readingHistory && memberProfile.readingHistory.length > 0 ? (
+        {state.memberProfile?.readingHistory && state.memberProfile.readingHistory.length > 0 ? (
           <WebtoonGrid
-            webtoons={memberProfile.readingHistory.map(h => h.webtoon)}
+            webtoons={state.memberProfile.readingHistory.map((h: any) => h.webtoon)}
           />
         ) : (
           <div className={styles.emptyMessage}>아직 감상한 웹툰이 없습니다.</div>

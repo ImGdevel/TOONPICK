@@ -17,7 +17,7 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
   buttonRef,
 }) => {
   const navigate = useNavigate();
-  const { memberProfile, logout } = useContext(AuthContext);
+  const { state, logout } = useContext(AuthContext);
   const widgetRef = React.useRef<HTMLDivElement>(null);
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
@@ -46,13 +46,13 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
     >
       <div className={styles.profileHeader}>
         <img
-          src={memberProfile?.profilePicture || '/image/profile/user.png'}
+          src={state.memberProfile?.profilePicture || '/image/profile/user.png'}
           alt="Profile"
           className={styles.profileImage}
         />
         <div className={styles.profileInfo}>
-          <span className={styles.username}>{memberProfile?.nickname || '게스트'}</span>
-          <span className={styles.email}>{memberProfile?.nickname || ''}</span>
+          <span className={styles.username}>{state.memberProfile?.nickname || '게스트'}</span>
+          <span className={styles.email}>{state.memberProfile?.nickname || ''}</span>
         </div>
       </div>
 

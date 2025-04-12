@@ -3,12 +3,12 @@ import { AuthContext } from '@contexts/auth-context';
 import styles from './style.module.css';
 
 const ProfileIcon: React.FC = () => {
-  const { memberProfile } = useContext(AuthContext);
+  const { state } = useContext(AuthContext);
 
   return (
     <div className={styles.profileIcon}>
       <img
-        src={memberProfile?.profilePicture || '/image/profile/user.png'}
+        src={state.memberProfile?.profilePicture || '/image/profile/user.png'}
         alt="Profile"
         className={styles.profileImage}
       />

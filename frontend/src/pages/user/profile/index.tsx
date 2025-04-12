@@ -11,22 +11,21 @@ import ReviewSection from './sections/review-section';
 import ReadingHistorySection from './sections/reading-history';
 import AchievementSection from './sections/achievement';
 
-import MemberService from '@services/member-service';
 import Spinner from '@components/spinner';
 
 const UserProfilePage: React.FC = () => {
-  const { isLoggedIn, memberProfile } = useContext(AuthContext);
+  const { state } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!state.isLoggedIn) {
       navigate(Routes.LOGIN);
       return;
     }
 
-    console.log(memberProfile)
+    console.log(state.memberProfile)
 
     const fetchUserData = async () => {
       try {
@@ -40,7 +39,7 @@ const UserProfilePage: React.FC = () => {
     };
 
     fetchUserData();
-  }, [isLoggedIn, navigate]);
+  }, [state.isLoggedIn, navigate]);
 
   if (error) return <div className={styles.error}>{error}</div>;
   if (isLoading) return <Spinner />;
@@ -48,42 +47,42 @@ const UserProfilePage: React.FC = () => {
   return (
     <div className={styles.profilePage}>
       <div className={styles.mainContent}>
-        {memberProfile ? (
+        {state.memberProfile ? (
           <>
-            <ProfileCard memberProfile={memberProfile} />
+            <ProfileCard memberProfile={state.memberProfile} />
             <div className={styles.gridLayout}>
               <div className={styles.leftColumn}>
                 <WebtoonListSection
                   title="내가 보고 있는 웹툰"
-                  webtoons={memberProfile?.readingHistory?.map(h => h.webtoon) || []}
+                  webtoons={state.memberProfile?.readingHistory?.map((h: any) => h.webtoon) || []}
                   showMoreLink={Routes.READING_HISTORY}
                 />
 
                 <WebtoonListSection
                   title="내 명작 웹툰"
-                  webtoons={memberProfile?.masterpieceWebtoons || []}
+                  webtoons={state.memberProfile?.masterpieceWebtoons || []}
                   showMoreLink={Routes.MASTERPIECE_WEBTOONS}
                 />
 
                 <PreferenceCard
-                  genrePreferences={memberProfile?.preferences?.genrePreferences || []}
-                  emotionalTags={memberProfile?.preferences?.emotionalTags || []}
-                  aiTags={memberProfile?.preferences?.aiTags || []}
+                  genrePreferences={state.memberProfile?.preferences?.genrePreferences || []}
+                  emotionalTags={state.memberProfile?.preferences?.emotionalTags || []}
+                  aiTags={state.memberProfile?.preferences?.aiTags || []}
                 />
               </div>
 
               <div className={styles.rightColumn}>
                 <ReviewSection
-                  reviews={memberProfile?.reviews || []}
-                  topReviews={memberProfile?.topReviews || []}
+                  reviews={state.memberProfile?.reviews || []}
+                  topReviews={state.memberProfile?.topReviews || []}
                 />
 
                 <ReadingHistorySection
-                  readingHistory={memberProfile?.readingHistory || []}
+                  readingHistory={state.memberProfile?.readingHistory || []}
                 />
 
                 <AchievementSection
-                  badges={memberProfile?.badges || []}
+                  badges={state.memberProfile?.badges || []}
                 />
               </div>
             </div>

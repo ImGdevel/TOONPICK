@@ -7,13 +7,13 @@ import Spinner from '@components/spinner';
 import styles from './style.module.css';
 
 const MasterpieceWebtoonsPage: React.FC = () => {
-  const { isLoggedIn, memberProfile } = useContext(AuthContext);
+  const { state } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!state.isLoggedIn) {
       navigate(Routes.LOGIN);
       return;
     }
@@ -30,7 +30,7 @@ const MasterpieceWebtoonsPage: React.FC = () => {
     };
 
     fetchMasterpieceWebtoons();
-  }, [isLoggedIn, navigate]);
+  }, [state.isLoggedIn, navigate]);
 
   if (error) return <div className={styles.error}>{error}</div>;
   if (isLoading) return <Spinner />;
@@ -39,9 +39,9 @@ const MasterpieceWebtoonsPage: React.FC = () => {
     <div className={styles.page}>
       <h1 className={styles.title}>내 명작 웹툰</h1>
       <div className={styles.content}>
-        {memberProfile?.masterpieceWebtoons && memberProfile.masterpieceWebtoons.length > 0 ? (
+        {state.memberProfile?.masterpieceWebtoons && state.memberProfile.masterpieceWebtoons.length > 0 ? (
           <WebtoonGrid
-            webtoons={memberProfile.masterpieceWebtoons}
+            webtoons={state.memberProfile.masterpieceWebtoons}
           />
         ) : (
           <div className={styles.emptyMessage}>아직 명작으로 등록한 웹툰이 없습니다.</div>
