@@ -1,0 +1,72 @@
+.achievementSection {
+  background-color: var(--background-color);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 24px 0;
+}
+
+.badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.badgeCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--background-secondary-color);
+  border-radius: 8px;
+  padding: 16px;
+  transition: transform 0.2s ease;
+}
+
+.badgeCard:hover {
+  transform: translateY(-2px);
+}
+
+.badgeIcon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.badgeName {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+  text-align: center;
+  word-break: keep-all;
+}
+
+@media (max-width: 768px) {
+  .achievementSection {
+    padding: 16px;
+  }
+
+  .badgeGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+  }
+
+  .badgeCard {
+    padding: 12px;
+  }
+
+  .badgeIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .badgeName {
+    font-size: 13px;
+  }
+} 

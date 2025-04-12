@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosHeaders, AxiosResponse } from 'axios';
-import TokenManager from '@/services/TokenManager';
-import TokenRefresher from '@/services/TokenRefresher';
-import Logger from '@utils/Logger';
+import TokenManager from '@/services/token-manager';
+import TokenRefresher from '@/services/token-refresher';
+import Logger from '@/utils/logger';
 
 // Axios 인스턴스 생성
 const api = axios.create({

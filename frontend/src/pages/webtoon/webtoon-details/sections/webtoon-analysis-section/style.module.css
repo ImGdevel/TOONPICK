@@ -1,0 +1,112 @@
+.section {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.statCard {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.statCard h3 {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.chartContainer {
+  margin-bottom: 32px;
+}
+
+.chartContainer h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+}
+
+.chart {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.chart h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+  text-align: center;
+}
+
+.predictionContainer {
+  margin-top: 32px;
+}
+
+.predictionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.predictionCard {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.predictionCard h4 {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.predictionValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .statsGrid,
+  .chartGrid,
+  .predictionGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .section {
+    padding: 16px;
+  }
+}

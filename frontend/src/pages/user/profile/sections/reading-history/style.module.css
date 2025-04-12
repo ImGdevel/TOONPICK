@@ -1,0 +1,80 @@
+.readingHistorySection {
+  background-color: var(--background-color);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 24px 0;
+}
+
+.calendarView {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.recentHistory h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 16px 0;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.historyItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--background-secondary-color);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.thumbnail {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.historyInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.webtoonTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.lastReadAt {
+  font-size: 12px;
+  color: var(--text-secondary-color);
+}
+
+@media (max-width: 768px) {
+  .readingHistorySection {
+    padding: 16px;
+  }
+
+  .historyItem {
+    padding: 8px;
+  }
+
+  .thumbnail {
+    width: 50px;
+    height: 50px;
+  }
+} 

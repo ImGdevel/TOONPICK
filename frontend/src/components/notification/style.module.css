@@ -1,0 +1,123 @@
+.notificationContainer {
+  position: relative;
+  margin-left: 1rem;
+}
+
+.notificationButton {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  transition: color 0.2s;
+}
+
+.notificationButton:hover {
+  color: var(--primary-color);
+}
+
+.icon {
+  color: inherit;
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--error-color);
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.notificationDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 320px;
+  height: 350px;
+  background-color: var(--card-background-color);
+  border-radius: 8px;
+  border: 1px solid var(--notification-border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.notificationList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.notificationItem {
+  padding: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.notificationItem:hover {
+  background-color: var(--hover-color);
+}
+
+.notificationItem.unread {
+  background-color: var(--hover-color);
+}
+
+.message {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-color);
+}
+
+.time {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary-color);
+  margin-top: 0.25rem;
+}
+
+.emptyMessage {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-secondary-color);
+}
+
+.settingsButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: var(--hover-color);
+  border: none;
+  border-top:1px solid var(--notification-border-color);
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+  
+}
+
+.settingsButton:hover {
+  background-color: var(--hover-color-dark);
+}
+
+@media (max-width: 768px) {
+  .notificationDropdown {
+    width: 280px;
+  }
+}

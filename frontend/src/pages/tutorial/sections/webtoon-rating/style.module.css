@@ -1,0 +1,297 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary-gradient), var(--secondary-gradient));
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--card-shadow);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 3px;
+}
+
+.step {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xl);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.fixedSection {
+  width: 100%;
+  max-width: 1000px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding-bottom: var(--spacing-md);
+}
+
+.scrollableSection {
+  width: 100%;
+  max-width: 1000px;
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-md) 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) transparent;
+}
+
+.scrollableSection::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollableSection::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollableSection::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 3px;
+}
+
+.loading {
+  padding: var(--spacing-lg);
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.loadMoreTrigger {
+  height: 1px;
+  width: 100%;
+}
+
+.nextButton {
+  position: absolute;
+  bottom: var(--spacing-xl);
+  right: var(--spacing-xl);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.nextButton:hover {
+  background-color: var(--primary-color-dark);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    padding: var(--spacing-lg);
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .fixedSection {
+    padding-bottom: var(--spacing-sm);
+  }
+
+  .nextButton {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    padding: var(--spacing-lg);
+  }
+}
+
+.webtoonCard {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.thumbnailContainer {
+  width: 100%;
+  aspect-ratio: 2/1;
+  overflow: hidden;
+  border-radius: var(--border-radius-md);
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.author {
+  font-size: 1rem;
+  color: var(--text-secondary-color);
+}
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.genre {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--background-secondary-color);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.9rem;
+  color: var(--text-secondary-color);
+}
+
+.ratingSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.statusButtons {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.statusButton {
+  flex: 1;
+  padding: var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.statusButton:hover {
+  background-color: var(--hover-color);
+}
+
+.statusButton.selected {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.starRating {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.star {
+  background: none;
+  border: none;
+  color: var(--border-color);
+  font-size: 2rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.star.filled {
+  color: var(--rating-color);
+}
+
+.nextButton {
+  align-self: flex-end;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.nextButton:hover {
+  background-color: var(--primary-color-dark);
+}
+
+@media (max-width: 768px) {
+  .webtoonCard {
+    padding: var(--spacing-lg);
+  }
+
+  .statusButtons {
+    flex-direction: column;
+  }
+
+  .nextButton {
+    width: 100%;
+  }
+} 

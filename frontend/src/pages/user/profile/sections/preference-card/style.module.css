@@ -1,0 +1,91 @@
+.preferenceCard {
+  background-color: var(--background-color);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cardTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 24px 0;
+}
+
+.chartContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+  padding: 16px;
+  background-color: var(--background-secondary-color);
+  border-radius: 8px;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tagSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tagSection h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.emotionTag {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.aiTag {
+  background-color: var(--background-secondary-color);
+  color: var(--text-color);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+  .preferenceCard {
+    padding: 16px;
+  }
+
+  .chartContainer {
+    padding: 12px;
+    margin-bottom: 24px;
+  }
+
+  .tagsContainer {
+    gap: 20px;
+  }
+
+  .tagSection {
+    gap: 10px;
+  }
+
+  .emotionTag,
+  .aiTag {
+    font-size: 13px;
+    padding: 5px 10px;
+  }
+} 

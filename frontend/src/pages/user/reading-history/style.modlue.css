@@ -1,0 +1,29 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--text-color);
+}
+
+.content {
+  min-height: 400px;
+}
+
+.error {
+  color: var(--error-color);
+  text-align: center;
+  padding: 24px;
+}
+
+.emptyMessage {
+  text-align: center;
+  color: var(--text-secondary-color);
+  font-size: 16px;
+  padding: 48px 0;
+}
