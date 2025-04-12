@@ -19,7 +19,11 @@ const SocialLoginCallbackPage: React.FC = () => {
 
         if (accessToken) {
           login();
-          navigate(Routes.HOME);
+          if(true){
+            navigate(Routes.TUTORIAL);
+          }else{
+            navigate(Routes.HOME);
+          }
         } else {
           throw new Error('Access Token이 없습니다.');
         }

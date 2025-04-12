@@ -39,7 +39,13 @@ const SignInPage: React.FC = () => {
     try {
       const response = await AuthService.login(formData.username, formData.password, login);
       if (response.success) {
+
+        if(true){
+          navigate(Routes.TUTORIAL);
+        }
+
         navigate(Routes.HOME);
+        
       }
     } catch (err: any) {
       const errorMessage =

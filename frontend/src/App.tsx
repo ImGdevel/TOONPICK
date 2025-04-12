@@ -21,6 +21,7 @@ import NotificationSettingsPage from '@pages/user/notification-settings';
 import ReadingHistoryPage from '@pages/user/reading-history';
 import MasterpieceWebtoonsPage from '@pages/user/masterpiece-webtoons';
 import AdultVerificationPage from '@pages/user/adult-verification';
+import TutorialPage from '@pages/tutorial';
 
 import { Routes as RoutePaths } from '@constants/routes';
 
@@ -34,6 +35,7 @@ const App: React.FC = () => {
           <main style={{ maxWidth: '1200px', width: '100%', minHeight: '1000px', margin: '0 auto', padding: '20px' }}>
             <Routes>
               <Route path={RoutePaths.HOME} element={<HomePage />} />
+              <Route path={RoutePaths.TUTORIAL} element={<TutorialPage />} />
 
               {/* 웹툰 관련 페이지 */}
               <Route path={RoutePaths.WEBTOON_NEW} element={<NewWebtoonsPage />} />
@@ -55,9 +57,11 @@ const App: React.FC = () => {
               <Route path={RoutePaths.READING_HISTORY} element={<ReadingHistoryPage />} />
               <Route path={RoutePaths.MASTERPIECE_WEBTOONS} element={<MasterpieceWebtoonsPage />} />
               <Route path={RoutePaths.ADULT_VERIFICATION} element={<AdultVerificationPage/>} />
+
             </Routes>
           </main>
         </Router>
+
       </ModalProvider>
     </AuthProvider>
   );

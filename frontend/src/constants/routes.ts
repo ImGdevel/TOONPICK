@@ -14,6 +14,7 @@ export const Routes = {
     READING_HISTORY: '/user/reading-history',
     MASTERPIECE_WEBTOONS: '/user/masterpiece-webtoons',
     ADULT_VERIFICATION: '/user/adult-verification',
+    TUTORIAL: '/tutorial',
     PASSWORD_CHANGE: '/user/password-change',
     ERROR: '*',
 } as const;
