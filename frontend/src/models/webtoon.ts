@@ -26,7 +26,7 @@ export interface Webtoon {
   genres: Genre[];
   totalRatings: number;
   averageRating: number;
-  similarWebtoons: SimilarWebtoon[];
+  similarWebtoons: SimilarWebtoon[] | null;
   analysisData?: WebtoonAnalysisData | null;
 }
 
@@ -57,14 +57,6 @@ export interface WebtoonResponse<T = any> {
   total?: number;
   message?: string;
   error?: string;
-}
-
-export interface MemberProfile {
-  id: number;
-  username: string;
-  email: string;
-  nickname: string;
-  profileImage: string;
 }
 
 export interface WebtoonAnalysisData {
