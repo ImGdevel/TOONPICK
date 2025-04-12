@@ -1,22 +1,6 @@
 import { Webtoon } from "./webtoon";
 import { Review } from "./review";
 
-export interface Member {
-  username: string;
-  nickname: string;
-  role: string;
-  profilePicture: string;
-  email: string;
-  isAdultVerified: boolean;
-}
-
-export interface BasicMemberInfo {
-  username: string;
-  nickname: string;
-  profilePicture: string;
-  role: string;
-}
-
 export interface MemberProfile {
   username: number;
   email: string;
