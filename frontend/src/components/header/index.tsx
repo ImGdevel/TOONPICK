@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '@contexts/auth-context';
 import { Routes as RoutePaths } from '@constants/routes';
 import ProfileWidget from '@components/profile-widget';
@@ -12,32 +12,16 @@ import ProfileIcon from '@components/profile-icon';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-  const { state, logout } = useContext(AuthContext);
-  const [isProfileWidgetOpen, setProfileWidgetOpen] = useState<boolean>(false);
+  const { state } = useContext(AuthContext);
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
-  const [isNotificationOpen, setNotificationOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const profileButtonRef = useRef<HTMLButtonElement>(null);
-  const profileWidgetRef = useRef<HTMLDivElement>(null);
-
-  const handleLogout = async (): Promise<void> => {
-    logout();
-    navigate(RoutePaths.LOGIN);
-  };
 
   const toggleTheme = (): void => {
     setIsDarkTheme((prev) => !prev);
     const theme = isDarkTheme ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
-  };
-
-  const toggleProfileWidget = (): void => {
-    setProfileWidgetOpen((prev) => !prev);
-  };
-
-  const toggleNotification = (): void => {
-    setNotificationOpen((prev) => !prev);
   };
 
   const toggleProfile = () => {
@@ -64,7 +48,7 @@ const Header: React.FC = () => {
 
           <NotificationComponent />
 
-          <Link to={RoutePaths.WEBTOON_RATING_LIST} className={styles.navLink}>웹툰 평가</Link>
+        {/* <Link to={RoutePaths.WEBTOON_RATING_LIST} className={styles.navLink}>웹툰 평가</Link> */}
 
           <div className={styles.profileContainer}>
             {state.isLoggedIn ? (
