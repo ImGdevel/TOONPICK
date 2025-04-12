@@ -1,0 +1,167 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+.webtoonCard {
+  display: flex;
+  justify-content: space-between;
+  background: var(--card-gradient);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.webtoonCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-hover-shadow);
+}
+
+.webtoonInfo {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.thumbnail {
+  width: 120px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--card-shadow);
+}
+
+.details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.author {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.genreTag {
+  background: var(--secondary-gradient);
+  color: var(--text-primary);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.875rem;
+}
+
+.ratingSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  width: 200px;
+}
+
+.statusButtons {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.statusButton {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.statusButton:hover {
+  background: var(--hover-color);
+}
+
+.statusButton.selected {
+  background: var(--primary-gradient);
+  color: white;
+  border-color: transparent;
+}
+
+.ratingInput {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.ratingInput label {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.ratingNumber {
+  width: 60px;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background: var(--input-background);
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.ratingNumber:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color-light);
+}
+
+.nextButton {
+  align-self: center;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.nextButton:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .webtoonInfo {
+    flex-direction: column;
+  }
+
+  .thumbnail {
+    width: 100%;
+    height: 200px;
+  }
+
+  .statusButtons {
+    flex-direction: column;
+  }
+
+  .statusButton {
+    width: 100%;
+  }
+} 

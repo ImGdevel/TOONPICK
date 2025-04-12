@@ -64,6 +64,18 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.loading {
+  padding: var(--spacing-lg);
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.loadMoreTrigger {
+  height: 1px;
+  width: 100%;
+}
+
 .nextButton {
   position: absolute;
   bottom: var(--spacing-xl);

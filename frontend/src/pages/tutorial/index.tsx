@@ -6,6 +6,10 @@ import BasicInfoForm from './sections/basic-info'
 import GenrePreferenceForm from './sections/genre-preference';
 import WebtoonRatingForm from './sections/webtoon-rating';
 
+interface WebtoonRatingFormProps {
+  onComplete: () => void;
+}
+
 const TutorialPage: React.FC = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<number>(1);
