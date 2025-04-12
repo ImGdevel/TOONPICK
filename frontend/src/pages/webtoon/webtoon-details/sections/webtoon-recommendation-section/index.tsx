@@ -1,7 +1,6 @@
 import React from 'react';
 import { Webtoon, Platform, SerializationStatus } from '@models/webtoon';
 import styles from './style.module.css';
-import WebtoonCard from '@components/webtoon-card';
 import WebtoonList from '@components/webtoon-list';
 
 interface WebtoonRecommendationSectionProps {
