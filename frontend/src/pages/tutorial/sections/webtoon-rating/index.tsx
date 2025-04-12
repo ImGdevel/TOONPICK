@@ -35,11 +35,11 @@ const WebtoonRatingPage: React.FC<WebtoonRatingFormProps> = ({ onComplete }) => 
     setLoading(true);
     try {
       // TODO: 실제 API 호출로 대체
-      const mockWebtoons: Webtoon[] = Array.from({ length: 30 }, (_, i) => ({
-        id: (pageNum - 1) * 30 + i + 1,
-        title: `웹툰 제목 ${(pageNum - 1) * 30 + i + 1}`,
-        author: `작가 ${(pageNum - 1) * 30 + i + 1}`,
-        thumbnail: `https://via.placeholder.com/100?text=Webtoon+${(pageNum - 1) * 30 + i + 1}`,
+      const mockWebtoons: Webtoon[] = Array.from({ length: 10 }, (_, i) => ({
+        id: (pageNum - 1) * 10 + i + 1,
+        title: `웹툰 제목 ${(pageNum - 1) * 10 + i + 1}`,
+        author: `작가 ${(pageNum - 1) * 10 + i + 1}`,
+        thumbnail: `https://via.placeholder.com/100?text=Webtoon+${(pageNum - 1) * 10 + i + 1}`,
         genres: ['로맨스', '판타지'],
         platform: '네이버',
       }));
@@ -49,7 +49,7 @@ const WebtoonRatingPage: React.FC<WebtoonRatingFormProps> = ({ onComplete }) => 
       } else {
         setWebtoons(prev => [...prev, ...mockWebtoons]);
       }
-      setHasMore(mockWebtoons.length === 30);
+      setHasMore(mockWebtoons.length === 10);
     } catch (error) {
       console.error('웹툰 목록을 불러오는데 실패했습니다:', error);
     } finally {
@@ -95,18 +95,22 @@ const WebtoonRatingPage: React.FC<WebtoonRatingFormProps> = ({ onComplete }) => 
       <div className={styles.content}>
         <h1 className={styles.title}>웹툰 평가</h1>
         
-        <SearchAndFilter
-          onSearch={handleSearch}
-          onFilterChange={handleFilterChange}
-        />
+        <div className={styles.fixedSection}>
+          <SearchAndFilter
+            onSearch={handleSearch}
+            onFilterChange={handleFilterChange}
+          />
+        </div>
 
-        <WebtoonRatingList
-          webtoons={filteredWebtoons.slice(0, 5)}
-          onRatingComplete={() => {}}
-        />
+        <div className={styles.scrollableSection}>
+          <WebtoonRatingList
+            webtoons={filteredWebtoons}
+            onRatingComplete={onComplete}
+          />
 
-        {loading && <div className={styles.loading}>로딩 중...</div>}
-        {!loading && hasMore && <div ref={ref} className={styles.loadMoreTrigger} />}
+          {loading && <div className={styles.loading}>로딩 중...</div>}
+          {!loading && hasMore && <div ref={ref} className={styles.loadMoreTrigger} />}
+        </div>
       </div>
     </div>
   );

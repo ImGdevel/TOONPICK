@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './WebtoonRatingList.module.css';
 import StarRating from 'src/components/star-rating';
 
@@ -17,8 +17,15 @@ interface WebtoonRatingListProps {
 }
 
 const WebtoonRatingList: React.FC<WebtoonRatingListProps> = ({ webtoons, onRatingComplete }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [displayedWebtoons, setDisplayedWebtoons] = useState<Webtoon[]>([]);
   const [ratings, setRatings] = useState<Record<number, { status: 'not_viewed' | 'viewing' | 'viewed'; rating?: number }>>({});
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // 처음에 10개의 웹툰을 표시
+    setDisplayedWebtoons(webtoons.slice(0, 10));
+  }, [webtoons]);
 
   const handleStatusChange = (webtoonId: number, status: 'not_viewed' | 'viewing' | 'viewed') => {
     setRatings(prev => ({
@@ -34,19 +41,36 @@ const WebtoonRatingList: React.FC<WebtoonRatingListProps> = ({ webtoons, onRatin
     }));
   };
 
-  const handleNext = () => {
-    if (currentIndex < webtoons.length - 1) {
-      setCurrentIndex(prev => prev + 1);
+  const loadMoreWebtoons = () => {
+    const nextIndex = currentIndex + 10;
+    if (nextIndex < webtoons.length) {
+      setDisplayedWebtoons(prev => [...prev, ...webtoons.slice(currentIndex, nextIndex)]);
+      setCurrentIndex(nextIndex);
     } else {
       onRatingComplete();
     }
   };
 
-  const currentWebtoons = webtoons.slice(currentIndex, currentIndex + 3);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      if (scrollHeight - scrollTop <= clientHeight + 100) {
+        loadMoreWebtoons();
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, [currentIndex, webtoons]);
 
   return (
-    <div className={styles.container}>
-      {currentWebtoons.map(webtoon => (
+    <div ref={containerRef} className={styles.container}>
+      {displayedWebtoons.map(webtoon => (
         <div key={webtoon.id} className={styles.webtoonCard}>
           <div className={styles.webtoonInfo}>
             <img src={webtoon.thumbnail} alt={webtoon.title} className={styles.thumbnail} />
@@ -94,9 +118,6 @@ const WebtoonRatingList: React.FC<WebtoonRatingListProps> = ({ webtoons, onRatin
           </div>
         </div>
       ))}
-      <button onClick={handleNext} className={styles.nextButton}>
-        {currentIndex < webtoons.length - 1 ? '다음' : '완료'}
-      </button>
     </div>
   );
 };

@@ -24,9 +24,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary-color) transparent;
+  overflow: hidden;
 }
 
 .content::-webkit-scrollbar {
@@ -62,6 +60,40 @@
   margin-bottom: var(--spacing-xl);
   text-align: center;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.fixedSection {
+  width: 100%;
+  max-width: 1000px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding-bottom: var(--spacing-md);
+}
+
+.scrollableSection {
+  width: 100%;
+  max-width: 1000px;
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-md) 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) transparent;
+}
+
+.scrollableSection::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollableSection::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollableSection::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 3px;
 }
 
 .loading {
@@ -115,6 +147,10 @@
 
   .title {
     font-size: 2rem;
+  }
+
+  .fixedSection {
+    padding-bottom: var(--spacing-sm);
   }
 
   .nextButton {
