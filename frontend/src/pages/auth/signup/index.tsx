@@ -1,11 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '@contexts/auth-context';
 import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 import AuthService from '@services/auth-service';
-
-
 
 export interface LoginFormData {
   email: string;
@@ -20,8 +18,8 @@ export interface SignUpFormData extends LoginFormData {
 
 const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
-  const { isLoggedIn } = useContext(AuthContext);
-  const [formData, setFormData] = useState<SignUpFormData>({
+  const { state } = useContext(AuthContext);
+  const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
@@ -29,12 +27,6 @@ const SignUpPage: React.FC = () => {
     agreeToTerms: false
   });
   const [error, setError] = useState<string>('');
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate(Routes.HOME);
-    }
-  }, [isLoggedIn, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -61,14 +53,14 @@ const SignUpPage: React.FC = () => {
     try {
       const response = await AuthService.signup(
         formData.username,
-        formData.password,
-        formData.email
+        formData.email,
+        formData.password
       );
 
       if (response.success) {
         navigate(Routes.LOGIN);
-      }else{
-        setError('회원가입에 실패했습니다. 다시 시도해주세요.' + response.message);
+      } else {
+        setError(response.message || '회원가입에 실패했습니다.');
       }
     } catch (err) {
       setError('회원가입에 실패했습니다. 다시 시도해주세요.');
@@ -82,7 +74,8 @@ const SignUpPage: React.FC = () => {
         <h3>회원가입</h3>
 
         {error && <div className={styles.error}>{error}</div>}
-        
+        {state.error && <div className={styles.error}>{state.error}</div>}
+
         <div className={styles.formGroup}>
           <label htmlFor="email">이메일</label>
           <input

@@ -9,22 +9,25 @@ import SocialLoginButton from '@components/social-login-button';
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, login } = useContext(AuthContext);
+  const { state, login } = useContext(AuthContext);
   const [formData, setFormData] = useState({ username: '', password: '', rememberMe: false });
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // 로그인 상태에 따라 홈으로 리다이렉트
   useEffect(() => {
-    if (isLoggedIn) {
+    if (state.isLoggedIn) {
       navigate(Routes.HOME);
     }
-  }, [isLoggedIn, navigate]);
+  }, [state.isLoggedIn, navigate]);
 
+  // 입력 필드 변경 처리
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
+  // 로그인 폼 제출 처리
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -37,28 +40,21 @@ const SignInPage: React.FC = () => {
     }
 
     try {
-      const response = await AuthService.login(formData.username, formData.password, login);
-      if (response.success) {
-
-        if(true){
-          navigate(Routes.TUTORIAL);
-        }
-
-        navigate(Routes.HOME);
-        
+      await login(formData.username, formData.password); // 로그인 요청
+      if (state.isLoggedIn) {
+        navigate(Routes.TUTORIAL); // 로그인 성공 시 튜토리얼 페이지로 이동
       }
     } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message || '로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.';
-      setError(errorMessage);
+      setError(err.message || '로그인에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  // 소셜 로그인 처리
   const handleSocialLogin = (provider: 'google' | 'kakao' | 'naver') => {
     try {
-      AuthService.socialLogin(provider);
+      AuthService.socialLogin(provider); // 소셜 로그인 요청
     } catch (err) {
       setError('소셜 로그인에 실패했습니다. 다시 시도해주세요.');
     }
@@ -72,6 +68,7 @@ const SignInPage: React.FC = () => {
         <h3>웹툰 리뷰 플랫폼</h3>
 
         {error && <div className={styles.error}>{error}</div>}
+        {state.error && <div className={styles.error}>{state.error}</div>}
 
         <div className={styles.formGroup}>
           <input

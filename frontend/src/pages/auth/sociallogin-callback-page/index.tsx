@@ -8,7 +8,7 @@ import TokenRefresher from '@services/token-refresher';
 const SocialLoginCallbackPage: React.FC = () => {
   const navigate = useNavigate();
   const { provider } = useParams<{ provider: string }>();
-  const { login } = useContext(AuthContext);
+  const { state, login } = useContext(AuthContext);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -18,25 +18,23 @@ const SocialLoginCallbackPage: React.FC = () => {
         const accessToken = await TokenRefresher.refreshAccessToken();
 
         if (accessToken) {
-          login();
-          if(true){
+          await login('', ''); // 소셜 로그인의 경우 username과 password는 필요 없음
+          if (state.isLoggedIn) {
             navigate(Routes.TUTORIAL);
-          }else{
-            navigate(Routes.HOME);
           }
         } else {
           throw new Error('Access Token이 없습니다.');
         }
       } catch (err: any) {
         setError(`소셜 로그인에 실패했습니다. 다시 시도해주세요. (오류: ${err.message || err})`);
-        setTimeout(() => navigate('/signin'), 3000);
+        setTimeout(() => navigate(Routes.LOGIN), 3000);
       } finally {
         setLoading(false);
       }
     };
 
     handleSocialLogin();
-  }, [navigate, provider, login]);
+  }, [navigate, provider, login, state.isLoggedIn]);
 
   return (
     <div className={styles.socialLoginCallback}>
@@ -47,6 +45,8 @@ const SocialLoginCallbackPage: React.FC = () => {
         </div>
       ) : error ? (
         <div className={styles.error}>{error}</div>
+      ) : state.error ? (
+        <div className={styles.error}>{state.error}</div>
       ) : null}
     </div>
   );
