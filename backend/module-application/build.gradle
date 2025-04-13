@@ -6,7 +6,6 @@ project(':module-application:toonpick-app-api') {
         implementation project(':module-domain:domain-auth')
         implementation project(':module-domain:domain-member')
         implementation project(':module-domain:domain-webtoon')
-        implementation project(':module-domain:domain-review')
         implementation project(':module-domain:domain-toon-collection')
         implementation project(':module-domain:domain-member-engagement')
 
@@ -28,7 +27,6 @@ project(':module-application:toonpick-app-batch') {
         implementation project(':module-domain:domain-common')
         implementation project(':module-domain:domain-member')
         implementation project(':module-domain:domain-webtoon')
-        implementation project(':module-domain:domain-review')
         implementation project(':module-domain:domain-toon-collection')
         implementation project(':module-domain:domain-member-engagement')
 
@@ -49,7 +47,6 @@ project(':module-application:toonpick-app-worker') {
         implementation project(':module-domain:domain-common')
         implementation project(':module-domain:domain-member')
         implementation project(':module-domain:domain-webtoon')
-        implementation project(':module-domain:domain-review')
         implementation project(':module-domain:domain-toon-collection')
         implementation project(':module-domain:domain-member-engagement')
 
@@ -70,7 +67,6 @@ project(':module-application:toonpick-app-admin') {
         implementation project(':module-domain:domain-common')
         implementation project(':module-domain:domain-member')
         implementation project(':module-domain:domain-webtoon')
-        implementation project(':module-domain:domain-review')
         implementation project(':module-domain:domain-toon-collection')
         implementation project(':module-domain:domain-member-engagement')
 

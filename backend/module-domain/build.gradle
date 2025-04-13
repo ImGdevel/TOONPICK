@@ -23,16 +23,6 @@ project(':module-domain:domain-member') {
     bootJar.enabled = false
 }
 
-project(':module-domain:domain-review') {
-    dependencies {
-        implementation project(':module-domain:domain-member')
-        implementation project(':module-domain:domain-webtoon')
-        implementation project(':module-domain:domain-common')
-        implementation project(':module-common')
-    }
-    bootJar.enabled = false
-}
-
 
 project(':module-domain:domain-webtoon') {
     dependencies {

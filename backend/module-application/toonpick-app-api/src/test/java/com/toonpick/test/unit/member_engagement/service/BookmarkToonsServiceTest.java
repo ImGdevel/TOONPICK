@@ -13,10 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.toonpick.entity.BookmarkToons;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.exception.ResourceNotFoundException;
-import com.toonpick.repository.BookmarkToonsRepository;
 import com.toonpick.repository.WebtoonRepository;
 
 

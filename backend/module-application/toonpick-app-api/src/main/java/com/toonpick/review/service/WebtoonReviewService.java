@@ -7,8 +7,10 @@ import com.toonpick.exception.DatabaseOperationException;
 import com.toonpick.exception.ResourceNotFoundException;
 import com.toonpick.repository.MemberRepository;
 import com.toonpick.repository.WebtoonRepository;
-import com.toonpick.repository.WebtoonReviewRepository;
 import com.toonpick.repository.ReviewLikeRepository;
+import com.toonpick.repository.WebtoonReviewRepository;
+import com.toonpick.review.request.WebtoonReviewCreateDTO;
+import com.toonpick.review.response.WebtoonReviewDTO;
 import com.toonpick.type.ErrorCode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -20,8 +22,6 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.toonpick.dto.WebtoonReviewCreateDTO;
-import com.toonpick.dto.WebtoonReviewDTO;
 import com.toonpick.entity.ReviewLike;
 import com.toonpick.entity.WebtoonReview;
 import com.toonpick.review.mapper.WebtoonReviewMapper;
@@ -80,7 +80,8 @@ public class WebtoonReviewService {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.REVIEW_NOT_FOUND, reviewId));
         float oldRating = review.getRating();
-        review.update(reviewCreateDTO.getRating(), reviewCreateDTO.getComment());
+
+        // todo : 리뷰 수정 로직 작성
 
         WebtoonReview updatedReview = webtoonReviewRepository.save(review);
         webtoonRepository.updateReview(review.getWebtoon().getId(), oldRating, reviewCreateDTO.getRating());

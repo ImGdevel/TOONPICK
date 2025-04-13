@@ -1,4 +1,4 @@
-package com.toonpick.dto;
+package com.toonpick.review.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

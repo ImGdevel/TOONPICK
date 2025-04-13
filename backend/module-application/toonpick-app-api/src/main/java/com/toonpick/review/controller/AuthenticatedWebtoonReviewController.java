@@ -1,6 +1,8 @@
 package com.toonpick.review.controller;
 
 import com.toonpick.annotation.CurrentUser;
+import com.toonpick.review.request.WebtoonReviewCreateDTO;
+import com.toonpick.review.response.WebtoonReviewDTO;
 import com.toonpick.user.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,8 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.toonpick.dto.WebtoonReviewCreateDTO;
-import com.toonpick.dto.WebtoonReviewDTO;
 import com.toonpick.review.service.WebtoonReviewService;
 
 import java.util.List;

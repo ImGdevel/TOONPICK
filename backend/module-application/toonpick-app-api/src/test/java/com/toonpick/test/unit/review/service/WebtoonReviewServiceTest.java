@@ -1,8 +1,6 @@
 package com.toonpick.test.unit.review.service;
 
 import com.toonpick.dto.PagedResponseDTO;
-import com.toonpick.dto.WebtoonReviewCreateDTO;
-import com.toonpick.dto.WebtoonReviewDTO;
 import com.toonpick.entity.Member;
 import com.toonpick.entity.ReviewLike;
 import com.toonpick.entity.Webtoon;
@@ -11,6 +9,8 @@ import com.toonpick.repository.MemberRepository;
 import com.toonpick.repository.ReviewLikeRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.repository.WebtoonReviewRepository;
+import com.toonpick.review.request.WebtoonReviewCreateDTO;
+import com.toonpick.review.response.WebtoonReviewDTO;
 import com.toonpick.review.service.WebtoonReviewService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,11 +1,9 @@
 package com.toonpick.test.unit.member_engagement.service;
 
 import com.toonpick.entity.Member;
-import com.toonpick.entity.WatchingToons;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.member_enagement.service.WatchingToonsService;
 import com.toonpick.repository.MemberRepository;
-import com.toonpick.repository.WatchingToonsRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
 import com.toonpick.webtoon.response.WebtoonResponseDTO;

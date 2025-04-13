@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.toonpick.dto.WebtoonReviewDTO;
 import com.toonpick.service.WebtoonReviewService;
 
 @Tag(name = "Webtoon", description = "웹툰 리뷰 관련 API (접근 권한 : Admin)")

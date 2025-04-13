@@ -1,5 +1,6 @@
-package com.toonpick.dto;
+package com.toonpick.review.response;
 
+import com.toonpick.dto.MemberDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
