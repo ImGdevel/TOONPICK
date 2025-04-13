@@ -97,7 +97,7 @@ public class Webtoon {
     @Column(name = "last_update_date")
     private LocalDate lastUpdatedDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "webtoon_author",
             joinColumns = @JoinColumn(name = "webtoon_id"),
@@ -105,7 +105,7 @@ public class Webtoon {
     )
     private Set<Author> authors = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "webtoon_genre",
             joinColumns = @JoinColumn(name = "webtoon_id"),
@@ -120,9 +120,6 @@ public class Webtoon {
     private float ratingSum = 0;
 
     private int ratingCount = 0;
-
-    @Version
-    private int version;
 
     @Builder
     public Webtoon(Long id,
