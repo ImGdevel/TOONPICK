@@ -20,7 +20,7 @@ const WebtoonDetailPage: React.FC = () => {
         setLoading(true);
         if (!id) return;
 
-        const response = await WebtoonService.getWebtoonById(parseInt(id));
+        const response = await WebtoonService.getWebtoonDetails(parseInt(id));
         if (response.success && response.data) {
           setWebtoon(response.data);
         } else {

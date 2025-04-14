@@ -17,8 +17,18 @@ class WebtoonService {
     return this.instance;
   }
 
-  // 웹툰 상세 조회
+  // 웹툰 간단 정보 조회
   public async getWebtoonById(id: number): Promise<Response<Webtoon>> {
+    try {
+      const response = await api.get<Webtoon>(`/api/public/webtoons/${id}`);
+      return { success: true, data: response.data };
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  // 웹툰 상제 정보 조회
+  public async getWebtoonDetails(id: number): Promise<Response<Webtoon>> {
     try {
       const response = await api.get<Webtoon>(`/api/public/webtoons/${id}`);
       return { success: true, data: response.data };

@@ -93,7 +93,9 @@ const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ webtoon }) 
       
       <div className={styles.ratingSummary}>
         <div className={styles.averageRating}>
-          <div className={styles.ratingValue}>{webtoon.averageRating.toFixed(1)}</div>
+          <div className={styles.ratingValue}>
+            {webtoon.averageRating ? webtoon.averageRating?.toFixed(1) : '0.0' }
+          </div>
           <div className={styles.ratingStars}>
             {[1, 2, 3, 4, 5].map(star => (
               <span 
