@@ -12,6 +12,7 @@ import com.toonpick.repository.WebtoonReviewRepository;
 import com.toonpick.review.request.WebtoonReviewCreateDTO;
 import com.toonpick.review.response.WebtoonReviewDTO;
 import com.toonpick.type.ErrorCode;
+import jakarta.annotation.Nullable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,8 +27,11 @@ import com.toonpick.entity.ReviewLike;
 import com.toonpick.entity.WebtoonReview;
 import com.toonpick.review.mapper.WebtoonReviewMapper;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -144,39 +148,41 @@ public class WebtoonReviewService {
     }
 
 
-    // User가 웹툰에 누른 웹툰 리스트 반환
-    @Transactional(readOnly = true)
-    public List<Long> getLikedReviewIds(String username, Long webtoonId) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
-        Webtoon webtoon = webtoonRepository.findById(webtoonId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, webtoonId));
-
-        List<ReviewLike> likes = reviewLikeRepository.findByMemberAndWebtoon(member, webtoon);
-        return likes.stream()
-                .map(like -> like.getReview().getId())
-                .collect(Collectors.toList());
-    }
-
     // 특정 웹툰의 리뷰들을 가져온다 (정렬 기준)
     @Transactional(readOnly = true)
     public PagedResponseDTO<WebtoonReviewDTO> getReviewsByWebtoon(
-            Long webtoonId, String sortBy, int page, int size) {
+            Long webtoonId, String sortBy, int page, int size, @Nullable String username) {
+
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, webtoonId));
 
-        Sort sort;
-        if ("best".equalsIgnoreCase(sortBy)) {
-            sort = Sort.by(Sort.Direction.DESC, "likes");
-        } else {
-            sort = Sort.by(Sort.Direction.DESC, "createdDate");
+        Member member = null;
+        if (username != null) {
+            member = memberRepository.findByUsername(username)
+                    .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         }
+
+        Sort sort = "best".equalsIgnoreCase(sortBy)
+                ? Sort.by(Sort.Direction.DESC, "likes")
+                : Sort.by(Sort.Direction.DESC, "createdDate");
 
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<WebtoonReview> reviewPage = webtoonReviewRepository.findByWebtoon(webtoon, pageable);
 
+        List<Long> reviewIds = reviewPage.getContent().stream()
+                .map(WebtoonReview::getId)
+                .toList();
+
+        Set<Long> likedReviewIds = member != null
+                ? new HashSet<>(reviewLikeRepository.findLikedReviewIdsByMemberIdAndReviewIds(member.getId(), reviewIds))
+                : Collections.emptySet();
+
         List<WebtoonReviewDTO> reviewDTOs = reviewPage.getContent().stream()
-                .map(webtoonReviewMapper::webtoonReviewToWebtoonReviewDTO)
+                .map(review -> {
+                    WebtoonReviewDTO dto = webtoonReviewMapper.webtoonReviewToWebtoonReviewDTO(review);
+                    dto.setIsLiked(likedReviewIds.contains(review.getId()));
+                    return dto;
+                })
                 .collect(Collectors.toList());
 
         return PagedResponseDTO.<WebtoonReviewDTO>builder()

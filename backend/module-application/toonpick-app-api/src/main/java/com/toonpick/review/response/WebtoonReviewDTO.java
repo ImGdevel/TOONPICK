@@ -15,10 +15,12 @@ import java.time.LocalDateTime;
 public class WebtoonReviewDTO {
     private Long id;
     private Long webtoonId;
-    private MemberDTO memberId;
+    private MemberDTO member;
     private float rating;
     private String comment;
     private int likes;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+
+    private Boolean isLiked;
 }

@@ -1,11 +1,16 @@
 package com.toonpick.review.controller;
 
+import com.toonpick.annotation.CurrentUser;
 import com.toonpick.dto.PagedResponseDTO;
 import com.toonpick.review.response.WebtoonReviewDTO;
+import com.toonpick.user.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +28,8 @@ import com.toonpick.review.service.WebtoonReviewService;
 public class PublicWebtoonReviewController {
 
     private final WebtoonReviewService webtoonReviewService;
+
+    private final Logger logger = LoggerFactory.getLogger(PublicWebtoonReviewController.class);
 
     @Operation(summary = "특정 리뷰 조회", description = "리뷰 ID를 사용하여 특정 리뷰를 조회합니다")
     @GetMapping("/{reviewId}")
@@ -44,9 +51,10 @@ public class PublicWebtoonReviewController {
             @Parameter(description = "페이지 번호 (0부터 시작)", required = false)
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "페이지 크기", required = false)
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(defaultValue = "20") int size,
+            @CurrentUser CustomUserDetails user
     ) {
-        PagedResponseDTO<WebtoonReviewDTO> pagedReviews = webtoonReviewService.getReviewsByWebtoon(webtoonId, sortBy, page, size);
+        PagedResponseDTO<WebtoonReviewDTO> pagedReviews = webtoonReviewService.getReviewsByWebtoon(webtoonId, sortBy, page, size, user.getUsername());
         return ResponseEntity.ok(pagedReviews);
     }
 }

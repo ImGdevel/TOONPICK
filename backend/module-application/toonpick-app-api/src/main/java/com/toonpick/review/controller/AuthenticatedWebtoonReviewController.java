@@ -32,7 +32,7 @@ public class AuthenticatedWebtoonReviewController {
 
     private final WebtoonReviewService webtoonReviewService;
 
-    @Operation(summary = "새로운 리뷰 생성", description = "새로운 리뷰를 작성합니다")
+    @Operation(summary = "새로운 리뷰 생성", description = "Member가 새로운 리뷰를 작성합니다")
     @PostMapping("/{webtoonId}")
     public ResponseEntity<WebtoonReviewDTO> createReview(
             @Parameter(description = "리뷰 작성 포맷", required = true)
@@ -43,7 +43,7 @@ public class AuthenticatedWebtoonReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
 
-    @Operation(summary = "기존 리뷰 수정", description = "기존에 작성항 리뷰를 수정합니다")
+    @Operation(summary = "기존 리뷰 수정", description = "Member가 기존에 작성항 리뷰를 수정합니다. - (비활성화)")
     @PutMapping("/{reviewId}")
     public ResponseEntity<WebtoonReviewDTO> updateReview(
             @Parameter(description = "수정할 리뷰 id")
@@ -56,7 +56,7 @@ public class AuthenticatedWebtoonReviewController {
         return ResponseEntity.ok(updatedReview);
     }
 
-    @Operation(summary = "리뷰 삭제", description = "작성한 리뷰를 삭제/제거합니다")
+    @Operation(summary = "리뷰 삭제", description = "Member가 자신이 작성한 리뷰를 삭제/제거합니다")
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReview(
             @Parameter(description = "삭제할 리뷰 id")
@@ -92,14 +92,4 @@ public class AuthenticatedWebtoonReviewController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @Operation(summary = "리뷰 추천 확인", description = "회원이 추천한 리뷰를 조회합니다")
-    @GetMapping("/{webtoonId}/liked")
-    public ResponseEntity<List<Long>> getLikedReviews(
-            @Parameter(description = "조회할 웹툰")
-            @PathVariable Long webtoonId,
-            @CurrentUser CustomUserDetails user
-    ) {
-        List<Long> likedReviewIds = webtoonReviewService.getLikedReviewIds(user.getUsername(), webtoonId);
-        return ResponseEntity.ok(likedReviewIds);
-    }
 }
