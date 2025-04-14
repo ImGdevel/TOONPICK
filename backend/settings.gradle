@@ -11,8 +11,6 @@ include 'module-application:toonpick-app-batch'
 findProject(':module-application:toonpick-app-batch')?.name = 'toonpick-app-batch'
 include 'module-application:toonpick-app-worker'
 findProject(':module-application:toonpick-app-worker')?.name = 'toonpick-app-worker'
-include 'module-application:toonpick-app-admin'
-findProject(':module-application:toonpick-app-admin')?.name = 'toonpick-app-admin'
 
 // 도데인 모듈
 include 'module-domain'
