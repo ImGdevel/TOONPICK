@@ -34,6 +34,14 @@ project(':module-domain:domain-webtoon') {
     bootJar.enabled = false
 }
 
+project(':module-domain:domain-analysis') {
+    dependencies {
+        implementation project(':module-common')
+        implementation project(':module-domain:domain-common')
+    }
+    bootJar.enabled = false
+}
+
 project(':module-domain:domain-member-engagement') {
     dependencies {
         implementation project(':module-domain:domain-member')
