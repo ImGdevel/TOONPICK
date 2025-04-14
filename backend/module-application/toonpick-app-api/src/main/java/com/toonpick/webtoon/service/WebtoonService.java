@@ -1,12 +1,23 @@
 package com.toonpick.webtoon.service;
 
+
+import com.toonpick.dto.PagedResponseDTO;
+import com.toonpick.dto.WebtoonFilterDTO;
+import com.toonpick.entity.Author;
+import com.toonpick.entity.Genre;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.exception.ResourceNotFoundException;
-import com.toonpick.webtoon.mapper.WebtoonMapper;
+import com.toonpick.repository.AuthorRepository;
 import com.toonpick.repository.GenreRepository;
+import com.toonpick.repository.WebtoonAnalysisRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
+import com.toonpick.webtoon.mapper.WebtoonAnalysisMapper;
+import com.toonpick.webtoon.mapper.WebtoonMapper;
+import com.toonpick.webtoon.request.WebtoonRequestDTO;
+import com.toonpick.webtoon.response.WebtoonDetailsResponse;
 import com.toonpick.webtoon.response.WebtoonResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
-import com.toonpick.dto.PagedResponseDTO;
-import com.toonpick.dto.WebtoonFilterDTO;
-import com.toonpick.webtoon.request.WebtoonRequestDTO;
-import com.toonpick.entity.Author;
-import com.toonpick.entity.Genre;
-import com.toonpick.repository.AuthorRepository;
-
 
 import java.util.HashSet;
 import java.util.List;
@@ -38,9 +41,8 @@ public class WebtoonService {
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
     private final WebtoonMapper webtoonMapper;
-
-    private final AuthorService authorService;
-    private final GenreService genreService;
+    private final WebtoonAnalysisRepository analysisRepository;
+    private final WebtoonAnalysisMapper analysisMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(WebtoonService.class);
 
@@ -48,14 +50,34 @@ public class WebtoonService {
      * id 기반으로 웹툰 조회
      */
     @Transactional(readOnly = true)
-    public WebtoonResponse getWebtoonById(Long id) {
+    public WebtoonResponse getWebtoon(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
         return webtoonMapper.webtoonToWebtoonResponseDto(webtoon);
     }
 
     /**
-     * Filter 옵션 및 page 에 맞춰 Webtoon 가져오기
+     * id 기반으로 웹툰 상세 데이터 조회
+     */
+    public WebtoonDetailsResponse getWebtoonDetails(Long id) {
+        Webtoon webtoon = webtoonRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("웹툰이 존재하지 않습니다."));
+
+        // 기본 정보 매핑
+        WebtoonDetailsResponse webtoonDetails = webtoonMapper.toWebtoonDetailsResponse(webtoon);
+
+        // 분석 데이터 조회 및 매핑
+        analysisRepository.findByWebtoonId(id)
+                .map(analysisMapper::toDto)
+                .ifPresent(webtoonDetails::setAnalysisData);
+
+        // todo : 유사 웹툰 (옵션) 추가 예정
+
+        return webtoonDetails;
+    }
+
+    /**
+     * Filter 옵션 및 page 에 맞춰 Webtoon 리스트 가져오기
      */
     @Transactional(readOnly = true)
     public PagedResponseDTO<WebtoonResponse> getWebtoonsOptions(

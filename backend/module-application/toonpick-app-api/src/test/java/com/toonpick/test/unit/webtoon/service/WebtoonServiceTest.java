@@ -91,13 +91,13 @@ class WebtoonServiceTest {
 
     @DisplayName("Id로 웹툰 조회 유닛 테스트")
     @Test
-    void testGetWebtoonById_Success() {
+    void testGetWebtoon_Success() {
         // given
         when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
         when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
 
         // when
-        WebtoonResponse result = webtoonService.getWebtoonById(1L);
+        WebtoonResponse result = webtoonService.getWebtoon(1L);
 
         // then
         assertNotNull(result);
@@ -106,12 +106,12 @@ class WebtoonServiceTest {
 
     @DisplayName("Id로 웹툰 조회 예외 유닛 테스트")
     @Test
-    void testGetWebtoonById_NotFound() {
+    void testGetWebtoon_NotFound() {
         // given
         when(webtoonRepository.findById(2L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> webtoonService.getWebtoonById(2L));
+        assertThrows(ResourceNotFoundException.class, () -> webtoonService.getWebtoon(2L));
     }
 
     @DisplayName("웹툰 업데이트 유닛 테스트")

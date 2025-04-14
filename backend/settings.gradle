@@ -27,6 +27,8 @@ include 'module-domain:domain-member-engagement'
 findProject(':module-domain:domain-member-engagement')?.name = 'domain-member-engagement'
 include 'module-domain:domain-toon-collection'
 findProject(':module-domain:domain-toon-collection')?.name = 'domain-toon-collection'
+include 'module-domain:domain-analysis'
+findProject(':module-domain:domain-analysis')?.name = 'domain-analysis'
 
 // 내부 모듈
 include 'module-internal'

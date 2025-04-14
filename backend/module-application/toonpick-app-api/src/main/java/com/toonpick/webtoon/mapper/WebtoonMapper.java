@@ -1,5 +1,6 @@
 package com.toonpick.webtoon.mapper;
 
+import com.toonpick.webtoon.response.WebtoonDetailsResponse;
 import com.toonpick.webtoon.response.WebtoonResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,5 +16,6 @@ public interface WebtoonMapper {
     @Mapping(source = "genres", target = "genres")
     WebtoonResponse webtoonToWebtoonResponseDto(Webtoon webtoon);
 
+    WebtoonDetailsResponse toWebtoonDetailsResponse(Webtoon webtoon);
 
 }

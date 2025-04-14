@@ -33,7 +33,7 @@ public class PublicWebtoonController {
             @Parameter(description = "웹툰 ID", required = true, example = "1")
             @PathVariable Long id
     ) {
-        WebtoonResponse webtoonDTO = webtoonService.getWebtoonById(id);
+        WebtoonResponse webtoonDTO = webtoonService.getWebtoon(id);
         return ResponseEntity.ok(webtoonDTO);
     }
 

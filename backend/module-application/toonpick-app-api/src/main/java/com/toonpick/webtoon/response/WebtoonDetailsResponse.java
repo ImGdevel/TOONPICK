@@ -1,12 +1,12 @@
 package com.toonpick.webtoon.response;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Data
-@Builder
+@SuperBuilder
 public class WebtoonDetailsResponse extends WebtoonResponse {
 
     private List<WebtoonResponse> similarWebtoons;
