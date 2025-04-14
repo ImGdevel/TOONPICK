@@ -179,20 +179,62 @@ class WebtoonReviewServiceTest {
     }
 
 
-    @DisplayName("웹툰 리뷰 리스트 페이징 조회 성공 유닛 테스트")
+    @DisplayName("웹툰 리뷰 리스트 조회 - 로그인하지 않은 유저일 때 성공")
     @Test
-    void getReviewsByWebtoon_Success() {
+    void getReviewsByWebtoon_WithoutLogin_Success() {
         // given
-        Page<WebtoonReview> reviewPage = new PageImpl<>(List.of(review));
+        Webtoon webtoon = Webtoon.builder().id(1L).title("웹툰").build();
+        Member member = Member.builder().username("작성자").build();
+        WebtoonReview review = WebtoonReview.builder().id(200L).member(member).webtoon(webtoon).comment("꿀잼").likes(10).build();
+
+        Page<WebtoonReview> page = new PageImpl<>(List.of(review));
+
         when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
-        when(webtoonReviewRepository.findByWebtoon(eq(webtoon), any(Pageable.class))).thenReturn(reviewPage);
+        when(webtoonReviewRepository.findByWebtoon(eq(webtoon), any(Pageable.class))).thenReturn(page);
 
         // when
-        PagedResponseDTO<WebtoonReviewDTO> result = webtoonReviewService.getReviewsByWebtoon(1L, "best", 0, 10);
+        PagedResponseDTO<WebtoonReviewDTO> result = webtoonReviewService.getReviewsByWebtoon(
+                1L, "latest", 0, 10, null); // username null
 
         // then
         assertNotNull(result);
         assertEquals(1, result.getData().size());
-        assertEquals(review.getComment(), result.getData().get(0).getComment());
+
+        WebtoonReviewDTO dto = result.getData().get(0);
+        assertEquals("꿀잼", dto.getComment());
+        assertFalse(dto.getIsLiked());
     }
+
+
+
+    @DisplayName("웹툰 리뷰 리스트 조회 - 로그인한 유저일 때 성공")
+    @Test
+    void getReviewsByWebtoon_WithLogin_Success() {
+        // given
+        Member member = Member.builder().id(1L).username("testUser").build();
+        Webtoon webtoon = Webtoon.builder().id(1L).title("웹툰").build();
+        WebtoonReview review = WebtoonReview.builder().id(100L).member(member).webtoon(webtoon).comment("재밌음").likes(3).build();
+
+        Page<WebtoonReview> page = new PageImpl<>(List.of(review));
+        List<Long> likedReviewIds = List.of(100L); // 유저가 이 리뷰에 좋아요 함
+
+        when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
+        when(memberRepository.findByUsername("testUser")).thenReturn(Optional.of(member));
+        when(webtoonReviewRepository.findByWebtoon(eq(webtoon), any(Pageable.class))).thenReturn(page);
+        when(reviewLikeRepository.findLikedReviewIdsByMemberIdAndReviewIds(1L, List.of(100L)))
+                .thenReturn(likedReviewIds);
+
+        // when
+        PagedResponseDTO<WebtoonReviewDTO> result = webtoonReviewService.getReviewsByWebtoon(
+                1L, "best", 0, 10, "testUser");
+
+        // then
+        assertNotNull(result);
+        assertEquals(1, result.getData().size());
+
+        WebtoonReviewDTO dto = result.getData().get(0);
+        assertEquals("재밌음", dto.getComment());
+        assertTrue(dto.getIsLiked()); // 좋아요 체크됨
+    }
+
 }

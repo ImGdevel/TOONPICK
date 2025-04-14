@@ -85,7 +85,8 @@ public class WebtoonReviewService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.REVIEW_NOT_FOUND, reviewId));
         float oldRating = review.getRating();
 
-        // todo : 리뷰 수정 로직 작성
+        review.updateRating(reviewCreateDTO.getRating());
+        review.updateComment(reviewCreateDTO.getComment());
 
         WebtoonReview updatedReview = webtoonReviewRepository.save(review);
         webtoonRepository.updateReview(review.getWebtoon().getId(), oldRating, reviewCreateDTO.getRating());

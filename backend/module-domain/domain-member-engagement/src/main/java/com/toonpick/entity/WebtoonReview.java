@@ -41,4 +41,12 @@ public class WebtoonReview extends BaseTimeEntity {
     private boolean isSpoiler;
     private boolean isReported;
 
+    public void updateRating(float newRating) {
+        this.rating = newRating;
+    }
+
+    public void updateComment(String newComment){
+        this.comment = newComment;
+    }
+
 }

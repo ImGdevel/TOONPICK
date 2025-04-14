@@ -83,16 +83,20 @@ public class Member extends BaseTimeEntity {
     private MemberStatistics statistics;
 
     @Builder
-    public Member(String username,
-                  String email,
-                  String password,
-                  String nickname,
-                  MemberRole role,
-                  Boolean isAdultVerified,
-                  String profileImage,
-                  LocalDate birthday,
-                  String phoneNumber,
-                  Gender gender) {
+    public Member(
+            Long id,
+            String username,
+            String email,
+            String password,
+            String nickname,
+            MemberRole role,
+            Boolean isAdultVerified,
+            String profileImage,
+            LocalDate birthday,
+            String phoneNumber,
+            Gender gender
+    ) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
