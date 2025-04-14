@@ -112,10 +112,11 @@ public class Webtoon {
     private Set<Genre> genres = new HashSet<>();
 
     @Column(name = "platform_rating")
-    private float platformRating = 0;
+    private Float platformRating = 0f;
 
     @Column(name = "average_rating")
-    private float averageRating = 0;
+    private Float averageRating = 0f;
+
 
     private float ratingSum = 0;
 

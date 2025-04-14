@@ -2,6 +2,7 @@ package com.toonpick.webtoon.controller;
 
 import com.toonpick.dto.PagedResponseDTO;
 import com.toonpick.dto.WebtoonFilterDTO;
+import com.toonpick.webtoon.response.WebtoonDetailsResponse;
 import com.toonpick.webtoon.response.WebtoonResponse;
 import com.toonpick.webtoon.service.WebtoonService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +35,17 @@ public class PublicWebtoonController {
             @PathVariable Long id
     ) {
         WebtoonResponse webtoonDTO = webtoonService.getWebtoon(id);
+        return ResponseEntity.ok(webtoonDTO);
+    }
+
+    @Operation(summary = "웹툰 정보 조회", description = "웹툰 ID를 통해 특정 웹툰의 정보를 조회합니다")
+    @ApiResponse(responseCode = "200", description = "웹툰 정보를 성공적으로 반환")
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<WebtoonDetailsResponse> getWebtoonDetails(
+            @Parameter(description = "웹툰 ID", required = true, example = "1")
+            @PathVariable Long id
+    ) {
+        WebtoonDetailsResponse webtoonDTO = webtoonService.getWebtoonDetails(id);
         return ResponseEntity.ok(webtoonDTO);
     }
 
