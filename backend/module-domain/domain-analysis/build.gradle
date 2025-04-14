@@ -1,0 +1,11 @@
+dependencies {
+    // Spring Data MongoDB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+    // Embedded MongoDB for local test
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+
+    // Jackson 모듈 (Mongo Document 직렬화용)
+    implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+}

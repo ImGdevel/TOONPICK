@@ -45,3 +45,4 @@ logs/info.log
 application-secrets.yml
 application-API-KEY.yml
 *.env
+*.log

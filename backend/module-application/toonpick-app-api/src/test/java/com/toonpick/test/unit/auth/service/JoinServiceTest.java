@@ -2,6 +2,7 @@ package com.toonpick.test.unit.auth.service;
 
 import com.toonpick.auth.service.JoinService;
 import com.toonpick.entity.Member;
+import com.toonpick.exception.UserAlreadyRegisteredException;
 import com.toonpick.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -49,10 +50,9 @@ class JoinServiceTest {
     void testRegisterNewMemberDuplicateUsername() {
         JoinRequest joinRequest = new JoinRequest("testUser", "test@example.com", "password");
 
-        when(memberRepository.existsByUsername("testUser")).thenReturn(true);
+        when(memberRepository.existsByUsername("test@example.com")).thenReturn(true);
 
         assertThatThrownBy(() -> joinService.registerNewMember(joinRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Username testUser already exists.");
+                .isInstanceOf(UserAlreadyRegisteredException.class);
     }
 }

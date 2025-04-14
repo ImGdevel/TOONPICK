@@ -1,6 +1,8 @@
 package com.toonpick.test.unit.auth.service;
 
 import com.toonpick.auth.service.TokenService;
+import com.toonpick.exception.ExpiredJwtTokenException;
+import com.toonpick.exception.InvalidJwtTokenException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,11 +73,11 @@ class TokenReissueControllerTest {
         String invalidRefreshToken = "invalid-refresh-token";
 
         when(jwtTokenValidator.extractRefreshTokenFromCookies(request)).thenReturn(invalidRefreshToken);
-        doThrow(new IllegalArgumentException("Invalid token")).when(jwtTokenValidator).validateRefreshToken(invalidRefreshToken);
+        doThrow(new InvalidJwtTokenException("Invalid token")).when(jwtTokenValidator).validateRefreshToken(invalidRefreshToken);
 
         ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
 
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
         assertEquals("Invalid token", responseEntity.getBody());
     }
 
@@ -92,12 +96,16 @@ class TokenReissueControllerTest {
         when(tokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
         when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(true);
         when(tokenService.reissueRefreshToken(refreshToken)).thenReturn(newRefreshToken);
-        when(CookieUtils.createRefreshCookie(newRefreshToken)).thenReturn(new Cookie("refresh", newRefreshToken));
+        try (MockedStatic<CookieUtils> mockedCookieUtils = Mockito.mockStatic(CookieUtils.class)) {
+            mockedCookieUtils.when(() -> CookieUtils.createRefreshCookie(newRefreshToken))
+                    .thenReturn(new Cookie("refresh", newRefreshToken));
 
-        ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
+            ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
 
-        verify(response).setHeader("Authorization", "Bearer " + newAccessToken);
-        verify(response).addCookie(any(Cookie.class));
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+            verify(response).setHeader("Authorization", "Bearer " + newAccessToken);
+            verify(response).addCookie(any(Cookie.class));
+            assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        }
     }
+
 }
