@@ -7,10 +7,6 @@ include 'module-application:toonpick-app-auth'
 findProject(':module-application:toonpick-app-auth')?.name = 'toonpick-app-auth'
 include 'module-application:toonpick-app-api'
 findProject(':module-application:toonpick-app-api')?.name = 'toonpick-app-api'
-include 'module-application:toonpick-app-batch'
-findProject(':module-application:toonpick-app-batch')?.name = 'toonpick-app-batch'
-include 'module-application:toonpick-app-worker'
-findProject(':module-application:toonpick-app-worker')?.name = 'toonpick-app-worker'
 
 // 도데인 모듈
 include 'module-domain'
