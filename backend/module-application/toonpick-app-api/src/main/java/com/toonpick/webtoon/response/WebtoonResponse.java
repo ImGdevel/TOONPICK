@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Data
 @Builder
-public class WebtoonResponseDTO {
+public class WebtoonResponse {
     private Long id;
     private String title;
     private Platform platform;
@@ -27,9 +27,7 @@ public class WebtoonResponseDTO {
     private Set<AuthorDTO> authors;
     private Set<GenreDTO> genres;
     private int episodeCount;
-    private LocalDate lastUpdatedDate;
     private Float averageRating;
-    private Float platformRating;
     private LocalDate publishStartDate;
     private LocalDate lastUpdateDate;
 }

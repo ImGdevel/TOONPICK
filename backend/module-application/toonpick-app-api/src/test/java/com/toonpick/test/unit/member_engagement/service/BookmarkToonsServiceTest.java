@@ -4,7 +4,7 @@ import com.toonpick.entity.Member;
 import com.toonpick.member_enagement.service.BookmarkToonsService;
 import com.toonpick.repository.MemberRepository;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
-import com.toonpick.webtoon.response.WebtoonResponseDTO;
+import com.toonpick.webtoon.response.WebtoonResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -46,7 +46,7 @@ class BookmarkToonsServiceTest {
     private Member member;
     private Webtoon webtoon;
     private BookmarkToons bookmarkToons;
-    private WebtoonResponseDTO responseDTO;
+    private WebtoonResponse responseDTO;
 
     @BeforeEach
     void setUp() {
@@ -64,7 +64,7 @@ class BookmarkToonsServiceTest {
                 .webtoon(webtoon)
                 .build();
 
-        responseDTO = WebtoonResponseDTO.builder()
+        responseDTO = WebtoonResponse.builder()
                 .id(1L)
                 .title("Test Webtoon")
                 .build();
@@ -155,7 +155,7 @@ class BookmarkToonsServiceTest {
         when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
 
         // when
-        List<WebtoonResponseDTO> result = bookmarkToonsService.getWebtoonsByUsername("testuser");
+        List<WebtoonResponse> result = bookmarkToonsService.getWebtoonsByUsername("testuser");
 
         // then
         assertNotNull(result);

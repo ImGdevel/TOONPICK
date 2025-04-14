@@ -4,14 +4,13 @@ import com.toonpick.entity.Webtoon;
 import com.toonpick.enums.AgeRating;
 import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
-import com.toonpick.exception.ResourceAlreadyExistsException;
 import com.toonpick.exception.ResourceNotFoundException;
 import com.toonpick.repository.AuthorRepository;
 import com.toonpick.repository.GenreRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
 import com.toonpick.webtoon.request.WebtoonRequestDTO;
-import com.toonpick.webtoon.response.WebtoonResponseDTO;
+import com.toonpick.webtoon.response.WebtoonResponse;
 import com.toonpick.webtoon.service.WebtoonService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +51,7 @@ class WebtoonServiceTest {
     private WebtoonService webtoonService;
 
     private Webtoon webtoon;
-    private WebtoonResponseDTO responseDTO;
+    private WebtoonResponse responseDTO;
 
     @BeforeEach
     void setUp() {
@@ -75,7 +74,7 @@ class WebtoonServiceTest {
                 .genres(new HashSet<>())
                 .build();
 
-        responseDTO = WebtoonResponseDTO.builder()
+        responseDTO = WebtoonResponse.builder()
                 .id(1L)
                 .title("Test Webtoon")
                 .platform(Platform.NAVER)
@@ -98,7 +97,7 @@ class WebtoonServiceTest {
         when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
 
         // when
-        WebtoonResponseDTO result = webtoonService.getWebtoonById(1L);
+        WebtoonResponse result = webtoonService.getWebtoonById(1L);
 
         // then
         assertNotNull(result);
@@ -131,7 +130,7 @@ class WebtoonServiceTest {
         when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
 
         // when
-        WebtoonResponseDTO result = webtoonService.updateWebtoon(1L, updateRequestDTO);
+        WebtoonResponse result = webtoonService.updateWebtoon(1L, updateRequestDTO);
 
         // then
         assertNotNull(result);

@@ -6,6 +6,7 @@ import com.toonpick.webtoon.mapper.WebtoonMapper;
 import com.toonpick.repository.GenreRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
+import com.toonpick.webtoon.response.WebtoonResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.toonpick.dto.PagedResponseDTO;
 import com.toonpick.dto.WebtoonFilterDTO;
 import com.toonpick.webtoon.request.WebtoonRequestDTO;
-import com.toonpick.webtoon.response.WebtoonResponseDTO;
 import com.toonpick.entity.Author;
 import com.toonpick.entity.Genre;
 import com.toonpick.repository.AuthorRepository;
@@ -48,7 +48,7 @@ public class WebtoonService {
      * id 기반으로 웹툰 조회
      */
     @Transactional(readOnly = true)
-    public WebtoonResponseDTO getWebtoonById(Long id) {
+    public WebtoonResponse getWebtoonById(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
         return webtoonMapper.webtoonToWebtoonResponseDto(webtoon);
@@ -58,17 +58,17 @@ public class WebtoonService {
      * Filter 옵션 및 page 에 맞춰 Webtoon 가져오기
      */
     @Transactional(readOnly = true)
-    public PagedResponseDTO<WebtoonResponseDTO> getWebtoonsOptions(
+    public PagedResponseDTO<WebtoonResponse> getWebtoonsOptions(
             WebtoonFilterDTO filter, int page, int size, String sortBy, String sortDir) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortBy);
         Page<Webtoon> webtoonPage = webtoonRepository.findWebtoonsByFilterOptions(filter, pageable);
 
-        List<WebtoonResponseDTO> webtoonDTOs = webtoonPage.getContent().stream()
+        List<WebtoonResponse> webtoonDTOs = webtoonPage.getContent().stream()
                 .map(webtoonMapper::webtoonToWebtoonResponseDto)
                 .collect(Collectors.toList());
 
-        return PagedResponseDTO.<WebtoonResponseDTO>builder()
+        return PagedResponseDTO.<WebtoonResponse>builder()
                 .data(webtoonDTOs)
                 .page(webtoonPage.getNumber())
                 .size(webtoonPage.getSize())
@@ -82,7 +82,7 @@ public class WebtoonService {
      * 기존 웹툰 업데이트
      */
     @Transactional
-    public WebtoonResponseDTO updateWebtoon(Long id, WebtoonRequestDTO webtoonRequestDTO) {
+    public WebtoonResponse updateWebtoon(Long id, WebtoonRequestDTO webtoonRequestDTO) {
         Webtoon existingWebtoon = webtoonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
 

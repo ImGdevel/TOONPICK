@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,7 +14,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,11 +23,11 @@ import com.toonpick.enums.AgeRating;
 import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
 
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
 
 @Entity
 @Getter
@@ -113,8 +111,10 @@ public class Webtoon {
     )
     private Set<Genre> genres = new HashSet<>();
 
+    @Column(name = "platform_rating")
     private float platformRating = 0;
 
+    @Column(name = "average_rating")
     private float averageRating = 0;
 
     private float ratingSum = 0;

@@ -2,7 +2,7 @@ package com.toonpick.webtoon.controller;
 
 import com.toonpick.dto.PagedResponseDTO;
 import com.toonpick.dto.WebtoonFilterDTO;
-import com.toonpick.webtoon.response.WebtoonResponseDTO;
+import com.toonpick.webtoon.response.WebtoonResponse;
 import com.toonpick.webtoon.service.WebtoonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,18 +29,18 @@ public class PublicWebtoonController {
     @Operation(summary = "웹툰 정보 조회", description = "웹툰 ID를 통해 특정 웹툰의 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "웹툰 정보를 성공적으로 반환")
     @GetMapping("/{id}")
-    public ResponseEntity<WebtoonResponseDTO> getWebtoon(
+    public ResponseEntity<WebtoonResponse> getWebtoon(
             @Parameter(description = "웹툰 ID", required = true, example = "1")
             @PathVariable Long id
     ) {
-        WebtoonResponseDTO webtoonDTO = webtoonService.getWebtoonById(id);
+        WebtoonResponse webtoonDTO = webtoonService.getWebtoonById(id);
         return ResponseEntity.ok(webtoonDTO);
     }
 
     @Operation(summary = "웹툰 필터 조회", description = "필터 옵션과 페이징 정보를 통해 웹툰 리스트를 조회합니다")
     @ApiResponse(responseCode = "200", description = "필터링된 웹툰 리스트를 성공적으로 반환")
     @GetMapping
-    public ResponseEntity<PagedResponseDTO<WebtoonResponseDTO>> filterWebtoons(
+    public ResponseEntity<PagedResponseDTO<WebtoonResponse>> filterWebtoons(
             @Parameter(description = "필터 옵션 (제목, 장르 등)", required = false)
             @ModelAttribute WebtoonFilterDTO filter,
             @Parameter(description = "페이지 번호 (0부터 시작)", required = false, example = "0")
@@ -52,7 +52,7 @@ public class PublicWebtoonController {
             @Parameter(description = "정렬 방향 (asc/desc)", required = false, example = "asc")
             @RequestParam(defaultValue = "asc") String sortDir
     ) {
-        PagedResponseDTO<WebtoonResponseDTO> webtoons = webtoonService.getWebtoonsOptions(filter, page, size, sortBy, sortDir);
+        PagedResponseDTO<WebtoonResponse> webtoons = webtoonService.getWebtoonsOptions(filter, page, size, sortBy, sortDir);
         return ResponseEntity.ok(webtoons);
     }
 }

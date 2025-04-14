@@ -11,7 +11,7 @@ import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.toon_collection.mapper.ToonCollectionMapper;
 import com.toonpick.toon_collection.response.ToonCollectionResponseDTO;
 import com.toonpick.toon_collection.service.ToonCollectionService;
-import com.toonpick.webtoon.response.WebtoonResponseDTO;
+import com.toonpick.webtoon.response.WebtoonResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -76,7 +76,7 @@ class ToonCollectionServiceTest {
                         .profileImage("profile.jpg")
                         .level(1)
                         .build())
-                .webtoons(List.of(WebtoonResponseDTO.builder()
+                .webtoons(List.of(WebtoonResponse.builder()
                         .id(1L)
                         .title("Test Webtoon")
                         .build()))
