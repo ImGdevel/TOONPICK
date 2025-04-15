@@ -15,6 +15,7 @@ import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
 
 
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Set;
 
@@ -24,64 +25,51 @@ public class WebtoonRepositoryImpl implements WebtoonRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Webtoon> findWebtoonsByFilter(WebtoonFilterDTO filter) {
-        QWebtoon webtoon = QWebtoon.webtoon;
-
-        return queryFactory.selectFrom(webtoon)
-                .where(
-                        platformEq(filter.getPlatform()),
-                        serializationStatusEq(filter.getSerializationStatus()),
-                        ageRatingEq(filter.getAgeRating()),
-                        weekEq(filter.getWeek()),
-                        genresIn(filter.getGenres()),
-                        authorsIn(filter.getAuthors())
-                )
-                .fetch();
-    }
-
-    @Override
     public Page<Webtoon> findWebtoonsByFilterOptions(WebtoonFilterDTO filter, Pageable pageable) {
         QWebtoon webtoon = QWebtoon.webtoon;
 
         JPAQuery<Webtoon> query = queryFactory.selectFrom(webtoon)
-                .where(
-                        platformEq(filter.getPlatform()),
-                        serializationStatusEq(filter.getSerializationStatus()),
-                        ageRatingEq(filter.getAgeRating()),
-                        weekEq(filter.getWeek()),
-                        genresIn(filter.getGenres()),
-                        authorsIn(filter.getAuthors())
-                );
+            .where(
+                platformsIn(filter.getPlatforms()),
+                serializationStatusesIn(filter.getSerializationStatuses()),
+                ageRatingsIn(filter.getAgeRatings()),
+                publishDaysIn(filter.getPublishDays()),
+                genresIn(filter.getGenres()),
+                authorsIn(filter.getAuthors())
+            );
 
         long total = query.fetchCount();
-        List<Webtoon> content = query.offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+
+        List<Webtoon> content = query
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
 
         return new PageImpl<>(content, pageable, total);
     }
 
-    private BooleanExpression platformEq(Platform platform) {
-        return platform != null ? QWebtoon.webtoon.platform.eq(platform) : null;
+    private BooleanExpression platformsIn(Set<Platform> platforms) {
+        return (platforms != null && !platforms.isEmpty()) ? QWebtoon.webtoon.platform.in(platforms) : null;
     }
 
-    private BooleanExpression serializationStatusEq(SerializationStatus serializationStatus) {
-        return serializationStatus != null ? QWebtoon.webtoon.serializationStatus.eq(serializationStatus) : null;
+    private BooleanExpression serializationStatusesIn(Set<SerializationStatus> statuses) {
+        return (statuses != null && !statuses.isEmpty()) ? QWebtoon.webtoon.serializationStatus.in(statuses) : null;
     }
 
-    private BooleanExpression ageRatingEq(AgeRating ageRating) {
-        return ageRating != null ? QWebtoon.webtoon.ageRating.eq(ageRating) : null;
+    private BooleanExpression ageRatingsIn(Set<AgeRating> ratings) {
+        return (ratings != null && !ratings.isEmpty()) ? QWebtoon.webtoon.ageRating.in(ratings) : null;
     }
 
-    private BooleanExpression weekEq(java.time.DayOfWeek dayOfWeek) {
-        return dayOfWeek != null ? QWebtoon.webtoon.dayOfWeek.eq(dayOfWeek) : null;
+    private BooleanExpression publishDaysIn(Set<DayOfWeek> days) {
+        return (days != null && !days.isEmpty()) ? QWebtoon.webtoon.dayOfWeek.in(days) : null;
     }
 
     private BooleanExpression genresIn(Set<String> genres) {
-        return genres != null && !genres.isEmpty() ? QWebtoon.webtoon.genres.any().name.in(genres) : null;
+        return (genres != null && !genres.isEmpty()) ? QWebtoon.webtoon.genres.any().name.in(genres) : null;
     }
 
     private BooleanExpression authorsIn(Set<String> authors) {
-        return authors != null && !authors.isEmpty() ? QWebtoon.webtoon.authors.any().name.in(authors) : null;
+        return (authors != null && !authors.isEmpty()) ? QWebtoon.webtoon.authors.any().name.in(authors) : null;
     }
+
 }

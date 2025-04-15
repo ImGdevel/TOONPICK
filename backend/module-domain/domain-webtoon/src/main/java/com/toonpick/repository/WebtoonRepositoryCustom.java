@@ -9,6 +9,5 @@ import com.toonpick.entity.Webtoon;
 import java.util.List;
 
 public interface WebtoonRepositoryCustom {
-    List<Webtoon> findWebtoonsByFilter(WebtoonFilterDTO filter);
     Page<Webtoon> findWebtoonsByFilterOptions(WebtoonFilterDTO filter, Pageable pageable);
 }

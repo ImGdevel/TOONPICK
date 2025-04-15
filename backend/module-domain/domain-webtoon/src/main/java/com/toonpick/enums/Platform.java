@@ -9,9 +9,11 @@ import lombok.RequiredArgsConstructor;
 public enum Platform {
     NAVER,
     KAKAO,
+    KAKAOPAGE,
     RIDI,
     LEZHIN,
     TOOMICS,
+    BOMTOON,
     MRBLUE,
-    BUFF
+    BUFF,
 }
