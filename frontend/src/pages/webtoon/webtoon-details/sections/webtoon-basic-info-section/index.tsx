@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Webtoon, Platform, SerializationStatus } from '@models/webtoon';
+import { FiMoreVertical, FiBookmark, FiAlertCircle, FiShare2, FiPlus, FiEyeOff, FiChevronDown } from 'react-icons/fi';
 // import { useAuth } from '@contexts/auth-context';
+import StatusTags from './components/status-tags';
 import styles from './style.module.css';
 
 interface WebtoonBasicInfoSectionProps {
@@ -12,37 +14,63 @@ const WebtoonBasicInfoSection: React.FC<WebtoonBasicInfoSectionProps> = ({ webto
   const navigate = useNavigate();
   // const { isLoggedIn, memberProfile } = useAuth();
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isGenresExpanded, setIsGenresExpanded] = useState(false);
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   // 더미 데이터 (실제로는 API에서 받아올 데이터)
   const readingStatus = false ? 'READING' : null; // 'READING', 'COMPLETED', 'DROPPED', null
   const readingProgress = false ? 75 : 0; // 0-100 사이의 값
-  const isBookmarked = false ? true : false;
 
   const handleReadClick = () => {
-    // 읽기 페이지로 이동 (아직 구현되지 않음)
     navigate(`/webtoons/${webtoon.id}/read`);
   };
 
   const handleBookmarkClick = () => {
-    // 북마크 추가/제거 (아직 구현되지 않음)
-    console.log('북마크 토글');
+    setIsBookmarked(!isBookmarked);
+  };
+
+  const toggleMoreMenu = () => {
+    setIsMoreMenuOpen(!isMoreMenuOpen);
   };
 
   const toggleDescription = () => {
     setIsDescriptionExpanded(!isDescriptionExpanded);
   };
 
-  // 설명 텍스트가 200자 이상인 경우 자르기
-  const descriptionText = webtoon.description || '설명이 없습니다.';
-  const shouldTruncate = descriptionText.length > 100;
-  const displayText = isDescriptionExpanded || !shouldTruncate 
-    ? descriptionText 
-    : `${descriptionText.substring(0, 100)}...`;
+  const toggleGenres = () => {
+    setIsGenresExpanded(!isGenresExpanded);
+  };
+
+  const getStatusText = (status: SerializationStatus) => {
+    switch (status) {
+      case SerializationStatus.ONGOING:
+        return '연재중';
+      case SerializationStatus.COMPLETED:
+        return '완결';
+      case SerializationStatus.HIATUS:
+        return '휴재';
+      default:
+        return '';
+    }
+  };
+
+  const getAuthorText = () => {
+    const authorsByRole = webtoon.authors.reduce((acc, author) => {
+      if (!acc[author.role]) {
+        acc[author.role] = [];
+      }
+      acc[author.role].push(author.name);
+      return acc;
+    }, {} as Record<string, string[]>);
+
+    return Object.entries(authorsByRole)
+      .map(([role, names]) => `${role} : ${names.join(', ')}`)
+      .join(' | ');
+  };
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.sectionTitle}>웹툰 정보</h2>
-      
       <div className={styles.contentContainer}>
         <div className={styles.leftSection}>
           <div className={styles.thumbnailContainer}>
@@ -51,94 +79,93 @@ const WebtoonBasicInfoSection: React.FC<WebtoonBasicInfoSectionProps> = ({ webto
               alt={webtoon.title} 
               className={styles.thumbnail}
             />
-            
-            {/* 상태 뱃지 */}
-            <div className={styles.badgeContainer}>
-              {webtoon.isAdult && <span className={styles.adultBadge}>성인</span>}
-              {webtoon.status === SerializationStatus.COMPLETED && (
-                <span className={styles.completedBadge}>완결</span>
-              )}
-              {webtoon.status === SerializationStatus.HIATUS && (
-                <span className={styles.hiatusBadge}>휴재</span>
-              )}
-            </div>
-          </div>
-          
-          <div className={styles.actionButtons}>
-            <button 
-              className={styles.readButton}
-              onClick={handleReadClick}
-            >
-              {readingStatus === 'READING' ? '이어보기' : '읽기 시작'}
-            </button>
-            
-            <button 
-              className={`${styles.bookmarkButton} ${isBookmarked ? styles.bookmarked : ''}`}
-              onClick={handleBookmarkClick}
-            >
-              {isBookmarked ? '북마크됨' : '북마크'}
-            </button>
           </div>
         </div>
         
         <div className={styles.rightSection}>
+          <div className={styles.topRow}>
+            <StatusTags status={webtoon.status} isAdult={webtoon.isAdult} />
+            <div className={styles.actionButtons}>
+              <button 
+                className={`${styles.bookmarkButton} ${isBookmarked ? styles.bookmarked : ''}`}
+                onClick={handleBookmarkClick}
+              >
+                <FiBookmark />
+                {isBookmarked ? '관심' : '관심'}
+              </button>
+              <div className={styles.moreButtonContainer}>
+                <button 
+                  className={styles.moreButton}
+                  onClick={toggleMoreMenu}
+                >
+                  <FiMoreVertical />
+                </button>
+                {isMoreMenuOpen && (
+                  <div className={styles.moreMenu}>
+                    <button className={styles.menuItem}>
+                      <FiShare2 />
+                      작품 공유
+                    </button>
+                    <button className={styles.menuItem}>
+                      <FiPlus />
+                      컬렉션에 추가
+                    </button>
+                    <button className={styles.menuItem}>
+                      <FiEyeOff />
+                      더이상 보지 않기
+                    </button>
+                    <button className={styles.menuItem}>
+                      <FiAlertCircle />
+                      정보 오류 신고하기
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
           <h1 className={styles.title}>{webtoon.title}</h1>
-          
-          <div className={styles.platform}>
-            <span className={styles.label}>연재 플랫폼:</span>
-            <span className={styles.value}>{webtoon.platform}</span>
-          </div>
-          
+
           <div className={styles.authors}>
-            <span className={styles.label}>작가:</span>
-            <span className={styles.value}>
-              {webtoon.authors ? webtoon.authors.map(author => author.name).join(', ') : '정보 없음'}
-            </span>
+            {getAuthorText()}
           </div>
-          
-          <div className={styles.publishDay}>
-            <span className={styles.label}>연재일:</span>
-            <span className={styles.value}>{webtoon.publishDay}</span>
-          </div>
-          
-          <div className={styles.genres}>
-            <span className={styles.label}>장르:</span>
-            <div className={styles.genreTags}>
-              {webtoon.genres ? webtoon.genres.map(genre => (
+
+          <div className={styles.genresContainer}>
+            <div className={`${styles.genreTags} ${isGenresExpanded ? styles.expanded : ''}`}>
+              {webtoon.genres.map(genre => (
                 <span key={genre.id} className={styles.genreTag}>
                   {genre.name}
                 </span>
-              )) : '정보 없음'}
+              ))}
             </div>
+            {webtoon.genres.length > 4 && (
+              <button 
+                className={styles.expandButton}
+                onClick={toggleGenres}
+              >
+                <FiChevronDown />
+              </button>
+            )}
           </div>
-          
-          <div className={styles.description}>
-            <span className={styles.label}>줄거리:</span>
-            <p className={styles.descriptionText}>
-              {displayText}
-              {shouldTruncate && (
-                <button 
-                  className={styles.expandButton}
-                  onClick={toggleDescription}
-                >
-                  {isDescriptionExpanded ? '접기' : '더보기'}
-                </button>
-              )}
+
+          <div className={styles.descriptionContainer}>
+            <p className={`${styles.descriptionText} ${isDescriptionExpanded ? styles.expanded : ''}`}>
+              {webtoon.description || ''}
             </p>
+            <button 
+              className={styles.expandButton}
+              onClick={toggleDescription}
+            >
+              <FiChevronDown />
+            </button>
           </div>
-          
-          {false && readingStatus && (
-            <div className={styles.readingProgress}>
-              <span className={styles.label}>읽기 진행률:</span>
-              <div className={styles.progressBar}>
-                <div 
-                  className={styles.progressFill} 
-                  style={{ width: `${readingProgress}%` }}
-                />
-              </div>
-              <span className={styles.progressText}>{readingProgress}%</span>
-            </div>
-          )}
+
+          <button 
+            className={styles.readButton}
+            onClick={handleReadClick}
+          >
+            첫화보기
+          </button>
         </div>
       </div>
     </section>

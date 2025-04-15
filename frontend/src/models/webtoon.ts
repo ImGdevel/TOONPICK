@@ -32,6 +32,7 @@ export interface Webtoon {
 
 export interface Author {
   id: number;
+  role : string;
   name: string;
 }
 
