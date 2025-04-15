@@ -3,8 +3,7 @@ export enum Platform {
   KAKAO = 'KAKAO',
   KAKAOPAGE = 'KAKAOPAGE',
   LEZHIN = 'LEZHIN',
-  BOMTOON = 'BOMTOON',
-  OTHER = 'OTHER'
+  BOMTOON = 'BOMTOON'
 }
 
 export type AgeRating = 'ALL' | 'TEEN' | 'ADULT';

@@ -39,7 +39,6 @@ const OngoingWebtoonsPage: React.FC = () => {
     [Platform.KAKAOPAGE]: '카카오페이지',
     [Platform.LEZHIN]: '레진',
     [Platform.BOMTOON]: '봄툰',
-    [Platform.OTHER]: '기타'
   };
 
   const SORT_OPTIONS = [
@@ -71,6 +70,7 @@ const OngoingWebtoonsPage: React.FC = () => {
 
   const fetchOngoingWebtoons = async (page: number) => {
     setIsLoading(true);
+    console.log("데이터 가져오기!")
     try {
       const response = await WebtoonService.getWebtoons({
         page,
