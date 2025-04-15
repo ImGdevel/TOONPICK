@@ -1,8 +1,8 @@
 import { api , Response, PagedResponse } from '@api';
-import { Webtoon } from '@models/webtoon';
-import { DayOfWeek, SerializationStatus, AgeRating, Platform } from '@models/enum';
+import { Webtoon, Platform, SerializationStatus } from '@models/webtoon';
+import { DayOfWeek, AgeRating } from '@models/enum';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 60;
 
 // WebtoonService 클래스
 class WebtoonService {
@@ -44,12 +44,12 @@ class WebtoonService {
       size?: number;
       sortBy?: string;
       sortDir?: 'asc' | 'desc';
-      platform?: Platform;
+      platforms?: Platform[];
       genres?: string[];
       authors?: string[];
-      week?: DayOfWeek;
-      serializationStatus?: SerializationStatus;
-      ageRating?: AgeRating;
+      publishDays?: DayOfWeek[];
+      serializationStatuses?: SerializationStatus[];
+      ageRatings?: AgeRating[];
     }
   ): Promise<PagedResponse<Webtoon[]>> {
     try {
@@ -61,10 +61,10 @@ class WebtoonService {
           sortDir: options.sortDir || 'asc',
           genres: options.genres,
           authors: options.authors,
-          platform: options.platform,
-          week: options.week,
-          serializationStatus: options.serializationStatus,
-          ageRating: options.ageRating,
+          platforms: options.platforms,
+          publishDays: options.publishDays,
+          serializationStatuses: options.serializationStatuses,
+          ageRatings: options.ageRatings,
         },
       });
 

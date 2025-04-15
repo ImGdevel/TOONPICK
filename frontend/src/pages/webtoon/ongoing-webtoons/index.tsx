@@ -3,8 +3,8 @@ import styles from './style.module.css';
 import WebtoonService from '@services/webtoon-service';
 import WebtoonGrid from '@components/webtoon-grid';
 import Spinner from '@components/spinner';
-import { Webtoon } from '@models/webtoon';
-import { SerializationStatus } from '@models/enum';
+import { Webtoon, Platform } from '@models/webtoon';
+import { DayOfWeek } from '@models/enum';
 
 const OngoingWebtoonsPage: React.FC = () => {
   const [webtoons, setWebtoons] = useState<Webtoon[]>([]);
@@ -12,19 +12,75 @@ const OngoingWebtoonsPage: React.FC = () => {
   const [isLastPage, setIsLastPage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // 필터 상태
+  const [selectedPlatforms, setSelectedPlatforms] = useState<Platform[]>([]);
+  const [selectedDay, setSelectedDay] = useState<DayOfWeek | null>(null);
+  const [sortBy, setSortBy] = useState<'POPULARITY' | 'RATING' | 'LATEST' | 'UPDATE'>('POPULARITY');
+  
   const observer = useRef<IntersectionObserver | null>(null);
   const lastWebtoonRef = useRef<HTMLDivElement | null>(null);
+
+  const DAYS: DayOfWeek[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+  const DAY_LABELS: Record<DayOfWeek, string> = {
+    'ALL': '전체',
+    'MONDAY': '월',
+    'TUESDAY': '화',
+    'WEDNESDAY': '수',
+    'THURSDAY': '목',
+    'FRIDAY': '금',
+    'SATURDAY': '토',
+    'SUNDAY': '일'
+  };
+
+  const PLATFORM_LABELS: Record<Platform, string> = {
+    [Platform.NAVER]: '네이버',
+    [Platform.KAKAO]: '카카오',
+    [Platform.KAKAOPAGE]: '카카오페이지',
+    [Platform.LEZHIN]: '레진',
+    [Platform.BOMTOON]: '봄툰',
+    [Platform.OTHER]: '기타'
+  };
+
+  const SORT_OPTIONS = [
+    { value: 'POPULARITY', label: '인기순' },
+    { value: 'RATING', label: '별점순' },
+    { value: 'LATEST', label: '최신순' },
+    { value: 'UPDATE', label: '업데이트순' }
+  ];
+
+  const handlePlatformChange = (platform: Platform) => {
+    setSelectedPlatforms(prev => 
+      prev.includes(platform)
+        ? prev.filter(p => p !== platform)
+        : [...prev, platform]
+    );
+  };
+
+  const handleSelectAllPlatforms = () => {
+    if (selectedPlatforms.length === Object.values(Platform).length) {
+      setSelectedPlatforms([]);
+    } else {
+      setSelectedPlatforms(Object.values(Platform));
+    }
+  };
+
+  const handleDayChange = (day: DayOfWeek) => {
+    setSelectedDay(day === selectedDay ? null : day);
+  };
 
   const fetchOngoingWebtoons = async (page: number) => {
     setIsLoading(true);
     try {
       const response = await WebtoonService.getWebtoons({
         page,
-        serializationStatus: SerializationStatus.ONGOING,
+        platforms: selectedPlatforms.length > 0 ? selectedPlatforms : undefined,
+        publishDays: selectedDay ? [selectedDay] : undefined,
+        sortBy
       });
       const { data, last } = response;
 
-      setWebtoons((prev) => [...prev, ...(data || [])]);
+      setWebtoons((prev) => page === 0 ? (data || []) : [...prev, ...(data || [])]);
       setIsLastPage(last || false);
     } catch (error) {
       setError('진행 중인 웹툰을 불러오는데 실패했습니다.');
@@ -33,10 +89,13 @@ const OngoingWebtoonsPage: React.FC = () => {
     }
   };
 
-  // 초기 데이터 로드
+  // 필터 변경 시 데이터 리셋 및 재로드
   useEffect(() => {
+    setCurrentPage(0);
+    setWebtoons([]);
+    setIsLastPage(false);
     fetchOngoingWebtoons(0);
-  }, []);
+  }, [selectedPlatforms, selectedDay, sortBy]);
 
   // IntersectionObserver 설정
   useEffect(() => {
@@ -73,7 +132,54 @@ const OngoingWebtoonsPage: React.FC = () => {
 
   return (
     <div className={styles.ongoingWebtoonsPage}>
-      <h1>진행 중인 웹툰</h1>
+
+      <div className={styles.filters}>
+        <div className={styles.filterGroup}>
+          <div className={styles.platformButtons}>
+            <button
+              className={`${styles.filterButton} ${selectedPlatforms.length === Object.values(Platform).length ? styles.active : ''}`}
+              onClick={handleSelectAllPlatforms}
+            >
+              전체
+            </button>
+            {Object.values(Platform).map((platform) => (
+              <button
+                key={platform}
+                className={`${styles.filterButton} ${selectedPlatforms.includes(platform) ? styles.active : ''}`}
+                onClick={() => handlePlatformChange(platform)}
+              >
+                {PLATFORM_LABELS[platform]}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.filterGroup}>
+          <div className={styles.dayButtons}>
+            {DAYS.map((day) => (
+              <button
+                key={day}
+                className={`${styles.filterButton} ${selectedDay === day ? styles.active : ''}`}
+                onClick={() => handleDayChange(day)}
+              >
+                {DAY_LABELS[day]}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.sortOptions}>
+          {SORT_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              className={`${styles.sortButton} ${sortBy === option.value ? styles.active : ''}`}
+              onClick={() => setSortBy(option.value as typeof sortBy)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {error ? (
         <div className={styles.error}>

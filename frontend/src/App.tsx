@@ -29,7 +29,7 @@ const App: React.FC = () => {
       <ModalProvider>
         <Router>
           <Header />
-          <main style={{ maxWidth: '1200px', width: '100%', minHeight: '1000px', margin: '0 auto', padding: '20px' }}>
+          <main style={{ maxWidth: '1400px', width: '100%', minHeight: '1000px', margin: '0 auto', padding: '20px' }}>
             <Routes>
               <Route path={RoutePaths.HOME} element={<HomePage />} />
               <Route path={RoutePaths.TUTORIAL} element={<TutorialPage />} />

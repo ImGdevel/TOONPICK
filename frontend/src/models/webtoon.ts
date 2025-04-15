@@ -7,10 +7,16 @@ export enum Platform {
   OTHER = 'OTHER'
 }
 
+export type AgeRating = 'ALL' | 'TEEN' | 'ADULT';
+export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+
 export enum SerializationStatus {
   ONGOING = 'ONGOING',
   COMPLETED = 'COMPLETED',
-  HIATUS = 'HIATUS'
+  HIATUS = 'HIATUS',
+  ENDED = 'ENDED',
+  PAUSED = 'PAUSED',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export interface Webtoon {
