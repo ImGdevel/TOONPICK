@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import styles from './style.module.css';
 import WebtoonService from '@services/webtoon-service';
 import WebtoonGrid from '@components/webtoon-grid';
@@ -7,6 +8,9 @@ import { Webtoon, Platform } from '@models/webtoon';
 import { DayOfWeek } from '@models/enum';
 
 const OngoingWebtoonsPage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  
   const [webtoons, setWebtoons] = useState<Webtoon[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [isLastPage, setIsLastPage] = useState(false);
@@ -14,10 +18,34 @@ const OngoingWebtoonsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   
   // 필터 상태
-  const [selectedPlatforms, setSelectedPlatforms] = useState<Platform[]>([]);
-  const [selectedDay, setSelectedDay] = useState<DayOfWeek | null>(null);
-  const [sortBy, setSortBy] = useState<'POPULARITY' | 'RATING' | 'LATEST' | 'UPDATE'>('POPULARITY');
+  const [selectedPlatforms, setSelectedPlatforms] = useState<Platform[]>(() => {
+    const platforms = searchParams.get('platforms');
+    return platforms ? platforms.split(',').map(p => p as Platform) : [];
+  });
   
+  const [selectedDay, setSelectedDay] = useState<DayOfWeek | null>(() => {
+    const day = searchParams.get('day');
+    if (day) return day as DayOfWeek;
+    
+    // 오늘 요일을 기본값으로 설정
+    const today = new Date().getDay();
+    const dayMap: { [key: number]: DayOfWeek } = {
+      0: 'SUNDAY',
+      1: 'MONDAY',
+      2: 'TUESDAY',
+      3: 'WEDNESDAY',
+      4: 'THURSDAY',
+      5: 'FRIDAY',
+      6: 'SATURDAY'
+    };
+    return dayMap[today];
+  });
+  
+  const [sortBy, setSortBy] = useState<'POPULARITY' | 'RATING' | 'LATEST' | 'UPDATE'>(() => {
+    const sort = searchParams.get('sort');
+    return (sort as 'POPULARITY' | 'RATING' | 'LATEST' | 'UPDATE') || 'POPULARITY';
+  });
+
   const observer = useRef<IntersectionObserver | null>(null);
   const lastWebtoonRef = useRef<HTMLDivElement | null>(null);
 
@@ -47,6 +75,26 @@ const OngoingWebtoonsPage: React.FC = () => {
     { value: 'LATEST', label: '최신순' },
     { value: 'UPDATE', label: '업데이트순' }
   ];
+
+  // URL 파라미터 업데이트 함수
+  const updateUrlParams = () => {
+    const params = new URLSearchParams();
+    if (selectedPlatforms.length > 0) {
+      params.set('platforms', selectedPlatforms.join(','));
+    }
+    if (selectedDay) {
+      params.set('day', selectedDay);
+    }
+    if (sortBy !== 'POPULARITY') {
+      params.set('sort', sortBy);
+    }
+    setSearchParams(params);
+  };
+
+  // 필터 상태 변경 시 URL 업데이트
+  useEffect(() => {
+    updateUrlParams();
+  }, [selectedPlatforms, selectedDay, sortBy]);
 
   const handlePlatformChange = (platform: Platform) => {
     setSelectedPlatforms(prev => 
@@ -108,7 +156,10 @@ const OngoingWebtoonsPage: React.FC = () => {
     };
 
     if (!observer.current) {
-      observer.current = new IntersectionObserver(observerCallback);
+      observer.current = new IntersectionObserver(observerCallback, {
+        threshold: 0.3, // 요소가 10% 보이면 트리거
+        rootMargin: '1000px' // 뷰포트 아래 100px에서 미리 로드
+      });
     }
 
     const currentRef = lastWebtoonRef.current;
