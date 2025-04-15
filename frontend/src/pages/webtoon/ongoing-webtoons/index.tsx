@@ -118,6 +118,7 @@ const OngoingWebtoonsPage: React.FC = () => {
 
   const fetchOngoingWebtoons = async (page: number) => {
     setIsLoading(true);
+    console.log("데이터 가져오기!")
     try {
       const response = await WebtoonService.getWebtoons({
         page,
@@ -127,14 +128,7 @@ const OngoingWebtoonsPage: React.FC = () => {
       });
       const { data, last } = response;
 
-      // 각 페이지의 데이터만 추가
-      setWebtoons(prev => {
-        const newWebtoons = [...prev];
-        if (data) {
-          newWebtoons.splice(page * 60, 60, ...data);
-        }
-        return newWebtoons;
-      });
+      setWebtoons((prev) => page === 0 ? (data || []) : [...prev, ...(data || [])]);
       setIsLastPage(last || false);
     } catch (error) {
       setError('진행 중인 웹툰을 불러오는데 실패했습니다.');
@@ -163,8 +157,8 @@ const OngoingWebtoonsPage: React.FC = () => {
 
     if (!observer.current) {
       observer.current = new IntersectionObserver(observerCallback, {
-        threshold: 0.3,
-        rootMargin: '1000px'
+        threshold: 0.3, // 요소가 10% 보이면 트리거
+        rootMargin: '1000px' // 뷰포트 아래 100px에서 미리 로드
       });
     }
 
@@ -178,7 +172,7 @@ const OngoingWebtoonsPage: React.FC = () => {
         observer.current?.unobserve(currentRef);
       }
     };
-  }, [isLoading, isLastPage, webtoons.length]);
+  }, [isLoading, isLastPage]);
 
   // 새로운 페이지 로드
   useEffect(() => {
@@ -247,8 +241,6 @@ const OngoingWebtoonsPage: React.FC = () => {
         <>
           <WebtoonGrid
             webtoons={webtoons}
-            loading={isLoading}
-            onWebtoonClick={(webtoon) => navigate(`/webtoon/${webtoon.id}`)}
             lastWebtoonRef={lastWebtoonRef}
           />
           {isLoading && <Spinner />}

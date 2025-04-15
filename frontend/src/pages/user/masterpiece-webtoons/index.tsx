@@ -42,8 +42,6 @@ const MasterpieceWebtoonsPage: React.FC = () => {
         {state.memberProfile?.masterpieceWebtoons && state.memberProfile.masterpieceWebtoons.length > 0 ? (
           <WebtoonGrid
             webtoons={state.memberProfile.masterpieceWebtoons}
-            loading={isLoading}
-            onWebtoonClick={(webtoon) => navigate(`/webtoon/${webtoon.id}`)}
           />
         ) : (
           <div className={styles.emptyMessage}>아직 명작으로 등록한 웹툰이 없습니다.</div>
