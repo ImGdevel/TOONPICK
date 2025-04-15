@@ -54,13 +54,13 @@ const HomePage: React.FC = () => {
       {/* 인기 웹툰 섹션 */}
       <section className={styles.section}>
         <h2>인기 웹툰</h2>
-         <WebtoonGrid webtoons={state.popularWebtoons || []} /> 
+
       </section>
 
       {/* 최신 웹툰 섹션 */}
       <section className={styles.section}>
         <h2>최신 웹툰</h2>
-         <WebtoonGrid webtoons={state.recentWebtoons || []} /> 
+
       </section>
     </div>
   );

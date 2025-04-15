@@ -8,9 +8,10 @@ interface WebtoonCardProps {
   webtoon: Webtoon;
   showTags?: boolean;
   size?: number;
+  onClick?: () => void;
 }
 
-const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showTags = true, size = 210 }) => {
+const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showTags = true, size = 210, onClick }) => {
   const getAuthors = (authors: { name: string }[] | undefined): string => {
     return authors?.map(author => author.name).join(', ') || '작가 없음';
   };
@@ -32,7 +33,7 @@ const WebtoonCard: React.FC<WebtoonCardProps> = ({ webtoon, showTags = true, siz
   
 
   return (
-    <Link to={`/webtoon/${webtoon.id}`} className={styles.webtoonCard} style={{ width: `${width}px`, height: `${height}px` }}>
+    <Link to={`/webtoon/${webtoon.id}`} className={styles.webtoonCard} style={{ width: `${width}px`, height: `${height}px` }} onClick={onClick}>
       
       <div className={styles.thumbnailContainer}>
         <img src={webtoon.thumbnailUrl} alt={webtoon.title} className={styles.thumbnailImage} />

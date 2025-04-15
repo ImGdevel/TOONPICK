@@ -42,6 +42,8 @@ const ReadingHistoryPage: React.FC = () => {
         {state.memberProfile?.readingHistory && state.memberProfile.readingHistory.length > 0 ? (
           <WebtoonGrid
             webtoons={state.memberProfile.readingHistory.map((h: any) => h.webtoon)}
+            loading={isLoading}
+            onWebtoonClick={(webtoon) => navigate(`/webtoon/${webtoon.id}`)}
           />
         ) : (
           <div className={styles.emptyMessage}>아직 감상한 웹툰이 없습니다.</div>
