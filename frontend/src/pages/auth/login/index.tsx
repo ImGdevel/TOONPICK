@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '@contexts/auth-context';
+import { useAuth } from '@contexts/auth-context';
 import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 import AuthService from '@services/auth-service';
@@ -9,17 +9,17 @@ import SocialLoginButton from '@components/social-login-button';
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
-  const { state, login } = useContext(AuthContext);
+  const { state, login } = useAuth();
   const [formData, setFormData] = useState({ username: '', password: '', rememberMe: false });
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
   // 로그인 상태에 따라 홈으로 리다이렉트
   useEffect(() => {
-    if (state.isLoggedIn) {
+    if (state.isAuthenticated) {
       navigate(Routes.HOME);
     }
-  }, [state.isLoggedIn, navigate]);
+  }, [state.isAuthenticated, navigate]);
 
   // 입력 필드 변경 처리
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +41,7 @@ const SignInPage: React.FC = () => {
 
     try {
       await login(formData.username, formData.password); // 로그인 요청
-      if (state.isLoggedIn) {
+      if (state.isAuthenticated) {
         navigate(Routes.TUTORIAL); // 로그인 성공 시 튜토리얼 페이지로 이동
       }
     } catch (err: any) {

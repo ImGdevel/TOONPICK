@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import { AuthContext } from '@contexts/auth-context';
+import React from 'react';
+import {  useAuth } from '@contexts/auth-context';
 import styles from './style.module.css';
 
 const ProfileIcon: React.FC = () => {
-  const { state } = useContext(AuthContext);
+  const { state } = useAuth();
 
   return (
     <div className={styles.profileIcon}>

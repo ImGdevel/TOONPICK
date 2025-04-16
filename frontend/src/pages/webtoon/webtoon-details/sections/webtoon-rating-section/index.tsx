@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Webtoon } from '@models/webtoon';
 import { Review } from '@models/review';
-import { AuthContext } from '@contexts/auth-context';
+import { useAuth } from '@contexts/auth-context';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { FiMoreVertical, FiThumbsUp, FiFlag } from 'react-icons/fi';
 import styles from './style.module.css';
@@ -11,7 +11,7 @@ interface WebtoonRatingSectionProps {
 }
 
 const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ webtoon }) => {
-  const { state } = useContext(AuthContext);
+  const { state } = useAuth();
   const [userRating, setUserRating] = useState<number>(0);
   const [showCommentForm, setShowCommentForm] = useState<boolean>(false);
   const [userComment, setUserComment] = useState<string>('');

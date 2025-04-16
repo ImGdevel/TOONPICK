@@ -32,5 +32,14 @@ export interface MemberProfile {
   }[];
   reviews: Review[];
   topReviews: Review[];
-
+  connectedAccounts: {
+    google: boolean;
+    naver: boolean;
+    kakao: boolean;
+  };
+  adultSettings: {
+    goreFilter: boolean;
+    adultContentFilter: boolean;
+    violenceFilter: boolean;
+  };
 }

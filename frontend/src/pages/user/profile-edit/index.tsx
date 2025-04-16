@@ -1,45 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiArrowLeft, FiCamera, FiLock, FiMail, FiUser, FiAlertCircle, FiEdit2, FiCheck, FiX } from 'react-icons/fi';
+import { FiArrowLeft, FiCamera, FiUser, FiAlertCircle, FiEdit2, FiCheck, FiX } from 'react-icons/fi';
 import styles from './style.module.css';
 import { Routes } from '@constants/routes';
-
-interface ProfileData {
-  nickname: string;
-  email: string;
-  isAdult: boolean;
-  adultSettings: {
-    goreFilter: boolean;
-    adultContentFilter: boolean;
-    violenceFilter: boolean;
-  };
-  connectedAccounts: {
-    google: boolean;
-    naver: boolean;
-    kakao: boolean;
-  };
-}
+import { MemberProfile } from '@models/member';
+import { useAuth } from '@contexts/auth-context';
 
 const ProfileEditPage: React.FC = () => {
   const navigate = useNavigate();
+  const { memberProfile, updateProfile } = useAuth();
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [editingField, setEditingField] = useState<string | null>(null);
   const [tempValue, setTempValue] = useState<string>('');
-  const [profileData, setProfileData] = useState<ProfileData>({
-    nickname: '사용자닉네임',
-    email: 'user@example.com',
-    isAdult: false,
-    adultSettings: {
-      goreFilter: true,
-      adultContentFilter: true,
-      violenceFilter: true,
-    },
-    connectedAccounts: {
-      google: true,
-      naver: false,
-      kakao: false,
-    },
-  });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -64,51 +36,63 @@ const ProfileEditPage: React.FC = () => {
   };
 
   const saveEdit = () => {
-    if (editingField) {
-      setProfileData(prev => ({
-        ...prev,
+    if (editingField && memberProfile) {
+      const updatedProfile: MemberProfile = {
+        ...memberProfile,
         [editingField]: tempValue
-      }));
+      };
+      updateProfile(updatedProfile);
       setEditingField(null);
       setTempValue('');
     }
   };
 
   const handleAdultToggle = () => {
-    if (!profileData.isAdult) {
+    if (!memberProfile?.adultSettings) return;
+    
+    if (!memberProfile.adultSettings.adultContentFilter) {
       navigate(Routes.ADULT_VERIFICATION);
     } else {
-      setProfileData(prev => ({
-        ...prev,
-        isAdult: false,
+      const updatedProfile: MemberProfile = {
+        ...memberProfile,
         adultSettings: {
-          goreFilter: true,
-          adultContentFilter: true,
-          violenceFilter: true,
+          ...memberProfile.adultSettings,
+          adultContentFilter: false
         }
-      }));
+      };
+      updateProfile(updatedProfile);
     }
   };
 
-  const handleAdultSettingChange = (setting: keyof ProfileData['adultSettings']) => {
-    setProfileData(prev => ({
-      ...prev,
+  const handleAdultSettingChange = (setting: keyof MemberProfile['adultSettings']) => {
+    if (!memberProfile?.adultSettings) return;
+    
+    const updatedProfile: MemberProfile = {
+      ...memberProfile,
       adultSettings: {
-        ...prev.adultSettings,
-        [setting]: !prev.adultSettings[setting]
+        ...memberProfile.adultSettings,
+        [setting]: !memberProfile.adultSettings[setting]
       }
-    }));
+    };
+    updateProfile(updatedProfile);
   };
 
-  const handleAccountConnect = (provider: keyof ProfileData['connectedAccounts']) => {
-    setProfileData(prev => ({
-      ...prev,
+  const handleAccountConnect = (provider: keyof MemberProfile['connectedAccounts']) => {
+    if (!memberProfile?.connectedAccounts) return;
+    
+    const updatedProfile: MemberProfile = {
+      ...memberProfile,
       connectedAccounts: {
-        ...prev.connectedAccounts,
-        [provider]: !prev.connectedAccounts[provider]
+        ...memberProfile.connectedAccounts,
+        [provider]: !memberProfile.connectedAccounts[provider]
       }
-    }));
+    };
+    updateProfile(updatedProfile);
   };
+
+  if (!memberProfile) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={styles.container}>
@@ -126,7 +110,7 @@ const ProfileEditPage: React.FC = () => {
           <div className={styles.profileImageContainer}>
             <div className={styles.profileImageWrapper}>
               <img 
-                src={profileImage || '/default-profile.png'} 
+                src={profileImage || memberProfile.profilePicture || '/default-profile.png'} 
                 alt="프로필" 
                 className={styles.profileImage}
               />
@@ -165,9 +149,9 @@ const ProfileEditPage: React.FC = () => {
                 </div>
               ) : (
                 <div className={styles.valueRow}>
-                  <span className={styles.value}>{profileData.nickname}</span>
+                  <span className={styles.value}>{memberProfile.nickname}</span>
                   <button 
-                    onClick={() => startEditing('nickname', profileData.nickname)}
+                    onClick={() => startEditing('nickname', memberProfile.nickname)}
                     className={styles.editButton}
                   >
                     <FiEdit2 />
@@ -185,28 +169,28 @@ const ProfileEditPage: React.FC = () => {
             <div className={styles.accountItem}>
               <span className={styles.accountName}>Google</span>
               <button
-                className={`${styles.connectButton} ${profileData.connectedAccounts.google ? styles.connected : ''}`}
+                className={`${styles.connectButton} ${memberProfile.connectedAccounts?.google ? styles.connected : ''}`}
                 onClick={() => handleAccountConnect('google')}
               >
-                {profileData.connectedAccounts.google ? '연동됨' : '연동하기'}
+                {memberProfile.connectedAccounts?.google ? '연동됨' : '연동하기'}
               </button>
             </div>
             <div className={styles.accountItem}>
               <span className={styles.accountName}>Naver</span>
               <button
-                className={`${styles.connectButton} ${profileData.connectedAccounts.naver ? styles.connected : ''}`}
+                className={`${styles.connectButton} ${memberProfile.connectedAccounts?.naver ? styles.connected : ''}`}
                 onClick={() => handleAccountConnect('naver')}
               >
-                {profileData.connectedAccounts.naver ? '연동됨' : '연동하기'}
+                {memberProfile.connectedAccounts?.naver ? '연동됨' : '연동하기'}
               </button>
             </div>
             <div className={styles.accountItem}>
               <span className={styles.accountName}>Kakao</span>
               <button
-                className={`${styles.connectButton} ${profileData.connectedAccounts.kakao ? styles.connected : ''}`}
+                className={`${styles.connectButton} ${memberProfile.connectedAccounts?.kakao ? styles.connected : ''}`}
                 onClick={() => handleAccountConnect('kakao')}
               >
-                {profileData.connectedAccounts.kakao ? '연동됨' : '연동하기'}
+                {memberProfile.connectedAccounts?.kakao ? '연동됨' : '연동하기'}
               </button>
             </div>
           </div>
@@ -236,12 +220,12 @@ const ProfileEditPage: React.FC = () => {
               <span className={styles.adultLabel}>성인 인증 상태</span>
               <div className={styles.toggleContainer}>
                 <span className={styles.toggleLabel}>
-                  {profileData.isAdult ? '인증됨' : '미인증'}
+                  {memberProfile.adultSettings?.adultContentFilter ? '인증됨' : '미인증'}
                 </span>
                 <label className={styles.toggleSwitch}>
                   <input
                     type="checkbox"
-                    checked={profileData.isAdult}
+                    checked={memberProfile.adultSettings?.adultContentFilter}
                     onChange={handleAdultToggle}
                   />
                   <span className={styles.toggleSlider} />
@@ -249,7 +233,7 @@ const ProfileEditPage: React.FC = () => {
               </div>
             </div>
 
-            {profileData.isAdult && (
+            {memberProfile.adultSettings?.adultContentFilter && (
               <div className={styles.adultSettings}>
                 <h3 className={styles.settingsTitle}>성인 콘텐츠 설정</h3>
                 <div className={styles.settingItem}>
@@ -257,7 +241,7 @@ const ProfileEditPage: React.FC = () => {
                     고어 콘텐츠 필터
                     <input
                       type="checkbox"
-                      checked={profileData.adultSettings.goreFilter}
+                      checked={memberProfile.adultSettings.goreFilter}
                       onChange={() => handleAdultSettingChange('goreFilter')}
                     />
                   </label>
@@ -267,7 +251,7 @@ const ProfileEditPage: React.FC = () => {
                     성인 콘텐츠 필터
                     <input
                       type="checkbox"
-                      checked={profileData.adultSettings.adultContentFilter}
+                      checked={memberProfile.adultSettings.adultContentFilter}
                       onChange={() => handleAdultSettingChange('adultContentFilter')}
                     />
                   </label>
@@ -277,7 +261,7 @@ const ProfileEditPage: React.FC = () => {
                     폭력 콘텐츠 필터
                     <input
                       type="checkbox"
-                      checked={profileData.adultSettings.violenceFilter}
+                      checked={memberProfile.adultSettings.violenceFilter}
                       onChange={() => handleAdultSettingChange('violenceFilter')}
                     />
                   </label>

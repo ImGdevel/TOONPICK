@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect, ReactNode } from 'react';
+import React, { createContext, useReducer, useEffect, ReactNode, useContext } from 'react';
 import AuthService from '@services/auth-service';
 import MemberService from '@services/member-service';
 import { MemberProfile } from '@models/member';
@@ -6,42 +6,25 @@ import TokenManager from '@services/token-manager';
 
 // 인증 상태를 정의하는 인터페이스
 interface AuthState {
-  isLoggedIn: boolean; // 로그인 여부
+  isAuthenticated: boolean; // 로그인 여부
   memberProfile: MemberProfile | null; // 회원 프로필 정보
   error: string | null; // 에러 메시지
 }
 
 // 인증 액션 타입 정의
 type AuthAction =
-  | { type: 'LOGIN_SUCCESS'; payload: MemberProfile } // 로그인 성공
+  | { type: 'LOGIN_SUCCESS'; payload: MemberProfile | null } // 로그인 성공
   | { type: 'LOGIN_FAILURE'; payload: string } // 로그인 실패
   | { type: 'LOGOUT' } // 로그아웃
   | { type: 'SET_MEMBER_PROFILE'; payload: MemberProfile } // 회원 프로필 설정
-  | { type: 'SOCIAL_LOGIN_SUCCESS'; payload: MemberProfile }; // 소셜 로그인 성공 액션 추가
+  | { type: 'SOCIAL_LOGIN_SUCCESS'; payload: MemberProfile } // 소셜 로그인 성공 액션 추가
+  | { type: 'UPDATE_PROFILE'; payload: MemberProfile }; // 프로필 업데이트
 
 // 초기 상태 정의
 const initialState: AuthState = {
-  isLoggedIn: false,
+  isAuthenticated: false,
   memberProfile: null,
   error: null,
-};
-
-// 인증 상태를 관리하는 리듀서 함수
-const authReducer = (state: AuthState, action: AuthAction): AuthState => {
-  switch (action.type) {
-    case 'LOGIN_SUCCESS':
-      return { ...state, isLoggedIn: true, memberProfile: action.payload, error: null };
-    case 'LOGIN_FAILURE':
-      return { ...state, isLoggedIn: false, memberProfile: null, error: action.payload };
-    case 'LOGOUT':
-      return { ...state, isLoggedIn: false, memberProfile: null, error: null };
-    case 'SET_MEMBER_PROFILE':
-      return { ...state, memberProfile: action.payload };
-    case 'SOCIAL_LOGIN_SUCCESS':
-      return { ...state, isLoggedIn: true, memberProfile: action.payload, error: null };
-    default:
-      return state; // 기본 상태 반환
-  }
 };
 
 // 인증 컨텍스트 타입 정의
@@ -51,6 +34,8 @@ interface AuthContextType {
   logout: () => void; // 로그아웃 함수
   setMemberProfile: (profile: MemberProfile) => void; // 회원 프로필 설정 함수
   socialLoginSuccess: () => Promise<MemberProfile>; // 소셜 로그인 성공 함수 추가
+  updateProfile: (profile: MemberProfile) => void; // 프로필 업데이트 함수
+  memberProfile: MemberProfile | null; // 회원 프로필 정보
 }
 
 // 인증 컨텍스트 생성
@@ -62,14 +47,36 @@ const defaultAuthContext: AuthContextType = {
   socialLoginSuccess: async () => {
     throw new Error('AuthContext not initialized');
   },
+  updateProfile: () => {},
+  memberProfile: null,
 };
-
-export const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
 // 인증 제공자 프로퍼티 타입 정의
 interface AuthProviderProps {
-  children: ReactNode; // 자식 컴포넌트
+  children: ReactNode;
 }
+
+// 인증 상태를 관리하는 리듀서 함수
+const authReducer = (state: AuthState, action: AuthAction): AuthState => {
+  switch (action.type) {
+    case 'LOGIN_SUCCESS':
+      return { ...state, isAuthenticated: true, memberProfile: action.payload, error: null };
+    case 'LOGIN_FAILURE':
+      return { ...state, isAuthenticated: false, memberProfile: null, error: action.payload };
+    case 'LOGOUT':
+      return { ...state, isAuthenticated: false, memberProfile: null, error: null };
+    case 'SET_MEMBER_PROFILE':
+      return { ...state, memberProfile: action.payload };
+    case 'SOCIAL_LOGIN_SUCCESS':
+      return { ...state, isAuthenticated: true, memberProfile: action.payload, error: null };
+    case 'UPDATE_PROFILE':
+      return { ...state, memberProfile: action.payload };
+    default:
+      return state; // 기본 상태 반환
+  }
+};
+
+const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
 // 인증 제공자 컴포넌트
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -140,10 +147,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const updateProfile = (profile: MemberProfile) => {
+    dispatch({ type: 'UPDATE_PROFILE', payload: profile });
+  };
+
   // 컨텍스트 제공
   return (
-    <AuthContext.Provider value={{ state, login, logout, setMemberProfile, socialLoginSuccess }}>
+    <AuthContext.Provider
+      value={{
+        state,
+        login,
+        logout,
+        setMemberProfile,
+        socialLoginSuccess,
+        updateProfile,
+        memberProfile: state.memberProfile,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
-}; 
+};
+
+// 인증 컨텍스트 사용을 위한 훅
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
