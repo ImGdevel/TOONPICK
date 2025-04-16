@@ -13,7 +13,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ memberProfile }) => {
     <div className={styles.profileCard}>
       <div className={styles.profileHeader}>
         <img
-          src={memberProfile.profilePicture || '/image/profile/user.png'}
+          src={memberProfile.profileImage || '/image/profile/user.png'}
           alt="Profile"
           className={styles.profileImage}
         />

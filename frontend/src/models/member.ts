@@ -5,7 +5,7 @@ export interface MemberProfile {
   username: number;
   email: string;
   nickname: string;
-  profilePicture: string;
+  profileImage: string | null;
   level: number;
   ratedWebtoons: number;
   reviewedWebtoons: number;

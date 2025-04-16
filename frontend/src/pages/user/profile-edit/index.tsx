@@ -5,6 +5,7 @@ import styles from './style.module.css';
 import { Routes } from '@constants/routes';
 import { MemberProfile } from '@models/member';
 import { useAuth } from '@contexts/auth-context';
+import MemberService from '@services/member-service';
 
 const ProfileEditPage: React.FC = () => {
   const navigate = useNavigate();
@@ -13,15 +14,43 @@ const ProfileEditPage: React.FC = () => {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [tempValue, setTempValue] = useState<string>('');
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target?.result) {
           setProfileImage(event.target.result as string);
         }
       };
-      reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(file);
+
+      const response = await MemberService.updateProfileImage(file);
+      if (response.success && memberProfile) {
+        const updatedProfile: MemberProfile = {
+          ...memberProfile,
+          profileImage: response.data || memberProfile.profileImage,
+          username: memberProfile.username ?? 0,
+          email: memberProfile.email ?? '',
+          nickname: memberProfile.nickname ?? '',
+          level: memberProfile.level ?? 0,
+          ratedWebtoons: memberProfile.ratedWebtoons ?? 0,
+          reviewedWebtoons: memberProfile.reviewedWebtoons ?? 0,
+          adultSettings: memberProfile.adultSettings ?? {
+            goreFilter: false,
+            adultContentFilter: false,
+            violenceFilter: false
+          },
+          connectedAccounts: memberProfile.connectedAccounts ?? {
+            google: false,
+            naver: false,
+            kakao: false
+          }
+        };
+        updateProfile(updatedProfile);
+      } else {
+        console.error('프로필 이미지 업로드 실패:', response.message);
+      }
     }
   };
 
@@ -39,7 +68,7 @@ const ProfileEditPage: React.FC = () => {
     if (editingField && memberProfile) {
       const updatedProfile: MemberProfile = {
         ...memberProfile,
-        [editingField]: tempValue
+        [editingField]: tempValue,
       };
       updateProfile(updatedProfile);
       setEditingField(null);
@@ -110,9 +139,9 @@ const ProfileEditPage: React.FC = () => {
           <div className={styles.profileImageContainer}>
             <div className={styles.profileImageWrapper}>
               <img 
-                src={profileImage || memberProfile.profilePicture || '/images/profile/user.png'} 
+                src={profileImage || memberProfile.profileImage || '/images/profile/user.png'} 
                 alt="프로필" 
-                style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '50%' }}
+                style={{ width: '128px', height: '128px', objectFit: 'cover', borderRadius: '50%' }}
               />
 
               <label className={styles.imageUploadButton}>

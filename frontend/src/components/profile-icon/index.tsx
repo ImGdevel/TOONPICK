@@ -4,11 +4,11 @@ import styles from './style.module.css';
 
 const ProfileIcon: React.FC = () => {
   const { state } = useAuth();
-
+  
   return (
     <div className={styles.profileIcon}>
       <img
-        src={state.memberProfile?.profilePicture || '/image/profile/user.png'}
+        src={state.memberProfile?.profileImage || '/image/profile/user.png'}
         alt="Profile"
         className={styles.profileImage}
       />

@@ -77,7 +77,7 @@ public class MemberService {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
-        String fileName = "profile/" + username + "/" + UUID.randomUUID() + ".webp";
+        String fileName = "profile-images/" + username + "/" + UUID.randomUUID() + ".webp";
         String profileImageUrl = awsS3StorageService.uploadFile(imageFile, fileName);
 
         member.updateProfileImage(profileImageUrl);

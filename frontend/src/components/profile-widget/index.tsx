@@ -46,7 +46,7 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
     >
       <div className={styles.profileHeader}>
         <img
-          src={state.memberProfile?.profilePicture || '/image/profile/user.png'}
+          src={state.memberProfile?.profileImage || '/image/profile/user.png'}
           alt="Profile"
           className={styles.profileImage}
         />
