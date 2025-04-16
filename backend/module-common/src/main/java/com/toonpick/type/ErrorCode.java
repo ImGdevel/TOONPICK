@@ -39,8 +39,10 @@ public enum ErrorCode {
     // 3xxx : API/Service error
 
     // 32xx : image
-    IMAGE_UPLOAD_FAILED( 3230,"Failed to upload file"),
-    IMAGE_UPLOAD_FAILED_TO_S3( 3231,"Failed to upload file to S3"),
+    INVALID_IMAGE_FILE(3230, "Invalid image file"),
+    IMAGE_UPLOAD_FAILED( 3234,"Failed to upload file"),
+    IMAGE_UPLOAD_FAILED_TO_S3( 3235,"Failed to upload file to S3"),
+
 
     // 4xxx : Database error
     DATABASE_ERROR(4000, "Database error occurred"),

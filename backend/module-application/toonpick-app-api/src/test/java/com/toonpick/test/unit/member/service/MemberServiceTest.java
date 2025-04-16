@@ -10,6 +10,8 @@ import com.toonpick.member.response.MemberProfileResponseDTO;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
 import com.toonpick.repository.MemberRepository;
+import com.toonpick.service.AwsS3StorageService;
+import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -20,7 +22,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.toonpick.exception.ResourceNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -38,6 +42,9 @@ class MemberServiceTest {
 
     @InjectMocks
     private MemberService memberService;
+
+    @Mock
+    private AwsS3StorageService awsS3StorageService;
 
     private Member member;
     private MemberProfileRequestDTO profileRequestDTO;
@@ -136,16 +143,37 @@ class MemberServiceTest {
 
     @DisplayName("사용자 프로필 이미지 수정 단위 테스트")
     @Test
-    void testUpdateProfileImage_Success() {
+    void testUpdateProfileImage_Success() throws IOException {
         // given
-        when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
+        String username = "testuser";
+        String expectedUrl = "https://s3.example.com/profile/testuser/uuid.webp";
+
+        MultipartFile mockFile = mock(MultipartFile.class);
+        when(mockFile.isEmpty()).thenReturn(false);
+        when(mockFile.getContentType()).thenReturn("image/webp");
+
+        when(memberRepository.findByUsername(username)).thenReturn(Optional.of(member));
+        when(awsS3StorageService.uploadFile(any(MultipartFile.class), anyString())).thenReturn(expectedUrl);
 
         // when
-        memberService.updateProfileImage("testuser", "newProfileImageUrl" );
+        String actualUrl = memberService.updateProfileImage(username, mockFile);
 
         // then
-        verify(memberRepository, times(1)).save(member);
-        assertEquals("newProfileImageUrl", member.getProfileImage());
+        verify(memberRepository).save(member);
+        assertEquals(expectedUrl, actualUrl);
+        assertEquals(expectedUrl, member.getProfileImage());
+    }
+
+
+    @DisplayName("잘못된 이미지 업로드 시 예외 발생")
+    @Test
+    void testUpdateProfileImage_InvalidFile() {
+        MultipartFile emptyFile = mock(MultipartFile.class);
+        when(emptyFile.isEmpty()).thenReturn(true);
+
+        assertThrows(BadRequestException.class, () -> {
+            memberService.updateProfileImage("testuser", emptyFile);
+        });
     }
 
     @DisplayName("사용자 패스워드 수정 단위 테스트")
