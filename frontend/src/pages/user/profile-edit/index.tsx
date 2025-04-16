@@ -110,10 +110,11 @@ const ProfileEditPage: React.FC = () => {
           <div className={styles.profileImageContainer}>
             <div className={styles.profileImageWrapper}>
               <img 
-                src={profileImage || memberProfile.profilePicture || '/default-profile.png'} 
+                src={profileImage || memberProfile.profilePicture || '/images/profile/user.png'} 
                 alt="프로필" 
-                className={styles.profileImage}
+                style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '50%' }}
               />
+
               <label className={styles.imageUploadButton}>
                 <FiCamera />
                 <input
