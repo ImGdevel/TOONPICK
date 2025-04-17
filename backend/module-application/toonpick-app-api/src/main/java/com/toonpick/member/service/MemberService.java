@@ -6,17 +6,15 @@ import com.toonpick.member.mapper.MemberMapper;
 import com.toonpick.repository.MemberRepository;
 import com.toonpick.service.AwsS3StorageService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.toonpick.member.response.MemberProfileDetailsResponseDTO;
+import com.toonpick.member.response.MemberProfileDetailsResponse;
 import com.toonpick.member.request.MemberProfileRequestDTO;
-import com.toonpick.member.response.MemberProfileResponseDTO;
+import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.type.ErrorCode;
 import com.toonpick.exception.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -29,7 +27,7 @@ public class MemberService {
 
     // Member 프로필 조회
     @Transactional(readOnly = true)
-    public MemberProfileResponseDTO getProfile(String username) {
+    public MemberProfileResponse getProfile(String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         return memberMapper.memberToProfileResponseDTO(member);
@@ -37,7 +35,7 @@ public class MemberService {
 
     // Member 상세 프로필 조회
     @Transactional(readOnly = true)
-    public MemberProfileDetailsResponseDTO getProfileDetails(String username) {
+    public MemberProfileDetailsResponse getProfileDetails(String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         return memberMapper.memberToProfileDetailsResponseDTO(member);

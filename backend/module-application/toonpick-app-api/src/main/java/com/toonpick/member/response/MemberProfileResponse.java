@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MemberProfileResponseDTO {
+public class MemberProfileResponse {
     private String username;
     private String nickname;
     private String profileImage;

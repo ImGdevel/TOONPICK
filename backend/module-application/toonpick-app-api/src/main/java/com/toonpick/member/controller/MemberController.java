@@ -2,10 +2,9 @@ package com.toonpick.member.controller;
 
 import com.toonpick.annotation.CurrentUser;
 import com.toonpick.member.request.MemberProfileRequestDTO;
-import com.toonpick.member.response.MemberProfileDetailsResponseDTO;
+import com.toonpick.member.response.MemberProfileDetailsResponse;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
-import com.toonpick.type.ErrorCode;
 import com.toonpick.user.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,10 +44,10 @@ public class MemberController {
 
     @Operation(summary = "회원 상세 프로필 조회", description = "현재 인증된 사용자의 상세 프로필 정보를 조회합니다")
     @GetMapping("/profile")
-    public ResponseEntity<MemberProfileDetailsResponseDTO> getUserProfile(
+    public ResponseEntity<MemberProfileDetailsResponse> getUserProfile(
             @CurrentUser CustomUserDetails user
     ) {
-        MemberProfileDetailsResponseDTO memberResponseDTO = memberService.getProfileDetails(user.getUsername());
+        MemberProfileDetailsResponse memberResponseDTO = memberService.getProfileDetails(user.getUsername());
         return ResponseEntity.ok(memberResponseDTO);
     }
 

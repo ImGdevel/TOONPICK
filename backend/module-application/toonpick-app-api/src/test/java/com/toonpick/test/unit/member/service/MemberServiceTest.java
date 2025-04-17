@@ -5,8 +5,8 @@ import com.toonpick.entity.Member;
 import com.toonpick.enums.MemberRole;
 import com.toonpick.member.mapper.MemberMapper;
 import com.toonpick.member.request.MemberProfileRequestDTO;
-import com.toonpick.member.response.MemberProfileDetailsResponseDTO;
-import com.toonpick.member.response.MemberProfileResponseDTO;
+import com.toonpick.member.response.MemberProfileDetailsResponse;
+import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
 import com.toonpick.repository.MemberRepository;
@@ -48,8 +48,8 @@ class MemberServiceTest {
 
     private Member member;
     private MemberProfileRequestDTO profileRequestDTO;
-    private MemberProfileResponseDTO profileResponseDTO;
-    private MemberProfileDetailsResponseDTO profileDetailsResponseDTO;
+    private MemberProfileResponse profileResponseDTO;
+    private MemberProfileDetailsResponse profileDetailsResponseDTO;
 
     @BeforeEach
     void setUp() {
@@ -64,13 +64,13 @@ class MemberServiceTest {
                 .nickname("newNickname")
                 .build();
 
-        profileResponseDTO = MemberProfileResponseDTO.builder()
+        profileResponseDTO = MemberProfileResponse.builder()
                 .username("testuser")
                 .nickname("newNickname")
                 .profileImage("newProfileImageUrl")
                 .build();
 
-        profileDetailsResponseDTO = MemberProfileDetailsResponseDTO.builder()
+        profileDetailsResponseDTO = MemberProfileDetailsResponse.builder()
                 .username("testuser")
                 .nickname("newNickname")
                 .profileImage("newProfileImageUrl")
@@ -88,7 +88,7 @@ class MemberServiceTest {
         when(memberMapper.memberToProfileResponseDTO(member)).thenReturn(profileResponseDTO);
 
         // when
-        MemberProfileResponseDTO result = memberService.getProfile("testuser");
+        MemberProfileResponse result = memberService.getProfile("testuser");
 
         // then
         assertNotNull(result);
@@ -115,7 +115,7 @@ class MemberServiceTest {
         when(memberMapper.memberToProfileDetailsResponseDTO(member)).thenReturn(profileDetailsResponseDTO);
 
         // when
-        MemberProfileDetailsResponseDTO result = memberService.getProfileDetails("testuser");
+        MemberProfileDetailsResponse result = memberService.getProfileDetails("testuser");
 
         // then
         assertNotNull(result);
