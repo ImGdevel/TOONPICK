@@ -76,7 +76,7 @@ class MemberTest {
 
         member.verifyAdult();
 
-        assertThat(member.getIsAdultVerified()).isTrue();
+        assertThat(member.getAdultVerified()).isTrue();
     }
 }
 

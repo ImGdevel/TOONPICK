@@ -3,35 +3,51 @@ package com.toonpick.entity;
 import com.toonpick.enums.Gender;
 import com.toonpick.enums.MemberRole;
 import com.toonpick.enums.MemberStatus;
+import com.toonpick.enums.OAuthProvider;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
-@NoArgsConstructor
-@Table(name = "member", indexes = @Index(name = "idx_username", columnList = "user_name"))
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "member",
+        indexes = @Index(name = "idx_uuid", columnList = "uid")
+)
 public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "uid",nullable = false, unique = true, updatable = false)
+    private UUID uuid;
+
+    // todo: 해당 필드 rename 혹은 제거
     @Column(name = "user_name", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, length = 100)
     private String email;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "nick_name", unique = true)
+    @Column(name = "nick_name", unique = true, length = 30)
     private String nickname;
+
+    @Column(name = "birthday")
+    private LocalDate birthday;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private Gender gender;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
@@ -40,22 +56,19 @@ public class Member extends BaseTimeEntity {
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(name = "is_adult_verified")
-    private Boolean isAdultVerified = false;
+    @Column(name = "adult_verified", nullable = false)
+    private Boolean adultVerified = false;
 
     @Column(name = "level")
     private int level = 0;
 
-    // 출성년도 (나이)
-    @Column(name = "birthday")
-    private LocalDate birthday;
-
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
+    // 소셜 로그인 정보
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
-    private Gender gender;
+    @Column(name = "oauth_provider")
+    private OAuthProvider provider;
+
+    @Column(name = "oauth_provider_id", unique = true)
+    private String providerId;
 
     // 계정 활성화 상태
     @Enumerated(EnumType.STRING)
@@ -72,15 +85,11 @@ public class Member extends BaseTimeEntity {
 
     // 이메일 인증 여부
     @Column(name = "is_email_verified", nullable = false)
-    private boolean isEmailVerified = false;
+    private boolean emailVerified = false;
 
     // 정보 제공 동의
-    @Column(name = "agreed_terms_at")
-    private LocalDateTime agreedTermsAt;
-
-    // 맴버 사용 통계
-    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY ,cascade = CascadeType.ALL, orphanRemoval = true)
-    private MemberStatistics statistics;
+    @Column(name = "terms_agreed_at")
+    private LocalDateTime termsAgreedAt;
 
     @Builder
     public Member(
@@ -90,10 +99,9 @@ public class Member extends BaseTimeEntity {
             String password,
             String nickname,
             MemberRole role,
-            Boolean isAdultVerified,
+            Boolean adultVerified,
             String profileImage,
             LocalDate birthday,
-            String phoneNumber,
             Gender gender
     ) {
         this.id = id;
@@ -102,14 +110,13 @@ public class Member extends BaseTimeEntity {
         this.password = password;
         this.nickname = nickname;
         this.role = role;
-        this.isAdultVerified = isAdultVerified != null ? isAdultVerified : false;
+        this.adultVerified = adultVerified != null ? adultVerified : false;
         this.profileImage = profileImage;
         this.birthday = birthday;
-        this.phoneNumber = phoneNumber;
         this.gender = gender;
         this.status = MemberStatus.ACTIVE;
         this.loginFailCount = 0;
-        this.isEmailVerified = false;
+        this.emailVerified = false;
     }
 
     // 로그인
@@ -130,7 +137,7 @@ public class Member extends BaseTimeEntity {
 
     // 개인 정보 동의
     public void agreeTerms() {
-        this.agreedTermsAt = LocalDateTime.now();
+        this.termsAgreedAt = LocalDateTime.now();
     }
 
     // 프로필 업데이트
@@ -150,12 +157,12 @@ public class Member extends BaseTimeEntity {
 
     // 성인 인증
     public void verifyAdult() {
-        this.isAdultVerified = true;
+        this.adultVerified = true;
     }
 
     // 이메일 인증
     public void verifyEmail() {
-        this.isEmailVerified = true;
+        this.emailVerified = true;
     }
 
     // 레벨 업데이트

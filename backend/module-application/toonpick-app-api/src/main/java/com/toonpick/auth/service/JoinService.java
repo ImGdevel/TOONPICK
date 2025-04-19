@@ -40,7 +40,7 @@ public class JoinService {
                 .password(bCryptPasswordEncoder.encode(joinRequest.getPassword()))
                 .email(joinRequest.getEmail())
                 .role(MemberRole.ROLE_USER)
-                .isAdultVerified(false)
+                .adultVerified(false)
                 .profileImage(null)
                 .build();
 

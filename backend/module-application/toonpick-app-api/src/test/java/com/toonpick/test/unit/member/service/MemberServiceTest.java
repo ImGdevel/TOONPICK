@@ -201,7 +201,7 @@ class MemberServiceTest {
 
         // then
         verify(memberRepository, times(1)).save(member);
-        assertTrue(member.getIsAdultVerified());
+        assertTrue(member.getAdultVerified());
     }
 
     @DisplayName("사용자 정보 조회 테스트")
@@ -285,7 +285,7 @@ class MemberServiceTest {
 
         member.agreeTerms();
 
-        assertNotNull(member.getAgreedTermsAt());
+        assertNotNull(member.getTermsAgreedAt());
     }
 
     @DisplayName("닉네임 변경")
@@ -325,7 +325,7 @@ class MemberServiceTest {
 
         member.verifyAdult();
 
-        assertTrue(member.getIsAdultVerified());
+        assertTrue(member.getAdultVerified());
     }
 
     @DisplayName("계정 활성화 처리")
