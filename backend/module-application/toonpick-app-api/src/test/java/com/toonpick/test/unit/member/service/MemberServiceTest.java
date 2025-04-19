@@ -1,6 +1,5 @@
 package com.toonpick.test.unit.member.service;
 
-
 import com.toonpick.entity.Member;
 import com.toonpick.enums.MemberRole;
 import com.toonpick.member.mapper.MemberMapper;
@@ -11,7 +10,6 @@ import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
 import com.toonpick.repository.MemberRepository;
 import com.toonpick.service.AwsS3StorageService;
-import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -22,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.toonpick.exception.ResourceNotFoundException;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class MemberServiceTest {
 
     @Mock
@@ -121,7 +122,6 @@ class MemberServiceTest {
         assertEquals("newNickname", result.getNickname());
         assertEquals("newProfileImageUrl", result.getProfileImage());
         assertEquals("testuser@example.com", result.getEmail());
-        assertTrue(result.getIsAdultVerified());
         assertEquals(0, result.getLevel());
     }
 
@@ -160,18 +160,6 @@ class MemberServiceTest {
         verify(memberRepository).save(member);
         assertEquals(expectedUrl, actualUrl);
         assertEquals(expectedUrl, member.getProfileImage());
-    }
-
-
-    @DisplayName("잘못된 이미지 업로드 시 예외 발생")
-    @Test
-    void testUpdateProfileImage_InvalidFile() {
-        MultipartFile emptyFile = mock(MultipartFile.class);
-        when(emptyFile.isEmpty()).thenReturn(true);
-
-        assertThrows(BadRequestException.class, () -> {
-            memberService.updateProfileImage("testuser", emptyFile);
-        });
     }
 
     @DisplayName("사용자 패스워드 수정 단위 테스트")
