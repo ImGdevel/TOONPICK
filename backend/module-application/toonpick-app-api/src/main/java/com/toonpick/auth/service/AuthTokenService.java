@@ -14,13 +14,13 @@ import com.toonpick.service.RefreshTokenService;
 
 @Service
 @RequiredArgsConstructor
-public class TokenService implements TokenIssuer {
+public class AuthTokenService implements TokenIssuer {
 
     private final RefreshTokenService refreshTokenService;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenValidator jwtTokenValidator;
 
-    private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthTokenService.class);
 
     /**
      * Access Token 발급

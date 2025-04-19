@@ -14,44 +14,50 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Random;
-
 @Service
 @RequiredArgsConstructor
-public class JoinService {
+public class MemberJoinService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JoinService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MemberJoinService.class);
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
-    public Member registerNewMember(JoinRequest joinRequest) {
+    public Member registerMember(JoinRequest joinRequest) {
         String username = joinRequest.getEmail();
+        String nickname = generateNickname();
+        String password = bCryptPasswordEncoder.encode(joinRequest.getPassword());
+        String email = joinRequest.getEmail();
 
         // 이미 존재하는 유저인지 검증
         if (memberRepository.existsByUsername(username)) {
             throw new UserAlreadyRegisteredException(ErrorCode.USER_ALREADY_REGISTERED, username);
         }
 
-        // 랜덤 nickname 생성
-        String nickname;
-        do {
-            nickname = "user-" + ShortIdUtil.generateRandomId();
-        }while (!memberRepository.existsByNickname(username));
-
+        // Member 생성 기본 양식
         Member member = Member.builder()
                 .username(username)
                 .nickname(nickname)
-                .password(bCryptPasswordEncoder.encode(joinRequest.getPassword()))
-                .email(joinRequest.getEmail())
+                .password(password)
+                .email(email)
                 .role(MemberRole.ROLE_USER)
-                .profileImage(null)
                 .build();
+
+        member.verifyEmail();
+        member.agreeTerms();
+        member.activateAccount();
 
         Member savedMember = memberRepository.save(member);
         LOGGER.info("Member {} created successfully.", username);
         return savedMember;
     }
 
+    private String generateNickname() {
+        String nickname;
+        do {
+            nickname = "user-" + ShortIdUtil.generateRandomId();
+        } while (memberRepository.existsByNickname(nickname));
+        return nickname;
+    }
 }

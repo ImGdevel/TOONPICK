@@ -1,10 +1,11 @@
 package com.toonpick.auth.controller;
 
 import com.toonpick.dto.JoinRequest;
-import com.toonpick.auth.service.JoinService;
+import com.toonpick.auth.service.MemberJoinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +20,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor
 public class JoinController {
 
-    private final JoinService joinService;
+    private final MemberJoinService memberJoinService;
 
     @Operation(summary = "회원가입")
     @PostMapping("/join")
     public ResponseEntity<?> joinProcess(
             @Parameter(description = "회원가입 포맷")
-            @RequestBody JoinRequest joinRequest
+            @RequestBody @Valid JoinRequest joinRequest
     ) {
-        joinService.registerNewMember(joinRequest);
+        memberJoinService.registerMember(joinRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

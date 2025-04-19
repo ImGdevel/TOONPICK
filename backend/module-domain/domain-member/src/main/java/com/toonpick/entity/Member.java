@@ -3,7 +3,6 @@ package com.toonpick.entity;
 import com.toonpick.enums.Gender;
 import com.toonpick.enums.MemberRole;
 import com.toonpick.enums.MemberStatus;
-import com.toonpick.enums.OAuthProvider;
 import com.toonpick.type.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -64,9 +63,8 @@ public class Member extends BaseTimeEntity {
     private int level = 0;
 
     // 소셜 로그인 정보
-    @Enumerated(EnumType.STRING)
     @Column(name = "oauth_provider")
-    private OAuthProvider provider;
+    private String provider;
 
     @Column(name = "oauth_provider_id", unique = true)
     private String providerId;
@@ -103,7 +101,7 @@ public class Member extends BaseTimeEntity {
             LocalDate birthday,
             Gender gender,
             String profileImage,
-            OAuthProvider provider,
+            String provider,
             String providerId
     ) {
         this.id = id;

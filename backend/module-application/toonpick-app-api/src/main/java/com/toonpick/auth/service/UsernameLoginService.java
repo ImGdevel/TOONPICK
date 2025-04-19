@@ -12,7 +12,7 @@ import com.toonpick.user.CustomUserDetails;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class UsernameLoginService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
