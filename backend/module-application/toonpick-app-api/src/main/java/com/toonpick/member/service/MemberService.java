@@ -47,7 +47,7 @@ public class MemberService {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
-        member.updateProfile(
+        member.updateNickname(
                 memberProfileRequestDTO.getNickname()
         );
 

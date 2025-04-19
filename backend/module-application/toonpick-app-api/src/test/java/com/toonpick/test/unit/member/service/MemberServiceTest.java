@@ -57,7 +57,6 @@ class MemberServiceTest {
                 .username("testuser")
                 .email("testuser@example.com")
                 .role(MemberRole.ROLE_USER)
-                .isAdultVerified(false)
                 .build();
 
         profileRequestDTO = MemberProfileRequestDTO.builder()
@@ -75,7 +74,6 @@ class MemberServiceTest {
                 .nickname("newNickname")
                 .profileImage("newProfileImageUrl")
                 .email("testuser@example.com")
-                .isAdultVerified(true)
                 .level(0)
                 .build();
     }
@@ -240,7 +238,7 @@ class MemberServiceTest {
                 .role(MemberRole.ROLE_USER)
                 .build();
 
-        member.login();
+        member.loginSuccess();
 
         assertNotNull(member.getLastLoginAt());
         assertEquals(0, member.getLoginFailCount());
@@ -293,7 +291,7 @@ class MemberServiceTest {
     void testUpdateProfile() {
         Member member = Member.builder().build();
 
-        member.updateProfile("newNickname");
+        member.updateNickname("newNickname");
 
         assertEquals("newNickname", member.getNickname());
     }

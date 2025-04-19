@@ -4,6 +4,7 @@ import com.toonpick.enums.Gender;
 import com.toonpick.enums.MemberRole;
 import com.toonpick.enums.MemberStatus;
 import com.toonpick.enums.OAuthProvider;
+import com.toonpick.type.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,20 +27,20 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "uid",nullable = false, unique = true, updatable = false)
+    @Column(name = "uid", nullable = false, unique = true, updatable = false)
     private UUID uuid;
 
     // todo: 해당 필드 rename 혹은 제거
     @Column(name = "user_name", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "email", unique = true, length = 100)
+    @Column(name = "email", unique = true, length = 100, nullable = false)
     private String email;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "nick_name", unique = true, length = 30)
+    @Column(name = "nick_name", unique = true, length = 30, nullable = false)
     private String nickname;
 
     @Column(name = "birthday")
@@ -47,10 +48,10 @@ public class Member extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
-    private Gender gender;
+    private Gender gender = Gender.NONE;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private MemberRole role;
 
     @Column(name = "profile_image")
@@ -59,7 +60,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "adult_verified", nullable = false)
     private Boolean adultVerified = false;
 
-    @Column(name = "level")
+    @Column(name = "level", nullable = false)
     private int level = 0;
 
     // 소셜 로그인 정보
@@ -99,28 +100,32 @@ public class Member extends BaseTimeEntity {
             String password,
             String nickname,
             MemberRole role,
-            Boolean adultVerified,
-            String profileImage,
             LocalDate birthday,
-            Gender gender
+            Gender gender,
+            String profileImage,
+            OAuthProvider provider,
+            String providerId
     ) {
         this.id = id;
         this.username = username;
+        this.uuid = UUID.randomUUID();
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.role = role;
-        this.adultVerified = adultVerified != null ? adultVerified : false;
-        this.profileImage = profileImage;
+        this.role = role != null ? role : MemberRole.ROLE_USER;
         this.birthday = birthday;
         this.gender = gender;
+        this.profileImage = profileImage;
+        this.provider = provider;
+        this.providerId = providerId;
         this.status = MemberStatus.ACTIVE;
         this.loginFailCount = 0;
         this.emailVerified = false;
+        this.adultVerified = false;
     }
 
     // 로그인
-    public void login() {
+    public void loginSuccess() {
         this.lastLoginAt = LocalDateTime.now();
         this.loginFailCount = 0;
     }
@@ -141,17 +146,20 @@ public class Member extends BaseTimeEntity {
     }
 
     // 프로필 업데이트
-    public void updateProfile(String nickname) {
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
 
     // 프로필 이미지 업데이트
-    public void updateProfileImage(String profilePicture){
-        this.profileImage = profilePicture;
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     // 패스워드 변경
     public void changePassword(String newPassword) {
+        if (newPassword == null || newPassword.length() < 8) {
+            throw new IllegalArgumentException(ErrorCode.PASSWORD_TOO_SHORT.getMessage());
+        }
         this.password = newPassword;
     }
 
@@ -184,5 +192,4 @@ public class Member extends BaseTimeEntity {
     public void deactivateAccount() {
         this.status = MemberStatus.DELETED;
     }
-
 }
