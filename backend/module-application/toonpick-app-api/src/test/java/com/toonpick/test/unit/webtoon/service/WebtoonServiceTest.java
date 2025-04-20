@@ -74,7 +74,7 @@ class WebtoonServiceTest {
                 .thumbnailUrl("http://example.com/thumb.jpg")
                 .link("http://example.com/webtoon")
                 .ageRating(AgeRating.ADULT)
-                .description("Test Description")
+                .summary("Test Summary")
                 .serializationStatus(SerializationStatus.ONGOING)
                 .episodeCount(10)
                 .platformRating(4.5f)
@@ -115,7 +115,7 @@ class WebtoonServiceTest {
     @Test
     void testGetWebtoon_Success() {
         when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
-        when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
+        when(webtoonMapper.toWebtoonResponse(webtoon)).thenReturn(responseDTO);
 
         WebtoonResponse result = webtoonService.getWebtoon(1L);
 
@@ -157,7 +157,7 @@ class WebtoonServiceTest {
         when(authorRepository.findAllById(null)).thenReturn(new ArrayList<>());
         when(genreRepository.findAllById(null)).thenReturn(new ArrayList<>());
         when(webtoonRepository.save(any(Webtoon.class))).thenReturn(webtoon);
-        when(webtoonMapper.webtoonToWebtoonResponseDto(webtoon)).thenReturn(responseDTO);
+        when(webtoonMapper.toWebtoonResponse(webtoon)).thenReturn(responseDTO);
 
         WebtoonResponse result = webtoonService.updateWebtoon(1L, updateRequestDTO);
 
