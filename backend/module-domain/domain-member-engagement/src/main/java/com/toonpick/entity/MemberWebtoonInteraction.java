@@ -54,7 +54,4 @@ public class MemberWebtoonInteraction {
     private String tags;
     private Boolean notificationEnabled;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "webtoon_review")
-    private WebtoonReview webtoonReview;
 }
