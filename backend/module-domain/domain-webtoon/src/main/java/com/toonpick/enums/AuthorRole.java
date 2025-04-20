@@ -6,13 +6,14 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public enum SerializationStatus {
+public enum AuthorRole {
 
-    ONGOING("연재중"),
-    HIATUS("휴재"),
-    COMPLETED("완결"),
-    CANCELLED("연재중지"),
+    WRITER("글"),
+    ARTIST("그림"),
+    BOTH("글/그림"),
+    ORIGINAL("원작"),
     ;
 
     private final String name;
+
 }
