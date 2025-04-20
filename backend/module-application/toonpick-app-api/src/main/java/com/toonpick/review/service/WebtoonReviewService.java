@@ -9,8 +9,9 @@ import com.toonpick.repository.MemberRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.repository.ReviewLikeRepository;
 import com.toonpick.repository.WebtoonReviewRepository;
-import com.toonpick.review.request.WebtoonReviewCreateDTO;
-import com.toonpick.review.response.WebtoonReviewDTO;
+import com.toonpick.review.request.WebtoonReviewCreateRequest;
+import com.toonpick.review.request.WebtoonReviewUpdateRequest;
+import com.toonpick.review.response.WebtoonReviewResponse;
 import com.toonpick.type.ErrorCode;
 import jakarta.annotation.Nullable;
 import org.springframework.dao.DataAccessException;
@@ -48,50 +49,53 @@ public class WebtoonReviewService {
 
     // 리뷰 추가
     @Transactional
-    public WebtoonReviewDTO createReview(WebtoonReviewCreateDTO reviewCreateDTO, String username) {
+    public WebtoonReviewResponse createReview(WebtoonReviewCreateRequest reviewCreateRequest, String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
-        Webtoon webtoon = webtoonRepository.findById(reviewCreateDTO.getWebtoonId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, reviewCreateDTO.getWebtoonId()));
+        Webtoon webtoon = webtoonRepository.findById(reviewCreateRequest.getWebtoonId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, reviewCreateRequest.getWebtoonId()));
 
         WebtoonReview review = WebtoonReview.builder()
                 .member(member)
                 .webtoon(webtoon)
-                .comment(reviewCreateDTO.getComment())
-                .rating(reviewCreateDTO.getRating())
-                .likes(0)
+                .comment(reviewCreateRequest.getComment())
+                .rating(reviewCreateRequest.getRating())
+                .likesCount(0)
                 .build();
 
         WebtoonReview savedReview = webtoonReviewRepository.save(review);
 
-        webtoonRepository.addReview(webtoon.getId(), reviewCreateDTO.getRating());
+        // todo : Webtoon 평점에 반영(업데이트/비동기 로직 고려)
+        webtoonRepository.addReview(webtoon.getId(), reviewCreateRequest.getRating());
 
-        return webtoonReviewMapper.webtoonReviewToWebtoonReviewDTO(savedReview);
+        return webtoonReviewMapper.toWebtoonReviewResponse(savedReview);
     }
 
     // 리뷰 가져오기
     @Transactional(readOnly = true)
-    public WebtoonReviewDTO getReview(Long reviewId) {
+    public WebtoonReviewResponse getReview(Long reviewId) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.REVIEW_NOT_FOUND, reviewId));
 
-        return webtoonReviewMapper.webtoonReviewToWebtoonReviewDTO(review);
+        return webtoonReviewMapper.toWebtoonReviewResponse(review);
     }
 
     // 리뷰 수정
     @Transactional
-    public WebtoonReviewDTO updateReview(Long reviewId, WebtoonReviewCreateDTO reviewCreateDTO) {
+    public WebtoonReviewResponse updateReview(Long reviewId, WebtoonReviewUpdateRequest reviewUpdateRequest) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.REVIEW_NOT_FOUND, reviewId));
         float oldRating = review.getRating();
 
-        review.updateRating(reviewCreateDTO.getRating());
-        review.updateComment(reviewCreateDTO.getComment());
+        review.updateRating(reviewUpdateRequest.getRating());
+        review.updateComment(reviewUpdateRequest.getComment());
 
         WebtoonReview updatedReview = webtoonReviewRepository.save(review);
-        webtoonRepository.updateReview(review.getWebtoon().getId(), oldRating, reviewCreateDTO.getRating());
 
-        return webtoonReviewMapper.webtoonReviewToWebtoonReviewDTO(updatedReview);
+        // todo : Webtoon 평점 업데이트
+        webtoonRepository.updateReview(review.getWebtoon().getId(), oldRating, reviewUpdateRequest.getRating());
+
+        return webtoonReviewMapper.toWebtoonReviewResponse(updatedReview);
     }
 
     // 리뷰 삭제
@@ -151,7 +155,7 @@ public class WebtoonReviewService {
 
     // 특정 웹툰의 리뷰들을 가져온다 (정렬 기준)
     @Transactional(readOnly = true)
-    public PagedResponseDTO<WebtoonReviewDTO> getReviewsByWebtoon(
+    public PagedResponseDTO<WebtoonReviewResponse> getReviewsByWebtoon(
             Long webtoonId, String sortBy, int page, int size, @Nullable String username) {
 
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
@@ -178,15 +182,15 @@ public class WebtoonReviewService {
                 ? new HashSet<>(reviewLikeRepository.findLikedReviewIdsByMemberIdAndReviewIds(member.getId(), reviewIds))
                 : Collections.emptySet();
 
-        List<WebtoonReviewDTO> reviewDTOs = reviewPage.getContent().stream()
+        List<WebtoonReviewResponse> reviewDTOs = reviewPage.getContent().stream()
                 .map(review -> {
-                    WebtoonReviewDTO dto = webtoonReviewMapper.webtoonReviewToWebtoonReviewDTO(review);
+                    WebtoonReviewResponse dto = webtoonReviewMapper.toWebtoonReviewResponse(review);
                     dto.setIsLiked(likedReviewIds.contains(review.getId()));
                     return dto;
                 })
                 .collect(Collectors.toList());
 
-        return PagedResponseDTO.<WebtoonReviewDTO>builder()
+        return PagedResponseDTO.<WebtoonReviewResponse>builder()
                 .data(reviewDTOs)
                 .page(reviewPage.getNumber())
                 .size(reviewPage.getSize())
@@ -198,13 +202,13 @@ public class WebtoonReviewService {
 
     // 어떤 유저가 특정 웹툰에 작성한 리뷰를 가져온다
     @Transactional(readOnly = true)
-    public Optional<WebtoonReviewDTO> getUserReviewForWebtoon(String username, Long webtoonId) {
+    public Optional<WebtoonReviewResponse> getUserReviewForWebtoon(String username, Long webtoonId) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, webtoonId));
 
         Optional<WebtoonReview> reviewOpt = webtoonReviewRepository.findWebtoonReviewByMemberAndWebtoon(member, webtoon);
-        return reviewOpt.map(webtoonReviewMapper::webtoonReviewToWebtoonReviewDTO);
+        return reviewOpt.map(webtoonReviewMapper::toWebtoonReviewResponse);
     }
 }

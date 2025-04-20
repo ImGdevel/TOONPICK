@@ -9,8 +9,9 @@ import com.toonpick.repository.MemberRepository;
 import com.toonpick.repository.ReviewLikeRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.repository.WebtoonReviewRepository;
-import com.toonpick.review.request.WebtoonReviewCreateDTO;
-import com.toonpick.review.response.WebtoonReviewDTO;
+import com.toonpick.review.request.WebtoonReviewCreateRequest;
+import com.toonpick.review.request.WebtoonReviewUpdateRequest;
+import com.toonpick.review.response.WebtoonReviewResponse;
 import com.toonpick.review.service.WebtoonReviewService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,7 +65,7 @@ class WebtoonReviewServiceTest {
                 .webtoon(webtoon)
                 .comment("Great webtoon!")
                 .rating(5.0f)
-                .likes(0)
+                .likesCount(0)
                 .build();
     }
 
@@ -73,7 +74,7 @@ class WebtoonReviewServiceTest {
     @Test
     void createReview_Success() {
         // given
-        WebtoonReviewCreateDTO reviewCreateDTO = WebtoonReviewCreateDTO.builder()
+        WebtoonReviewCreateRequest reviewCreateDTO = WebtoonReviewCreateRequest.builder()
                 .webtoonId(1L)
                 .rating(4.5f)
                 .comment("Good")
@@ -84,7 +85,7 @@ class WebtoonReviewServiceTest {
         when(webtoonReviewRepository.save(any(WebtoonReview.class))).thenReturn(review);
 
         // when
-        WebtoonReviewDTO result = webtoonReviewService.createReview(reviewCreateDTO, "testuser");
+        WebtoonReviewResponse result = webtoonReviewService.createReview(reviewCreateDTO, "testuser");
 
         // then
         assertNotNull(result);
@@ -100,7 +101,7 @@ class WebtoonReviewServiceTest {
         when(webtoonReviewRepository.findById(1L)).thenReturn(Optional.of(review));
 
         // when
-        WebtoonReviewDTO result = webtoonReviewService.getReview(1L);
+        WebtoonReviewResponse result = webtoonReviewService.getReview(1L);
 
         // then
         assertNotNull(result);
@@ -112,8 +113,8 @@ class WebtoonReviewServiceTest {
     @Test
     void updateReview_Success() {
         // given
-        WebtoonReviewCreateDTO updateDTO = WebtoonReviewCreateDTO.builder()
-                .webtoonId(1L)
+        WebtoonReviewUpdateRequest updateDTO = WebtoonReviewUpdateRequest.builder()
+                .reviewId(1L)
                 .comment("Updated comment")
                 .rating(5.0f)
                 .build();
@@ -122,7 +123,7 @@ class WebtoonReviewServiceTest {
         when(webtoonReviewRepository.save(any(WebtoonReview.class))).thenReturn(review);
 
         // when
-        WebtoonReviewDTO result = webtoonReviewService.updateReview(1L, updateDTO);
+        WebtoonReviewResponse result = webtoonReviewService.updateReview(1L, updateDTO);
 
         // then
         assertNotNull(result);
@@ -171,7 +172,7 @@ class WebtoonReviewServiceTest {
         when(webtoonReviewRepository.findWebtoonReviewByMemberAndWebtoon(member, webtoon)).thenReturn(Optional.of(review));
 
         // when
-        Optional<WebtoonReviewDTO> result = webtoonReviewService.getUserReviewForWebtoon("testuser", 1L);
+        Optional<WebtoonReviewResponse> result = webtoonReviewService.getUserReviewForWebtoon("testuser", 1L);
 
         // then
         assertTrue(result.isPresent());
@@ -185,7 +186,7 @@ class WebtoonReviewServiceTest {
         // given
         Webtoon webtoon = Webtoon.builder().id(1L).title("웹툰").build();
         Member member = Member.builder().username("작성자").build();
-        WebtoonReview review = WebtoonReview.builder().id(200L).member(member).webtoon(webtoon).comment("꿀잼").likes(10).build();
+        WebtoonReview review = WebtoonReview.builder().id(200L).member(member).webtoon(webtoon).comment("꿀잼").likesCount(10).build();
 
         Page<WebtoonReview> page = new PageImpl<>(List.of(review));
 
@@ -193,14 +194,14 @@ class WebtoonReviewServiceTest {
         when(webtoonReviewRepository.findByWebtoon(eq(webtoon), any(Pageable.class))).thenReturn(page);
 
         // when
-        PagedResponseDTO<WebtoonReviewDTO> result = webtoonReviewService.getReviewsByWebtoon(
+        PagedResponseDTO<WebtoonReviewResponse> result = webtoonReviewService.getReviewsByWebtoon(
                 1L, "latest", 0, 10, null); // username null
 
         // then
         assertNotNull(result);
         assertEquals(1, result.getData().size());
 
-        WebtoonReviewDTO dto = result.getData().get(0);
+        WebtoonReviewResponse dto = result.getData().get(0);
         assertEquals("꿀잼", dto.getComment());
         assertFalse(dto.getIsLiked());
     }
@@ -213,7 +214,7 @@ class WebtoonReviewServiceTest {
         // given
         Member member = Member.builder().id(1L).username("testUser").build();
         Webtoon webtoon = Webtoon.builder().id(1L).title("웹툰").build();
-        WebtoonReview review = WebtoonReview.builder().id(100L).member(member).webtoon(webtoon).comment("재밌음").likes(3).build();
+        WebtoonReview review = WebtoonReview.builder().id(100L).member(member).webtoon(webtoon).comment("재밌음").likesCount(3).build();
 
         Page<WebtoonReview> page = new PageImpl<>(List.of(review));
         List<Long> likedReviewIds = List.of(100L); // 유저가 이 리뷰에 좋아요 함
@@ -225,14 +226,14 @@ class WebtoonReviewServiceTest {
                 .thenReturn(likedReviewIds);
 
         // when
-        PagedResponseDTO<WebtoonReviewDTO> result = webtoonReviewService.getReviewsByWebtoon(
+        PagedResponseDTO<WebtoonReviewResponse> result = webtoonReviewService.getReviewsByWebtoon(
                 1L, "best", 0, 10, "testUser");
 
         // then
         assertNotNull(result);
         assertEquals(1, result.getData().size());
 
-        WebtoonReviewDTO dto = result.getData().get(0);
+        WebtoonReviewResponse dto = result.getData().get(0);
         assertEquals("재밌음", dto.getComment());
         assertTrue(dto.getIsLiked()); // 좋아요 체크됨
     }

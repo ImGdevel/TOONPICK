@@ -12,15 +12,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WebtoonReviewDTO {
+public class WebtoonReviewResponse {
     private Long id;
     private Long webtoonId;
     private MemberDTO member;
     private float rating;
     private String comment;
     private int likes;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
+    private LocalDateTime updatedDate;
 
     private Boolean isLiked;
 }

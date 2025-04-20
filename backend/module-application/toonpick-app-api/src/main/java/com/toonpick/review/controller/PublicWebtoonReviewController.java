@@ -2,12 +2,11 @@ package com.toonpick.review.controller;
 
 import com.toonpick.annotation.CurrentUser;
 import com.toonpick.dto.PagedResponseDTO;
-import com.toonpick.review.response.WebtoonReviewDTO;
+import com.toonpick.review.response.WebtoonReviewResponse;
 import com.toonpick.user.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,17 +32,17 @@ public class PublicWebtoonReviewController {
 
     @Operation(summary = "특정 리뷰 조회", description = "리뷰 ID를 사용하여 특정 리뷰를 조회합니다")
     @GetMapping("/{reviewId}")
-    public ResponseEntity<WebtoonReviewDTO> getReview(
+    public ResponseEntity<WebtoonReviewResponse> getReview(
             @Parameter(description = "조회할 리뷰의 ID", required = true)
             @PathVariable Long reviewId
     ) {
-        WebtoonReviewDTO reviewDTO = webtoonReviewService.getReview(reviewId);
+        WebtoonReviewResponse reviewDTO = webtoonReviewService.getReview(reviewId);
         return reviewDTO != null ? ResponseEntity.ok(reviewDTO) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @Operation(summary = "특정 웹툰의 리뷰 목록 조회", description = "특정 웹툰의 리뷰를 페이징하여 조회합니다")
     @GetMapping("/webtoon/{webtoonId}")
-    public ResponseEntity<PagedResponseDTO<WebtoonReviewDTO>> getReviewsByWebtoon(
+    public ResponseEntity<PagedResponseDTO<WebtoonReviewResponse>> getReviewsByWebtoon(
             @Parameter(description = "리뷰를 조회할 웹툰의 ID", required = true)
             @PathVariable Long webtoonId,
             @Parameter(description = "정렬 기준 (latest / rating)", required = false)
@@ -54,7 +53,7 @@ public class PublicWebtoonReviewController {
             @RequestParam(defaultValue = "20") int size,
             @CurrentUser CustomUserDetails user
     ) {
-        PagedResponseDTO<WebtoonReviewDTO> pagedReviews = webtoonReviewService.getReviewsByWebtoon(webtoonId, sortBy, page, size, user.getUsername());
+        PagedResponseDTO<WebtoonReviewResponse> pagedReviews = webtoonReviewService.getReviewsByWebtoon(webtoonId, sortBy, page, size, user.getUsername());
         return ResponseEntity.ok(pagedReviews);
     }
 }

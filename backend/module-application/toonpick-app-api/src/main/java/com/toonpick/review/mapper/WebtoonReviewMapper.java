@@ -1,8 +1,7 @@
 package com.toonpick.review.mapper;
 
 import com.toonpick.entity.WebtoonReview;
-import com.toonpick.review.request.WebtoonReviewCreateDTO;
-import com.toonpick.review.response.WebtoonReviewDTO;
+import com.toonpick.review.response.WebtoonReviewResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -12,9 +11,6 @@ import org.mapstruct.factory.Mappers;
 public interface WebtoonReviewMapper {
     WebtoonReviewMapper INSTANCE = Mappers.getMapper(WebtoonReviewMapper.class);
 
+    WebtoonReviewResponse toWebtoonReviewResponse(WebtoonReview review);
 
-    WebtoonReviewDTO webtoonReviewToWebtoonReviewDTO(WebtoonReview review);
-
-    @Mapping(target = "member", ignore = true)
-    WebtoonReview webtoonReviewDTOToWebtoonReview(WebtoonReviewCreateDTO reviewCreateDTO);
 }
