@@ -5,7 +5,6 @@ import com.toonpick.entity.Author;
 import com.toonpick.exception.ResourceNotFoundException;
 import com.toonpick.repository.AuthorRepository;
 import com.toonpick.webtoon.mapper.AuthorMapper;
-import com.toonpick.webtoon.service.AuthorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

@@ -6,7 +6,6 @@ import com.toonpick.entity.Genre;
 import com.toonpick.exception.ResourceNotFoundException;
 import com.toonpick.repository.GenreRepository;
 import com.toonpick.webtoon.mapper.GenreMapper;
-import com.toonpick.webtoon.service.GenreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
