@@ -53,7 +53,7 @@ public class WebtoonService {
     public WebtoonResponse getWebtoon(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
-        return webtoonMapper.webtoonToWebtoonResponseDto(webtoon);
+        return webtoonMapper.toWebtoonResponse(webtoon);
     }
 
     /**
@@ -87,7 +87,7 @@ public class WebtoonService {
         Page<Webtoon> webtoonPage = webtoonRepository.findWebtoonsByFilterOptions(filter, pageable);
 
         List<WebtoonResponse> webtoonDTOs = webtoonPage.getContent().stream()
-                .map(webtoonMapper::webtoonToWebtoonResponseDto)
+                .map(webtoonMapper::toWebtoonResponse)
                 .collect(Collectors.toList());
 
         return PagedResponseDTO.<WebtoonResponse>builder()
@@ -126,7 +126,7 @@ public class WebtoonService {
 
         existingWebtoon = webtoonRepository.save(existingWebtoon);
 
-        return webtoonMapper.webtoonToWebtoonResponseDto(existingWebtoon);
+        return webtoonMapper.toWebtoonResponse(existingWebtoon);
     }
 
 

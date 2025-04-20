@@ -40,9 +40,9 @@ public class WebtoonResponse {
 
     private AgeRating ageRating;
 
-    private Set<AuthorDTO> authors;
+    private Set<AuthorResponse> authors;
 
-    private Set<GenreDTO> genres;
+    private Set<GenreResponse> genres;
 
     @JsonProperty("totalRatings")
     private int episodeCount;

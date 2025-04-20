@@ -14,7 +14,7 @@ public interface WebtoonMapper {
 
     @Mapping(source = "authors", target = "authors")
     @Mapping(source = "genres", target = "genres")
-    WebtoonResponse webtoonToWebtoonResponseDto(Webtoon webtoon);
+    WebtoonResponse toWebtoonResponse(Webtoon webtoon);
 
     WebtoonDetailsResponse toWebtoonDetailsResponse(Webtoon webtoon);
 
