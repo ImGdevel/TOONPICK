@@ -3,21 +3,15 @@ package com.toonpick.webtoon.service;
 
 import com.toonpick.dto.PagedResponseDTO;
 import com.toonpick.dto.WebtoonFilterDTO;
-import com.toonpick.entity.Author;
-import com.toonpick.entity.Genre;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.exception.ResourceNotFoundException;
-import com.toonpick.repository.AuthorRepository;
-import com.toonpick.repository.GenreRepository;
 import com.toonpick.repository.WebtoonAnalysisRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
 import com.toonpick.webtoon.mapper.WebtoonAnalysisMapper;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
-import com.toonpick.webtoon.request.WebtoonRequestDTO;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
 import com.toonpick.webtoon.response.WebtoonResponse;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,8 +30,6 @@ import java.util.stream.Collectors;
 public class WebtoonService {
 
     private final WebtoonRepository webtoonRepository;
-    private final AuthorRepository authorRepository;
-    private final GenreRepository genreRepository;
     private final WebtoonMapper webtoonMapper;
     private final WebtoonAnalysisRepository analysisRepository;
     private final WebtoonAnalysisMapper analysisMapper;
@@ -61,7 +51,7 @@ public class WebtoonService {
      */
     public WebtoonDetailsResponse getWebtoonDetails(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("웹툰이 존재하지 않습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
 
         // 기본 정보 매핑
         WebtoonDetailsResponse webtoonDetails = webtoonMapper.toWebtoonDetailsResponse(webtoon);
@@ -98,46 +88,6 @@ public class WebtoonService {
                 .totalPages(webtoonPage.getTotalPages())
                 .last(webtoonPage.isLast())
                 .build();
-    }
-
-    /**
-     * 기존 웹툰 업데이트
-     */
-    @Transactional
-    public WebtoonResponse updateWebtoon(Long id, WebtoonRequestDTO webtoonRequestDTO) {
-        Webtoon existingWebtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
-
-        Set<Author> authors = new HashSet<>(authorRepository.findAllById(webtoonRequestDTO.getAuthorIds()));
-        Set<Genre> genres = new HashSet<>(genreRepository.findAllById(webtoonRequestDTO.getGenreIds()));
-
-        existingWebtoon.updateWebtoonDetails(
-                webtoonRequestDTO.getTitle(),
-                webtoonRequestDTO.getPlatform(),
-                webtoonRequestDTO.getDescription(),
-                webtoonRequestDTO.getSerializationStatus(),
-                webtoonRequestDTO.getDayOfWeek(),
-                webtoonRequestDTO.getThumbnailUrl(),
-                webtoonRequestDTO.getLink(),
-                webtoonRequestDTO.getAgeRating(),
-                authors,
-                genres
-        );
-
-        existingWebtoon = webtoonRepository.save(existingWebtoon);
-
-        return webtoonMapper.toWebtoonResponse(existingWebtoon);
-    }
-
-
-    /**
-     * 웹툰 삭제
-     */
-    @Transactional
-    public void deleteWebtoon(Long id) {
-        Webtoon webtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
-        webtoonRepository.delete(webtoon);
     }
 
 }

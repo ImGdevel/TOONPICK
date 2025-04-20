@@ -12,7 +12,6 @@ import com.toonpick.repository.WebtoonAnalysisRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.webtoon.mapper.WebtoonAnalysisMapper;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
-import com.toonpick.webtoon.request.WebtoonRequestDTO;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
 import com.toonpick.webtoon.response.WebtoonResponse;
 import com.toonpick.webtoon.service.WebtoonService;
@@ -143,43 +142,5 @@ class WebtoonServiceTest {
 
         assertNotNull(result);
         assertEquals(1000, result.getAnalysisData().totalViews);
-    }
-
-    @DisplayName("웹툰 업데이트 유닛 테스트")
-    @Test
-    void testUpdateWebtoon_Success() {
-        WebtoonRequestDTO updateRequestDTO = WebtoonRequestDTO.builder()
-                .title("Updated Webtoon")
-                .platform(Platform.KAKAO)
-                .build();
-
-        when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
-        when(authorRepository.findAllById(null)).thenReturn(new ArrayList<>());
-        when(genreRepository.findAllById(null)).thenReturn(new ArrayList<>());
-        when(webtoonRepository.save(any(Webtoon.class))).thenReturn(webtoon);
-        when(webtoonMapper.toWebtoonResponse(webtoon)).thenReturn(responseDTO);
-
-        WebtoonResponse result = webtoonService.updateWebtoon(1L, updateRequestDTO);
-
-        assertNotNull(result);
-        assertEquals("Test Webtoon", result.getTitle());
-    }
-
-    @DisplayName("웹툰 삭제 유닛 테스트")
-    @Test
-    void testDeleteWebtoon_Success() {
-        when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
-
-        webtoonService.deleteWebtoon(1L);
-
-        verify(webtoonRepository, times(1)).delete(webtoon);
-    }
-
-    @DisplayName("웹툰 삭제 예외 유닛 테스트")
-    @Test
-    void testDeleteWebtoon_NotFound() {
-        when(webtoonRepository.findById(2L)).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class, () -> webtoonService.deleteWebtoon(2L));
     }
 }

@@ -32,38 +32,35 @@ public class WebtoonController {
 
     private final Logger logger = LoggerFactory.getLogger(WebtoonController.class);
 
-    @Operation(summary = "웹툰 정보 조회", description = "웹툰 ID를 통해 특정 웹툰의 정보를 조회합니다")
-    @ApiResponse(responseCode = "200", description = "웹툰 정보를 성공적으로 반환")
-    @GetMapping("/{id}")
-    public ResponseEntity<WebtoonResponse> getWebtoon(
-            @Parameter(description = "웹툰 ID", required = true, example = "1")
-            @PathVariable Long id
+
+    @Operation(summary = "웹툰 리스트 조회", description = "페이징 정보를 통해 웹툰 리스트를 조회합니다")
+    @ApiResponse(responseCode = "200", description = "웹툰 리스트를 성공적으로 반환")
+    @PostMapping()
+    public ResponseEntity<PagedResponseDTO<WebtoonResponse>> getWebtoons(
+            @Parameter(description = "페이지 번호 (0부터 시작)", required = false, example = "0")
+            @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "페이지당 항목 수", required = false, example = "30")
+            @RequestParam(defaultValue = "60") int size,
+            @Parameter(description = "정렬 기준 필드", required = false, example = "title")
+            @RequestParam(defaultValue = "title") String sortBy,
+            @Parameter(description = "정렬 방향 (asc/desc)", required = false, example = "asc")
+            @RequestParam(defaultValue = "asc") String sortDir
     ) {
-        WebtoonResponse webtoonDTO = webtoonService.getWebtoon(id);
-        return ResponseEntity.ok(webtoonDTO);
+        PagedResponseDTO<WebtoonResponse> webtoons = webtoonService.getWebtoonsOptions(null, page, size, sortBy, sortDir);
+        return ResponseEntity.ok(webtoons);
     }
 
-    @Operation(summary = "웹툰 정보 조회", description = "웹툰 ID를 통해 특정 웹툰의 정보를 조회합니다")
-    @ApiResponse(responseCode = "200", description = "웹툰 정보를 성공적으로 반환")
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<WebtoonDetailsResponse> getWebtoonDetails(
-            @Parameter(description = "웹툰 ID", required = true, example = "1")
-            @PathVariable Long id
-    ) {
-        WebtoonDetailsResponse webtoonDTO = webtoonService.getWebtoonDetails(id);
-        return ResponseEntity.ok(webtoonDTO);
-    }
 
     @Operation(summary = "웹툰 필터 조회", description = "필터 옵션과 페이징 정보를 통해 웹툰 리스트를 조회합니다")
     @ApiResponse(responseCode = "200", description = "필터링된 웹툰 리스트를 성공적으로 반환")
     @PostMapping("/filter")
-    public ResponseEntity<PagedResponseDTO<WebtoonResponse>> filterWebtoons(
+    public ResponseEntity<PagedResponseDTO<WebtoonResponse>> getWebtoonsByFilter(
             @Parameter(description = "필터 옵션 (제목, 장르 등)", required = false)
             @RequestBody WebtoonFilterDTO filter,  // JSON 형식으로 받기 위해 @RequestBody 사용
             @Parameter(description = "페이지 번호 (0부터 시작)", required = false, example = "0")
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "페이지당 항목 수", required = false, example = "30")
-            @RequestParam(defaultValue = "30") int size,
+            @RequestParam(defaultValue = "60") int size,
             @Parameter(description = "정렬 기준 필드", required = false, example = "title")
             @RequestParam(defaultValue = "title") String sortBy,
             @Parameter(description = "정렬 방향 (asc/desc)", required = false, example = "asc")
@@ -74,6 +71,32 @@ public class WebtoonController {
         PagedResponseDTO<WebtoonResponse> webtoons = webtoonService.getWebtoonsOptions(filter, page, size, sortBy, sortDir);
         return ResponseEntity.ok(webtoons);
     }
+
+
+    @Operation(summary = "웹툰 상세 정보 조회", description = "웹툰 ID를 통해 특정 웹툰의 상세 정보를 조회합니다")
+    @ApiResponse(responseCode = "200", description = "웹툰 정보를 성공적으로 반환")
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<WebtoonDetailsResponse> getWebtoonDetails(
+            @Parameter(description = "웹툰 ID", required = true, example = "1")
+            @PathVariable Long id
+    ) {
+        WebtoonDetailsResponse webtoonDTO = webtoonService.getWebtoonDetails(id);
+        return ResponseEntity.ok(webtoonDTO);
+    }
+
+    @Operation(summary = "웹툰 정보 조회", description = "웹툰 ID를 통해 특정 웹툰의 정보를 조회합니다")
+    @ApiResponse(responseCode = "200", description = "웹툰 정보를 성공적으로 반환")
+    @GetMapping("/{id}")
+    public ResponseEntity<WebtoonResponse> getWebtoonById(
+            @Parameter(description = "웹툰 ID", required = true, example = "1")
+            @PathVariable Long id
+    ) {
+        WebtoonResponse webtoonDTO = webtoonService.getWebtoon(id);
+        return ResponseEntity.ok(webtoonDTO);
+    }
+
+
+
 
 }
 
