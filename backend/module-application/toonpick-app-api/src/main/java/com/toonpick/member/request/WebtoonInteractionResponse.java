@@ -13,7 +13,7 @@ public class WebtoonInteractionResponse {
 
     private boolean liked;
     private boolean bookmarked;
-    private Boolean notificationEnabled;
+    private boolean notificationEnabled;
     private WatchingStatus status;
     private int lastReadEpisode;
     private LocalDateTime lastReadAt;

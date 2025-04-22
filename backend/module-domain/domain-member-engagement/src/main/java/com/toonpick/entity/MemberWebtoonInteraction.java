@@ -55,7 +55,7 @@ public class MemberWebtoonInteraction {
     private WatchingStatus status = WatchingStatus.WATCHING;
 
     @Column(name = "last_read_episode")
-    private Integer lastReadEpisode;
+    private int lastReadEpisode;
 
     @Column(name = "last_read_at")
     private LocalDateTime lastReadAt;
