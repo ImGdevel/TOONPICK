@@ -119,10 +119,10 @@ public class Webtoon {
     private Float averageRating = 0f;
 
     @Column(name = "rating_sum")
-    private float ratingSum = 0f;
+    private Float ratingSum = 0f;
 
     @Column(name = "rating_count")
-    private int ratingCount = 0;
+    private Integer ratingCount = 0;
 
     @Builder
     public Webtoon(Long id,

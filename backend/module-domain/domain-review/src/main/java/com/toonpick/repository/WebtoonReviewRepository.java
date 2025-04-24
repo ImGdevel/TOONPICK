@@ -19,14 +19,14 @@ public interface WebtoonReviewRepository extends JpaRepository<WebtoonReview, Lo
 
     Optional<WebtoonReview> findWebtoonReviewByMemberAndWebtoon(Member member, Webtoon webtoon);
 
-    @Transactional
     @Modifying
-    @Query("UPDATE WebtoonReview r SET r.likes = r.likes + 1 WHERE r.id = :reviewId")
-    int incrementLikes(@Param("reviewId") Long reviewId);
-
     @Transactional
-    @Modifying
-    @Query("UPDATE WebtoonReview r SET r.likes = r.likes - 1 WHERE r.id = :reviewId AND r.likes > 0")
+    @Query("UPDATE WebtoonReview r SET r.likesCount = r.likesCount - 1 WHERE r.id = :reviewId AND r.likesCount > 0")
     int decrementLikes(@Param("reviewId") Long reviewId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE WebtoonReview r SET r.likesCount = r.likesCount + 1 WHERE r.id = :reviewId")
+    int incrementLikes(@Param("reviewId") Long reviewId);
 
 }
