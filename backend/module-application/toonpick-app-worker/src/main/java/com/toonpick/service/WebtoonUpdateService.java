@@ -21,6 +21,8 @@ public class WebtoonUpdateService {
     private final WebtoonUpdatePublisher webtoonUpdatePublisher;
     private final WebtoonMapper webtoonMapper;
 
+    private static final int BATCH_SIZE = 20;
+
     public void processWebtoonUpdate() {
         List<SerializationStatus> statuses = List.of(SerializationStatus.ONGOING, SerializationStatus.HIATUS);
         LocalDate thresholdDate = LocalDate.now().minusDays(6);
@@ -35,6 +37,10 @@ public class WebtoonUpdateService {
                 .map(webtoonMapper::toWebtoonUpdatePayload)
                 .toList();
 
-        webtoonUpdatePublisher.publishRequests(payloads);
+        for (int i = 0; i < payloads.size(); i += BATCH_SIZE) {
+            int endIndex = Math.min(i + BATCH_SIZE, payloads.size());
+            List<WebtoonUpdatePayload> batchPayload = payloads.subList(i, endIndex);
+            webtoonUpdatePublisher.publishRequests(batchPayload);
+        }
     }
 }
