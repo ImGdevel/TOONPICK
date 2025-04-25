@@ -28,8 +28,8 @@ public class WebtoonService {
 
         // todo : 추가적인 생성 로직 작성
 
-        Webtoon webtoon = webtoonMapper.toWebtoon(request);
-        webtoonRepository.save(webtoon);
+        //Webtoon webtoon = webtoonMapper.toWebtoon(request);
+        //webtoonRepository.save(webtoon);
     }
 
     /**
