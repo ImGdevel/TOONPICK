@@ -20,7 +20,7 @@ const WebtoonDetailPage: React.FC = () => {
         setLoading(true);
         if (!id) return;
 
-        const response = await WebtoonService.getWebtoonById(parseInt(id));
+        const response = await WebtoonService.getWebtoonDetails(parseInt(id));
         if (response.success && response.data) {
           setWebtoon(response.data);
         } else {
@@ -35,6 +35,7 @@ const WebtoonDetailPage: React.FC = () => {
     };
 
     fetchWebtoon();
+    window.scrollTo(0, 0); // 페이지 로드 시 스크롤을 최상단으로 이동
   }, [id]);
 
   if (loading) {

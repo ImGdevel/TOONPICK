@@ -1,7 +1,6 @@
 package com.toonpick.test.unit.auth.service;
 
-import com.toonpick.auth.service.TokenService;
-import com.toonpick.exception.ExpiredJwtTokenException;
+import com.toonpick.auth.service.AuthTokenService;
 import com.toonpick.exception.InvalidJwtTokenException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +35,7 @@ class TokenReissueControllerTest {
     private JwtTokenProvider jwtTokenProvider;
 
     @Mock
-    private TokenService tokenService;
+    private AuthTokenService authTokenService;
 
     @Mock
     private JwtTokenValidator jwtTokenValidator;
@@ -55,7 +54,7 @@ class TokenReissueControllerTest {
 
         when(jwtTokenValidator.extractRefreshTokenFromCookies(request)).thenReturn(refreshToken);
         doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
-        when(tokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
+        when(authTokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
         when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(false);
 
         ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
@@ -93,9 +92,9 @@ class TokenReissueControllerTest {
 
         when(jwtTokenValidator.extractRefreshTokenFromCookies(request)).thenReturn(refreshToken);
         doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
-        when(tokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
+        when(authTokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
         when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(true);
-        when(tokenService.reissueRefreshToken(refreshToken)).thenReturn(newRefreshToken);
+        when(authTokenService.reissueRefreshToken(refreshToken)).thenReturn(newRefreshToken);
         try (MockedStatic<CookieUtils> mockedCookieUtils = Mockito.mockStatic(CookieUtils.class)) {
             mockedCookieUtils.when(() -> CookieUtils.createRefreshCookie(newRefreshToken))
                     .thenReturn(new Cookie("refresh", newRefreshToken));

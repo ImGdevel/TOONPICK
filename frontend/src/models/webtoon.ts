@@ -3,14 +3,19 @@ export enum Platform {
   KAKAO = 'KAKAO',
   KAKAOPAGE = 'KAKAOPAGE',
   LEZHIN = 'LEZHIN',
-  BOMTOON = 'BOMTOON',
-  OTHER = 'OTHER'
+  BOMTOON = 'BOMTOON'
 }
+
+export type AgeRating = 'ALL' | 'TEEN' | 'ADULT';
+export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
 
 export enum SerializationStatus {
   ONGOING = 'ONGOING',
   COMPLETED = 'COMPLETED',
-  HIATUS = 'HIATUS'
+  HIATUS = 'HIATUS',
+  ENDED = 'ENDED',
+  PAUSED = 'PAUSED',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export interface Webtoon {
@@ -32,6 +37,7 @@ export interface Webtoon {
 
 export interface Author {
   id: number;
+  role : string;
   name: string;
 }
 

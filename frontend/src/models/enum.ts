@@ -8,4 +8,4 @@ export enum SerializationStatus {
   UNKNOWN = 'UNKNOWN',
 }
 export type AgeRating = 'ALL' | 'TEEN' | 'ADULT';
-export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+export type DayOfWeek = 'ALL' | 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';

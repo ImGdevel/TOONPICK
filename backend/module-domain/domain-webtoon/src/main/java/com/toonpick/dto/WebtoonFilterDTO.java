@@ -16,10 +16,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class WebtoonFilterDTO {
-    private Platform platform;
-    private SerializationStatus serializationStatus;
-    private AgeRating ageRating;
-    private DayOfWeek week;
+    private Set<Platform> platforms;
+    private Set<SerializationStatus> serializationStatuses;
+    private Set<AgeRating> ageRatings;
+    private Set<DayOfWeek> publishDays;
     private Set<String> genres;
     private Set<String> authors;
 }

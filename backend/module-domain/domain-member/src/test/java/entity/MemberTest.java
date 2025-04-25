@@ -20,7 +20,6 @@ class MemberTest {
                 .password("password")
                 .nickname("testNickname")
                 .role(MemberRole.ROLE_USER)
-                .isAdultVerified(false)
                 .profileImage("default_profile_img.png")
                 .build();
 
@@ -37,7 +36,7 @@ class MemberTest {
                 .profileImage("default_profile_img.png")
                 .build();
 
-        member.updateProfile("newNickname");
+        member.updateNickname("newNickname");
 
         assertThat(member.getNickname()).isEqualTo("newNickname");
     }
@@ -71,12 +70,11 @@ class MemberTest {
     @DisplayName("성인 인증 상태 변경 테스트")
     void testVerifyAdult() {
         Member member = Member.builder()
-                .isAdultVerified(false)
                 .build();
 
         member.verifyAdult();
 
-        assertThat(member.getIsAdultVerified()).isTrue();
+        assertThat(member.getAdultVerified()).isTrue();
     }
 }
 

@@ -1,15 +1,15 @@
 package com.toonpick.test.unit.member.service;
 
-
 import com.toonpick.entity.Member;
 import com.toonpick.enums.MemberRole;
 import com.toonpick.member.mapper.MemberMapper;
 import com.toonpick.member.request.MemberProfileRequestDTO;
-import com.toonpick.member.response.MemberProfileDetailsResponseDTO;
-import com.toonpick.member.response.MemberProfileResponseDTO;
+import com.toonpick.member.response.MemberProfileDetailsResponse;
+import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
 import com.toonpick.repository.MemberRepository;
+import com.toonpick.service.AwsS3StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -20,7 +20,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.toonpick.exception.ResourceNotFoundException;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -28,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class MemberServiceTest {
 
     @Mock
@@ -39,10 +44,13 @@ class MemberServiceTest {
     @InjectMocks
     private MemberService memberService;
 
+    @Mock
+    private AwsS3StorageService awsS3StorageService;
+
     private Member member;
     private MemberProfileRequestDTO profileRequestDTO;
-    private MemberProfileResponseDTO profileResponseDTO;
-    private MemberProfileDetailsResponseDTO profileDetailsResponseDTO;
+    private MemberProfileResponse profileResponseDTO;
+    private MemberProfileDetailsResponse profileDetailsResponseDTO;
 
     @BeforeEach
     void setUp() {
@@ -50,25 +58,23 @@ class MemberServiceTest {
                 .username("testuser")
                 .email("testuser@example.com")
                 .role(MemberRole.ROLE_USER)
-                .isAdultVerified(false)
                 .build();
 
         profileRequestDTO = MemberProfileRequestDTO.builder()
                 .nickname("newNickname")
                 .build();
 
-        profileResponseDTO = MemberProfileResponseDTO.builder()
+        profileResponseDTO = MemberProfileResponse.builder()
                 .username("testuser")
                 .nickname("newNickname")
                 .profileImage("newProfileImageUrl")
                 .build();
 
-        profileDetailsResponseDTO = MemberProfileDetailsResponseDTO.builder()
+        profileDetailsResponseDTO = MemberProfileDetailsResponse.builder()
                 .username("testuser")
                 .nickname("newNickname")
                 .profileImage("newProfileImageUrl")
                 .email("testuser@example.com")
-                .isAdultVerified(true)
                 .level(0)
                 .build();
     }
@@ -81,7 +87,7 @@ class MemberServiceTest {
         when(memberMapper.memberToProfileResponseDTO(member)).thenReturn(profileResponseDTO);
 
         // when
-        MemberProfileResponseDTO result = memberService.getProfile("testuser");
+        MemberProfileResponse result = memberService.getProfile("testuser");
 
         // then
         assertNotNull(result);
@@ -108,7 +114,7 @@ class MemberServiceTest {
         when(memberMapper.memberToProfileDetailsResponseDTO(member)).thenReturn(profileDetailsResponseDTO);
 
         // when
-        MemberProfileDetailsResponseDTO result = memberService.getProfileDetails("testuser");
+        MemberProfileDetailsResponse result = memberService.getProfileDetails("testuser");
 
         // then
         assertNotNull(result);
@@ -116,7 +122,6 @@ class MemberServiceTest {
         assertEquals("newNickname", result.getNickname());
         assertEquals("newProfileImageUrl", result.getProfileImage());
         assertEquals("testuser@example.com", result.getEmail());
-        assertTrue(result.getIsAdultVerified());
         assertEquals(0, result.getLevel());
     }
 
@@ -136,16 +141,25 @@ class MemberServiceTest {
 
     @DisplayName("사용자 프로필 이미지 수정 단위 테스트")
     @Test
-    void testUpdateProfileImage_Success() {
+    void testUpdateProfileImage_Success() throws IOException {
         // given
-        when(memberRepository.findByUsername("testuser")).thenReturn(Optional.of(member));
+        String username = "testuser";
+        String expectedUrl = "https://s3.example.com/profile/testuser/uuid.webp";
+
+        MultipartFile mockFile = mock(MultipartFile.class);
+        when(mockFile.isEmpty()).thenReturn(false);
+        when(mockFile.getContentType()).thenReturn("image/webp");
+
+        when(memberRepository.findByUsername(username)).thenReturn(Optional.of(member));
+        when(awsS3StorageService.uploadFile(any(MultipartFile.class), anyString())).thenReturn(expectedUrl);
 
         // when
-        memberService.updateProfileImage("testuser", "newProfileImageUrl" );
+        String actualUrl = memberService.updateProfileImage(username, mockFile);
 
         // then
-        verify(memberRepository, times(1)).save(member);
-        assertEquals("newProfileImageUrl", member.getProfileImage());
+        verify(memberRepository).save(member);
+        assertEquals(expectedUrl, actualUrl);
+        assertEquals(expectedUrl, member.getProfileImage());
     }
 
     @DisplayName("사용자 패스워드 수정 단위 테스트")
@@ -173,7 +187,7 @@ class MemberServiceTest {
 
         // then
         verify(memberRepository, times(1)).save(member);
-        assertTrue(member.getIsAdultVerified());
+        assertTrue(member.getAdultVerified());
     }
 
     @DisplayName("사용자 정보 조회 테스트")
@@ -212,7 +226,7 @@ class MemberServiceTest {
                 .role(MemberRole.ROLE_USER)
                 .build();
 
-        member.login();
+        member.loginSuccess();
 
         assertNotNull(member.getLastLoginAt());
         assertEquals(0, member.getLoginFailCount());
@@ -257,7 +271,7 @@ class MemberServiceTest {
 
         member.agreeTerms();
 
-        assertNotNull(member.getAgreedTermsAt());
+        assertNotNull(member.getTermsAgreedAt());
     }
 
     @DisplayName("닉네임 변경")
@@ -265,7 +279,7 @@ class MemberServiceTest {
     void testUpdateProfile() {
         Member member = Member.builder().build();
 
-        member.updateProfile("newNickname");
+        member.updateNickname("newNickname");
 
         assertEquals("newNickname", member.getNickname());
     }
@@ -297,7 +311,7 @@ class MemberServiceTest {
 
         member.verifyAdult();
 
-        assertTrue(member.getIsAdultVerified());
+        assertTrue(member.getAdultVerified());
     }
 
     @DisplayName("계정 활성화 처리")

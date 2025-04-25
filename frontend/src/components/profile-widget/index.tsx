@@ -1,6 +1,6 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '@contexts/auth-context';
+import { useAuth } from '@contexts/auth-context';
 import { Routes } from '@constants/routes';
 import { FiUser, FiSettings, FiBook, FiLogOut } from 'react-icons/fi';
 import styles from './style.module.css';
@@ -17,7 +17,7 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
   buttonRef,
 }) => {
   const navigate = useNavigate();
-  const { state, logout } = useContext(AuthContext);
+  const { state, logout } = useAuth();
   const widgetRef = React.useRef<HTMLDivElement>(null);
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
@@ -46,7 +46,7 @@ const ProfileWidget: React.FC<ProfileWidgetProps> = ({
     >
       <div className={styles.profileHeader}>
         <img
-          src={state.memberProfile?.profilePicture || '/image/profile/user.png'}
+          src={state.memberProfile?.profileImage || '/image/profile/user.png'}
           alt="Profile"
           className={styles.profileImage}
         />

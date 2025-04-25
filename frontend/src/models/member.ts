@@ -5,7 +5,7 @@ export interface MemberProfile {
   username: number;
   email: string;
   nickname: string;
-  profilePicture: string;
+  profileImage: string | null;
   level: number;
   ratedWebtoons: number;
   reviewedWebtoons: number;
@@ -32,5 +32,14 @@ export interface MemberProfile {
   }[];
   reviews: Review[];
   topReviews: Review[];
-
+  connectedAccounts: {
+    google: boolean;
+    naver: boolean;
+    kakao: boolean;
+  };
+  adultSettings: {
+    goreFilter: boolean;
+    adultContentFilter: boolean;
+    violenceFilter: boolean;
+  };
 }

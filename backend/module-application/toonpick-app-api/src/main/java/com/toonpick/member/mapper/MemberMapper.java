@@ -1,13 +1,13 @@
 package com.toonpick.member.mapper;
 
 
+import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import com.toonpick.dto.MemberDTO;
-import com.toonpick.member.response.MemberProfileDetailsResponseDTO;
-import com.toonpick.member.response.MemberProfileResponseDTO;
+import com.toonpick.member.response.MemberProfileDetailsResponse;
 
 @Mapper(componentModel = "spring")
 public interface MemberMapper {
@@ -17,8 +17,8 @@ public interface MemberMapper {
 
     MemberResponseDTO memberToMemberResponseDTO(Member member);
 
-    MemberProfileResponseDTO memberToProfileResponseDTO(Member member);
+    MemberProfileResponse memberToProfileResponseDTO(Member member);
 
-    MemberProfileDetailsResponseDTO memberToProfileDetailsResponseDTO(Member member);
+    MemberProfileDetailsResponse memberToProfileDetailsResponseDTO(Member member);
 
 }

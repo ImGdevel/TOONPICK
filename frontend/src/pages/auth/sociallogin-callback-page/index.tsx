@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AuthContext } from '@contexts/auth-context';
+import { useAuth } from '@contexts/auth-context';
 import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 import TokenRefresher from '@services/token-refresher';
@@ -8,7 +8,7 @@ import TokenRefresher from '@services/token-refresher';
 const SocialLoginCallbackPage: React.FC = () => {
   const navigate = useNavigate();
   const { provider } = useParams<{ provider: string }>();
-  const { state, socialLoginSuccess } = useContext(AuthContext);
+  const { state, socialLoginSuccess } = useAuth();
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 

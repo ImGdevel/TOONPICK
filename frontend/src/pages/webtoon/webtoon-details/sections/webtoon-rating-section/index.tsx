@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
 import { Webtoon } from '@models/webtoon';
-// import { useAuth } from '@contexts/auth-context';
-import styles from './style.module.css';
 import { Review } from '@models/review';
-import WebtoonReviewCard from '@components/webtoon-review-card';
+import { useAuth } from '@contexts/auth-context';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { FiMoreVertical, FiThumbsUp, FiFlag } from 'react-icons/fi';
+import styles from './style.module.css';
 
 interface WebtoonRatingSectionProps {
   webtoon: Webtoon;
 }
 
 const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ webtoon }) => {
-  // const { isLoggedIn, memberProfile } = useAuth();
+  const { state } = useAuth();
   const [userRating, setUserRating] = useState<number>(0);
+  const [showCommentForm, setShowCommentForm] = useState<boolean>(false);
   const [userComment, setUserComment] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [sortBy, setSortBy] = useState<'popular' | 'recent'>('popular');
+  const [showMoreMenu, setShowMoreMenu] = useState<number | null>(null);
 
-
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  
   // 더미 데이터
-  const hasUserRated = isLoggedIn && Math.random() > 0.5; // 랜덤으로 평가 여부 결정
+  const hasUserRated = state && userRating > 0;
   
   // 더미 평가 데이터
   const dummyReviews: Review[] = [
@@ -37,25 +38,22 @@ const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ webtoon }) 
     },
   ];
   
-  // 더미 평점 분포 데이터
+  // 더미 평점 분포 데이터 (0.5점 단위)
   const ratingDistribution = [
-    { rating: 5, count: 120, percentage: 40 },
-    { rating: 4, count: 90, percentage: 30 },
-    { rating: 3, count: 45, percentage: 15 },
-    { rating: 2, count: 30, percentage: 10 },
-    { rating: 1, count: 15, percentage: 5 }
+    { rating: 1, count: 5, percentage: 1.7 },
+    { rating: 1.5, count: 8, percentage: 2.7 },
+    { rating: 2, count: 12, percentage: 4 },
+    { rating: 2.5, count: 18, percentage: 6 },
+    { rating: 3, count: 30, percentage: 10 },
+    { rating: 3.5, count: 45, percentage: 15 },
+    { rating: 4, count: 75, percentage: 25 },
+    { rating: 4.5, count: 60, percentage: 20 },
+    { rating: 5, count: 47, percentage: 15.6 }
   ];
-  
-  // 사용자가 이미 평가한 경우 더미 데이터로 초기화
-  React.useEffect(() => {
-    if (isLoggedIn && hasUserRated) {
-      setUserRating(4);
-      setUserComment('이 웹툰은 정말 재미있습니다. 특히 캐릭터들의 성장 과정이 인상적이에요.');
-    }
-  }, [isLoggedIn, hasUserRated]);
   
   const handleRatingChange = (rating: number) => {
     setUserRating(rating);
+    setShowCommentForm(false);
   };
   
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -74,10 +72,11 @@ const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ webtoon }) 
     setTimeout(() => {
       console.log('평가 제출:', { rating: userRating, comment: userComment });
       setIsSubmitting(false);
+      setShowCommentForm(false);
       alert('평가가 등록되었습니다.');
     }, 1000);
   };
-  
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('ko-KR', {
@@ -86,14 +85,22 @@ const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ webtoon }) 
       day: 'numeric'
     });
   };
-  
+
+  const handleReport = (reviewId: number) => {
+    // 신고 기능 구현
+    console.log('신고:', reviewId);
+    setShowMoreMenu(null);
+  };
+
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>웹툰 평가</h2>
       
       <div className={styles.ratingSummary}>
         <div className={styles.averageRating}>
-          <div className={styles.ratingValue}>{webtoon.averageRating.toFixed(1)}</div>
+          <div className={styles.ratingValue}>
+            {webtoon.averageRating ? webtoon.averageRating?.toFixed(1) : '0.0'}
+          </div>
           <div className={styles.ratingStars}>
             {[1, 2, 3, 4, 5].map(star => (
               <span 
@@ -108,70 +115,103 @@ const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ webtoon }) 
             총 {webtoon.totalRatings}명 평가
           </div>
         </div>
-        
+
         <div className={styles.ratingDistribution}>
-          {ratingDistribution.map(item => (
-            <div key={item.rating} className={styles.distributionItem}>
-              <div className={styles.ratingLabel}>{item.rating}점</div>
-              <div className={styles.distributionBar}>
-                <div 
-                  className={styles.distributionFill} 
-                  style={{ width: `${item.percentage}%` }}
-                />
-              </div>
-              <div className={styles.distributionCount}>
-                {item.count}명 ({item.percentage}%)
-              </div>
-            </div>
-          ))}
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={ratingDistribution}>
+              <XAxis 
+                dataKey="rating" 
+                tickFormatter={(value) => `${value}점`}
+                tick={{ fontSize: 12 }}
+              />
+              <YAxis hide />
+              <Tooltip 
+                formatter={(value: number) => [`${value}명`, '평가 수']}
+                labelFormatter={(label) => `${label}점`}
+              />
+              <Bar 
+                dataKey="count" 
+                fill="#ffd700" 
+                radius={[4, 4, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
-      
-      {isLoggedIn && (
-        <div className={styles.userRatingForm}>
-          <h3 className={styles.formTitle}>
-            {hasUserRated ? '내 평가 수정하기' : '내 평가 작성하기'}
-          </h3>
-          
-          <div className={styles.ratingInput}>
-            <div className={styles.ratingLabel}>평점</div>
-            <div className={styles.starRating}>
-              {[1, 2, 3, 4, 5].map(star => (
-                <button
-                  key={star}
-                  className={`${styles.starButton} ${star <= userRating ? styles.selected : ''}`}
-                  onClick={() => handleRatingChange(star)}
-                  type="button"
-                >
-                  ★
-                </button>
-              ))}
+
+      <div className={styles.userRating}>
+        <h3 className={styles.userRatingTitle}>내 평가</h3>
+        {state ? (
+          <>
+            <div className={styles.userRatingValue}>
+              <div className={styles.ratingValue}>
+                {userRating ? userRating.toFixed(1) : '0.0'}
+              </div>
+              <div className={styles.ratingStars}>
+                {[1, 2, 3, 4, 5].map(star => (
+                  <button
+                    key={star}
+                    className={`${styles.starButton} ${star <= userRating ? styles.selected : ''}`}
+                    onClick={() => handleRatingChange(star)}
+                    type="button"
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
             </div>
+            {userRating > 0 && !showCommentForm && (
+              <button 
+                className={styles.commentButton}
+                onClick={() => setShowCommentForm(true)}
+              >
+                코멘트 남기기
+              </button>
+            )}
+            {showCommentForm && (
+              <div className={styles.commentForm}>
+                <textarea
+                  className={styles.commentTextarea}
+                  value={userComment}
+                  onChange={handleCommentChange}
+                  placeholder="이 웹툰에 대한 의견을 남겨주세요."
+                  rows={4}
+                />
+                <button
+                  className={styles.submitButton}
+                  onClick={handleSubmitReview}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? '제출 중...' : '제출하기'}
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className={styles.loginPrompt}>
+            로그인하여 평가를 남겨주세요.
           </div>
-          
-          <div className={styles.commentInput}>
-            <div className={styles.ratingLabel}>코멘트</div>
-            <textarea
-              className={styles.commentTextarea}
-              value={userComment}
-              onChange={handleCommentChange}
-              placeholder="이 웹툰에 대한 의견을 남겨주세요."
-              rows={4}
-            />
-          </div>
-          
-          <button
-            className={styles.submitButton}
-            onClick={handleSubmitReview}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? '제출 중...' : (hasUserRated ? '평가 수정하기' : '평가 등록하기')}
-          </button>
-        </div>
-      )}
+        )}
+      </div>
       
       <div className={styles.reviewsSection}>
-        <h3 className={styles.reviewsTitle}>사용자 평가</h3>
+        <div className={styles.reviewsHeader}>
+          <h3 className={styles.reviewsTitle}>사용자 평가</h3>
+          <div className={styles.sortButtons}>
+            <button 
+              className={`${styles.sortButton} ${sortBy === 'popular' ? styles.active : ''}`}
+              onClick={() => setSortBy('popular')}
+            >
+              인기순
+            </button>
+            <button 
+              className={`${styles.sortButton} ${sortBy === 'recent' ? styles.active : ''}`}
+              onClick={() => setSortBy('recent')}
+            >
+              최신순
+            </button>
+          </div>
+        </div>
         
         {dummyReviews.length > 0 ? (
           <div className={styles.reviewsList}>
@@ -188,27 +228,45 @@ const WebtoonRatingSection: React.FC<WebtoonRatingSectionProps> = ({ webtoon }) 
                       <div className={styles.reviewerName}>{review.userName}</div>
                       <div className={styles.reviewDate}>{formatDate(review.createdAt)}</div>
                     </div>
+                    <div className={styles.reviewRating}>
+                      {[1, 2, 3, 4, 5].map(star => (
+                        <span 
+                          key={star} 
+                          className={`${styles.reviewStar} ${star <= review.rating ? styles.filled : ''}`}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div className={styles.reviewRating}>
-                    {[1, 2, 3, 4, 5].map(star => (
-                      <span 
-                        key={star} 
-                        className={`${styles.reviewStar} ${star <= review.rating ? styles.filled : ''}`}
+                  <div className={styles.reviewActions}>
+                    <button className={styles.likeButton}>
+                      <FiThumbsUp />
+                      <span className={styles.likeCount}>{review.likes}</span>
+                    </button>
+                    <div className={styles.moreButtonContainer}>
+                      <button 
+                        className={styles.moreButton}
+                        onClick={() => setShowMoreMenu(review.id)}
                       >
-                        ★
-                      </span>
-                    ))}
+                        <FiMoreVertical />
+                      </button>
+                      {showMoreMenu === review.id && (
+                        <div className={styles.moreMenu}>
+                          <button 
+                            className={styles.menuItem}
+                            onClick={() => handleReport(review.id)}
+                          >
+                            <FiFlag />
+                            신고하기
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 
                 <div className={styles.reviewComment}>{review.comment}</div>
-                
-                <div className={styles.reviewActions}>
-                  <button className={styles.likeButton}>
-                    <span className={styles.likeIcon}>👍</span>
-                    <span className={styles.likeCount}>{review.likes}</span>
-                  </button>
-                </div>
               </div>
             ))}
           </div>

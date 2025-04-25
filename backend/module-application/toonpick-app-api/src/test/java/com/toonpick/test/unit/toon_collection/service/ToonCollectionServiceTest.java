@@ -4,7 +4,7 @@ import com.toonpick.entity.Member;
 import com.toonpick.entity.ToonCollection;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.exception.ResourceNotFoundException;
-import com.toonpick.member.response.MemberProfileResponseDTO;
+import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.repository.MemberRepository;
 import com.toonpick.repository.ToonCollectionRepository;
 import com.toonpick.repository.WebtoonRepository;
@@ -70,7 +70,7 @@ class ToonCollectionServiceTest {
 
         toonCollectionResponseDTO = ToonCollectionResponseDTO.builder()
                 .title("My Collection")
-                .member(MemberProfileResponseDTO.builder()
+                .member(MemberProfileResponse.builder()
                         .username("testuser")
                         .nickname("Test Nickname")
                         .profileImage("profile.jpg")

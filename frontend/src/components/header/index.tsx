@@ -1,6 +1,6 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '@contexts/auth-context';
+import { useAuth } from '@contexts/auth-context';
 import { Routes as RoutePaths } from '@constants/routes';
 import ProfileWidget from '@components/profile-widget';
 import Menu from '@components/top-menu';
@@ -12,7 +12,7 @@ import ProfileIcon from '@components/profile-icon';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-  const { state } = useContext(AuthContext);
+  const { state } = useAuth();
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -51,7 +51,7 @@ const Header: React.FC = () => {
         {/* <Link to={RoutePaths.WEBTOON_RATING_LIST} className={styles.navLink}>웹툰 평가</Link> */}
 
           <div className={styles.profileContainer}>
-            {state.isLoggedIn ? (
+            {state.isAuthenticated ? (
               <>
                 <button
                   ref={profileButtonRef}

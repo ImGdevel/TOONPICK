@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '@contexts/auth-context';
+import { useAuth } from '@contexts/auth-context';
 import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 import AuthService from '@services/auth-service';
@@ -18,7 +18,7 @@ export interface SignUpFormData extends LoginFormData {
 
 const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
-  const { state } = useContext(AuthContext);
+  const { state } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',

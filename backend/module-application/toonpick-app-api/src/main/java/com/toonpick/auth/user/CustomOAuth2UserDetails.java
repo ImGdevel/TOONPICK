@@ -36,7 +36,6 @@ public class CustomOAuth2UserDetails implements OAuth2User {
                                return memberDTO.getRole();
                            }
                        }
-
         );
 
         return collection;

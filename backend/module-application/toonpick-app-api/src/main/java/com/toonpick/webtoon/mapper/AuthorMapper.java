@@ -2,6 +2,7 @@ package com.toonpick.webtoon.mapper;
 
 import com.toonpick.entity.Author;
 import com.toonpick.dto.AuthorDTO;
+import com.toonpick.webtoon.response.AuthorResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -13,4 +14,6 @@ public interface AuthorMapper {
     AuthorDTO authorToAuthorDto(Author author);
 
     Author authorDtoToAuthor(AuthorDTO authorDTO);
+
+    AuthorResponse toAuthorResponse(Author author);
 }

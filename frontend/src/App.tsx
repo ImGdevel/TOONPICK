@@ -11,9 +11,7 @@ import SignUpPage from '@pages/auth/signup';
 import WebtoonDetailPage from '@pages/webtoon/webtoon-details';
 import MyProfilePage from '@pages/user/profile';
 import SocialLoginCallbackPage from '@pages/auth/sociallogin-callback-page';
-import NewWebtoonsPage from '@pages/webtoon/new-webtoons';
 import OngoingWebtoonsPage from '@pages/webtoon/ongoing-webtoons';
-import CompletedWebtoonsPage from '@pages/webtoon/completed-webtoons';
 import ProfileEditPage from '@pages/user/profile-edit';
 import ErrorPage from '@pages/error';
 import NotificationSettingsPage from '@pages/user/notification-settings';
@@ -31,15 +29,13 @@ const App: React.FC = () => {
       <ModalProvider>
         <Router>
           <Header />
-          <main style={{ maxWidth: '1200px', width: '100%', minHeight: '1000px', margin: '0 auto', padding: '20px' }}>
+          <main style={{ maxWidth: '1400px', width: '100%', minHeight: '1000px', margin: '0 auto', padding: '20px' }}>
             <Routes>
               <Route path={RoutePaths.HOME} element={<HomePage />} />
               <Route path={RoutePaths.TUTORIAL} element={<TutorialPage />} />
 
               {/* 웹툰 관련 페이지 */}
-              <Route path={RoutePaths.WEBTOON_NEW} element={<NewWebtoonsPage />} />
               <Route path={RoutePaths.WEBTOON_ONGOING} element={<OngoingWebtoonsPage />} />
-              <Route path={RoutePaths.WEBTOON_COMPLETED} element={<CompletedWebtoonsPage />} />
               <Route path={RoutePaths.WEBTOON_DETAIL(':id')} element={<WebtoonDetailPage />} />
 
               {/* Auth 관련 페이지 */}

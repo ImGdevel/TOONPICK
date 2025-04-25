@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '@contexts/auth-context';
+import { useAuth } from '@contexts/auth-context';
 import { Routes } from '@constants/routes';
 import styles from './style.module.css';
 
@@ -14,13 +14,13 @@ import AchievementSection from './sections/achievement';
 import Spinner from '@components/spinner';
 
 const UserProfilePage: React.FC = () => {
-  const { state } = useContext(AuthContext);
+  const { state } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!state.isLoggedIn) {
+    if (!state.isAuthenticated) {
       navigate(Routes.LOGIN);
       return;
     }
@@ -39,7 +39,7 @@ const UserProfilePage: React.FC = () => {
     };
 
     fetchUserData();
-  }, [state.isLoggedIn, navigate]);
+  }, [state.isAuthenticated, navigate]);
 
   if (error) return <div className={styles.error}>{error}</div>;
   if (isLoading) return <Spinner />;

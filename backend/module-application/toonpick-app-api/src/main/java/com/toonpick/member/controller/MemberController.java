@@ -2,15 +2,15 @@ package com.toonpick.member.controller;
 
 import com.toonpick.annotation.CurrentUser;
 import com.toonpick.member.request.MemberProfileRequestDTO;
-import com.toonpick.member.response.MemberProfileDetailsResponseDTO;
+import com.toonpick.member.response.MemberProfileDetailsResponse;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
 import com.toonpick.user.CustomUserDetails;
-import com.toonpick.webtoon.service.MemberProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberProfileService memberProfileService;
 
     private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
@@ -45,10 +44,10 @@ public class MemberController {
 
     @Operation(summary = "회원 상세 프로필 조회", description = "현재 인증된 사용자의 상세 프로필 정보를 조회합니다")
     @GetMapping("/profile")
-    public ResponseEntity<MemberProfileDetailsResponseDTO> getUserProfile(
+    public ResponseEntity<MemberProfileDetailsResponse> getUserProfile(
             @CurrentUser CustomUserDetails user
     ) {
-        MemberProfileDetailsResponseDTO memberResponseDTO = memberService.getProfileDetails(user.getUsername());
+        MemberProfileDetailsResponse memberResponseDTO = memberService.getProfileDetails(user.getUsername());
         return ResponseEntity.ok(memberResponseDTO);
     }
 
@@ -67,10 +66,17 @@ public class MemberController {
     @PostMapping("/profile-image")
     public ResponseEntity<String> uploadProfilePicture(
             @Parameter(description = "업로드할 이미지 파일 (JPEG, PNG 등 허용)", required = true)
-            @RequestParam("image") MultipartFile file,
+            @RequestParam("image") MultipartFile image,
             @CurrentUser CustomUserDetails user
-    ) {
-        String fileUrl = memberProfileService.uploadProfileImage(user.getUsername(), file);
+    ) throws BadRequestException {
+        if (image == null || image.isEmpty()) {
+            throw new BadRequestException();
+        }
+        String contentType = image.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new BadRequestException();
+        }
+        String fileUrl = memberService.updateProfileImage(user.getUsername(), image);
         return ResponseEntity.ok(fileUrl);
     }
 

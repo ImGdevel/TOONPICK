@@ -1,6 +1,7 @@
 package com.toonpick.webtoon.mapper;
 
 import com.toonpick.dto.GenreDTO;
+import com.toonpick.webtoon.response.GenreResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import com.toonpick.entity.Genre;
@@ -10,7 +11,8 @@ import com.toonpick.entity.Genre;
 public interface GenreMapper {
     GenreMapper INSTANCE = Mappers.getMapper(GenreMapper.class);
 
-    GenreDTO genreToGenreDto(Genre genre);
+    GenreDTO toGenreDTO(Genre genre);
 
-    Genre genreDtoToGenre(GenreDTO genreDTO);
+    GenreResponse toGenreResponse(Genre genre);
+
 }
