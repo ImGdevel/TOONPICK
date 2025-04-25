@@ -1,0 +1,48 @@
+spring:
+  config:
+    import: optional:file:.env
+
+  datasource:
+    data:
+      driver-class-name: org.mariadb.jdbc.Driver
+      jdbc-url: jdbc:mariadb://localhost:3306/toonpick-database?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      username: root
+      password: 1234
+    meta:
+      driver-class-name: org.mariadb.jdbc.Driver
+      jdbc-url: jdbc:mariadb://localhost:3306/meta?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      username: root
+      password: 1234
+
+  redis:
+    host: localhost
+    port: 6380
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/webtoon-db
+
+  jwt:
+    secret: devjwtsecretkeydevjwtsecretkeydevjwtsecretkeydevjwtsecretkeydevjwtsecretkeydevjwtsecretkey
+    access-token-expiration: 6000000
+    refresh-token-expiration: 360000000
+
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      region:
+        static: ${AWS_REGION}
+      s3:
+        bucket: ${AWS_S3_BUCKET}
+      sqs:
+        queue:
+          request:
+            name: ${AWS_SQS_UPDATE_REQUEST_QUEUE_NAME}
+            url: ${AWS_SQS_UPDATE_REQUEST_QUEUE_URL}
+          response:
+            name: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_NAME}
+            url: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_URL}
+        auto-create: false
+        enabled: false
