@@ -1,7 +1,8 @@
 package com.toonpick.service;
 
-import com.toonpick.dto.request.CreateWebtoonRequest;
-import com.toonpick.dto.request.UpdateWebtoonRequest;
+
+import com.toonpick.dto.request.WebtoonCreateCommand;
+import com.toonpick.dto.request.WebtoonUpdateCommand;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.mapper.WebtoonMapper;
 import com.toonpick.repository.WebtoonRepository;
@@ -20,7 +21,7 @@ public class WebtoonService {
     /**
      * 웹툰이 존재하지 않는 경우에만 새로 생성
      */
-    public void createWebtoon(CreateWebtoonRequest request) {
+    public void createWebtoon(WebtoonCreateCommand request) {
         if (webtoonRepository.existsById(request.getId())) {
             return;
         }
@@ -34,7 +35,7 @@ public class WebtoonService {
     /**
      * 기존 웹툰과 변경사항이 있는 경우에만 업데이트
      */
-    public boolean updateWebtoon(UpdateWebtoonRequest request) {
+    public boolean updateWebtoon(WebtoonUpdateCommand request) {
         Webtoon webtoon = webtoonRepository.findById(request.getId())
             .orElseThrow(() -> new IllegalArgumentException(ErrorCode.WEBTOON_NOT_FOUND.getMessage()));
 

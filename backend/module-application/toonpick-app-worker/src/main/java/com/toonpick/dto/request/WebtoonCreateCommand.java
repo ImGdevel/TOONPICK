@@ -6,6 +6,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UpdateWebtoonRequest {
+public class WebtoonCreateCommand {
     private Long id;
 }
