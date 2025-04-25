@@ -5,19 +5,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
-import org.springframework.beans.factory.annotation.Value;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class SQSMessageSender {
+public class AwsSqsPublisher {
 
     private final SqsTemplate sqsTemplate;
 
-    @Value("${spring.cloud.aws.sqs.queue.request.name}")
-    private String queueName;
-
-    public <T extends SQSMessage> void sendMessage(T message) {
+    public <T extends SQSMessage> void publisher(String queueName , T message) {
         try {
             String jsonMessage = message.toJson();
             sqsTemplate.send(to -> to.queue(queueName).payload(jsonMessage));

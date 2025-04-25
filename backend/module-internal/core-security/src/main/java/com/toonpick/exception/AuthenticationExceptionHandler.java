@@ -1,7 +1,5 @@
-package com.toonpick;
+package com.toonpick.exception;
 
-import com.toonpick.exception.CustomAuthenticationException;
-import com.toonpick.exception.UserAlreadyRegisteredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
