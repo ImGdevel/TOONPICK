@@ -1,17 +1,69 @@
 package com.toonpick.mapper;
 
+import com.toonpick.dto.request.AuthorRequest;
 import com.toonpick.dto.request.WebtoonCreateRequest;
-import com.toonpick.dto.request.WebtoonUpdateRequest;
+import com.toonpick.entity.Author;
+import com.toonpick.entity.Genre;
 import com.toonpick.entity.Webtoon;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import com.toonpick.service.AuthorService;
+import com.toonpick.service.GenreService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface WebtoonMapper {
-    WebtoonMapper INSTANCE = Mappers.getMapper(WebtoonMapper.class);
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-    Webtoon toWebtoon(WebtoonCreateRequest webtoonCreateRequest);
+@Component
+@RequiredArgsConstructor
+public class WebtoonMapper {
 
-    Webtoon toWebtoon(WebtoonUpdateRequest webtoonUpdateRequest);
+    private final AuthorService authorService;
 
+    private final GenreService genreService;
+
+    public Webtoon toWebtoon(WebtoonCreateRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        return Webtoon.builder()
+                .externalId(request.getExternalId())
+                .title(request.getTitle())
+                .platform(request.getPlatform())
+                .dayOfWeek(request.getDayOfWeek())
+                .thumbnailUrl(request.getThumbnailUrl())
+                .link(request.getLink())
+                .ageRating(request.getAgeRating())
+                .summary(request.getSummary())
+                .serializationStatus(request.getSerializationStatus())
+                .episodeCount(request.getEpisodeCount())
+                .platformRating(request.getPlatformRating())
+                .publishStartDate(request.getPublishStartDate())
+                .lastUpdatedDate(request.getLastUpdatedDate())
+                .authors(mapAuthors(request.getAuthors()))
+                .genres(mapGenres(request.getGenres()))
+                .build();
+    }
+
+
+    private Set<Author> mapAuthors(Set<AuthorRequest> authorDTOs) {
+        if (authorDTOs == null) {
+            return new HashSet<>();
+        }
+
+        return authorDTOs.stream()
+                .map(authorService::findOrCreateAuthor)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Genre> mapGenres(Set<String> genreNames) {
+        if (genreNames == null) {
+            return new HashSet<>();
+        }
+
+        return genreNames.stream()
+                .map(genreService::findOrCreateGenre)
+                .collect(Collectors.toSet());
+    }
 }
