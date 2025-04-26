@@ -1,11 +1,6 @@
 package com.toonpick.controller;
 
-package com.toonpick.controller;
 
-
-import com.toonpick.dto.WebtoonCreateRequestDTO;
-import com.toonpick.dto.WebtoonRequestDTO;
-import com.toonpick.dto.WebtoonResponseDTO;
 import com.toonpick.dto.request.WebtoonCreateRequest;
 import com.toonpick.dto.request.WebtoonUpdateRequest;
 import com.toonpick.response.ApiResponse;

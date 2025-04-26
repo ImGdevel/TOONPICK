@@ -8,7 +8,6 @@ import com.toonpick.exception.ResourceNotFoundException;
 import com.toonpick.mapper.WebtoonMapper;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class WebtoonService {
      * 새로운 웹툰 추가 (이미 존재하는 경우 거부)
      */
     public void createWebtoon(WebtoonCreateRequest webtoonCreateRequest) {
-        if(webtoonRepository.existsById(webtoonCreateRequest.getId())){
+        if(webtoonRepository.existsById(Long.valueOf(webtoonCreateRequest.getPlatform() + webtoonCreateRequest.getExternalId()))){
             throw new ResourceAlreadyExistsException(ErrorCode.WEBTOON_ALREADY_EXISTS);
         }
         Webtoon webtoon = webtoonMapper.toWebtoon(webtoonCreateRequest);
