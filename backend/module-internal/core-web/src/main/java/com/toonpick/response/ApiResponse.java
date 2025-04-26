@@ -10,15 +10,15 @@ public class ApiResponse<T> {
     private final T data;
     private final String message;
 
-    public static <T> ApiResponse<T> ok(){
+    public static <T> ApiResponse<T> success(){
         return new ApiResponse<>(true, null, null);
     }
 
-    public static <T> ApiResponse<T> ok(T data) {
+    public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>(true, data, null);
     }
 
-    public static <T> ApiResponse<T> ok(T data, String message) {
+    public static <T> ApiResponse<T> success(T data, String message) {
         return new ApiResponse<>(true, data, message);
     }
 
