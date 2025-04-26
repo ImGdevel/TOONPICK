@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, WebtoonRepositoryCustom {
+
+    boolean existsByExternalId(String externalId);
     Optional<Webtoon> findByExternalId(String externalId);
 
      /*
