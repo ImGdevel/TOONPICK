@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Tag(name = "Webtoon", description = "웹툰 관련 API (접근 권한 : Admin)")
 @RestController
 @RequestMapping("/api/admin/webtoons")
@@ -44,8 +46,10 @@ public class AdminWebtoonController {
 
     @Operation(summary = "웹툰 생성", description = "웹툰을 등록합니다 (관리자 권한)")
     @PostMapping
-    public ResponseEntity<ApiResponse> createWebtoon(@RequestBody WebtoonCreateRequest request) {
-        webtoonService.createWebtoon(request);
+    public ResponseEntity<ApiResponse> createWebtoon(@RequestBody List<WebtoonCreateRequest> requests) {
+        for(WebtoonCreateRequest request  : requests) {
+            webtoonService.createWebtoon(request);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success());
     }
 

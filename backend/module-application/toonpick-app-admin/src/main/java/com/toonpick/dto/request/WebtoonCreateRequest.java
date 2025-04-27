@@ -2,7 +2,6 @@ package com.toonpick.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.toonpick.enums.AgeRating;
-import com.toonpick.enums.AuthorRole;
 import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
 import lombok.Builder;
