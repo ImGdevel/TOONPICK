@@ -1,7 +1,8 @@
 package com.toonpick.test.unit.auth.service;
 
-import com.toonpick.auth.service.JoinService;
+import com.toonpick.auth.service.MemberJoinService;
 import com.toonpick.entity.Member;
+import com.toonpick.exception.UserAlreadyRegisteredException;
 import com.toonpick.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -25,7 +26,7 @@ class JoinServiceTest {
     private BCryptPasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private JoinService joinService;
+    private MemberJoinService memberJoinService;
 
     public JoinServiceTest() {
         MockitoAnnotations.openMocks(this);
@@ -33,26 +34,25 @@ class JoinServiceTest {
 
     @Test
     @DisplayName("정상적으로 유저 생성")
-    void testRegisterNewMemberSuccess() {
+    void testRegisterMemberSuccess() {
         JoinRequest joinRequest = new JoinRequest("testUser", "test@example.com", "password");
 
         when(memberRepository.existsByUsername("testUser")).thenReturn(false);
         when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
 
-        joinService.registerNewMember(joinRequest);
+        memberJoinService.registerMember(joinRequest);
 
         verify(memberRepository, times(1)).save(any(Member.class));
     }
 
     @Test
     @DisplayName("중복된 사용자 이름으로 유저 생성 실패")
-    void testRegisterNewMemberDuplicateUsername() {
+    void testRegisterMemberDuplicateUsername() {
         JoinRequest joinRequest = new JoinRequest("testUser", "test@example.com", "password");
 
-        when(memberRepository.existsByUsername("testUser")).thenReturn(true);
+        when(memberRepository.existsByUsername("test@example.com")).thenReturn(true);
 
-        assertThatThrownBy(() -> joinService.registerNewMember(joinRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Username testUser already exists.");
+        assertThatThrownBy(() -> memberJoinService.registerMember(joinRequest))
+                .isInstanceOf(UserAlreadyRegisteredException.class);
     }
 }

@@ -1,0 +1,93 @@
+.profileWidget {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 280px;
+  background-color: var(--card-background-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--notification-border-color);
+  z-index: 1000;
+  display: none;
+  margin-top: 8px;
+}
+
+.profileWidget.open {
+  display: block;
+}
+
+.profileHeader {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--notification-border-color);
+}
+
+.profileImage {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--notification-border-color);
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.username {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.email {
+  color: var(--text-secondary-color);
+  font-size: 0.875rem;
+}
+
+.menuList {
+  padding: 8px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.menuItem:hover {
+  background-color: var(--hover-color);
+}
+
+.menuIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary-color);
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--notification-border-color);
+  margin: 8px 0;
+}
+
+.logoutButton {
+  color: var(--error-color);
+}
+
+.logoutButton .menuIcon {
+  color: var(--error-color);
+}

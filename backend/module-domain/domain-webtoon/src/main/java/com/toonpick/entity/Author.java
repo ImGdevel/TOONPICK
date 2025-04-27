@@ -1,5 +1,6 @@
 package com.toonpick.entity;
 
+import com.toonpick.enums.AuthorRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -25,19 +26,23 @@ public class Author {
     @Column(name = "name", nullable = false)
     private String name;
 
-    private String role;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private AuthorRole role;
 
+    @Column(name = "link")
     private String link;
 
     @Builder
-    public Author(String uid, String name, String role, String link) {
+    public Author(String uid, String name, AuthorRole role, String link) {
         this.uid = uid;
         this.name = name;
         this.role = role;
         this.link = link;
     }
 
-    public void update(String name, String role, String link) {
+    public void update(String name, AuthorRole role, String link) {
         this.name = name;
         this.role = role;
         this.link = link;

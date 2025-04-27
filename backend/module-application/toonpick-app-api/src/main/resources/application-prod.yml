@@ -15,6 +15,10 @@ spring:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
 
+  data:
+    mongodb:
+      uri: ${SPRING_NOSQL_DATA_URL}
+
   jwt:
     secret: ${JWT_SECRET}
     access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}

@@ -41,7 +41,7 @@ class WebtoonTest {
                 .thumbnailUrl("http://example.com/thumbnail.jpg")
                 .link("http://example.com/webtoon")
                 .ageRating(AgeRating.ALL)
-                .description("This is a sample webtoon.")
+                .summary("This is a sample webtoon.")
                 .serializationStatus(SerializationStatus.COMPLETED)
                 .episodeCount(10)
                 .platformRating(4.5f)
@@ -67,17 +67,6 @@ class WebtoonTest {
         assertEquals(10, webtoon.getEpisodeCount());
         assertEquals(authors, webtoon.getAuthors());
         assertEquals(genres, webtoon.getGenres());
-    }
-
-    @DisplayName("에피소드 수와 최종 업데이트 날짜 업데이트 테스트")
-    @Test
-    void testUpdateEpisodeCountAndDate() {
-        // when
-        webtoon.updateEpisodeCountAndDate(15, LocalDate.of(2023, 3, 1));
-
-        // then
-        assertEquals(15, webtoon.getEpisodeCount());
-        assertEquals(LocalDate.of(2023, 3, 1), webtoon.getLastUpdatedDate());
     }
 
     @DisplayName("웹툰 세부정보 업데이트 테스트")
@@ -107,7 +96,7 @@ class WebtoonTest {
         // then
         assertEquals("Updated Webtoon", webtoon.getTitle());
         assertEquals(Platform.KAKAO, webtoon.getPlatform());
-        assertEquals("Updated description.", webtoon.getDescription());
+        assertEquals("Updated description.", webtoon.getSummary());
         assertEquals(SerializationStatus.COMPLETED, webtoon.getSerializationStatus());
         assertEquals(DayOfWeek.FRIDAY, webtoon.getDayOfWeek());
         assertEquals("http://example.com/new-thumbnail.jpg", webtoon.getThumbnailUrl());

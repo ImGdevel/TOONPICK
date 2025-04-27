@@ -74,9 +74,9 @@ public class SecurityConfig {
                 .successHandler(oAuth2SuccessHandler)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/join", "/logout", "/reissue", "/oauth2/*", "/api/public/*").permitAll()
+                .requestMatchers("/", "/login", "/join", "/logout", "/reissue", "/oauth2/**", "/api/public/**").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                .requestMatchers("/api/secure/*").hasRole("USER")
+                .requestMatchers("/api/secure/**").hasRole("USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )

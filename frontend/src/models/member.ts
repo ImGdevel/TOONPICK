@@ -1,28 +1,45 @@
-
-export interface Member {
-  username: string;
-  nickname: string;
-  role: string;
-  profilePicture: string;
-  email: string;
-  isAdultVerified: boolean;
-}
-
-export interface BasicMemberInfo {
-  username: string;
-  nickname: string;
-  profilePicture: string;
-  role: string;
-}
-
+import { Webtoon } from "./webtoon";
+import { Review } from "./review";
 
 export interface MemberProfile {
-  username: string;
+  username: number;
+  email: string;
   nickname: string;
-  profilePicture: string;
+  profileImage: string | null;
   level: number;
+  ratedWebtoons: number;
+  reviewedWebtoons: number;
+  collections: number;
+  readWebtoons: number;
   points: number;
   bookmarkedWebtoons: number;
   watchedWebtoons: number;
-  ratedWebtoons: number;
+  badges: {
+    id: number;
+    name: string;
+    icon: string;
+  }[];
+  preferences: {
+    genrePreferences: { name: string; value: number }[];
+    emotionalTags: string[];
+    aiTags: string[];
+  };
+  favoriteWebtoons: Webtoon[];
+  masterpieceWebtoons: Webtoon[];
+  readingHistory: {
+    webtoon: Webtoon;
+    lastReadAt: string;
+  }[];
+  reviews: Review[];
+  topReviews: Review[];
+  connectedAccounts: {
+    google: boolean;
+    naver: boolean;
+    kakao: boolean;
+  };
+  adultSettings: {
+    goreFilter: boolean;
+    adultContentFilter: boolean;
+    violenceFilter: boolean;
+  };
 }

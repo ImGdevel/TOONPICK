@@ -6,6 +6,7 @@
   --icon-color: #333333; 
   --login-button-color: #333333; 
   --body-background-color: #f0f2f5; 
+  --notification-border-color: rgba(0, 0, 0, 0.1);
   --body-text-color: #333333; 
   --form-background-color: #ffffff; 
   --form-input-background-color: #f9f9f9; 
@@ -19,6 +20,40 @@
   --text-color: #333333;
   --author-color: #666666;
   --rating-color: #ffcc00;
+
+  --primary-gradient: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+  --secondary-gradient: linear-gradient(135deg, #FF6B6B 0%, #FF0000 100%);
+  --card-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+  --border-radius-lg: 16px;
+  --border-radius-md: 12px;
+  --border-radius-sm: 8px;
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --spacing-xl: 32px;
+  --spacing-lg: 24px;
+  --spacing-md: 16px;
+  --spacing-sm: 12px;
+  --spacing-xs: 8px;
+
+  --success-color: #4CAF50;
+  --warning-color: #FFC107;
+  --info-color: #2196F3;
+  --hover-color: rgba(0, 0, 0, 0.05);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --background-color: #ffffff;
+  --background-secondary-color: #f5f5f5;
+  --text-secondary-color: #666666;
+  --primary-color: #5a9de2;
+  --secondary-color: #6B73FF;
+  --toggle-background: #e0e0e0;
+  --toggle-active: #4CAF50;
+  --toggle-inactive: #9e9e9e;
+  --edit-button-color: #2196F3;
+  --edit-button-hover: rgba(33, 150, 243, 0.1);
+  --connected-account-color: #4CAF50;
+  --disconnected-account-color: #9e9e9e;
 }
 
 [data-theme='dark'] {
@@ -28,6 +63,7 @@
   --input-text-color: white; 
   --icon-color: white; 
   --login-button-color: white; 
+  --notification-border-color: rgba(255, 255, 255, 0.1);
   --body-background-color: #161616; 
   --body-text-color: white; 
   --form-background-color: #2d2d2d; 
@@ -42,4 +78,25 @@
   --text-color: #ffffff;
   --author-color: #b3b3b3;
   --rating-color: #ffcc00;
+
+  --primary-gradient: linear-gradient(135deg, #8B93FF 0%, #2B35FF 100%);
+  --secondary-gradient: linear-gradient(135deg, #FF8B8B 0%, #FF2B2B 100%);
+  --card-gradient: linear-gradient(135deg, rgba(45, 45, 45, 0.9) 0%, rgba(45, 45, 45, 0.7) 100%);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --card-hover-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+
+  --hover-color: rgba(255, 255, 255, 0.05);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --background-color: #2d2d2d;
+  --background-secondary-color: #333333;
+  --text-secondary-color: #b3b3b3;
+  --primary-color: #4a90e2;
+  --secondary-color: #8B93FF;
+  --toggle-background: #404040;
+  --toggle-active: #66BB6A;
+  --toggle-inactive: #757575;
+  --edit-button-color: #64B5F6;
+  --edit-button-hover: rgba(100, 181, 246, 0.1);
+  --connected-account-color: #66BB6A;
+  --disconnected-account-color: #757575;
 } 

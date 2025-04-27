@@ -12,7 +12,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import com.toonpick.type.ErrorCode;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @Service
 public class AwsS3StorageService {
@@ -31,11 +30,9 @@ public class AwsS3StorageService {
     }
 
     /**
-     * AWS S3에 이미지 업로드 (범용)
+     * AWS S3에 파일 형태의 데이터 업로드
      */
-    public String uploadFile(MultipartFile file) {
-        String fileName = generateFileName(file.getOriginalFilename());
-
+    public String uploadFile(MultipartFile file, String fileName) {
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
@@ -54,7 +51,24 @@ public class AwsS3StorageService {
         return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region.id(), fileName);
     }
 
-    private String generateFileName(String originalFilename) {
-        return UUID.randomUUID().toString() + "_" + originalFilename;
+    /**
+     * AWS S3에 byte 형태의 데이터 업로드
+     */
+    public String uploadBytes(byte[] bytes, String fileName, String contentType) {
+        try {
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileName)
+                    .contentType(contentType)
+                    .build();
+
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(bytes));
+        } catch (Exception e) {
+            logger.error("{} : {}", ErrorCode.IMAGE_UPLOAD_FAILED_TO_S3, e);
+            throw new RuntimeException(ErrorCode.IMAGE_UPLOAD_FAILED_TO_S3.getMessage());
+        }
+
+        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region.id(), fileName);
     }
+
 }

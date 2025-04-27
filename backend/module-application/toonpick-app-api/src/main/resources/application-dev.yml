@@ -18,10 +18,14 @@ spring:
     host: localhost
     port: 6380
 
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/webtoon-db
+
   jwt:
     secret: devjwtsecretkeydevjwtsecretkeydevjwtsecretkeydevjwtsecretkeydevjwtsecretkeydevjwtsecretkey
-    access-token-expiration: 60000
-    refresh-token-expiration: 3600000
+    access-token-expiration: 6000000
+    refresh-token-expiration: 360000000
 
   security:
     oauth2:

@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,7 +14,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,11 +23,11 @@ import com.toonpick.enums.AgeRating;
 import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
 
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
 
 @Entity
 @Getter
@@ -57,16 +55,19 @@ public class Webtoon {
 
     @NotNull
     @Column(name = "normalized_title", nullable = false)
-    private String titleWithoutSpaces;
+    private String normalizedTitle;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "platform", nullable = false, length = 8)
+    @Column(name = "platform", nullable = false)
     private Platform platform;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week")
     private DayOfWeek dayOfWeek;
+
+    @Column(name = "summary", columnDefinition = "TEXT")
+    private String summary;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -85,9 +86,6 @@ public class Webtoon {
     @Column(name = "link", nullable = false)
     private String link;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
-
     @Column(name = "episode_count")
     private int episodeCount;
 
@@ -97,7 +95,7 @@ public class Webtoon {
     @Column(name = "last_update_date")
     private LocalDate lastUpdatedDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "webtoon_author",
             joinColumns = @JoinColumn(name = "webtoon_id"),
@@ -105,7 +103,7 @@ public class Webtoon {
     )
     private Set<Author> authors = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "webtoon_genre",
             joinColumns = @JoinColumn(name = "webtoon_id"),
@@ -113,16 +111,17 @@ public class Webtoon {
     )
     private Set<Genre> genres = new HashSet<>();
 
-    private float platformRating = 0;
+    @Column(name = "platform_rating")
+    private Float platformRating = 0f;
 
-    private float averageRating = 0;
+    @Column(name = "average_rating")
+    private Float averageRating = 0f;
 
-    private float ratingSum = 0;
+    @Column(name = "rating_sum")
+    private Float ratingSum = 0f;
 
-    private int ratingCount = 0;
-
-    @Version
-    private int version;
+    @Column(name = "rating_count")
+    private Integer ratingCount = 0;
 
     @Builder
     public Webtoon(Long id,
@@ -133,7 +132,7 @@ public class Webtoon {
                    String thumbnailUrl,
                    String link,
                    AgeRating ageRating,
-                   String description,
+                   String summary,
                    SerializationStatus serializationStatus,
                    int episodeCount,
                    float platformRating,
@@ -142,14 +141,14 @@ public class Webtoon {
                    Set<Author> authors,
                    Set<Genre> genres) {
         this.id = id;
-        this.externalId = externalId;
+        this.externalId = platform + externalId;
         this.title = title;
         this.platform = platform;
         this.dayOfWeek = dayOfWeek;
         this.thumbnailUrl = thumbnailUrl;
         this.link = link;
         this.ageRating = ageRating;
-        this.description = description;
+        this.summary = summary;
         this.serializationStatus = serializationStatus;
         this.platformRating = platformRating;
         this.episodeCount = episodeCount;
@@ -157,11 +156,6 @@ public class Webtoon {
         this.lastUpdatedDate = lastUpdatedDate;
         this.authors = authors != null ? authors : new HashSet<>();
         this.genres = genres != null ? genres : new HashSet<>();
-    }
-
-    public void updateEpisodeCountAndDate(int episodeCount, LocalDate lastUpdatedDate) {
-        this.episodeCount = episodeCount;
-        this.lastUpdatedDate = lastUpdatedDate;
     }
 
     public void updateWebtoonDetails(String title,
@@ -176,7 +170,7 @@ public class Webtoon {
                                      Set<Genre> genres) {
         this.title = title;
         this.platform = platform;
-        this.description = description;
+        this.summary = description;
         this.serializationStatus = serializationStatus;
         this.dayOfWeek = dayOfWeek;
         this.thumbnailUrl = thumbnailUrl;
@@ -189,6 +183,6 @@ public class Webtoon {
     @PrePersist
     @PreUpdate
     private void prePersistAndUpdate() {
-        this.titleWithoutSpaces = this.title != null ? this.title.replaceAll(" ", "") : null;
+        this.normalizedTitle = this.title != null ? this.title.replaceAll(" ", "") : null;
     }
 }
