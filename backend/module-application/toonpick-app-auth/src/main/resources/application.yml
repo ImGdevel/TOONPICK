@@ -1,24 +1,13 @@
 server:
-  port: 8001
+  port: 8080
 
 spring:
   profiles:
     default: dev
 
-  redis:
-    timeout: 10000ms
-    jedis:
-      enabled: false
-
   output:
     ansi:
       enabled: always
-
-  batch:
-    job:
-      enabled: false
-    jdbc:
-      initialize-schema: always
 
 logging:
   level:
@@ -29,3 +18,13 @@ logging:
   file:
     name: logs/application.log
     max-size: 10MB
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
