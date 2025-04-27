@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    data:
+      driver-class-name: org.mariadb.jdbc.Driver
+      jdbc-url: ${SPRING_DATASOURCE_DATA_URL}
+      username: ${SPRING_DATASOURCE_DATA_USERNAME}
+      password: ${SPRING_DATASOURCE_DATA_PASSWORD}
+    meta:
+      driver-class-name: org.mariadb.jdbc.Driver
+      jdbc-url: ${SPRING_DATASOURCE_META_URL}
+      username: ${SPRING_DATASOURCE_META_USERNAME}
+      password: ${SPRING_DATASOURCE_META_PASSWORD}
+
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+  data:
+    mongodb:
+      uri: ${SPRING_NOSQL_DATA_URL}
+
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      region:
+        static: ${AWS_REGION}
+      s3:
+        bucket: ${AWS_S3_BUCKET}
+      sqs:
+        queue:
+          new_webtoon: $(AWS_SQS_WEBTOON_REQUEST)
+          create-webtoon: ${AWS_SQS_CREATE_WEBTOON}
+          update-webtoon: ${AWS_SQS_UPDATE_WEBTOON}
+        auto-create: false
+        enabled: false

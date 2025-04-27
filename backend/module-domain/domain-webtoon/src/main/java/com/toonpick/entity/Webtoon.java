@@ -11,7 +11,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -119,10 +118,10 @@ public class Webtoon {
     private Float averageRating = 0f;
 
     @Column(name = "rating_sum")
-    private float ratingSum = 0f;
+    private Float ratingSum = 0f;
 
     @Column(name = "rating_count")
-    private int ratingCount = 0;
+    private Integer ratingCount = 0;
 
     @Builder
     public Webtoon(Long id,
@@ -142,7 +141,7 @@ public class Webtoon {
                    Set<Author> authors,
                    Set<Genre> genres) {
         this.id = id;
-        this.externalId = externalId;
+        this.externalId = platform + externalId;
         this.title = title;
         this.platform = platform;
         this.dayOfWeek = dayOfWeek;
