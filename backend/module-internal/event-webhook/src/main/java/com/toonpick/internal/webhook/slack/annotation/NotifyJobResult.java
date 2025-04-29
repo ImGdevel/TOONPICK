@@ -1,5 +1,7 @@
 package com.toonpick.internal.webhook.slack.annotation;
 
+import com.toonpick.internal.webhook.slack.enums.AlertLevel;
+
 import java.lang.annotation.*;
 
 /**
@@ -13,4 +15,9 @@ public @interface NotifyJobResult {
      * 작업 이름을 지정합니다.
      */
     String jobName();
+
+    /**
+     * 알림 레벨을 지정합니다. (기본값: INFO)
+     */
+    AlertLevel level() default AlertLevel.INFO;
 }
