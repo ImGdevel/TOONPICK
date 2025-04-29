@@ -1,4 +1,4 @@
-package com.toonpick.internal.webhook.slack;
+package com.toonpick.internal.webhook.slack.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

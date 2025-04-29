@@ -1,4 +1,4 @@
-package com.toonpick.internal.webhook.slack;
+package com.toonpick.internal.webhook.slack.config;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

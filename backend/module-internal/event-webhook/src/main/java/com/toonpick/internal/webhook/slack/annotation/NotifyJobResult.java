@@ -1,4 +1,4 @@
-package com.toonpick.internal.webhook.slack;
+package com.toonpick.internal.webhook.slack.annotation;
 
 import java.lang.annotation.*;
 

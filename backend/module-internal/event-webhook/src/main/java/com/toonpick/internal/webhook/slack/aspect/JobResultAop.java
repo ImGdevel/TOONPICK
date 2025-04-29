@@ -1,5 +1,7 @@
-package com.toonpick.internal.webhook.slack;
+package com.toonpick.internal.webhook.slack.aspect;
 
+import com.toonpick.internal.webhook.slack.annotation.NotifyJobResult;
+import com.toonpick.internal.webhook.slack.notifier.SlackNotifier;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;

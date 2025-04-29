@@ -1,4 +1,4 @@
-package com.toonpick.internal.webhook.slack;
+package com.toonpick.internal.webhook.slack.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
