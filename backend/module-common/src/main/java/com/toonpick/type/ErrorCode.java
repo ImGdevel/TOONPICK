@@ -70,6 +70,13 @@ public enum ErrorCode {
 
     // === 300 : Infra/Client/API/Service error ===
 
+    // === 310 : Slack Webhook
+    SLACK_INVALID_URL(310, "Slack Webhook URL이 유효하지 않습니다"),
+    SLACK_SEND_FAIL(311, "Slack 메시지 전송에 실패했습니다"),
+    SLACK_PAYLOAD_FORMAT_ERROR(312, "Slack 메시지 페이로드 형식이 올바르지 않습니다"),
+    SLACK_NOT_CONFIGURED(313, "Slack 설정이 존재하지 않거나 누락되었습니다"),
+    SLACK_RESPONSE_ERROR(314, "Slack 서버에서 오류 응답을 반환했습니다"),
+
     // === 320 : S3 Error ===
     INVALID_IMAGE_FILE(320, "잘못된 이미지 파일입니다"),
     IMAGE_UPLOAD_FAILED(321, "이미지 업로드에 실패했습니다"),
