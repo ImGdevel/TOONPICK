@@ -123,14 +123,11 @@ jobs:
 
     steps:
       - name: AWS 자격증명 설정
-        run: |
-          mkdir -p ~/.aws
-          echo "[default]" > ~/.aws/credentials
-          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
-          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
-
-          echo "[default]" > ~/.aws/config
-          echo "region = ap-northeast-2" >> ~/.aws/config
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
 
       - name: 새로운 EC2 인스턴스 생성
         run: |
@@ -159,6 +156,17 @@ jobs:
           echo "NEW_INSTANCE_IP=${NEW_INSTANCE_IP}" >> $GITHUB_ENV
           echo "새로운 인스턴스 IP: ${NEW_INSTANCE_IP}"
 
+      - name: Copy docker-compose.yaml to EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ env.NEW_INSTANCE_IP }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: backend/docker-compose.yaml
+          target: /home/ubuntu/TOONPICK/
+          strip_components: 1
+          overwrite: true
+
       - name: 새로운 EC2에 SSH 접속하여 배포 실행
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -168,6 +176,9 @@ jobs:
           script: |
             export DOCKER_HUB_USERNAME="${{ secrets.DOCKER_HUB_USERNAME }}"
             export DOCKER_HUB_PASSWORD="${{ secrets.DOCKER_HUB_PASSWORD }}"
+
+            echo "Logging into Docker Hub..."
+            echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
 
             cd ~/TOONPICK
 
@@ -201,7 +212,7 @@ jobs:
         run: |
           NEW_VERSION=$(aws ec2 create-launch-template-version \
             --launch-template-id ${{ secrets.LAUNCH_TEMPLATE_ID }} \
-            --version-description "Updated AMI" \
+            --version-description "Updated AMI from run ${{ github.run_id }}" \
             --source-version 1 \
             --launch-template-data "{\"ImageId\":\"${{ env.NEW_AMI_ID }}\"}" \
             --query 'LaunchTemplateVersion.VersionNumber' \
@@ -212,7 +223,8 @@ jobs:
 
       - name: Auto Scaling 그룹 업데이트
         run: |
+          echo "Updating Auto Scaling Group with new template version..."
           aws autoscaling update-auto-scaling-group \
             --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
-            --launch-template LaunchTemplateId=${{ secrets.LAUNCH_TEMPLATE_ID }},Version=$NEW_VERSION
-  
+            --launch-template LaunchTemplateId=${{ secrets.LAUNCH_TEMPLATE_ID }},Version=${{ env.NEW_VERSION }}
+
