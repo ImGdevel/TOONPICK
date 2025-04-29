@@ -94,6 +94,16 @@ jobs:
           name: backend-jar-files
           path: backend/module-application/${{ matrix.module.dir }}/build/libs
 
+      - name: JAR 파일 목록 출력
+        run: |
+          echo "=== 다운로드된 JAR 목록 ==="
+          ls -al backend/module-application/${{ matrix.module.dir }}/build/libs
+
+      - name: JAR 파일을 app.jar로 이름 변경
+        run: |
+          mv backend/module-application/${{ matrix.module.dir }}/build/libs/${{ matrix.module.jar }} \
+            backend/module-application/${{ matrix.module.dir }}/build/libs/app.jar
+
       - name: Docker Login
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
