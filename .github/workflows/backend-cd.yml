@@ -38,49 +38,83 @@ jobs:
       - name: Gradle 빌드 및 테스트
         working-directory: backend
         run: |
-          ./gradlew clean build -x test --no-daemon --parallel --configure-on-demand
+          ./gradlew :module-application:toonpick-app-api:clean :module-application:toonpick-app-api:build \
+                     :module-application:toonpick-app-worker:clean :module-application:toonpick-app-worker:build \
+                     :module-application:toonpick-app-admin:clean :module-application:toonpick-app-admin:build \
+                     -x test --no-daemon --parallel --configure-on-demand
 
-      - name: 빌드된 JAR 파일 업로드 (아티팩트 저장)
+      - name: 빌드 결과 확인
+        run: |
+          echo "=== toonpick-app-api JAR ==="
+          ls -al backend/module-application/toonpick-app-api/build/libs
+          echo "=== toonpick-app-worker JAR ==="
+          ls -al backend/module-application/toonpick-app-worker/build/libs
+          echo "=== toonpick-app-admin JAR ==="
+          ls -al backend/module-application/toonpick-app-admin/build/libs
+
+      - name: 빌드된 JAR 파일 업로드
         uses: actions/upload-artifact@v4
         with:
-          name: backend-jar
-          path: backend/module-application/toonpick-app-api/build/libs/toonpick-0.0.1-SNAPSHOT.jar
-          retention-days: 3
+          name: backend-jar-files
+          path: |
+            backend/module-application/toonpick-app-api/build/libs/toonpick-api-0.0.1-SNAPSHOT.jar
+            backend/module-application/toonpick-app-worker/build/libs/toonpick-worker-0.0.1-SNAPSHOT.jar
+            backend/module-application/toonpick-app-admin/build/libs/toonpick-admin-0.0.1-SNAPSHOT.jar
+          retention-days: 1
 
 
   docker-build-and-push:
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module:
+          - name: api
+            dir: toonpick-app-api
+            jar: toonpick-api-0.0.1-SNAPSHOT.jar
+            repo: toonpick-service-api
+          - name: worker
+            dir: toonpick-app-worker
+            jar: toonpick-worker-0.0.1-SNAPSHOT.jar
+            repo: toonpick-service-worker
+          - name: admin
+            dir: toonpick-app-admin
+            jar: toonpick-admin-0.0.1-SNAPSHOT.jar
+            repo: toonpick-service-admin
+
     steps:
       - name: 저장소 체크아웃
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: 빌드된 JAR 파일 다운로드
+      - name: 모듈별 JAR 다운로드
         uses: actions/download-artifact@v4
         with:
-          name: backend-jar
-          path: backend/module-application/toonpick-app-api/build/libs
+          name: backend-jar-files
+          path: backend/module-application/${{ matrix.module.dir }}/build/libs
 
-      - name: Docker Build & Push
+      - name: Docker Login
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          REPOSITORY: "toonpick-service-app"
+        run: echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+
+      - name: Docker Build & Push - ${{ matrix.module.name }}
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           IMAGE_TAG: "${{ github.event.inputs.version }}"
         run: |
-          echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-
-          echo "=== Docker Build 시작 ==="
+          echo "=== Docker Build 시작: ${{ matrix.module.name }} ==="
           docker build \
-            --cache-from $DOCKER_HUB_USERNAME/$REPOSITORY:latest \
-            -t $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG \
-            -t $DOCKER_HUB_USERNAME/$REPOSITORY:latest \
-            -f backend/Dockerfile .
+            -t $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:$IMAGE_TAG \
+            -t $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:latest \
+            -f backend/module-application/${{ matrix.module.dir }}/Dockerfile \
+            backend/module-application/${{ matrix.module.dir }}
 
-          docker push $DOCKER_HUB_USERNAME/$REPOSITORY:$IMAGE_TAG
-          docker push $DOCKER_HUB_USERNAME/$REPOSITORY:latest
+          docker push $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:$IMAGE_TAG
+          docker push $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:latest
+
 
 
   deploy:
