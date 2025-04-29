@@ -178,14 +178,14 @@ jobs:
           echo "NEW_INSTANCE_IP=${NEW_INSTANCE_IP}" >> $GITHUB_ENV
           echo "새로운 인스턴스 IP: ${NEW_INSTANCE_IP}"
 
-      - name: Copy docker-compose.yaml to EC2
+      - name: docker-compose.yaml 파일 EC2로 복사
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ env.NEW_INSTANCE_IP }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: backend/docker-compose.yaml
-          target: /home/ubuntu/TOONPICK/
+          target: /home/${{ secrets.SSH_USER }}/TOONPICK/
           strip_components: 1
           overwrite: true
 
