@@ -52,15 +52,27 @@ jobs:
           echo "=== toonpick-app-admin JAR ==="
           ls -al backend/module-application/toonpick-app-admin/build/libs
 
-      - name: 빌드된 JAR 파일 업로드
+      - name: toonpick-api JAR 업로드
         uses: actions/upload-artifact@v4
         with:
-          name: backend-jar-files
-          path: |
-            backend/module-application/toonpick-app-api/build/libs/toonpick-api-0.0.1-SNAPSHOT.jar
-            backend/module-application/toonpick-app-worker/build/libs/toonpick-worker-0.0.1-SNAPSHOT.jar
-            backend/module-application/toonpick-app-admin/build/libs/toonpick-admin-0.0.1-SNAPSHOT.jar
+          name: toonpick-api
+          path: backend/module-application/toonpick-app-api/build/libs/*.jar
           retention-days: 1
+
+      - name: toonpick-worker JAR 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: toonpick-worker
+          path: backend/module-application/toonpick-app-worker/build/libs/*.jar
+          retention-days: 1
+
+      - name: toonpick-admin JAR 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: toonpick-admin
+          path: backend/module-application/toonpick-app-admin/build/libs/*.jar
+          retention-days: 1
+
 
 
   docker-build-and-push:
@@ -88,10 +100,10 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: 모듈별 JAR 다운로드
+      - name: 모듈별 아티팩트 다운로드
         uses: actions/download-artifact@v4
         with:
-          name: backend-jar-files
+          name: toonpick-${{ matrix.module.name }}
           path: backend/module-application/${{ matrix.module.dir }}/build/libs
 
       - name: JAR 파일 목록 출력
