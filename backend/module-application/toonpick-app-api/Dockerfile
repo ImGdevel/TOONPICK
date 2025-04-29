@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # JAR 파일 복사
-COPY backend/module-application/toonpick-app-api/build/libs/*.jar app.jar
+COPY build/libs/*.jar app.jar
 
 RUN chmod +x /app/app.jar
 
