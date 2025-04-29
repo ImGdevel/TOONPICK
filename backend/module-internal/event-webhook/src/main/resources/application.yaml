@@ -1,0 +1,5 @@
+spring:
+  event:
+    webhook:
+      slack:
+        url: ${SLACK_WEBHOOK_URL}
