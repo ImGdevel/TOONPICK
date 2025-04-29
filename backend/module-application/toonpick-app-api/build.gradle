@@ -5,7 +5,7 @@ plugins {
 
 
 bootJar {
-    archiveFileName = "toonpick-${version}.jar"
+    archiveFileName = "toonpick-app-${version}.jar"
 }
 
 dependencies {
