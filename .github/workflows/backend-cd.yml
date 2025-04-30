@@ -258,3 +258,47 @@ jobs:
             --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
             --launch-template LaunchTemplateId=${{ secrets.LAUNCH_TEMPLATE_ID }},Version=${{ env.NEW_VERSION }}
           echo "[INFO] Auto Scaling Group 업데이트 완료"
+
+      - name: Slack Webhook 알림 전송
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            STATUS=":white_check_mark: *CD 성공*"
+            COLOR="#2EB67D"
+            MESSAGE="TOONPICK CD 파이프라인이 성공적으로 완료되었습니다. :rocket:"
+          else
+            STATUS=":x: *CD 실패*"
+            COLOR="#D00000"
+            MESSAGE="TOONPICK CD 파이프라인 실패 :warning:\n실패 Job: \`${{ github.job }}\`"
+          fi
+
+          curl -X POST -H 'Content-type: application/json' --data "{
+            \"attachments\": [
+              {
+                \"color\": \"${COLOR}\",
+                \"title\": \"${STATUS}\",
+                \"text\": \"${MESSAGE}\",
+                \"fields\": [
+                  {
+                    \"title\": \"GitHub Workflow\",
+                    \"value\": \"${{ github.workflow }}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"브랜치\",
+                    \"value\": \"${{ github.ref_name }}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"커밋자\",
+                    \"value\": \"${{ github.actor }}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"Run URL\",
+                    \"value\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+                  }
+                ]
+              }
+            ]
+          }" ${{ secrets.SLACK_WEBHOOK_URL }}
