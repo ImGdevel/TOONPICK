@@ -51,15 +51,6 @@ jobs:
           echo "=== toonpick-app-admin JAR ==="
           ls -al backend/module-application/toonpick-app-admin/build/libs
 
-      - name: 빌드된 JAR 파일 업로드
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-jar-files
-          path: |
-            backend/module-application/toonpick-app-api/build/libs/toonpick-api-0.0.1-SNAPSHOT.jar
-            backend/module-application/toonpick-app-worker/build/libs/toonpick-worker-0.0.1-SNAPSHOT.jar
-            backend/module-application/toonpick-app-admin/build/libs/toonpick-admin-0.0.1-SNAPSHOT.jar
-          retention-days: 1
 
       - name: Slack 알림 전송 (빌드 성공)
         if: success()
