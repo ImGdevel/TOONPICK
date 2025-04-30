@@ -183,11 +183,6 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: 디렉토리 구조 확인
-        run: |
-          ls -al
-          ls -al ./backend
 
       - name: docker-compose.yaml 파일 EC2로 복사
         uses: appleboy/scp-action@v0.1.4
@@ -197,7 +192,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: ./backend/docker-compose.yaml
           target: /home/${{ secrets.SSH_USER }}/TOONPICK/
-          strip_components: 1
+          strip_components: 2
           overwrite: true
 
       - name: 새로운 EC2에 SSH 접속하여 배포 실행
@@ -219,7 +214,7 @@ jobs:
             docker pull $DOCKER_HUB_USERNAME/toonpick-service-app:latest
 
             echo "Docker 컨테이너 실행..."
-            docker-compose up -d --force-recreate
+            docker-compose -f docker-compose.yaml up -d --force-recreate
 
       - name: 새로운 AMI 생성
         run: |
