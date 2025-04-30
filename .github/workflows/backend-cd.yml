@@ -39,9 +39,9 @@ jobs:
         working-directory: backend
         run: |
           echo "[INFO] toonpick-app 메시지 빌드 시작"
-          ./gradlew :module-application:toonpick-app-api:clean :module-application:toonpick-app-api:build \
-                     :module-application:toonpick-app-worker:clean :module-application:toonpick-app-worker:build \
-                     :module-application:toonpick-app-admin:clean :module-application:toonpick-app-admin:build \
+          ./gradlew :module-application:toonpick-app-api:clean :module-application:toonpick-app-api:bootjar \
+                     :module-application:toonpick-app-worker:clean :module-application:toonpick-app-worker:bootjar \
+                     :module-application:toonpick-app-admin:clean :module-application:toonpick-app-admin:bootjar \
                      -x test --no-daemon --parallel --configure-on-demand
 
       - name: 빌드 결과 확인
