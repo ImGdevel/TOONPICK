@@ -229,6 +229,7 @@ jobs:
           echo "새로운 AMI 생성 완료: ${NEW_AMI_ID}"
 
       - name: 임시 EC2 인스턴스 중지 및 종료
+        if: always()
         run: |
           echo "AMI 생성이 완료되었으므로 임시 인스턴스를 종료합니다."
           
