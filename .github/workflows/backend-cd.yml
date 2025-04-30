@@ -209,6 +209,8 @@ jobs:
             echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
 
             cd ~/TOONPICK
+            echo "최신 Docker 컨테이너 종료..."
+            docker-compose down
 
             echo "최신 Docker Image Pull..."
             docker pull $DOCKER_HUB_USERNAME/toonpick-service-app:latest
