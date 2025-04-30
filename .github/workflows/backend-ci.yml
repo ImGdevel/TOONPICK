@@ -51,18 +51,47 @@ jobs:
           echo "=== toonpick-app-admin JAR ==="
           ls -al backend/module-application/toonpick-app-admin/build/libs
 
-
-      - name: Slack 알림 전송 (빌드 성공)
-        if: success()
+      - name: Slack Webhook 알림 전송 (CI)
+        if: always()
         run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data "{\"text\":\"[TOONPICK] 백엔드 빌드 성공 (브랜치: ${{ github.ref_name }})\"}" \
-          ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Slack 알림 전송 (빌드 실패)
-        if: failure()
-        run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data "{\"text\":\"[TOONPICK] 백엔드 빌드 실패 (브랜치: ${{ github.ref_name }})\"}" \
-          ${{ secrets.SLACK_WEBHOOK_URL }}
-  
+          if [ "${{ job.status }}" == "success" ]; then
+            STATUS=":white_check_mark: *CI 성공*"
+            COLOR="#2EB67D"
+            MESSAGE="TOONPICK CI 파이프라인이 성공적으로 완료되었습니다. :rocket:"
+          else
+            STATUS=":x: *CI 실패*"
+            COLOR="#D00000"
+            MESSAGE="TOONPICK CI 파이프라인 실패 :warning:\n실패 Job: \`${{ github.job }}\`"
+          fi
+      
+          curl -X POST -H 'Content-type: application/json' --data "{
+            \"attachments\": [
+              {
+                \"color\": \"${COLOR}\",
+                \"title\": \"${STATUS}\",
+                \"text\": \"${MESSAGE}\",
+                \"fields\": [
+                  {
+                    \"title\": \"GitHub Workflow\",
+                    \"value\": \"${{ github.workflow }}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"브랜치\",
+                    \"value\": \"${{ github.ref_name }}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"커밋자\",
+                    \"value\": \"${{ github.actor }}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"Run URL\",
+                    \"value\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+                  }
+                ]
+              }
+            ]
+          }" ${{ secrets.SLACK_WEBHOOK_URL }}
+      
