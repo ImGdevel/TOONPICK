@@ -60,3 +60,18 @@ jobs:
             backend/module-application/toonpick-app-worker/build/libs/toonpick-worker-0.0.1-SNAPSHOT.jar
             backend/module-application/toonpick-app-admin/build/libs/toonpick-admin-0.0.1-SNAPSHOT.jar
           retention-days: 1
+
+      - name: Slack 알림 전송 (빌드 성공)
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{\"text\":\"[TOONPICK] 백엔드 빌드 성공 (브랜치: ${{ github.ref_name }})\"}" \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Slack 알림 전송 (빌드 실패)
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{\"text\":\"[TOONPICK] 백엔드 빌드 실패 (브랜치: ${{ github.ref_name }})\"}" \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+  
