@@ -205,15 +205,17 @@ jobs:
             echo "[INFO] SSM Parameter Store에서 환경변수 가져오기"
             SERVICE_NAME="TOONPICK"
             ENVIRONMENT="prod"
-            export $(aws ssm get-parameters-by-path \
+
+            aws ssm get-parameters-by-path \
               --path "/${SERVICE_NAME}/${ENVIRONMENT}/" \
-              --recursive \
               --with-decryption \
-              --query "Parameters[*].[Name,Value]" \
-              --output text | \
-              sed "s|/${SERVICE_NAME}/${ENVIRONMENT}/||g" | \
-              awk '{print $1"="$2}'
-            )
+              --recursive \
+              --output text \
+              --query "Parameters[*].[Name,Value]" | \
+              sed -E "s|/${SERVICE_NAME}/${ENVIRONMENT}/[^/]+/||g" | \
+              awk '{print "export " $1"=\"" $2"\""}' > /tmp/env.sh
+
+            source /tmp/env.sh
 
             echo "[INFO] 환경변수 세팅 확인"
             printenv | grep -E 'JWT|DATASOURCE|AWS|SLACK|OAUTH'
