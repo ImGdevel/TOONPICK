@@ -165,6 +165,7 @@ jobs:
             --key-name ${{ secrets.EC2_KEY }} \
             --security-group-ids ${{ secrets.SECURITY_GROUP_ID }} \
             --subnet-id ${{ secrets.SUBNET_ID }} \
+            --iam-instance-profile Arn=${{ secrets.EC2_INSTANCE_PROFILE_ARN }} \
             --query 'Instances[?State.Name==`pending`].InstanceId' \
             --output text)
 
@@ -219,6 +220,8 @@ jobs:
 
             echo "[INFO] 환경변수 세팅 확인"
             printenv | grep -E 'JWT|DATASOURCE|AWS|SLACK|OAUTH'
+
+            echo $AWS_REGION
 
             export DOCKER_HUB_USERNAME="${{ secrets.DOCKER_HUB_USERNAME }}"
             export DOCKER_HUB_PASSWORD="${{ secrets.DOCKER_HUB_PASSWORD }}"
