@@ -1,5 +1,6 @@
 package com.toonpick.controller;
 
+import com.toonpick.internal.webhook.slack.annotation.NotifyJobResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.health.Health;
@@ -12,6 +13,7 @@ public class HealthCheckController {
 
     final private Logger logger = LoggerFactory.getLogger(HealthCheckController.class);
 
+    @NotifyJobResult(jobName = "TOONPICK Api - health check")
     @GetMapping("/api/public/health")
     public Health health() {
         logger.info("health check 요청이 들어왔습니다.");
