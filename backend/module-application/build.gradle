@@ -53,6 +53,7 @@ project(':module-application:toonpick-app-worker') {
         implementation project(':module-internal')
         implementation project(':module-internal:event-sqs')
         implementation project(':module-internal:core-exception')
+        implementation project(':module-internal:event-webhook')
 
         implementation project(':module-common')
     }
