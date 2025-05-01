@@ -165,6 +165,7 @@ jobs:
             --key-name ${{ secrets.EC2_KEY }} \
             --security-group-ids ${{ secrets.SECURITY_GROUP_ID }} \
             --subnet-id ${{ secrets.SUBNET_ID }} \
+            --iam-instance-profile Arn=${{ secrets.EC2_INSTANCE_PROFILE_ARN }} \
             --query 'Instances[?State.Name==`pending`].InstanceId' \
             --output text)
 
