@@ -2,14 +2,9 @@ spring:
   datasource:
     data:
       driver-class-name: org.mariadb.jdbc.Driver
-      jdbc-url: ${SPRING_DATASOURCE_DATA_URL}
+      jdbc-url: jdbc:mariadb://${SPRING_DATASOURCE_DATA_ENDPOINT}:${SPRING_DATASOURCE_DATA_PORT}/${SPRING_DATASOURCE_DATA_NAME}?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
       username: ${SPRING_DATASOURCE_DATA_USERNAME}
       password: ${SPRING_DATASOURCE_DATA_PASSWORD}
-    meta:
-      driver-class-name: org.mariadb.jdbc.Driver
-      jdbc-url: ${SPRING_DATASOURCE_META_URL}
-      username: ${SPRING_DATASOURCE_META_USERNAME}
-      password: ${SPRING_DATASOURCE_META_PASSWORD}
 
   redis:
     host: ${REDIS_HOST}
