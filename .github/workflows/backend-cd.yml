@@ -218,6 +218,8 @@ jobs:
 
             source /tmp/env.sh
 
+            sleep 5
+
             echo "[INFO] 환경변수 세팅 확인"
             printenv | grep -E 'JWT|DATASOURCE|AWS|SLACK|OAUTH'
 
