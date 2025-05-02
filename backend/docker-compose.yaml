@@ -15,58 +15,12 @@ services:
     cpus: 0.7
     restart: always
     depends_on:
-      mariadb:
-        condition: service_healthy
-      mariadb-meta:
-        condition: service_healthy
       mongodb:
         condition: service_healthy
       redis:
         condition: service_started
     networks:
       - backend
-
-  mariadb:
-    image: mariadb:10.5
-    container_name: toonpick-db
-    env_file:
-      - .env
-    environment:
-      MYSQL_DATABASE: toonpick-database
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./data/data:/var/lib/mysql
-    networks:
-      - backend
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "--host=localhost", "--user=root", "--password=1234"]
-      interval: 30s
-      retries: 5
-      timeout: 10s
-      start_period: 30s
-    restart: always
-
-  mariadb-meta:
-    image: mariadb:10.5
-    container_name: toonpick-db-meta
-    env_file:
-      - .env
-    environment:
-      MYSQL_DATABASE: meta
-    ports:
-      - "3307:3306"
-    volumes:
-      - ./data/meta:/var/lib/mysql
-    networks:
-      - backend
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "--host=localhost", "--user=root", "--password=1234"]
-      interval: 30s
-      retries: 5
-      timeout: 10s
-      start_period: 30s
-    restart: always
 
   mongodb:
     image: mongo:6.0
