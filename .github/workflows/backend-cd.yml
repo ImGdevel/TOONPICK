@@ -253,13 +253,6 @@ jobs:
           echo "NEW_AMI_ID=${NEW_AMI_ID}" >> $GITHUB_ENV
           echo "[INFO] AMI 생성 완료: ${NEW_AMI_ID}"
 
-      - name: 임시 EC2 중지
-        if: always()
-        run: |
-          echo "[INFO] EC2 종료 시작"
-          aws ec2 terminate-instances --instance-ids $INSTANCE_ID
-          echo "[INFO] EC2 종료 완료: ${INSTANCE_ID}"
-
       - name: Launch Template 바로가기 업데이트
         run: |
           NEW_VERSION=$(aws ec2 create-launch-template-version \
