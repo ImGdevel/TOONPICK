@@ -195,14 +195,13 @@ jobs:
           strip_components: 2
           overwrite: true
 
-      - name: 새로운 EC2에 SSH 접속하여 배포 실행
+      - name: EC2에 환경변수 세팅
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ env.NEW_INSTANCE_IP }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-
             echo "[INFO] SSM Parameter Store에서 환경변수 가져오기"
             SERVICE_NAME="TOONPICK"
             ENVIRONMENT="prod"
@@ -216,15 +215,38 @@ jobs:
               sed -E "s|/${SERVICE_NAME}/${ENVIRONMENT}/[^/]+/||g" | \
               awk '{print "export " $1"=\"" $2"\""}' > /tmp/env.sh
 
-            source /tmp/env.sh
+            echo "[INFO] 환경변수 스크립트 생성 완료"
 
+      - name: 환경변수 적용 및 확인
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ env.NEW_INSTANCE_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "[INFO] 환경변수 적용 시작"
+            set -a
+            source /tmp/env.sh
+            set +a
+      
+            echo "[INFO] 환경변수 적용 대기 중..."
             sleep 5
 
-            echo "[INFO] 환경변수 세팅 확인"
-            printenv | grep -E 'JWT|DATASOURCE|AWS|SLACK|OAUTH'
+            echo "[INFO] 환경변수 검증 중..."
+            if [ -z "$AWS_REGION" ] || [ -z "$REDIS_HOST" ]; then
+              echo "[ERROR] 필수 환경변수 로드 실패"
+              exit 1
+            fi
 
-            echo $AWS_REGION
+            echo "[INFO] 환경변수 적용 성공"
 
+      - name: 새로운 EC2에 SSH 접속하여 배포 실행
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ env.NEW_INSTANCE_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
             export DOCKER_HUB_USERNAME="${{ secrets.DOCKER_HUB_USERNAME }}"
             export DOCKER_HUB_PASSWORD="${{ secrets.DOCKER_HUB_PASSWORD }}"
 
