@@ -2,13 +2,13 @@ spring:
   datasource:
     data:
       driver-class-name: org.mariadb.jdbc.Driver
-      jdbc-url: ${SPRING_DATASOURCE_DATA_URL}
-      username: ${SPRING_DATASOURCE_DATA_USERNAME}
-      password: ${SPRING_DATASOURCE_DATA_PASSWORD}
+      jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME}?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+      username: ${DB_MARIADB_USERNAME}
+      password: ${DB_MARIADB_PASSWORD}
 
   redis:
-    host: ${REDIS_HOST}
-    port: ${REDIS_PORT}
+    host: ${DB_REDIS_HOST}
+    port: ${DB_REDIS_PORT}
     timeout: 10000ms
     jedis:
       enabled: false
