@@ -257,11 +257,6 @@ jobs:
             echo "[INFO] 기존 서비스 정지..."
             docker-compose -f docker-compose.yaml down || true
 
-            echo "[INFO] Docker Image Pull..."
-            docker pull $DOCKER_HUB_USERNAME/toonpick-service-api:latest
-            docker pull $DOCKER_HUB_USERNAME/toonpick-service-worker:latest
-            docker pull $DOCKER_HUB_USERNAME/toonpick-service-admin:latest
-
             echo "[INFO] Docker 컨테이너 실행..."
             docker-compose -f docker-compose.yaml up -d --force-recreate
 
