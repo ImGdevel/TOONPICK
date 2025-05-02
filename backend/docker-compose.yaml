@@ -33,6 +33,7 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     ports:
       - "27017:27017"
+    cpus: 0.1
     volumes:
       - ./data/mongo:/data/db
     networks:
@@ -48,6 +49,7 @@ services:
   redis:
     image: redis:6.0
     container_name: toonpick-redis
+    cpus: 0.1
     ports:
       - "6379:6379"
     networks:
