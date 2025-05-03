@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  service-api:
+    image: $DOCKER_HUB_USERNAME/toonpick-service-api:latest
+    container_name: toonpick-service-api
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    cpus: 0.7
+    restart: always
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - backend
+
+  mongodb:
+    image: mongo:6.0
+    container_name: toonpick-mongodb
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    ports:
+      - "27017:27017"
+    cpus: 0.1
+    volumes:
+      - ./data/mongo:/data/db
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      retries: 5
+      timeout: 10s
+      start_period: 30s
+    restart: always
+
+  redis:
+    image: redis:6.0
+    container_name: toonpick-redis
+    cpus: 0.1
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+    restart: always
+
+networks:
+  backend:
+    driver: bridge

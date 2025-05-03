@@ -4,8 +4,8 @@ FROM openjdk:17-jdk-slim
 # 작업 디렉토리 설정
 WORKDIR /app
 
-# JAR 파일 복사 (toonpick-app-api 빌드 결과)
-COPY backend/module-application/toonpick-app-api/build/libs/*.jar app.jar
+# JAR 파일 복사
+COPY build/libs/*.jar app.jar
 
 RUN chmod +x /app/app.jar
 

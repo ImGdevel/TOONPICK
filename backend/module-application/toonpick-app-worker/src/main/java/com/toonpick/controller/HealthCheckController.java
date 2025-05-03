@@ -13,22 +13,13 @@ public class HealthCheckController {
 
     final private Logger logger = LoggerFactory.getLogger(HealthCheckController.class);
 
+    @NotifyJobResult(jobName = "TOONPICK worker - health check")
     @GetMapping("/health")
     public Health health() {
         logger.info("health check 요청이 들어왔습니다.");
 
         return Health.up()
-                     .withDetail("status", "TOONPICK 서비스가 정상적으로 작동 중입니다.")
-                     .build();
-    }
-
-    @NotifyJobResult(jobName = "TOONPICK Api - health check")
-    @GetMapping("/health/notify")
-    public Health healthNotify() {
-        logger.info("health check 요청이 들어왔습니다.");
-
-        return Health.up()
-                     .withDetail("status", "TOONPICK 서비스가 정상적으로 작동 중입니다.")
+                     .withDetail("status", "TOONPICK Worker가 정상적으로 작동 중입니다.")
                      .build();
     }
 }
