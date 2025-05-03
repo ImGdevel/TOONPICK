@@ -37,17 +37,61 @@ jobs:
       - name: Gradle 빌드 및 테스트
         working-directory: backend
         run: |
-          ./gradlew clean build -x test --no-daemon --parallel --configure-on-demand
+          ./gradlew :module-application:toonpick-app-api:clean :module-application:toonpick-app-api:build \
+                     :module-application:toonpick-app-worker:clean :module-application:toonpick-app-worker:build \
+                     :module-application:toonpick-app-admin:clean :module-application:toonpick-app-admin:build \
+                     -x test --no-daemon --parallel --configure-on-demand
 
-      - name: 빌드 결과 검증 (JAR 파일 확인)
+      - name: 빌드 결과 확인
         run: |
-          echo "=== Gradle Build 완료 후 JAR 파일 위치 확인 ==="
-          find backend/module-application/toonpick-app-api/build/libs -type f -name "*.jar"
+          echo "=== toonpick-app-api JAR ==="
           ls -al backend/module-application/toonpick-app-api/build/libs
+          echo "=== toonpick-app-worker JAR ==="
+          ls -al backend/module-application/toonpick-app-worker/build/libs
+          echo "=== toonpick-app-admin JAR ==="
+          ls -al backend/module-application/toonpick-app-admin/build/libs
 
-      - name: 빌드된 JAR 파일 업로드 (아티팩트 저장)
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-jar
-          path: backend/module-application/toonpick-app-api/build/libs/toonpick-0.0.1-SNAPSHOT.jar
-          retention-days: 3
+      - name: Slack Webhook 알림 전송 (CI)
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            STATUS=":white_check_mark: *CI 성공*"
+            COLOR="#2EB67D"
+            MESSAGE="TOONPICK CI 파이프라인이 성공적으로 완료되었습니다. :rocket:"
+          else
+            STATUS=":x: *CI 실패*"
+            COLOR="#D00000"
+            MESSAGE="TOONPICK CI 파이프라인 실패 :warning:\n실패 Job: \`${{ github.job }}\`"
+          fi
+      
+          curl -X POST -H 'Content-type: application/json' --data "{
+            \"attachments\": [
+              {
+                \"color\": \"${COLOR}\",
+                \"title\": \"${STATUS}\",
+                \"text\": \"${MESSAGE}\",
+                \"fields\": [
+                  {
+                    \"title\": \"GitHub Workflow\",
+                    \"value\": \"${{ github.workflow }}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"브랜치\",
+                    \"value\": \"${{ github.ref_name }}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"커밋자\",
+                    \"value\": \"${{ github.actor }}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"Run URL\",
+                    \"value\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+                  }
+                ]
+              }
+            ]
+          }" ${{ secrets.SLACK_WEBHOOK_URL }}
+      
