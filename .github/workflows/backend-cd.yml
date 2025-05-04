@@ -290,8 +290,18 @@ jobs:
           echo "[INFO] Auto Scaling Group 업데이트 시작"
           aws autoscaling update-auto-scaling-group \
             --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
-            --launch-template LaunchTemplateId=${{ secrets.LAUNCH_TEMPLATE_ID }},Version=${{ env.NEW_VERSION }}
+            --launch-template LaunchTemplateId=${{ secrets.LAUNCH_TEMPLATE_ID }},Version='$Latest'
           echo "[INFO] Auto Scaling Group 업데이트 완료"
+
+      - name: 인스턴스 리프레시 시작
+        run: |
+          echo "[INFO] 인스턴스 리프레시 시작"
+          aws autoscaling start-instance-refresh \
+            --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
+            --strategy Rolling \
+            --preferences '{"MinHealthyPercentage":100,"InstanceWarmup":300}'
+          echo "[INFO] 인스턴스 리프레시 요청 완료"
+  
 
       - name: Slack Webhook 알림 전송
         if: always()
