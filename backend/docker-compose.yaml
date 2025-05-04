@@ -22,6 +22,48 @@ services:
     networks:
       - backend
 
+  service-worker:
+    image: $DOCKER_HUB_USERNAME/toonpick-service-worker:latest
+    container_name: toonpick-service-worker
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./logs:/app/logs
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    cpus: 0.1
+    restart: always
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - backend
+
+  service-admin:
+    image: $DOCKER_HUB_USERNAME/toonpick-service-admin:latest
+    container_name: toonpick-service-admin
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./logs:/app/logs
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    cpus: 0.1
+    restart: always
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - backend
+
   mongodb:
     image: mongo:6.0
     container_name: toonpick-mongodb
