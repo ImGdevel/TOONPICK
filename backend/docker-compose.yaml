@@ -13,6 +13,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     cpus: 0.7
+    mem_limit: 512m
     restart: always
     depends_on:
       mongodb:
@@ -34,6 +35,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     cpus: 0.1
+    mem_limit: 128m
     restart: always
     depends_on:
       mongodb:
@@ -55,6 +57,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     cpus: 0.1
+    mem_limit: 128m
     restart: always
     depends_on:
       mongodb:
