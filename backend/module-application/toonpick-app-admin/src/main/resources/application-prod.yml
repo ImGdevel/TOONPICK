@@ -1,3 +1,6 @@
+server:
+  port: {ADMIN_SERVER_PORT}
+
 spring:
   datasource:
     data:

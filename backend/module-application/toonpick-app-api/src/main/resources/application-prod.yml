@@ -1,3 +1,6 @@
+server:
+  port: {API_SERVER_PORT}
+
 spring:
   datasource:
     data:
@@ -15,8 +18,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://${DB_MONGO_USERNAME}:${DB_MONGO_PASSWORD}@mongodb:27017/${DB_MONGO_DATABASE}?authSource=admin
-
+      uri: mongodb://${DB_MONGO_USERNAME}:${DB_MONGO_PASSWORD}@mongodb:${DB_MONGO_PORT}/${DB_MONGO_DATABASE}?authSource=admin
 
   jwt:
     secret: ${JWT_SECRET}

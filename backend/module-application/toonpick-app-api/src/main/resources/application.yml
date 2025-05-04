@@ -1,14 +1,6 @@
-server:
-  port: 8080
-
 spring:
   profiles:
     default: dev
-
-  redis:
-    timeout: 10000ms
-    jedis:
-      enabled: false
 
   output:
     ansi:
