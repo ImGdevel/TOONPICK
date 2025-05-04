@@ -13,7 +13,7 @@ public class HealthCheckController {
 
     final private Logger logger = LoggerFactory.getLogger(HealthCheckController.class);
 
-    @NotifyJobResult(jobName = "TOONPICK worker - health check")
+
     @GetMapping("/health")
     public Health health() {
         logger.info("health check 요청이 들어왔습니다.");
