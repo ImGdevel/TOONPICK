@@ -71,6 +71,7 @@ project(':module-application:toonpick-app-admin') {
         implementation project(':module-internal')
         implementation project(':module-internal:core-web')
         implementation project(':module-internal:core-exception')
+        implementation project(':module-internal:event-webhook')
 
         implementation project(':module-common')
     }
