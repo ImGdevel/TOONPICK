@@ -5,12 +5,12 @@ spring:
   datasource:
     data:
       driver-class-name: org.mariadb.jdbc.Driver
-      jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME}?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME}?useSSL=false&useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Seoul
       username: ${DB_MARIADB_USERNAME}
       password: ${DB_MARIADB_PASSWORD}
     meta:
       driver-class-name: org.mariadb.jdbc.Driver
-      jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME_META}?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME_META}?useSSL=false&useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Seoul
       username: ${DB_MARIADB_USERNAME}
       password: ${DB_MARIADB_USERNAME}
 
