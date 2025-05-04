@@ -303,6 +303,15 @@ jobs:
           echo "[INFO] 인스턴스 리프레시 요청 완료"
   
 
+      - name: 임시 EC2 인스턴스 중지 및 종료
+        if: always()
+        run: |
+          echo "AMI 생성이 완료되었으므로 임시 인스턴스를 종료합니다."
+          
+          aws ec2 terminate-instances --instance-ids $INSTANCE_ID
+          
+          echo "임시 인스턴스 종료 요청 완료: ${INSTANCE_ID}"
+
       - name: Slack Webhook 알림 전송
         if: always()
         run: |
