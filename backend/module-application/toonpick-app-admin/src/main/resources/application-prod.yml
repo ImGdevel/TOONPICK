@@ -9,12 +9,13 @@ spring:
       username: ${DB_MARIADB_USERNAME}
       password: ${DB_MARIADB_PASSWORD}
 
-  redis:
-    host: ${DB_REDIS_HOST}
-    port: ${DB_REDIS_PORT}
-    timeout: 10000ms
-    jedis:
-      enabled: false
+  data:
+    redis:
+      host: ${DB_REDIS_HOST}
+      port: ${DB_REDIS_PORT}
+      timeout: 10000ms
+      jedis:
+        enabled: false
 
   jwt:
     secret: ${JWT_SECRET}

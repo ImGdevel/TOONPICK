@@ -11,17 +11,15 @@ spring:
       jdbc-url: jdbc:mariadb://localhost:3306/toonpick-database?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
       username: root
       password: 1234
-    meta:
-      driver-class-name: org.mariadb.jdbc.Driver
-      jdbc-url: jdbc:mariadb://localhost:3306/meta?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-      username: root
-      password: 1234
-
-  redis:
-    host: localhost
-    port: 6380
 
   data:
+    redis:
+      host: localhost
+      port: 6380
+      timeout: 10000ms
+      jedis:
+        enabled: false
+
     mongodb:
       uri: mongodb://localhost:27017/webtoon-db
 

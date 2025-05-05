@@ -9,14 +9,14 @@ spring:
       username: ${DB_MARIADB_USERNAME}
       password: ${DB_MARIADB_PASSWORD}
 
-  redis:
-    host: ${DB_REDIS_HOST}
-    port: ${DB_REDIS_PORT}
-    timeout: 10000ms
-    jedis:
-      enabled: false
-
   data:
+    redis:
+      host: ${DB_REDIS_HOST}
+      port: ${DB_REDIS_PORT}
+      timeout: 10000ms
+      jedis:
+        enabled: false
+
     mongodb:
       uri: mongodb://${DB_MONGO_USERNAME}:${DB_MONGO_PASSWORD}@mongodb:${DB_MONGO_PORT}/${DB_MONGO_DATABASE}?authSource=admin
 
