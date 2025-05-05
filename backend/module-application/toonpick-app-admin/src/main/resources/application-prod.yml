@@ -40,3 +40,11 @@ spring:
             url: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_URL}
         auto-create: false
         enabled: false
+
+logging:
+  level:
+    org:
+      springframework: INFO
+  file:
+    name: ${LOG_FILE_NAME}
+    max-size: 10MB

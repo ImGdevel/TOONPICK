@@ -25,6 +25,13 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/webtoon-db
 
+  batch:
+    job:
+      enabled: true
+    jdbc:
+      initialize-schema: always
+
+
   cloud:
     aws:
       credentials:
@@ -42,3 +49,13 @@ spring:
           webtoon-update-complete: ${AWS_SQS_WEBTOON_UPDATE_COMPLETE}
         auto-create: false
         enabled: false
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
+      hibernate:
+        SQL: DEBUG
+  file:
+    name: logs/dev-application.log
+    max-size: 10MB

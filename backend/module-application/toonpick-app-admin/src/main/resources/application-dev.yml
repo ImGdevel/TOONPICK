@@ -43,3 +43,13 @@ spring:
             url: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_URL}
         auto-create: false
         enabled: false
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
+      hibernate:
+        SQL: DEBUG
+  file:
+    name: logs/dev-application.log
+    max-size: 10MB
