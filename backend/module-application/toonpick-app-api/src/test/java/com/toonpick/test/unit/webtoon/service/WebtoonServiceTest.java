@@ -5,7 +5,6 @@ import com.toonpick.entity.WebtoonAnalysisDataDocument;
 import com.toonpick.enums.AgeRating;
 import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
-import com.toonpick.exception.ResourceNotFoundException;
 import com.toonpick.repository.AuthorRepository;
 import com.toonpick.repository.GenreRepository;
 import com.toonpick.repository.WebtoonAnalysisRepository;

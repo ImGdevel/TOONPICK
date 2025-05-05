@@ -2,7 +2,7 @@ package com.toonpick.service;
 
 import com.toonpick.dto.response.WebtoonReviewResponse;
 import com.toonpick.entity.WebtoonReview;
-import com.toonpick.exception.ResourceNotFoundException;
+import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.mapper.WebtoonReviewMapper;
 import com.toonpick.repository.WebtoonReviewRepository;
 import com.toonpick.type.ErrorCode;
@@ -20,14 +20,14 @@ public class WebtoonReviewService {
     @Transactional(readOnly = true)
     public WebtoonReviewResponse getReview(Long id) {
         WebtoonReview review = reviewRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException(ErrorCode.REVIEW_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.REVIEW_NOT_FOUND));
 
         return reviewMapper.toWebtoonReviewResponse(review);
     }
 
     public void deleteReview(Long id) {
         if (!reviewRepository.existsById(id)) {
-            throw new ResourceNotFoundException(ErrorCode.REVIEW_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorCode.REVIEW_NOT_FOUND);
         }
         reviewRepository.deleteById(id);
     }

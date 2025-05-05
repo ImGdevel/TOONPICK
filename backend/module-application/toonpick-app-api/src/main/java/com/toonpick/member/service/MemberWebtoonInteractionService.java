@@ -4,7 +4,7 @@ import com.toonpick.entity.Member;
 import com.toonpick.entity.MemberWebtoonInteraction;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.enums.WatchingStatus;
-import com.toonpick.exception.ResourceNotFoundException;
+import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.member.request.LastReadUpdateRequest;
 import com.toonpick.member.request.WebtoonInteractionResponse;
 import com.toonpick.repository.MemberRepository;
@@ -111,11 +111,11 @@ public class MemberWebtoonInteractionService {
 
     private Member getMember(String username) {
         return memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     private Webtoon getWebtoon(Long webtoonId) {
         return webtoonRepository.findById(webtoonId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND));
     }
 }

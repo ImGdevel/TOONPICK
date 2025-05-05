@@ -3,8 +3,8 @@ package com.toonpick.service;
 import com.toonpick.dto.request.WebtoonCreateRequest;
 import com.toonpick.dto.request.WebtoonUpdateRequest;
 import com.toonpick.entity.Webtoon;
-import com.toonpick.exception.ResourceAlreadyExistsException;
-import com.toonpick.exception.ResourceNotFoundException;
+import com.toonpick.exception.DuplicateResourceException;
+import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.mapper.WebtoonMapper;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
@@ -23,7 +23,7 @@ public class WebtoonService {
      */
     public void createWebtoon(WebtoonCreateRequest webtoonCreateRequest) {
         if(webtoonRepository.existsByExternalId(webtoonCreateRequest.getPlatform() + webtoonCreateRequest.getExternalId())){
-            throw new ResourceAlreadyExistsException(ErrorCode.WEBTOON_ALREADY_EXISTS);
+            throw new DuplicateResourceException(ErrorCode.WEBTOON_ALREADY_EXISTS);
         }
         Webtoon webtoon = webtoonMapper.toWebtoon(webtoonCreateRequest);
         webtoonRepository.save(webtoon);
@@ -34,7 +34,7 @@ public class WebtoonService {
      */
     public void updateWebtoon(WebtoonUpdateRequest webtoonUpdateRequest) {
         Webtoon webtoon = webtoonRepository.findById(webtoonUpdateRequest.getId())
-            .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND));
+            .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND));
 
         // todo : 업데이트 가능한 데이터만 업데이트
         // webtoon.updateWebtoonDetails();
@@ -47,7 +47,7 @@ public class WebtoonService {
      */
     public void deleteWebtoon(Long id) {
         if (!webtoonRepository.existsById(id)) {
-            throw new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND);
         }
         webtoonRepository.deleteById(id);
     }

@@ -4,7 +4,7 @@ package com.toonpick.webtoon.service;
 import com.toonpick.dto.PagedResponseDTO;
 import com.toonpick.dto.WebtoonFilterDTO;
 import com.toonpick.entity.Webtoon;
-import com.toonpick.exception.ResourceNotFoundException;
+import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.repository.WebtoonAnalysisRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
@@ -42,7 +42,7 @@ public class WebtoonService {
     @Transactional(readOnly = true)
     public WebtoonResponse getWebtoon(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, String.valueOf(id)));
         return webtoonMapper.toWebtoonResponse(webtoon);
     }
 
@@ -51,7 +51,7 @@ public class WebtoonService {
      */
     public WebtoonDetailsResponse getWebtoonDetails(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, String.valueOf(id)));
 
         // 기본 정보 매핑
         WebtoonDetailsResponse webtoonDetails = webtoonMapper.toWebtoonDetailsResponse(webtoon);
