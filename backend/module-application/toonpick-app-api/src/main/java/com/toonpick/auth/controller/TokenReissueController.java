@@ -32,6 +32,8 @@ public class TokenReissueController {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenReissueController.class);
 
+    // todo : Refresh 토큰 발급 로직 Service로 분리 + AOP 적용할 것 : Controller는 오직 전달 역활만 간단하게!
+
     @Operation(summary = "access 토큰 재발급", description = "refresh 토큰을 통해 access 토큰 재발급")
     @PostMapping("/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
