@@ -8,6 +8,7 @@ import com.toonpick.handler.LoginFailureHandler;
 import com.toonpick.handler.LoginSuccessHandler;
 import com.toonpick.handler.LogoutHandler;
 import com.toonpick.handler.OAuth2SuccessHandler;
+import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.jwt.JwtTokenValidator;
 import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.toonpick.utils.ErrorResponseSender;
@@ -39,6 +40,7 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtTokenValidator jwtTokenValidator;
+    private final JwtTokenProvider jwtTokenProvider;
     private final DefaultOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final LoginSuccessHandler loginSuccessHandler;
@@ -89,7 +91,7 @@ public class SecurityConfig {
                 LogoutFilter.class
             )
             .addFilterAfter(
-                new JwtAuthorizationFilter(jwtTokenValidator),
+                new JwtAuthorizationFilter(jwtTokenValidator, jwtTokenProvider),
                 OAuth2LoginAuthenticationFilter.class
             );
 

@@ -1,10 +1,12 @@
 package com.toonpick.filter;
 
+import com.toonpick.dto.CustomUserDetails;
 import com.toonpick.exception.CustomAuthenticationException;
 import com.toonpick.exception.ExpiredJwtTokenException;
 import com.toonpick.exception.InvalidJwtTokenException;
 import com.toonpick.exception.JwtException;
 import com.toonpick.exception.MissingJwtTokenException;
+import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.type.ErrorCode;
 import com.toonpick.utils.ErrorResponseSender;
 import jakarta.servlet.FilterChain;
@@ -26,6 +28,7 @@ import java.io.IOException;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenValidator jwtTokenValidator;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
@@ -52,10 +55,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     // SecurityContext에 인증 정보 설정
     private void authenticateUser(String accessToken) {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = jwtTokenValidator.getUserDetails(accessToken);
+            UserDetails userDetails = getUserDetails(accessToken);
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
+    }
+
+    // 토큰에서 유저 정보 추출
+    private UserDetails getUserDetails(String token) {
+        String username = jwtTokenProvider.getUsername(token);
+        String role = jwtTokenProvider.getRole(token);
+        return new CustomUserDetails(username, "", role);
     }
 }

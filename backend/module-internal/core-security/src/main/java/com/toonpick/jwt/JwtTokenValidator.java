@@ -62,11 +62,4 @@ public class JwtTokenValidator {
         }
     }
 
-    // todo : 잘못된 위치 -> 이동 시킬 것
-    // 유저 정보 추출
-    public UserDetails getUserDetails(String token) {
-        String username = jwtTokenProvider.getUsername(token);
-        String role = jwtTokenProvider.getRole(token);
-        return new CustomUserDetails(username, "dummyPassword", role);
-    }
 }
