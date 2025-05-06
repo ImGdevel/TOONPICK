@@ -1,5 +1,6 @@
-package com.toonpick.exception;
+package com.toonpick.handler;
 
+import com.toonpick.exception.CustomAuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,44 +15,42 @@ import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
 public class AuthenticationExceptionHandler {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationExceptionHandler.class);
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        LOGGER.error("Username not found: {}", ex.getMessage());
+        logger.error("Username not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
-        LOGGER.error("Access denied: {}", ex.getMessage());
+        logger.error("Access denied: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 
     @ExceptionHandler(CustomAuthenticationException.class)
     public ResponseEntity<String> handleAuthenticationException(CustomAuthenticationException ex) {
-        LOGGER.error("Authentication Failed: {}", ex.getMessage());
+        logger.error("Authentication Failed: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
-    @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
+        @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
     public ResponseEntity<String> handleAuthenticationCredentialsNotFoundException(
             AuthenticationCredentialsNotFoundException ex) {
-        LOGGER.error("Authentication credentials not found: {}", ex.getMessage());
+        logger.error("Authentication credentials not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
     @ExceptionHandler(InvalidCsrfTokenException.class)
     public ResponseEntity<String> handleInvalidTokenException(InvalidCsrfTokenException ex) {
-        LOGGER.error("Invalid Token: {}", ex.getMessage());
+        logger.error("Invalid Token: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<String> handleNullPointerException(NullPointerException ex) {
-        LOGGER.error("Null pointer exception: {}", ex.getMessage(), ex);
+        logger.error("Null pointer exception: {}", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
-
 }
