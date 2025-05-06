@@ -42,12 +42,6 @@ public class AuthenticationExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
-    @ExceptionHandler(UserAlreadyRegisteredException.class)
-    public ResponseEntity<String> handleUsernameAlreadyExistsException(UserAlreadyRegisteredException ex) {
-        LOGGER.error("Username already exists: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-    }
-
     @ExceptionHandler(InvalidCsrfTokenException.class)
     public ResponseEntity<String> handleInvalidTokenException(InvalidCsrfTokenException ex) {
         LOGGER.error("Invalid Token: {}", ex.getMessage());
