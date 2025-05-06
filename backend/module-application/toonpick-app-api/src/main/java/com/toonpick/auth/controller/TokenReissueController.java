@@ -36,7 +36,7 @@ public class TokenReissueController {
     @PostMapping("/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
         // 쿠키에서 refresh token 추출 및 검증
-        String refreshToken = jwtTokenValidator.extractRefreshTokenFromCookies(request);
+        String refreshToken = CookieUtils.extractCookiesFromRequest(request, "refresh");
         jwtTokenValidator.validateRefreshToken(refreshToken);
 
         // 새로운 Access 토큰 발급

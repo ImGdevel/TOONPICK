@@ -34,7 +34,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 요청 헤더에서 Access Token 확인
-        String accessToken = jwtTokenValidator.extractAccessToken(request.getHeader("Authorization"));
+        String accessToken = extractAccessToken(request);
 
         if (accessToken != null) {
             try {
@@ -47,6 +47,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    // Access Token 추출
+    public String extractAccessToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        return authorizationHeader.substring(7).trim();
     }
 
     // SecurityContext에 인증 정보 설정
