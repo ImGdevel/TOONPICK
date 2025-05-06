@@ -25,7 +25,7 @@ public class LogoutHandler {
     public void handleLogout(HttpServletRequest request, HttpServletResponse response) {
 
         // refresh 토큰이 존재하는지 확인하고 제거
-        String refreshToken = tokenValidator.extractRefreshTokenFromCookies(request);
+        String refreshToken = CookieUtils.extractCookiesFromRequest(request, "refresh");
         if (refreshToken != null) {
             try {
                 tokenValidator.validateRefreshToken(refreshToken);
