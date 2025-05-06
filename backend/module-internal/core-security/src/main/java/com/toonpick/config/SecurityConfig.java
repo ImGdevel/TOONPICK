@@ -8,6 +8,8 @@ import com.toonpick.handler.LoginFailureHandler;
 import com.toonpick.handler.LoginSuccessHandler;
 import com.toonpick.handler.LogoutHandler;
 import com.toonpick.handler.OAuth2SuccessHandler;
+import com.toonpick.handler.RestAccessDeniedHandler;
+import com.toonpick.handler.RestAuthenticationEntryPoint;
 import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.jwt.JwtTokenValidator;
 import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -48,6 +50,8 @@ public class SecurityConfig {
     private final LogoutHandler logoutHandler;
     private final ErrorResponseSender errorResponseSender;
     private final HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private final RestAccessDeniedHandler restAccessDeniedHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -93,7 +97,12 @@ public class SecurityConfig {
             .addFilterAfter(
                 new JwtAuthorizationFilter(jwtTokenValidator, jwtTokenProvider),
                 OAuth2LoginAuthenticationFilter.class
-            );
+            )
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
+                .accessDeniedHandler(restAccessDeniedHandler)
+            )
+        ;
 
         return http.build();
     }
