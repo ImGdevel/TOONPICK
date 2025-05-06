@@ -1,6 +1,5 @@
-package com.toonpick.exception.handler;
+package com.toonpick.handler;
 
-import com.toonpick.dto.ErrorResponse;
 import com.toonpick.exception.AccessDeniedException;
 import com.toonpick.exception.AuthenticationException;
 import com.toonpick.exception.BadRequestException;
@@ -9,6 +8,7 @@ import com.toonpick.exception.DuplicateResourceException;
 import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.exception.InternalServerException;
 
+import com.toonpick.response.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -26,50 +26,50 @@ public class GlobalExceptionHandler {
      * BadRequestException(400 Bad Request): 잘못된 입력
      */
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
+    public ResponseEntity<ApiResponse> handleBadRequestException(BadRequestException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(ex.getErrorCode()));
+                .body(ApiResponse.fail(ex.getErrorCode()));
     }
 
     /**
      * AuthenticationException(401 Unauthorized):  로그인 실패, 인증 실패
      */
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+    public ResponseEntity<ApiResponse> handleAuthenticationException(AuthenticationException ex) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorResponse(ex.getErrorCode()));
+                .body(ApiResponse.fail(ex.getErrorCode()));
     }
 
     /**
      * AccessDeniedException(403 Forbidden): 인증은 됐지만, 권한이 부족함
      */
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+    public ResponseEntity<ApiResponse> handleAccessDeniedException(AccessDeniedException ex) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(ex.getErrorCode()));
+                .status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.fail(ex.getErrorCode()));
     }
 
     /**
      * EntityNotFoundException(404 Not Found): 요청한 데이터를 찾을 수 없음
      */
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException ex) {
+    public ResponseEntity<ApiResponse> handleEntityNotFoundException(EntityNotFoundException ex) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(ex.getErrorCode()));
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.fail(ex.getErrorCode()));
     }
 
     /**
      * DuplicateResourceException(409 Conflict): 동일 데이터 중복 생성 시도
      */
     @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateResourceException(DuplicateResourceException ex) {
+    public ResponseEntity<ApiResponse> handleDuplicateResourceException(DuplicateResourceException ex) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(ex.getErrorCode()));
+                .status(HttpStatus.CONFLICT)
+                .body(ApiResponse.fail(ex.getErrorCode()));
     }
 
 
@@ -77,20 +77,30 @@ public class GlobalExceptionHandler {
      * BusinessException(422 Unprocessable Entity): 도메인/비즈니스 규칙 위반
      */
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
+    public ResponseEntity<ApiResponse> handleBusinessException(BusinessException ex) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(ex.getErrorCode()));
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(ApiResponse.fail(ex.getErrorCode()));
     }
 
     /**
      * InternalServerException(500 Internal Server Error): 예기치 못한 서버 시스템 에러
      */
     @ExceptionHandler(InternalServerException.class)
-    public ResponseEntity<ErrorResponse> handleInternalServerException(InternalServerException ex) {
+    public ResponseEntity<ApiResponse> handleInternalServerException(InternalServerException ex) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(ex.getErrorCode()));
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.fail(ex.getErrorCode()));
+    }
+
+    /**
+     * Exception(500 Internal Server Error): 알 수 없는 시스템 에러
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse> handleException(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.fail(ex.getMessage()));
     }
 
 }
