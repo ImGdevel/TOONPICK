@@ -13,7 +13,6 @@ import com.toonpick.handler.RestAuthenticationEntryPoint;
 import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.jwt.JwtTokenValidator;
 import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.toonpick.utils.ErrorResponseSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +47,6 @@ public class SecurityConfig {
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
     private final LogoutHandler logoutHandler;
-    private final ErrorResponseSender errorResponseSender;
     private final HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final RestAccessDeniedHandler restAccessDeniedHandler;
@@ -91,7 +89,7 @@ public class SecurityConfig {
                 UsernamePasswordAuthenticationFilter.class
             )
             .addFilterBefore(
-                new CustomLogoutFilter(jwtTokenValidator, logoutHandler, errorResponseSender),
+                new CustomLogoutFilter(logoutHandler),
                 LogoutFilter.class
             )
             .addFilterAfter(
