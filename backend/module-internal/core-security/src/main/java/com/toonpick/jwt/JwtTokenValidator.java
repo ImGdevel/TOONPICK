@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import com.toonpick.user.CustomUserDetails;
+import com.toonpick.dto.CustomUserDetails;
 
 @Component
 @RequiredArgsConstructor
