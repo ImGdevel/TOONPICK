@@ -5,8 +5,8 @@ import com.toonpick.entity.Member;
 import com.toonpick.entity.ReviewLike;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.entity.WebtoonReview;
-import com.toonpick.exception.DatabaseOperationException;
 import com.toonpick.exception.EntityNotFoundException;
+import com.toonpick.exception.InternalServerException;
 import com.toonpick.repository.MemberRepository;
 import com.toonpick.repository.ReviewLikeRepository;
 import com.toonpick.repository.WebtoonRepository;
@@ -132,9 +132,9 @@ public class WebtoonReviewService {
                 return CompletableFuture.completedFuture(true);
             }
         } catch (DataAccessException e) {
-            throw new DatabaseOperationException(ErrorCode.DATABASE_ERROR, e);
+            throw new InternalServerException(ErrorCode.DATABASE_ERROR, e);
         } catch (Exception e) {
-            throw new RuntimeException(ErrorCode.UNKNOWN_ERROR.getMessage(), e);
+            throw new InternalServerException(ErrorCode.UNKNOWN_ERROR.getMessage(), e);
         }
     }
 
@@ -147,7 +147,7 @@ public class WebtoonReviewService {
                 webtoonReviewRepository.decrementLikes(reviewId);
             }
         } catch (DataAccessException e) {
-            throw new DatabaseOperationException(ErrorCode.LIKE_COUNT_UPDATE_ERROR, e);
+            throw new InternalServerException(ErrorCode.LIKE_COUNT_UPDATE_ERROR, e);
         }
         return CompletableFuture.completedFuture(null);
     }
