@@ -38,17 +38,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (accessToken != null) {
             try {
-                // Access Token 검증
                 jwtTokenValidator.validateAccessToken(accessToken);
-
-                // SecurityContext 인증 정보가 없으면 인증 정보 설정
-                if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = jwtTokenValidator.getUserDetails(accessToken);
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-
+                authenticateUser(accessToken);
             } catch (ExpiredJwtTokenException | InvalidJwtTokenException e) {
                 logger.warn("Invalid JWT Token: {}", e.getMessage());
                 throw new CustomAuthenticationException(ErrorCode.INVALID_AUTH_TOKEN);
@@ -58,4 +49,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    // SecurityContext에 인증 정보 설정
+    private void authenticateUser(String accessToken) {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = jwtTokenValidator.getUserDetails(accessToken);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
+    }
 }
