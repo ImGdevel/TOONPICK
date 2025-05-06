@@ -89,7 +89,7 @@ public class SecurityConfig {
                 LogoutFilter.class
             )
             .addFilterAfter(
-                new JwtAuthorizationFilter(jwtTokenValidator, errorResponseSender),
+                new JwtAuthorizationFilter(jwtTokenValidator),
                 OAuth2LoginAuthenticationFilter.class
             );
 
