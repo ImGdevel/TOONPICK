@@ -1,63 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './style.module.css';
 
-interface CarouselProps {
-  images: string[];
+interface CarouselItem {
+  imageUrl: string;
+  link: string;
 }
 
-const Carousel: React.FC<CarouselProps> = ({ images }) => {
+interface CarouselProps {
+  items: CarouselItem[];
+}
+
+const Carousel: React.FC<CarouselProps> = ({ items }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [loadedImages, setLoadedImages] = useState<number[]>([]);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
 
-  const handleImageLoad = (index: number): void => {
-    setLoadedImages((prevLoadedImages) => [...prevLoadedImages, index]);
-  };
-
-  const nextSlide = (): void => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const prevSlide = (): void => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-  };
-
-  const goToSlide = (index: number): void => {
+  const handleDotClick = (index: number) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
     setCurrentIndex(index);
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsTransitioning(false);
+    }, 500); // transition duration과 동일하게 설정
+    return () => clearTimeout(timer);
+  }, [currentIndex]);
+
   return (
-    <div className={styles.carousel}>
-      <div
-        className={styles.carouselInner}
-        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+    <div className={styles.carouselContainer}>
+      <div 
+        className={styles.carouselWrapper}
+        style={{ 
+          transform: `translateX(-${currentIndex * 100}%)`,
+          transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none'
+        }}
       >
-        {images.map((image, index) => (
-          <div key={index} className={styles.carouselItem}>
-            <img
-              src={image}
-              alt={`Slide ${index}`}
-              onLoad={() => handleImageLoad(index)}
-              style={{ display: loadedImages.includes(index) ? 'block' : 'none' }}
+        {items.map((item, index) => (
+          <a 
+            key={index} 
+            href={item.link} 
+            className={styles.carouselItem}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img 
+              src={item.imageUrl} 
+              alt={`Slide ${index + 1}`}
+              className={styles.carouselImage}
             />
-            {!loadedImages.includes(index) && <div className={styles.imagePlaceholder}></div>}
-          </div>
+          </a>
         ))}
       </div>
-      <button className={`${styles.carouselControl} ${styles.prev}`} onClick={prevSlide}>
-        &#10094;
-      </button>
-      <button className={`${styles.carouselControl} ${styles.next}`} onClick={nextSlide}>
-        &#10095;
-      </button>
-      <div className={styles.carouselIndicators}>
-        {images.map((_, index) => (
+      
+      <div className={styles.dotsContainer}>
+        {items.map((_, index) => (
           <button
             key={index}
-            className={`${styles.indicator} ${index === currentIndex ? styles.active : ''}`}
-            onClick={() => goToSlide(index)}
-          ></button>
+            className={`${styles.dot} ${index === currentIndex ? styles.activeDot : ''}`}
+            onClick={() => handleDotClick(index)}
+            aria-label={`Go to slide ${index + 1}`}
+          />
         ))}
       </div>
     </div>

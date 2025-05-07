@@ -1,79 +1,76 @@
-.carousel {
+.carouselContainer {
   position: relative;
-  width: 900px;
+  width: 100%;
+  max-width: 1100px;
   height: 500px;
+  margin: 32px auto 40px auto;
   overflow: hidden;
-  margin: 20px auto;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  background: linear-gradient(120deg, #23272f 60%, #1a1d22 100%);
+  display: flex;
+  align-items: center;
 }
 
-.carouselInner {
+.carouselWrapper {
   display: flex;
-  transition: transform 0.5s ease-in-out;
   width: 100%;
   height: 100%;
+  transition: transform 0.5s cubic-bezier(0.77,0,0.175,1);
 }
 
 .carouselItem {
-  min-width: 100%;
+  flex: 0 0 100%;
+  width: 100%;
   height: 100%;
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   position: relative;
 }
 
-.carousel img {
+.carouselImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  transition: transform 0.3s cubic-bezier(0.77,0,0.175,1);
 }
 
-.imagePlaceholder {
-  width: 100%;
-  height: 100%;
-  background-color: black;
+.carouselItem:hover .carouselImage {
+  transform: scale(1.03);
+}
+
+.dotsContainer {
   position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.carouselControl {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  border: none;
-  color: white;
-  font-size: 24px;
-  padding: 10px;
-  cursor: pointer;
-  z-index: 1;
-}
-
-.carouselControl.prev {
-  left: 10px;
-}
-
-.carouselControl.next {
-  right: 10px;
-}
-
-.carouselIndicators {
-  position: absolute;
-  bottom: 10px;
+  bottom: 22px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  gap: 12px;
+  z-index: 2;
 }
 
-.indicator {
-  width: 10px;
-  height: 10px;
-  margin: 0 5px;
-  background-color: white;
-  border: none;
+.dot {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
+  background: rgba(255,255,255,0.32);
+  border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s, transform 0.3s;
+  padding: 0;
 }
 
-.indicator.active {
-  background-color: #333;
+.dot:hover {
+  background: rgba(255,255,255,0.7);
+}
+
+.activeDot {
+  background: #fff;
+  transform: scale(1.25);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
