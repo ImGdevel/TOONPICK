@@ -6,21 +6,8 @@ sourceSets {
     }
 }
 
-project(':module-internal:client-auth') {
-    dependencies {
-        implementation project(':module-common')
-    }
-    bootJar.enabled = false
-}
 
 project(':module-internal:client-storage') {
-    dependencies {
-        implementation project(':module-common')
-    }
-    bootJar.enabled = false
-}
-
-project(':module-internal:core-exception') {
     dependencies {
         implementation project(':module-common')
     }

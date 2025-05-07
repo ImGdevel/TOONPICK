@@ -17,7 +17,6 @@ project(':module-application:toonpick-app-api') {
         implementation project(':module-internal:event-webhook')
         implementation project(':module-internal:client-storage')
         implementation project(':module-internal:core-security')
-        implementation project(':module-internal:core-exception')
 
         implementation project(':module-common')
     }
@@ -35,7 +34,6 @@ project(':module-application:toonpick-app-worker') {
 
         implementation project(':module-internal')
         implementation project(':module-internal:event-sqs')
-        implementation project(':module-internal:core-exception')
         implementation project(':module-internal:event-webhook')
 
         implementation project(':module-common')
@@ -53,7 +51,6 @@ project(':module-application:toonpick-app-admin') {
 
         implementation project(':module-internal')
         implementation project(':module-internal:core-web')
-        implementation project(':module-internal:core-exception')
         implementation project(':module-internal:event-webhook')
 
         implementation project(':module-common')
