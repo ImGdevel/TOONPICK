@@ -87,6 +87,26 @@ class WebtoonService {
     }
   }
 
+  // 인기 웹툰 조회
+  public async getPopularWebtoons(size: number = 10): Promise<Response<Webtoon[]>> {
+    try {
+      const response = await api.get<Webtoon[]>(`/api/public/webtoons/popular`, { params: { size } });
+      return { success: true, data: response.data };
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  // 최신 웹툰 조회
+  public async getRecentWebtoons(size: number = 10): Promise<Response<Webtoon[]>> {
+    try {
+      const response = await api.get<Webtoon[]>(`/api/public/webtoons/recent`, { params: { size } });
+      return { success: true, data: response.data };
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
   // 오류 처리
   private handleError(error: any): { success: false; message: string } {
     console.error('API Error:', error);

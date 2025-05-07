@@ -6,16 +6,21 @@ import styles from './style.module.css';
 interface WebtoonGridProps {
   webtoons: Webtoon[];
   lastWebtoonRef?: React.RefObject<HTMLDivElement>;
+  rowLimit?: number;
 }
 
-const WebtoonGrid: React.FC<WebtoonGridProps> = ({ webtoons, lastWebtoonRef }) => {
+const WebtoonGrid: React.FC<WebtoonGridProps> = ({ webtoons, lastWebtoonRef, rowLimit }) => {
+  const itemsPerRow = 5;
+  const maxItems = rowLimit ? rowLimit * itemsPerRow : webtoons.length;
+  const displayWebtoons = webtoons.slice(0, maxItems);
+
   return (
     <div className={styles.grid}>
-      {webtoons.map((webtoon, index) => (
+      {displayWebtoons.map((webtoon, index) => (
         <div
           className={styles.gridItem}
           key={webtoon.id || index}
-          ref={index === webtoons.length - 1 ? lastWebtoonRef : null} 
+          ref={index === displayWebtoons.length - 1 ? lastWebtoonRef : null} 
         >
           <WebtoonCard webtoon={webtoon} />
         </div>
