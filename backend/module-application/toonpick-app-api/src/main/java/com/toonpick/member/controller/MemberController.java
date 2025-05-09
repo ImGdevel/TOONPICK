@@ -5,7 +5,7 @@ import com.toonpick.member.request.MemberProfileRequestDTO;
 import com.toonpick.member.response.MemberProfileDetailsResponse;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
-import com.toonpick.user.CustomUserDetails;
+import com.toonpick.dto.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

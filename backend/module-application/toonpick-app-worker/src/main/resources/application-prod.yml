@@ -1,26 +1,35 @@
+server:
+  port: {WORKER_SERVER_PORT}
+
 spring:
   datasource:
     data:
       driver-class-name: org.mariadb.jdbc.Driver
-      jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME}?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME}?useSSL=false&useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Seoul{DB_MARIADB_ADDITIONAL_PARAMS}
       username: ${DB_MARIADB_USERNAME}
       password: ${DB_MARIADB_PASSWORD}
     meta:
       driver-class-name: org.mariadb.jdbc.Driver
-      jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME_META}?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME_META}?useSSL=false&useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Seoul{DB_MARIADB_ADDITIONAL_PARAMS}
       username: ${DB_MARIADB_USERNAME}
       password: ${DB_MARIADB_USERNAME}
 
-  redis:
-    host: ${DB_REDIS_HOST}
-    port: ${DB_REDIS_PORT}
-    timeout: 10000ms
-    jedis:
-      enabled: false
-
   data:
+    redis:
+      host: ${DB_REDIS_HOST}
+      port: ${DB_REDIS_PORT}
+      timeout: 10000ms
+      jedis:
+        enabled: false
+
     mongodb:
-      uri: mongodb://${DB_MONGO_USERNAME}:${DB_MONGO_PASSWORD}@mongodb:27017/${DB_MONGO_DATABASE}?authSource=admin
+      uri: mongodb://${DB_MONGO_USERNAME}:${DB_MONGO_PASSWORD}@mongodb:${DB_MONGO_PORT}/${DB_MONGO_DATABASE}?authSource=admin
+
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: never
 
   cloud:
     aws:
@@ -38,3 +47,11 @@ spring:
           update-webtoon: ${AWS_SQS_UPDATE_WEBTOON}
         auto-create: false
         enabled: false
+
+logging:
+  level:
+    org:
+      springframework: INFO
+  file:
+    name: ${LOG_FILE_NAME}
+    max-size: 10MB

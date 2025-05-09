@@ -2,7 +2,6 @@ package com.toonpick.test.unit.auth.service;
 
 import com.toonpick.auth.service.MemberJoinService;
 import com.toonpick.entity.Member;
-import com.toonpick.exception.UserAlreadyRegisteredException;
 import com.toonpick.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

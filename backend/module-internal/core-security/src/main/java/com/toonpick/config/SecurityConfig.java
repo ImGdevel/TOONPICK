@@ -1,5 +1,6 @@
 package com.toonpick.config;
 
+import com.toonpick.constants.SecurityConstants;
 import com.toonpick.filter.CustomLogoutFilter;
 import com.toonpick.filter.JwtAuthorizationFilter;
 import com.toonpick.filter.LoginAuthenticationFilter;
@@ -7,8 +8,11 @@ import com.toonpick.handler.LoginFailureHandler;
 import com.toonpick.handler.LoginSuccessHandler;
 import com.toonpick.handler.LogoutHandler;
 import com.toonpick.handler.OAuth2SuccessHandler;
+import com.toonpick.handler.RestAccessDeniedHandler;
+import com.toonpick.handler.RestAuthenticationEntryPoint;
+import com.toonpick.jwt.JwtTokenProvider;
+import com.toonpick.jwt.JwtTokenValidator;
 import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.toonpick.utils.ErrorResponseSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +31,6 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.toonpick.jwt.JwtTokenValidator;
-
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -39,13 +41,15 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtTokenValidator jwtTokenValidator;
+    private final JwtTokenProvider jwtTokenProvider;
     private final DefaultOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
     private final LogoutHandler logoutHandler;
-    private final ErrorResponseSender errorResponseSender;
     private final HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private final RestAccessDeniedHandler restAccessDeniedHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -74,10 +78,9 @@ public class SecurityConfig {
                 .successHandler(oAuth2SuccessHandler)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/health" ,"/login", "/join", "/logout", "/reissue", "/oauth2/**", "/api/public/**", "/auth/**").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                .requestMatchers("/api/secure/**").hasRole("USER")
-                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers(SecurityConstants.PUBLIC_URLS).permitAll()
+                .requestMatchers(SecurityConstants.USER_URLS).hasRole("USER")
+                .requestMatchers(SecurityConstants.ADMIN_URLS).hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -86,13 +89,18 @@ public class SecurityConfig {
                 UsernamePasswordAuthenticationFilter.class
             )
             .addFilterBefore(
-                new CustomLogoutFilter(jwtTokenValidator, logoutHandler, errorResponseSender),
+                new CustomLogoutFilter(logoutHandler),
                 LogoutFilter.class
             )
             .addFilterAfter(
-                new JwtAuthorizationFilter(jwtTokenValidator, errorResponseSender),
+                new JwtAuthorizationFilter(jwtTokenValidator, jwtTokenProvider),
                 OAuth2LoginAuthenticationFilter.class
-            );
+            )
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
+                .accessDeniedHandler(restAccessDeniedHandler)
+            )
+        ;
 
         return http.build();
     }

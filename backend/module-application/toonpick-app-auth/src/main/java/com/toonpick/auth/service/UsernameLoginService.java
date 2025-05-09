@@ -3,7 +3,7 @@ package com.toonpick.auth.service;
 import com.toonpick.entity.Member;
 import com.toonpick.repository.MemberRepository;
 import com.toonpick.type.ErrorCode;
-import com.toonpick.user.CustomUserDetails;
+import com.toonpick.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

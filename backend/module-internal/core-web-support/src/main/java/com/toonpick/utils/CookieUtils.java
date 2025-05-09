@@ -49,6 +49,21 @@ public class CookieUtils {
         return cookie;
     }
 
+    /**
+     * Header에서 Cookie 값 추출
+     */
+    public static String extractCookiesFromRequest(HttpServletRequest request, String key) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (key.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
         // 쿠키 가져오기
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         if (request.getCookies() == null) {

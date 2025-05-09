@@ -19,12 +19,12 @@ public class UpdatedWebtoonListener {
     private final Logger logger = LoggerFactory.getLogger(UpdatedWebtoonListener.class);
 
     private final WebtoonService webtoonService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Value("${spring.cloud.aws.sqs.queue.webtoon-update-complete}")
     private String queueName;
 
-    @SqsListener
+    @SqsListener(value = "${spring.cloud.aws.sqs.queue.webtoon-update-complete}")
     public void handle(String message) {
         try{
             WebtoonUpdateCommand request = objectMapper.readValue(message, WebtoonUpdateCommand.class);

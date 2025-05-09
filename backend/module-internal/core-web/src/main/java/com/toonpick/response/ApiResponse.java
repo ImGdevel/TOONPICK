@@ -1,5 +1,6 @@
 package com.toonpick.response;
 
+import com.toonpick.type.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -22,7 +23,15 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true, data, message);
     }
 
+    public static <T> ApiResponse<T> fail() {
+        return new ApiResponse<>(false, null, null);
+    }
+
     public static <T> ApiResponse<T> fail(String message) {
         return new ApiResponse<>(false, null, message);
+    }
+
+    public static <T> ApiResponse<T> fail(ErrorCode errorCode) {
+        return new ApiResponse<>(false, null, errorCode.getMessage());
     }
 }

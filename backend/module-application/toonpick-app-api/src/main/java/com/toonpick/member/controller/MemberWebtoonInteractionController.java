@@ -6,7 +6,7 @@ import com.toonpick.member.request.LastReadUpdateRequest;
 import com.toonpick.member.request.NotificationUpdateRequest;
 import com.toonpick.member.request.WebtoonInteractionResponse;
 import com.toonpick.member.service.MemberWebtoonInteractionService;
-import com.toonpick.user.CustomUserDetails;
+import com.toonpick.dto.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
