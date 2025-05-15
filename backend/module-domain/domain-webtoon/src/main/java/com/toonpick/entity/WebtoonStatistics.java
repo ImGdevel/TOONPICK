@@ -13,8 +13,12 @@ import java.time.LocalDateTime;
 public class WebtoonStatistics {
 
     @Id
-    @Column(name = "webtoon_id")
-    private Long webtoonId;
+    private Long id;
+
+    @MapsId
+    @OneToOne
+    @JoinColumn(name = "webtoon_id")
+    private Webtoon webtoon;
 
     @Column(name = "total_views", nullable = false)
     private Long totalViews = 0L;

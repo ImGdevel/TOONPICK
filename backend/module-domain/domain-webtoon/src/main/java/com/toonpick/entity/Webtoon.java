@@ -126,7 +126,12 @@ public class Webtoon {
     @Column(name = "rating_count")
     private Integer ratingCount = 0;
 
-    @OneToOne(mappedBy = "webtoon", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(
+            mappedBy = "webtoon",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private WebtoonStatistics webtoonStatistics;
 
     @Builder
