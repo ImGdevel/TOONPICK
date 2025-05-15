@@ -59,14 +59,6 @@ public class Member extends BaseTimeEntity {
     @Column(name = "adult_verified", nullable = false)
     private Boolean adultVerified = false;
 
-
-    // 소셜 로그인 정보
-    @Column(name = "oauth_provider")
-    private String provider;
-
-    @Column(name = "oauth_provider_id", unique = true)
-    private String providerId;
-
     // 계정 활성화 상태
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -98,8 +90,6 @@ public class Member extends BaseTimeEntity {
             MemberRole role,
             LocalDate birthday,
             Gender gender,
-            String profileImage,
-            String provider,
             String profileImage
     ) {
         this.id = id;
@@ -112,8 +102,6 @@ public class Member extends BaseTimeEntity {
         this.birthday = birthday;
         this.gender = gender;
         this.profileImage = profileImage;
-        this.provider = provider;
-        this.providerId = providerId;
         this.status = MemberStatus.ACTIVE;
         this.loginFailCount = 0;
         this.emailVerified = false;
