@@ -53,14 +53,12 @@ public class Member extends BaseTimeEntity {
     @Column(name = "role", nullable = false)
     private MemberRole role;
 
-    @Column(name = "profile_image")
+    @Column(name = "profile_image_url")
     private String profileImage;
 
     @Column(name = "adult_verified", nullable = false)
     private Boolean adultVerified = false;
 
-    @Column(name = "level", nullable = false)
-    private int level = 0;
 
     // 소셜 로그인 정보
     @Column(name = "oauth_provider")
@@ -102,7 +100,7 @@ public class Member extends BaseTimeEntity {
             Gender gender,
             String profileImage,
             String provider,
-            String providerId
+            String profileImage
     ) {
         this.id = id;
         this.username = username;
@@ -169,11 +167,6 @@ public class Member extends BaseTimeEntity {
     // 이메일 인증
     public void verifyEmail() {
         this.emailVerified = true;
-    }
-
-    // 레벨 업데이트
-    public void updateLevel(int newLevel) {
-        this.level = newLevel;
     }
 
     // 계정 활성화
