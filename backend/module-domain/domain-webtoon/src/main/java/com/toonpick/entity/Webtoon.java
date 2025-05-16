@@ -51,9 +51,6 @@ public class Webtoon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "external_id", nullable = false, unique = true)
-    private String externalId;
-
     @NotNull
     @Column(name = "title", nullable = false)
     private String title;
@@ -132,15 +129,12 @@ public class Webtoon {
 
     @Builder
     public Webtoon(Long id,
-                   String externalId,
                    String title,
-                   Platform platform,
                    DayOfWeek dayOfWeek,
                    String thumbnailUrl,
-                   String link,
                    AgeRating ageRating,
                    String summary,
-                   SerializationStatus serializationStatus,
+                   SerializationStatus status,
                    int episodeCount,
                    float platformRating,
                    LocalDate publishStartDate,
@@ -148,13 +142,12 @@ public class Webtoon {
                    Set<Author> authors,
                    Set<Genre> genres) {
         this.id = id;
-        this.externalId = platform + externalId;
         this.title = title;
         this.dayOfWeek = dayOfWeek;
         this.thumbnailUrl = thumbnailUrl;
         this.ageRating = ageRating;
         this.summary = summary;
-        this.serializationStatus = serializationStatus;
+        this.serializationStatus = status;
         this.platformRating = platformRating;
         this.episodeCount = episodeCount;
         this.publishStartDate = publishStartDate;

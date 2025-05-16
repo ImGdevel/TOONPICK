@@ -28,15 +28,12 @@ public class WebtoonMapper {
         }
 
         return Webtoon.builder()
-                .externalId(request.getExternalId())
                 .title(request.getTitle())
-                .platform(request.getPlatform())
                 .dayOfWeek(request.getDayOfWeek())
                 .thumbnailUrl(request.getThumbnailUrl())
-                .link(request.getLink())
                 .ageRating(request.getAgeRating())
                 .summary(request.getSummary())
-                .serializationStatus(request.getSerializationStatus())
+                .status(request.getSerializationStatus())
                 .episodeCount(request.getEpisodeCount())
                 .platformRating(request.getPlatformRating())
                 .publishStartDate(request.getPublishStartDate())

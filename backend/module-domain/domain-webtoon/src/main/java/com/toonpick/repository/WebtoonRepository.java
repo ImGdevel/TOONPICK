@@ -11,15 +11,16 @@ import com.toonpick.enums.SerializationStatus;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, WebtoonRepositoryCustom {
 
-    boolean existsByExternalId(String externalId);
-    Optional<Webtoon> findByExternalId(String externalId);
+    /**
+     * 같은 제목의 웹툰 전부 반환
+     */
+    List<Webtoon> findAllByTitle(String title);
 
-     /*
-     업데이트가 필요한 웹툰 리스트 참조
+     /**
+     업데이트가 필요한 웹툰 리스트 반환
       */
      @Query("SELECT w FROM Webtoon w " +
             "WHERE w.serializationStatus IN (:statuses) " +
