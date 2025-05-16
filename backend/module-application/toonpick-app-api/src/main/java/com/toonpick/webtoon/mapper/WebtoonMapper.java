@@ -1,5 +1,7 @@
 package com.toonpick.webtoon.mapper;
 
+import com.toonpick.entity.WebtoonPlatform;
+import com.toonpick.webtoon.response.PlatformResponse;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
 import com.toonpick.webtoon.response.WebtoonResponse;
 import org.mapstruct.Mapper;
@@ -18,4 +20,7 @@ public interface WebtoonMapper {
 
     WebtoonDetailsResponse toWebtoonDetailsResponse(Webtoon webtoon);
 
+    @Mapping(target = "name", source = "platform.name")
+    @Mapping(target = "link", source = "link")
+    PlatformResponse toPlatformResponse(WebtoonPlatform webtoonPlatform);
 }
