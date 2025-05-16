@@ -93,6 +93,7 @@ public enum ErrorCode {
     WEBTOON_NOT_FOUND("웹툰을 찾을 수 없습니다"),
     AUTHOR_NOT_FOUND("작가를 찾을 수 없습니다"),
     GENRE_NOT_FOUND("장르를 찾을 수 없습니다"),
+    PLATFORM_NOT_FOUND("플랫폼을 찾을 수 없습니다"),
     REVIEW_NOT_FOUND("리뷰를 찾을 수 없습니다"),
     COLLECTION_NOT_FOUND("컬렉션을 찾을 수 없습니다"),
     BOOKMARK_TOON_NOT_FOUND("북마크한 웹툰을 찾을 수 없습니다"),
