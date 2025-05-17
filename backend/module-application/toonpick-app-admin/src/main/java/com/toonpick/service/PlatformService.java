@@ -31,10 +31,13 @@ public class PlatformService {
     }
 
     public WebtoonPlatform createWebtoonPlatform(Webtoon webtoon, Platform platform, String link){
+        int currentRank = webtoonPlatformRepository.countByWebtoon(webtoon);
+
         WebtoonPlatform webtoonPlatform = WebtoonPlatform.builder()
                 .webtoon(webtoon)
                 .platform(platform)
                 .link(link)
+                .rank(currentRank + 1)
                 .build();
         return webtoonPlatformRepository.save(webtoonPlatform);
     }

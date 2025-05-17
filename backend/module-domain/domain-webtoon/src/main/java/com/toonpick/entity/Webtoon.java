@@ -15,6 +15,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -84,7 +85,8 @@ public class Webtoon {
     @Column(name = "last_update_date")
     private LocalDate lastUpdatedDate;
 
-    @OneToMany(mappedBy = "webtoon", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "webtoon", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("rank ASC")
     private List<WebtoonPlatform> platforms = new ArrayList<>();
 
     @ManyToMany
