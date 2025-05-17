@@ -14,8 +14,7 @@ public interface WebtoonStatisticsRepository extends JpaRepository<WebtoonStatis
     @Query("UPDATE WebtoonStatistics ws SET " +
            "ws.totalRatingSum = ws.totalRatingSum + :newRating, " +
            "ws.totalRatingCount = ws.totalRatingCount + 1, " +
-           "ws.averageRating = ws.totalRatingSum / ws.totalRatingCount, " +
-           "ws.lastUpdateAt = CURRENT_TIMESTAMP " +
+           "ws.averageRating = ws.totalRatingSum / ws.totalRatingCount " +
            "WHERE ws.id = :webtoonId")
     void addReview(@Param("webtoonId") Long webtoonId, @Param("newRating") float newRating);
 
@@ -25,8 +24,7 @@ public interface WebtoonStatisticsRepository extends JpaRepository<WebtoonStatis
     @Query("UPDATE WebtoonStatistics ws SET " +
            "ws.totalRatingSum = ws.totalRatingSum - :oldRating, " +
            "ws.totalRatingCount = ws.totalRatingCount - 1, " +
-           "ws.averageRating = CASE WHEN ws.totalRatingCount = 0 THEN 0 ELSE ws.totalRatingSum / ws.totalRatingCount END, " +
-           "ws.lastUpdateAt = CURRENT_TIMESTAMP " +
+           "ws.averageRating = CASE WHEN ws.totalRatingCount = 0 THEN 0 ELSE ws.totalRatingSum / ws.totalRatingCount END " +
            "WHERE ws.id = :webtoonId")
     void removeReview(@Param("webtoonId") Long webtoonId, @Param("oldRating") float oldRating);
 
@@ -35,10 +33,8 @@ public interface WebtoonStatisticsRepository extends JpaRepository<WebtoonStatis
     @Transactional
     @Query("UPDATE WebtoonStatistics ws SET " +
            "ws.totalRatingSum = ws.totalRatingSum - :oldRating + :newRating, " +
-           "ws.averageRating = ws.totalRatingSum / ws.totalRatingCount, " +
-           "ws.lastUpdateAt = CURRENT_TIMESTAMP " +
+           "ws.averageRating = ws.totalRatingSum / ws.totalRatingCount " +
            "WHERE ws.id = :webtoonId")
     void updateReview(@Param("webtoonId") Long webtoonId, @Param("oldRating") float oldRating, @Param("newRating") float newRating);
-
 
 }

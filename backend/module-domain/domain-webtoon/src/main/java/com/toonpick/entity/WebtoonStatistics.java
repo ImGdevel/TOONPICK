@@ -5,13 +5,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "webtoon_statistics")
-public class WebtoonStatistics {
+public class WebtoonStatistics extends BaseTimeEntity {
 
     @Id
     private Long id;
@@ -50,15 +48,6 @@ public class WebtoonStatistics {
 
     @Column(name = "recent_reviews", nullable = false)
     private Long recentReviews = 0L;
-
-    @Column(name = "last_update_at", nullable = false)
-    private LocalDateTime lastUpdateAt;
-
-    @PrePersist
-    @PreUpdate
-    private void updateTimestamp() {
-        this.lastUpdateAt = LocalDateTime.now();
-    }
 
     /**
      * 자동으로 One to One 연결
