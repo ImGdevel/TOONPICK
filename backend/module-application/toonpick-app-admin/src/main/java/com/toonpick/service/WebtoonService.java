@@ -4,7 +4,6 @@ import com.toonpick.dto.request.AuthorRequest;
 import com.toonpick.dto.request.WebtoonCreateRequest;
 import com.toonpick.dto.request.WebtoonUpdateRequest;
 import com.toonpick.entity.Author;
-import com.toonpick.entity.Platform;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.exception.DuplicateResourceException;
 import com.toonpick.exception.EntityNotFoundException;
@@ -13,6 +12,7 @@ import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class WebtoonService {
 
     private final WebtoonRepository webtoonRepository;
