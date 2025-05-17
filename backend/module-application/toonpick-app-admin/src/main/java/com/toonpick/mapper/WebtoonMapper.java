@@ -34,7 +34,6 @@ public class WebtoonMapper {
                 .ageRating(request.getAgeRating())
                 .summary(request.getSummary())
                 .status(request.getSerializationStatus())
-                .episodeCount(request.getEpisodeCount())
                 .publishStartDate(request.getPublishStartDate())
                 .lastUpdatedDate(request.getLastUpdatedDate())
                 .authors(mapAuthors(request.getAuthors()))

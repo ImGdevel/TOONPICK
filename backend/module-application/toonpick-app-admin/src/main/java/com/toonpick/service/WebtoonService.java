@@ -5,10 +5,12 @@ import com.toonpick.dto.request.WebtoonCreateRequest;
 import com.toonpick.dto.request.WebtoonUpdateRequest;
 import com.toonpick.entity.Author;
 import com.toonpick.entity.Webtoon;
+import com.toonpick.entity.WebtoonStatistics;
 import com.toonpick.exception.DuplicateResourceException;
 import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.mapper.WebtoonMapper;
 import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.repository.WebtoonStatisticsRepository;
 import com.toonpick.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class WebtoonService {
 
     private final WebtoonRepository webtoonRepository;
+    private final WebtoonStatisticsRepository webtoonStatisticsRepository;
     private final WebtoonMapper webtoonMapper;
 
     private final PlatformService platformService;
@@ -38,6 +41,9 @@ public class WebtoonService {
 
         // 신규 웹툰 등록
         Webtoon webtoon = webtoonMapper.toWebtoon(request);
+        WebtoonStatistics webtoonStatistics = new WebtoonStatistics(webtoon);
+        webtoonStatistics.setEpisodeCount(request.getEpisodeCount());
+
         webtoonRepository.save(webtoon);
         platformService.registerWebtoonPlatform(webtoon, request.getPlatform().name(), request.getLink());
     }

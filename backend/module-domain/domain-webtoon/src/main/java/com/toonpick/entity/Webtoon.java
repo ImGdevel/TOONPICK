@@ -78,9 +78,6 @@ public class Webtoon {
     @Column(name = "summary", columnDefinition = "TEXT")
     private String summary;
 
-    @Column(name = "episode_count")
-    private int episodeCount;
-
     @Column(name = "publish_start_date")
     private LocalDate publishStartDate;
 
@@ -122,7 +119,6 @@ public class Webtoon {
                    AgeRating ageRating,
                    String summary,
                    SerializationStatus status,
-                   int episodeCount,
                    LocalDate publishStartDate,
                    LocalDate lastUpdatedDate,
                    Set<Author> authors,
@@ -134,7 +130,6 @@ public class Webtoon {
         this.ageRating = ageRating;
         this.summary = summary;
         this.serializationStatus = status;
-        this.episodeCount = episodeCount;
         this.publishStartDate = publishStartDate;
         this.lastUpdatedDate = lastUpdatedDate;
         this.authors = authors != null ? authors : new HashSet<>();
@@ -165,5 +160,9 @@ public class Webtoon {
     @PreUpdate
     private void prePersistAndUpdate() {
         this.normalizedTitle = this.title != null ? this.title.replaceAll(" ", "") : null;
+    }
+
+    public void setWebtoonStatistics(WebtoonStatistics webtoonStatistics){
+        this.webtoonStatistics = webtoonStatistics;
     }
 }
