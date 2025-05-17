@@ -9,6 +9,7 @@ import com.toonpick.repository.MemberRepository;
 import com.toonpick.repository.ReviewLikeRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.repository.WebtoonReviewRepository;
+import com.toonpick.repository.WebtoonStatisticsRepository;
 import com.toonpick.review.request.WebtoonReviewCreateRequest;
 import com.toonpick.review.request.WebtoonReviewUpdateRequest;
 import com.toonpick.review.response.WebtoonReviewResponse;
@@ -44,6 +45,8 @@ class WebtoonReviewServiceTest {
     private MemberRepository memberRepository;
     @Mock
     private WebtoonRepository webtoonRepository;
+    @Mock
+    private WebtoonStatisticsRepository webtoonStatisticsRepository;
     @InjectMocks
     private WebtoonReviewService webtoonReviewService;
 
@@ -91,7 +94,7 @@ class WebtoonReviewServiceTest {
         assertNotNull(result);
         assertEquals(review.getComment(), result.getComment());
         assertEquals(review.getRating(), result.getRating());
-        verify(webtoonRepository, times(1)).addReview(webtoon.getId(), reviewCreateDTO.getRating());
+        verify(webtoonStatisticsRepository, times(1)).addReview(webtoon.getId(), reviewCreateDTO.getRating());
     }
 
     @DisplayName("리뷰 가져오기 성공 유닛 테스트")
@@ -129,7 +132,7 @@ class WebtoonReviewServiceTest {
         assertNotNull(result);
         assertEquals(updateDTO.getComment(), result.getComment());
         assertEquals(updateDTO.getRating(), result.getRating());
-        verify(webtoonRepository, times(1)).updateReview(webtoon.getId(), review.getRating(), updateDTO.getRating());
+        verify(webtoonStatisticsRepository, times(1)).updateReview(webtoon.getId(), review.getRating(), updateDTO.getRating());
     }
 
     @DisplayName("리뷰 삭제 성공 유닛 테스트")
@@ -142,7 +145,7 @@ class WebtoonReviewServiceTest {
         webtoonReviewService.deleteReview(1L);
 
         // then
-        verify(webtoonRepository, times(1)).removeReview(webtoon.getId(), review.getRating());
+        verify(webtoonStatisticsRepository, times(1)).removeReview(webtoon.getId(), review.getRating());
         verify(webtoonReviewRepository, times(1)).delete(review);
     }
 

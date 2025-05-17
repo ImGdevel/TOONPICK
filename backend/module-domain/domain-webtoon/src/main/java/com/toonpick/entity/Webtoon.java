@@ -40,7 +40,6 @@ import java.util.Set;
 @Table(
     name = "webtoon",
     indexes = {
-        @Index(name = "idx_platform", columnList = "platform"),
         @Index(name = "idx_status", columnList = "status"),
         @Index(name = "idx_day_of_week", columnList = "day_of_week")
     }
@@ -107,18 +106,6 @@ public class Webtoon {
     )
     private Set<Genre> genres = new HashSet<>();
 
-    @Column(name = "platform_rating")
-    private Float platformRating = 0f;
-
-    @Column(name = "average_rating")
-    private Float averageRating = 0f;
-
-    @Column(name = "rating_sum")
-    private Float ratingSum = 0f;
-
-    @Column(name = "rating_count")
-    private Integer ratingCount = 0;
-
     @OneToOne(
             mappedBy = "webtoon",
             fetch = FetchType.LAZY,
@@ -136,7 +123,6 @@ public class Webtoon {
                    String summary,
                    SerializationStatus status,
                    int episodeCount,
-                   float platformRating,
                    LocalDate publishStartDate,
                    LocalDate lastUpdatedDate,
                    Set<Author> authors,
@@ -148,7 +134,6 @@ public class Webtoon {
         this.ageRating = ageRating;
         this.summary = summary;
         this.serializationStatus = status;
-        this.platformRating = platformRating;
         this.episodeCount = episodeCount;
         this.publishStartDate = publishStartDate;
         this.lastUpdatedDate = lastUpdatedDate;

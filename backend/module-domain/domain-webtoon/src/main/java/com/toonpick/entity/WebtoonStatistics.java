@@ -33,6 +33,12 @@ public class WebtoonStatistics {
     @Column(name = "average_rating", nullable = false)
     private Float averageRating = 0.0f;
 
+    @Column(name = "total_rating_sum", nullable = false)
+    private Float totalRatingSum = 0f;
+
+    @Column(name = "total_rating_count", nullable = false)
+    private Integer totalRatingCount = 0;
+
     @Column(name = "recent_views", nullable = false)
     private Long recentViews = 0L;
 
