@@ -144,7 +144,6 @@ public class Webtoon {
                                      DayOfWeek dayOfWeek,
                                      String thumbnailUrl,
                                      AgeRating ageRating,
-                                     List<WebtoonPlatform> platforms,
                                      Set<Author> authors,
                                      Set<Genre> genres) {
         this.title = title;
@@ -153,7 +152,6 @@ public class Webtoon {
         this.dayOfWeek = dayOfWeek;
         this.thumbnailUrl = thumbnailUrl;
         this.ageRating = ageRating;
-        this.platforms = platforms != null ? platforms : this.platforms;
         this.authors = authors != null ? authors : this.authors;
         this.genres = genres != null ? genres : this.genres;
     }
