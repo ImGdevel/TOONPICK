@@ -1,6 +1,9 @@
 package com.toonpick.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -12,6 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "member_badge")
 public class MemberBadge extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "badge_id", nullable = false)

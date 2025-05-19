@@ -20,16 +20,16 @@ public class Badge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "badge_name", nullable = false)
     private String name;
 
-    @Column(name = "image_url")
+    @Column(name = "badge_image_url")
     private String imageUrl;
 
-    @Column(name = "description")
+    @Column(name = "badge_description")
     private String description;
 
-    @Column(name = "condition")
+    @Column(name = "badge_condition")
     private String condition;
 
     @Column(name = "is_active")
