@@ -27,6 +27,9 @@ include 'module-domain:domain-analysis'
 findProject(':module-domain:domain-analysis')?.name = 'domain-analysis'
 include 'module-domain:domain-review'
 findProject(':module-domain:domain-review')?.name = 'domain-review'
+include 'module-domain:domain-report'
+findProject(':module-domain:domain-report')?.name = 'domain-report'
+
 
 // 내부 모듈
 include 'module-internal'
