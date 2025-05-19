@@ -5,6 +5,7 @@ import com.toonpick.entity.WebtoonAnalysisDataDocument;
 import com.toonpick.enums.AgeRating;
 import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
+import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.repository.AuthorRepository;
 import com.toonpick.repository.GenreRepository;
 import com.toonpick.repository.WebtoonAnalysisRepository;
@@ -65,17 +66,12 @@ class WebtoonServiceTest {
     void setUp() {
         webtoon = Webtoon.builder()
                 .id(1L)
-                .externalId("ext123")
                 .title("Test Webtoon")
-                .platform(Platform.NAVER)
                 .dayOfWeek(DayOfWeek.MONDAY)
                 .thumbnailUrl("http://example.com/thumb.jpg")
-                .link("http://example.com/webtoon")
                 .ageRating(AgeRating.ADULT)
                 .summary("Test Summary")
-                .serializationStatus(SerializationStatus.ONGOING)
-                .episodeCount(10)
-                .platformRating(4.5f)
+                .status(SerializationStatus.ONGOING)
                 .publishStartDate(LocalDate.now())
                 .lastUpdatedDate(LocalDate.now())
                 .authors(new HashSet<>())
@@ -85,7 +81,6 @@ class WebtoonServiceTest {
         responseDTO = WebtoonResponse.builder()
                 .id(1L)
                 .title("Test Webtoon")
-                .platform(Platform.NAVER)
                 .dayOfWeek(DayOfWeek.MONDAY)
                 .thumbnailUrl("http://example.com/thumb.jpg")
                 .link("http://example.com/webtoon")
@@ -126,7 +121,7 @@ class WebtoonServiceTest {
     void testGetWebtoon_NotFound() {
         when(webtoonRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> webtoonService.getWebtoon(2L));
+        assertThrows(EntityNotFoundException.class, () -> webtoonService.getWebtoon(2L));
     }
 
     @DisplayName("웹툰 상세 조회 유닛 테스트")

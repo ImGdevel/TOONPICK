@@ -2,6 +2,7 @@ package com.toonpick.test.unit.member.service;
 
 import com.toonpick.entity.Member;
 import com.toonpick.enums.MemberRole;
+import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.member.mapper.MemberMapper;
 import com.toonpick.member.request.MemberProfileRequestDTO;
 import com.toonpick.member.response.MemberProfileDetailsResponse;
@@ -102,7 +103,7 @@ class MemberServiceTest {
         when(memberRepository.findByUsername("nonexistentuser")).thenReturn(Optional.empty());
 
         // when
-        assertThrows(ResourceNotFoundException.class, () -> memberService.getProfile("nonexistentuser"));
+        assertThrows(EntityNotFoundException.class, () -> memberService.getProfile("nonexistentuser"));
     }
 
     @DisplayName("사용자 상세 프로필 조회 단위 테스트")
@@ -341,16 +342,6 @@ class MemberServiceTest {
         member.deactivateAccount();
 
         assertEquals("DELETED", member.getStatus().name());
-    }
-
-    @DisplayName("레벨 업데이트 처리")
-    @Test
-    void testUpdateLevel() {
-        Member member = Member.builder().build();
-
-        member.updateLevel(5);
-
-        assertEquals(5, member.getLevel());
     }
 
 }
