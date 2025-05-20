@@ -9,6 +9,7 @@ project(':module-application:toonpick-app-api') {
         implementation project(':module-domain:domain-review')
         implementation project(':module-domain:domain-toon-collection')
         implementation project(':module-domain:domain-member-engagement')
+        implementation project(':module-domain:domain-webtoon-recommend')
 
         implementation project(':module-internal')
         implementation project(':module-internal:core-web')
