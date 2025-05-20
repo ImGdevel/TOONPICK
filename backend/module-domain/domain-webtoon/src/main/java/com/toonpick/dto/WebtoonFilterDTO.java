@@ -1,7 +1,6 @@
 package com.toonpick.dto;
 
 import com.toonpick.enums.AgeRating;
-import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class WebtoonFilterDTO {
-    private Set<Platform> platforms;
+    private Set<String> platforms;
     private Set<SerializationStatus> serializationStatuses;
     private Set<AgeRating> ageRatings;
     private Set<DayOfWeek> publishDays;

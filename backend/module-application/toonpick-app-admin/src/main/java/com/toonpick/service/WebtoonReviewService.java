@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class WebtoonReviewService {
 
     private final WebtoonReviewRepository reviewRepository;

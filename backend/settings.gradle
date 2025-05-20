@@ -23,10 +23,13 @@ include 'module-domain:domain-member-engagement'
 findProject(':module-domain:domain-member-engagement')?.name = 'domain-member-engagement'
 include 'module-domain:domain-toon-collection'
 findProject(':module-domain:domain-toon-collection')?.name = 'domain-toon-collection'
-include 'module-domain:domain-analysis'
-findProject(':module-domain:domain-analysis')?.name = 'domain-analysis'
 include 'module-domain:domain-review'
 findProject(':module-domain:domain-review')?.name = 'domain-review'
+include 'module-domain:domain-report'
+findProject(':module-domain:domain-report')?.name = 'domain-report'
+include 'module-domain:domain-webtoon-recommend'
+findProject(':module-domain:domain-webtoon-recommend')?.name = 'domain-webtoon-recommend'
+
 
 // 내부 모듈
 include 'module-internal'

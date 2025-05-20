@@ -1,27 +1,26 @@
 package com.toonpick.webtoon.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.toonpick.dto.AuthorDTO;
-import com.toonpick.dto.GenreDTO;
 import com.toonpick.enums.AgeRating;
-import lombok.Data;
-import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Set;
 
-@Data
+@Getter
 @SuperBuilder
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class WebtoonResponse {
 
     private Long id;
 
     private String title;
-
-    private Platform platform;
 
     private String description;
 
@@ -43,6 +42,8 @@ public class WebtoonResponse {
     private Set<AuthorResponse> authors;
 
     private Set<GenreResponse> genres;
+
+    private Set<PlatformResponse> platforms;
 
     @JsonProperty("totalRatings")
     private int episodeCount;

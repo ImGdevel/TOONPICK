@@ -3,6 +3,7 @@ package com.toonpick.test.unit.toon_collection.service;
 import com.toonpick.entity.Member;
 import com.toonpick.entity.ToonCollection;
 import com.toonpick.entity.Webtoon;
+import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.repository.MemberRepository;
 import com.toonpick.repository.ToonCollectionRepository;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.webjars.NotFoundException;
 
 
 import java.util.List;
@@ -109,7 +111,7 @@ class ToonCollectionServiceTest {
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> toonCollectionService.createCollection("testuser", "My Collection"));
+        assertThrows(EntityNotFoundException.class, () -> toonCollectionService.createCollection("testuser", "My Collection"));
     }
 
     @DisplayName("웹툰을 컬렉션에 추가하는 단위 테스트")
@@ -135,7 +137,7 @@ class ToonCollectionServiceTest {
         when(toonCollectionRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> toonCollectionService.addWebtoon(1L, 1L));
+        assertThrows(EntityNotFoundException.class, () -> toonCollectionService.addWebtoon(1L, 1L));
     }
 
     @DisplayName("웹툰 추가 시 웹툰이 존재하지 않으면 예외가 발생하는 단위 테스트")
@@ -146,7 +148,7 @@ class ToonCollectionServiceTest {
         when(webtoonRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> toonCollectionService.addWebtoon(1L, 1L));
+        assertThrows(EntityNotFoundException.class, () -> toonCollectionService.addWebtoon(1L, 1L));
     }
 
     @DisplayName("웹툰을 컬렉션에서 제거하는 단위 테스트")
@@ -174,7 +176,7 @@ class ToonCollectionServiceTest {
         when(toonCollectionRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> toonCollectionService.removeWebtoon(1L, 1L));
+        assertThrows(EntityNotFoundException.class, () -> toonCollectionService.removeWebtoon(1L, 1L));
     }
 
     @DisplayName("웹툰 제거 시 웹툰이 존재하지 않으면 예외가 발생하는 단위 테스트")
@@ -185,7 +187,7 @@ class ToonCollectionServiceTest {
         when(webtoonRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> toonCollectionService.removeWebtoon(1L, 1L));
+        assertThrows(EntityNotFoundException.class, () -> toonCollectionService.removeWebtoon(1L, 1L));
     }
 
     @DisplayName("컬렉션에 여러 웹툰을 추가하는 단위 테스트")
@@ -239,7 +241,7 @@ class ToonCollectionServiceTest {
         when(toonCollectionRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> toonCollectionService.updateCollectionTitle(1L, "Updated Title"));
+        assertThrows(EntityNotFoundException.class, () -> toonCollectionService.updateCollectionTitle(1L, "Updated Title"));
     }
 
     @DisplayName("컬렉션에서 여러 웹툰을 제거하는 단위 테스트")
@@ -299,6 +301,6 @@ class ToonCollectionServiceTest {
         when(memberRepository.findByUsername("testuser")).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(ResourceNotFoundException.class, () -> toonCollectionService.getCollectionsByMember("testuser"));
+        assertThrows(EntityNotFoundException.class, () -> toonCollectionService.getCollectionsByMember("testuser"));
     }
 }

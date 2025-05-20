@@ -4,7 +4,6 @@ import com.toonpick.dto.WebtoonFilterDTO;
 import com.toonpick.enums.AgeRating;
 import lombok.Builder;
 import lombok.Data;
-import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
 
 import java.time.DayOfWeek;
@@ -13,7 +12,7 @@ import java.util.Set;
 @Data
 @Builder
 public class WebtoonFilterRequest {
-    private Set<Platform> platforms;
+    private Set<String> platforms;
     private Set<SerializationStatus> serializationStatuses;
     private Set<AgeRating> ageRatings;
     private Set<DayOfWeek> publishDays;

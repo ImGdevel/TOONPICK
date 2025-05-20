@@ -5,9 +5,11 @@ import com.toonpick.entity.Author;
 import com.toonpick.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthorService {
 
     private final AuthorRepository authorRepository;

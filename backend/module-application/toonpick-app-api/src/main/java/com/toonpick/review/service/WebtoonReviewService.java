@@ -11,6 +11,7 @@ import com.toonpick.repository.MemberRepository;
 import com.toonpick.repository.ReviewLikeRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.repository.WebtoonReviewRepository;
+import com.toonpick.repository.WebtoonStatisticsRepository;
 import com.toonpick.review.mapper.WebtoonReviewMapper;
 import com.toonpick.review.request.WebtoonReviewCreateRequest;
 import com.toonpick.review.request.WebtoonReviewUpdateRequest;
@@ -44,6 +45,7 @@ public class WebtoonReviewService {
     private final ReviewLikeRepository reviewLikeRepository;
     private final MemberRepository memberRepository;
     private final WebtoonRepository webtoonRepository;
+    private final WebtoonStatisticsRepository webtoonStatisticsRepository;
 
     private final WebtoonReviewMapper webtoonReviewMapper = WebtoonReviewMapper.INSTANCE;
 
@@ -66,7 +68,7 @@ public class WebtoonReviewService {
         WebtoonReview savedReview = webtoonReviewRepository.save(review);
 
         // todo : Webtoon 평점에 반영(업데이트/비동기 로직 고려)
-        webtoonRepository.addReview(webtoon.getId(), reviewCreateRequest.getRating());
+        webtoonStatisticsRepository.addReview(webtoon.getId(), reviewCreateRequest.getRating());
 
         return webtoonReviewMapper.toWebtoonReviewResponse(savedReview);
     }
@@ -93,7 +95,7 @@ public class WebtoonReviewService {
         WebtoonReview updatedReview = webtoonReviewRepository.save(review);
 
         // todo : Webtoon 평점 업데이트
-        webtoonRepository.updateReview(review.getWebtoon().getId(), oldRating, reviewUpdateRequest.getRating());
+        webtoonStatisticsRepository.updateReview(review.getWebtoon().getId(), oldRating, reviewUpdateRequest.getRating());
 
         return webtoonReviewMapper.toWebtoonReviewResponse(updatedReview);
     }
@@ -103,7 +105,7 @@ public class WebtoonReviewService {
     public void deleteReview(Long reviewId) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.REVIEW_NOT_FOUND, String.valueOf(reviewId)));
-        webtoonRepository.removeReview(review.getWebtoon().getId(), review.getRating());
+        webtoonStatisticsRepository.removeReview(review.getWebtoon().getId(), review.getRating());
 
         webtoonReviewRepository.delete(review);
     }
