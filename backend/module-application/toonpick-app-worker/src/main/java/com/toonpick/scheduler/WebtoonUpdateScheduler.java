@@ -1,7 +1,7 @@
 package com.toonpick.scheduler;
 
 import com.toonpick.internal.webhook.slack.annotation.NotifyJobResult;
-import com.toonpick.service.WebtoonUpdateService;
+import com.toonpick.service.WebtoonUpdateBatchCoordinator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WebtoonUpdateScheduler {
 
-    final private WebtoonUpdateService webtoonUpdateService;
+    final private WebtoonUpdateBatchCoordinator webtoonUpdateService;
 
     final private Logger logger = LoggerFactory.getLogger(WebtoonUpdateScheduler.class);
 
@@ -22,7 +22,7 @@ public class WebtoonUpdateScheduler {
     @Scheduled(cron = "0 30-59/1 22 * * *")
     @Scheduled(cron = "0 0-30/1 23 * * *")
     public void updatePeak() {
-        webtoonUpdateService.processWebtoonUpdate();
+        webtoonUpdateService.executeMetadataSync();
     }
 
     // 매일 23:30 ~ 다음날 01:00까지 15분 간격 실행
@@ -31,6 +31,6 @@ public class WebtoonUpdateScheduler {
     @Scheduled(cron = "0 0/15 0 * * *")
     @Scheduled(cron = "0 0 1 * * *")
     public void updateOffPeak() {
-        webtoonUpdateService.processWebtoonUpdate();
+        webtoonUpdateService.executeMetadataSync();
     }
 }
