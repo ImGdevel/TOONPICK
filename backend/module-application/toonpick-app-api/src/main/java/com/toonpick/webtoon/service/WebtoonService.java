@@ -5,10 +5,8 @@ import com.toonpick.dto.PagedResponseDTO;
 import com.toonpick.dto.WebtoonFilterDTO;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.exception.EntityNotFoundException;
-import com.toonpick.repository.WebtoonAnalysisRepository;
 import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
-import com.toonpick.webtoon.mapper.WebtoonAnalysisMapper;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
 import com.toonpick.webtoon.response.WebtoonResponse;
@@ -31,8 +29,6 @@ public class WebtoonService {
 
     private final WebtoonRepository webtoonRepository;
     private final WebtoonMapper webtoonMapper;
-    private final WebtoonAnalysisRepository analysisRepository;
-    private final WebtoonAnalysisMapper analysisMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(WebtoonService.class);
 
@@ -57,9 +53,6 @@ public class WebtoonService {
         WebtoonDetailsResponse webtoonDetails = webtoonMapper.toWebtoonDetailsResponse(webtoon);
 
         // 분석 데이터 조회 및 매핑
-        analysisRepository.findByWebtoonId(id)
-                .map(analysisMapper::toDto)
-                .ifPresent(webtoonDetails::setAnalysisData);
 
         // todo : 유사 웹툰 (옵션) 추가 예정
 
