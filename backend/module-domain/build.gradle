@@ -75,3 +75,13 @@ project(':module-domain:domain-report') {
     }
     bootJar.enabled = false
 }
+
+project(':module-domain:domain-webtoon-recommend') {
+    dependencies {
+        implementation project(':module-domain:domain-common')
+        implementation project(':module-domain:domain-webtoon')
+
+        implementation project(':module-common')
+    }
+    bootJar.enabled = false
+}

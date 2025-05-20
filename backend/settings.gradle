@@ -27,6 +27,8 @@ include 'module-domain:domain-review'
 findProject(':module-domain:domain-review')?.name = 'domain-review'
 include 'module-domain:domain-report'
 findProject(':module-domain:domain-report')?.name = 'domain-report'
+include 'module-domain:domain-webtoon-recommend'
+findProject(':module-domain:domain-webtoon-recommend')?.name = 'domain-webtoon-recommend'
 
 
 // 내부 모듈
