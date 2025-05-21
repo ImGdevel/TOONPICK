@@ -27,6 +27,7 @@ public class UpdatedWebtoonListener {
     @SqsListener(value = "${spring.cloud.aws.sqs.queue.webtoon-update-complete}")
     public void handle(String message) {
         try{
+            logger.info("데이터 픽업");
             WebtoonUpdateCommand request = objectMapper.readValue(message, WebtoonUpdateCommand.class);
             webtoonService.updateWebtoon(request);
         }catch (Exception e){

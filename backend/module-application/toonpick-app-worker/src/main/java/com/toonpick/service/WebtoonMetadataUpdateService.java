@@ -7,6 +7,8 @@ import com.toonpick.mapper.WebtoonMapper;
 import com.toonpick.publisher.WebtoonUpdatePublisher;
 import com.toonpick.repository.WebtoonRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,6 +27,8 @@ public class WebtoonMetadataUpdateService {
 
     private static final int BATCH_SIZE = 20;
 
+    private final Logger logger = LoggerFactory.getLogger(WebtoonMetadataUpdateService.class);
+
     /**
      * 매일 연재 중인 웹툰에 대한 웹데이트 Request 전송
      */
@@ -40,6 +44,8 @@ public class WebtoonMetadataUpdateService {
         List<WebtoonUpdatePayload> payloads = webtoonsToUpdate.stream()
                 .map(webtoonMapper::toWebtoonUpdatePayload)
                 .toList();
+
+        logger.info( "전체 요청 수: {}", payloads.size());
 
         // Batch 단위로 전송
         for (int i = 0; i < payloads.size(); i += BATCH_SIZE) {
