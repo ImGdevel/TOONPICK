@@ -65,14 +65,13 @@ spring:
         bucket: ${AWS_S3_BUCKET}
       sqs:
         queue:
-          request:
-            name: ${AWS_SQS_UPDATE_REQUEST_QUEUE_NAME}
-            url: ${AWS_SQS_UPDATE_REQUEST_QUEUE_URL}
-          response:
-            name: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_NAME}
-            url: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_URL}
+          webtoon-create-request: ${AWS_SQS_WEBTOON_CREATE_REQUEST}
+          webtoon-update-request: ${AWS_SQS_WEBTOON_UPDATE_REQUEST}
+          webtoon-create-complete: ${AWS_SQS_WEBTOON_CREATE_COMPLETE}
+          webtoon-update-complete: ${AWS_SQS_WEBTOON_UPDATE_COMPLETE}
         auto-create: false
         enabled: false
+
 
 logging:
   level:
