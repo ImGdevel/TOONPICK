@@ -11,13 +11,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class WebtoonUpdateBatchCoordinator {
 
-
-    WebtoonMetadataUpdateService webtoonMetadataUpdateService;
-    PopularWebtoonRankingService popularWebtoonRankingService;
-    SimilarWebtoonMappingService similarWebtoonMappingService;
-    WebtoonStatusUpdateService webtoonStatusUpdateService;
-    WebtoonStatisticsAggregationService webtoonStatisticsAggregationService;
-
+    private final WebtoonMetadataUpdateService webtoonMetadataUpdateService;
+    private final PopularWebtoonRankingService popularWebtoonRankingService;
+    private final SimilarWebtoonMappingService similarWebtoonMappingService;
+    private final WebtoonStatusUpdateService webtoonStatusUpdateService;
+    private final WebtoonStatisticsAggregationService webtoonStatisticsAggregationService;
 
     /**
      * 모든 배치 작업 실행
