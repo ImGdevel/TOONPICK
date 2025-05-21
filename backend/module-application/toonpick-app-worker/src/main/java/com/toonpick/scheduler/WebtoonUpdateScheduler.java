@@ -33,4 +33,10 @@ public class WebtoonUpdateScheduler {
     public void updateOffPeak() {
         webtoonUpdateService.executeMetadataSync();
     }
+
+    @NotifyJobResult(jobName = "TOONPICK worker - periodic data update job")
+    @Scheduled(cron = "0 0/5 * * * *") // 매 5분마다
+    public void updatePeriodically() {
+        webtoonUpdateService.executeRegularStatusSync();
+    }
 }

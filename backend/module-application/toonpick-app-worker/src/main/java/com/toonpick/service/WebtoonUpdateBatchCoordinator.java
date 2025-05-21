@@ -36,4 +36,12 @@ public class WebtoonUpdateBatchCoordinator {
 
     // todo : 그 외 필요한 작업 나열
 
+    /**
+     * 5분마다 실행되는 상태 정기 업데이트
+     */
+    public void executeRegularStatusSync() {
+        webtoonStatusUpdateService.updateCompletedWebtoons();
+        webtoonStatusUpdateService.updateCanceledWebtoons();
+    }
+
 }
