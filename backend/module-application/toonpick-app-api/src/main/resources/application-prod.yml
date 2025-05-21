@@ -8,6 +8,14 @@ spring:
       jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME}?useSSL=false&useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Seoul{DB_MARIADB_ADDITIONAL_PARAMS}
       username: ${DB_MARIADB_USERNAME}
       password: ${DB_MARIADB_PASSWORD}
+      hikari:
+        max-lifetime: 1800000
+        idle-timeout: 600000
+        minimum-idle: 5
+        maximum-pool-size: 20
+        validation-timeout: 5000
+        keepalive-time: 300000
+        connection-test-query: SELECT 1
 
   data:
     redis:
