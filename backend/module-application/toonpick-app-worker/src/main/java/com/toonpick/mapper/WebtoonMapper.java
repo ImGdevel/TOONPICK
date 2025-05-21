@@ -47,6 +47,9 @@ public class WebtoonMapper {
 
 
     public WebtoonUpdatePayload toWebtoonUpdatePayload(Webtoon webtoon){
+        if (webtoon.getPlatforms().isEmpty()) {
+            return null;
+        }
         return WebtoonUpdatePayload.builder()
                 .id(webtoon.getId())
                 .platform(webtoon.getPlatforms().get(0).getPlatform().getName())

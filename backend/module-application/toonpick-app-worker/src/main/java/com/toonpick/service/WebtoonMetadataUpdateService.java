@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 업데이트 대상 웹툰 조회 후 크롤러에 전송
@@ -43,6 +44,7 @@ public class WebtoonMetadataUpdateService {
         // Payload 매핑
         List<WebtoonUpdatePayload> payloads = webtoonsToUpdate.stream()
                 .map(webtoonMapper::toWebtoonUpdatePayload)
+                .filter(Objects::nonNull)
                 .toList();
 
         logger.info( "전체 요청 수: {}", payloads.size());
