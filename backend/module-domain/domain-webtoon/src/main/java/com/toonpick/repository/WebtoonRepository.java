@@ -6,7 +6,9 @@ import org.springframework.data.repository.query.Param;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.enums.SerializationStatus;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, WebtoonRepositoryCustom {
@@ -27,5 +29,19 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
          @Param("statuses") List<SerializationStatus> statuses,
          @Param("thresholdDate") LocalDate thresholdDate
      );
+
+
+
+    @Query("SELECT w FROM Webtoon w " +
+           "JOIN FETCH w.statistics s " +
+           "WHERE w.serializationStatus IN (:statuses) " +
+           "AND (w.dayOfWeek = :today OR w.dayOfWeek = :nextDay) " +
+           "AND w.lastUpdatedDate < :thresholdDate")
+    List<Webtoon> findWebtoonsForEpisodeUpdate(
+            @Param("statuses") List<SerializationStatus> statuses,
+            @Param("today") DayOfWeek today,
+            @Param("nextDay") DayOfWeek nextDay,
+            @Param("thresholdDate") LocalDate thresholdDate
+    );
 
 }
