@@ -28,7 +28,7 @@ public class WebtoonUpdateBatchCoordinator {
      * 웹툰 정보 업데이트 작업 실행
      */
     public void executeMetadataSync(){
-        webtoonMetadataUpdateService.dispatchOngoingUpdateRequests();
+        webtoonMetadataUpdateService.dispatchEpisodeUpdateRequests();
     }
 
 

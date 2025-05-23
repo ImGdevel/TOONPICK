@@ -11,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,6 +52,35 @@ public class WebtoonMetadataUpdateService {
         logger.info( "전체 요청 수: {}", payloads.size());
 
         // Batch 단위로 전송
+        for (int i = 0; i < payloads.size(); i += BATCH_SIZE) {
+            int end = Math.min(i + BATCH_SIZE, payloads.size());
+            List<WebtoonUpdatePayload> batch = payloads.subList(i, end);
+            webtoonUpdatePublisher.publishRequests(batch);
+        }
+    }
+
+    /**
+     * 매일 웹툰의 최신 에피소드 업데이트 요청
+     */
+    public void dispatchEpisodeUpdateRequests(){
+        List<SerializationStatus> statuses = List.of(SerializationStatus.ONGOING, SerializationStatus.HIATUS);
+        LocalDateTime now = LocalDateTime.now();
+        DayOfWeek today = now.getDayOfWeek();
+        DayOfWeek nextDay = today.plus(1);
+        LocalDate threshold = LocalDate.from(now.minusDays(2));
+
+        // 업데이트 대상 웹툰 조회
+        List<Webtoon> webtoonsToUpdate = webtoonRepository.findWebtoonsForEpisodeUpdate(statuses, today, nextDay, threshold);
+        if (webtoonsToUpdate.isEmpty()) return;
+
+        // Payload 매핑
+        List<WebtoonUpdatePayload> payloads = webtoonsToUpdate.stream()
+                .map(webtoonMapper::toEpisodeUpdatePayload)
+                .filter(Objects::nonNull)
+                .toList();
+
+        logger.info("에피소드 업데이트 요청 수: {}", payloads.size());
+
         for (int i = 0; i < payloads.size(); i += BATCH_SIZE) {
             int end = Math.min(i + BATCH_SIZE, payloads.size());
             List<WebtoonUpdatePayload> batch = payloads.subList(i, end);

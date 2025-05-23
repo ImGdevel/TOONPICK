@@ -57,6 +57,18 @@ public class WebtoonMapper {
                 .build();
     }
 
+    public WebtoonUpdatePayload toEpisodeUpdatePayload(Webtoon webtoon){
+        if (webtoon.getPlatforms().isEmpty()) {
+            return null;
+        }
+        return WebtoonUpdatePayload.builder()
+                .id(webtoon.getId())
+                .platform(webtoon.getPlatforms().get(0).getPlatform().getName())
+                .url(webtoon.getPlatforms().get(0).getLink())
+                .episodeCount(webtoon.getStatistics().getEpisodeCount())
+                .build();
+    }
+
 
     private Set<Author> mapAuthors(Set<WebtoonCreateCommand.AuthorRequest> authorDTOs) {
         if (authorDTOs == null) {

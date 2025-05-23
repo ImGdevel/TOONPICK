@@ -18,4 +18,6 @@ public class WebtoonUpdatePayload {
 
     private String url;
 
+    private int episodeCount;
+
 }
