@@ -7,6 +7,26 @@ on:
         description: '배포 버전'
         required: true
         default: 'latest'
+      module:
+        description: '빌드/배포할 모듈 선택'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - api
+          - worker
+          - admin
+          - all
+      deploy:
+        description: '배포 방식 선택'
+        required: true
+        default: 'none'
+        type: choice
+        options:
+          - none
+          - docker
+          - aws
+          - docker+aws
 
 jobs:
   build:
