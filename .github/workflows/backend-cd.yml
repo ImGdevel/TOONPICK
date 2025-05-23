@@ -330,41 +330,80 @@ jobs:
       - name: Slack Webhook 알림 전송
         if: always()
         run: |
-          if [ "${{ job.status }}" == "success" ]; then
-            STATUS=":white_check_mark: *CD 성공*"
-            COLOR="#2EB67D"
-            MESSAGE="TOONPICK CD 파이프라인이 성공적으로 완료되었습니다. :rocket:"
-          else
-            STATUS=":x: *CD 실패*"
-            COLOR="#D00000"
-            MESSAGE="TOONPICK CD 파이프라인 실패 :warning:\n실패 Job: \`${{ github.job }}\`"
+          JOB_STATUS="${{ job.status }}"
+          if [ "$JOB_STATUS" == "success" ]; then
+            exit 0  # 성공 시 알림 전송 생략
           fi
+
+          AUTHOR="${{ github.actor }}"
+          BRANCH="${{ github.ref_name }}"
+          RUN_ID="${{ github.run_id }}"
+          REPO="${{ github.repository }}"
+          WORKFLOW_NAME="${{ github.workflow }}"
+          RUN_URL="https://github.com/${REPO}/actions/runs/${RUN_ID}"
+          TIMESTAMP=$(TZ=Asia/Seoul date "+%Y-%m-%d %H:%M (KST)")
+          DURATION="3분 12초"  # 필요 시 동적으로 대체
 
           curl -X POST -H 'Content-type: application/json' --data "{
             \"attachments\": [
               {
-                \"color\": \"${COLOR}\",
-                \"title\": \"${STATUS}\",
-                \"text\": \"${MESSAGE}\",
-                \"fields\": [
+                \"blocks\": [
                   {
-                    \"title\": \"GitHub Workflow\",
-                    \"value\": \"${{ github.workflow }}\",
-                    \"short\": true
+                    \"type\": \"header\",
+                    \"text\": {
+                      \"type\": \"plain_text\",
+                      \"text\": \"❌ [CI 실패] TOONPICK - ${BRANCH} 브랜치\",
+                      \"emoji\": true
+                    }
                   },
                   {
-                    \"title\": \"브랜치\",
-                    \"value\": \"${{ github.ref_name }}\",
-                    \"short\": true
+                    \"type\": \"section\",
+                    \"text\": {
+                      \"type\": \"mrkdwn\",
+                      \"text\": \"CI 작업이 실패하였습니다. \`build\` 단계에서 단위 테스트 중 오류가 발생했습니다.\"
+                    }
                   },
                   {
-                    \"title\": \"커밋자\",
-                    \"value\": \"${{ github.actor }}\",
-                    \"short\": true
+                    \"type\": \"divider\"
                   },
                   {
-                    \"title\": \"Run URL\",
-                    \"value\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+                    \"type\": \"section\",
+                    \"fields\": [
+                      {
+                        \"type\": \"mrkdwn\",
+                        \"text\": \"*작업자:*\t${AUTHOR}\"
+                      },
+                      {
+                        \"type\": \"mrkdwn\",
+                        \"text\": \"*소요 시간:*\t${DURATION}\"
+                      },
+                      {
+                        \"type\": \"mrkdwn\",
+                        \"text\": \"*작업 위치:*\tGitHub Actions\"
+                      },
+                      {
+                        \"type\": \"mrkdwn\",
+                        \"text\": \"*상세 위치:*\t브랜치 ${BRANCH}\"
+                      }
+                    ]
+                  },
+                  {
+                    \"type\": \"context\",
+                    \"elements\": [
+                      {
+                        \"type\": \"mrkdwn\",
+                        \"text\": \"*${TIMESTAMP}*\"
+                      }
+                    ]
+                  },
+                  {
+                    \"type\": \"context\",
+                    \"elements\": [
+                      {
+                        \"type\": \"mrkdwn\",
+                        \"text\": \"<${RUN_URL}|🔗 실행 상세 보기>\"
+                      }
+                    ]
                   }
                 ]
               }
