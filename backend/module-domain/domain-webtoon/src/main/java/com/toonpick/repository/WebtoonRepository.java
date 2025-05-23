@@ -20,6 +20,7 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
      업데이트가 필요한 웹툰 리스트 반환
       */
      @Query("SELECT w FROM Webtoon w " +
+            "JOIN FETCH w.statistics s " +
             "WHERE w.serializationStatus IN (:statuses) " +
             "AND w.lastUpdatedDate <= :thresholdDate")
      List<Webtoon> findWebtoonsForUpdate(
