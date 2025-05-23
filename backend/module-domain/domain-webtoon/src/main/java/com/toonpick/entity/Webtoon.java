@@ -111,7 +111,7 @@ public class Webtoon {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private WebtoonStatistics webtoonStatistics;
+    private WebtoonStatistics statistics;
 
     @Builder
     public Webtoon(Long id,
@@ -162,7 +162,7 @@ public class Webtoon {
         this.normalizedTitle = this.title != null ? this.title.replaceAll(" ", "") : null;
     }
 
-    public void setWebtoonStatistics(WebtoonStatistics webtoonStatistics){
-        this.webtoonStatistics = webtoonStatistics;
+    public void setWebtoonStatistics(WebtoonStatistics statistics){
+        this.statistics = statistics;
     }
 }
