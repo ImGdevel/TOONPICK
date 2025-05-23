@@ -65,7 +65,7 @@ spring:
           webtoon-create-complete: ${AWS_SQS_WEBTOON_CREATE_COMPLETE}
           webtoon-update-complete: ${AWS_SQS_WEBTOON_UPDATE_COMPLETE}
         auto-create: false
-        enabled: false
+        enabled: true
 
 
 logging:

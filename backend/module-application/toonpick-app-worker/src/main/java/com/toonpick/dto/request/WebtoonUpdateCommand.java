@@ -12,4 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WebtoonUpdateCommand {
     private Long id;
+
+    private String platform;
+
+    private String url;
 }
