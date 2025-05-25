@@ -59,6 +59,21 @@ public class WebtoonService {
     }
 
     /**
+     * 신규 에피소드가 나왔다면 업데이트
+     */
+    public boolean updateWebtoonEpisode(WebtoonUpdateCommand request) {
+        Webtoon webtoon = webtoonRepository.findById(request.getId())
+            .orElseThrow(() -> new IllegalArgumentException(ErrorCode.WEBTOON_NOT_FOUND.getMessage()));
+
+        webtoon.getLastUpdatedDate();
+
+        // todo : 추가 업데이트 로직 작성
+
+        webtoonRepository.save(webtoon);
+        return true;
+    }
+
+    /**
      * 등록을 시도하는 웹툰이 이미 동록된 웹툰인지 판별
      */
     private Optional<Webtoon> handleIfDuplicateWebtoon(WebtoonCreateCommand request) {
