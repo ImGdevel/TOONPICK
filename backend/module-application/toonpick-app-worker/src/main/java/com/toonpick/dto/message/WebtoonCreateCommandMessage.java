@@ -1,6 +1,7 @@
-package com.toonpick.dto.request;
+package com.toonpick.dto.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.toonpick.dto.command.WebtoonCreateCommand;
 import com.toonpick.message.SQSMessage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,9 +14,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WebtoonUpdateBulkMessage implements SQSMessage {
+public class WebtoonCreateCommandMessage implements SQSMessage {
     private int size;
-    private List<WebtoonUpdatePayload> requests;
+    private List<WebtoonCreateCommand> requests;
     private String requestTime;
 
     @Override
@@ -28,4 +29,5 @@ public class WebtoonUpdateBulkMessage implements SQSMessage {
             return "{}";
         }
     }
+
 }

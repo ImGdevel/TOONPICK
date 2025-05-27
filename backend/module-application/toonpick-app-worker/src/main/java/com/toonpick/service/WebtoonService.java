@@ -1,16 +1,14 @@
 package com.toonpick.service;
 
 
-import com.toonpick.dto.request.WebtoonCreateCommand;
-import com.toonpick.dto.request.WebtoonUpdateCommand;
+import com.toonpick.dto.result.WebtoonCreateResult;
+import com.toonpick.dto.result.WebtoonEpisodeUpdateResult;
 import com.toonpick.entity.Author;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.entity.WebtoonStatistics;
 import com.toonpick.exception.DuplicateResourceException;
-import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.mapper.WebtoonMapper;
 import com.toonpick.repository.WebtoonRepository;
-import com.toonpick.repository.WebtoonStatisticsRepository;
 import com.toonpick.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +29,7 @@ public class WebtoonService {
     /**
      * 웹툰이 존재하지 않는 경우에만 새로 생성
      */
-    public void createWebtoon(WebtoonCreateCommand request) {
+    public void createWebtoon(WebtoonCreateResult request) {
         // 중복 웹툰 처리
         if (handleIfDuplicateWebtoon(request).isPresent()) return;
 
@@ -46,7 +44,7 @@ public class WebtoonService {
     /**
      * 기존 웹툰과 변경사항이 있는 경우에만 업데이트
      */
-    public boolean updateWebtoon(WebtoonUpdateCommand request) {
+    public boolean updateWebtoon(WebtoonEpisodeUpdateResult request) {
         Webtoon webtoon = webtoonRepository.findById(request.getId())
             .orElseThrow(() -> new IllegalArgumentException(ErrorCode.WEBTOON_NOT_FOUND.getMessage()));
 
@@ -61,7 +59,7 @@ public class WebtoonService {
     /**
      * 신규 에피소드가 나왔다면 업데이트
      */
-    public boolean updateWebtoonEpisode(WebtoonUpdateCommand request) {
+    public boolean updateWebtoonEpisode(WebtoonEpisodeUpdateResult request) {
         Webtoon webtoon = webtoonRepository.findById(request.getId())
             .orElseThrow(() -> new IllegalArgumentException(ErrorCode.WEBTOON_NOT_FOUND.getMessage()));
 
@@ -76,7 +74,7 @@ public class WebtoonService {
     /**
      * 등록을 시도하는 웹툰이 이미 동록된 웹툰인지 판별
      */
-    private Optional<Webtoon> handleIfDuplicateWebtoon(WebtoonCreateCommand request) {
+    private Optional<Webtoon> handleIfDuplicateWebtoon(WebtoonCreateResult request) {
         List<Webtoon> sameTitleWebtoons = webtoonRepository.findAllByTitle(request.getTitle());
 
         for (Webtoon existing : sameTitleWebtoons) {
@@ -98,13 +96,13 @@ public class WebtoonService {
     /**
      * 동일한 작가가 있는지 체크
      */
-    private boolean hasSameAuthors(Set<Author> existingAuthors, Set<WebtoonCreateCommand.AuthorRequest> incomingRequests) {
+    private boolean hasSameAuthors(Set<Author> existingAuthors, Set<WebtoonCreateResult.AuthorRequest> incomingRequests) {
         Set<String> existingNames = existingAuthors.stream()
                 .map(Author::getName)
                 .collect(Collectors.toSet());
 
         Set<String> incomingNames = incomingRequests.stream()
-                .map(WebtoonCreateCommand.AuthorRequest::getName)
+                .map(WebtoonCreateResult.AuthorRequest::getName)
                 .collect(Collectors.toSet());
 
         return existingNames.equals(incomingNames);

@@ -1,6 +1,6 @@
 package com.toonpick.service;
 
-import com.toonpick.dto.request.WebtoonUpdatePayload;
+import com.toonpick.dto.command.WebtoonUpdateCommand;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.enums.SerializationStatus;
 import com.toonpick.mapper.WebtoonMapper;
@@ -44,7 +44,7 @@ public class WebtoonMetadataUpdateService {
         if (webtoonsToUpdate.isEmpty()) return;
 
         // Payload 매핑
-        List<WebtoonUpdatePayload> payloads = webtoonsToUpdate.stream()
+        List<WebtoonUpdateCommand> payloads = webtoonsToUpdate.stream()
                 .map(webtoonMapper::toWebtoonUpdatePayload)
                 .filter(Objects::nonNull)
                 .toList();
@@ -54,7 +54,7 @@ public class WebtoonMetadataUpdateService {
         // Batch 단위로 전송
         for (int i = 0; i < payloads.size(); i += BATCH_SIZE) {
             int end = Math.min(i + BATCH_SIZE, payloads.size());
-            List<WebtoonUpdatePayload> batch = payloads.subList(i, end);
+            List<WebtoonUpdateCommand> batch = payloads.subList(i, end);
             webtoonUpdatePublisher.publishRequests(batch);
         }
     }
@@ -74,7 +74,7 @@ public class WebtoonMetadataUpdateService {
         if (webtoonsToUpdate.isEmpty()) return;
 
         // Payload 매핑
-        List<WebtoonUpdatePayload> payloads = webtoonsToUpdate.stream()
+        List<WebtoonUpdateCommand> payloads = webtoonsToUpdate.stream()
                 .map(webtoonMapper::toEpisodeUpdatePayload)
                 .filter(Objects::nonNull)
                 .toList();
@@ -83,7 +83,7 @@ public class WebtoonMetadataUpdateService {
 
         for (int i = 0; i < payloads.size(); i += BATCH_SIZE) {
             int end = Math.min(i + BATCH_SIZE, payloads.size());
-            List<WebtoonUpdatePayload> batch = payloads.subList(i, end);
+            List<WebtoonUpdateCommand> batch = payloads.subList(i, end);
             webtoonUpdatePublisher.publishRequests(batch);
         }
     }

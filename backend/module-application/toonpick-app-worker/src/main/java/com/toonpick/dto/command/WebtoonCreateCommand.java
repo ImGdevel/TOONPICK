@@ -1,4 +1,4 @@
-package com.toonpick.dto.request;
+package com.toonpick.dto.command;
 
 
 import lombok.AllArgsConstructor;
@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WebtoonCreatePayload {
+public class WebtoonCreateCommand {
     private Long id;
 }

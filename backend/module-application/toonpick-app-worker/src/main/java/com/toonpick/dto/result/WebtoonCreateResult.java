@@ -1,4 +1,4 @@
-package com.toonpick.dto.request;
+package com.toonpick.dto.result;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +19,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WebtoonCreateCommand {
+public class WebtoonCreateResult {
 
     @JsonProperty("title")
     private String title;

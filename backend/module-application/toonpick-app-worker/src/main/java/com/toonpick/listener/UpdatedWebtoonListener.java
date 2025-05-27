@@ -1,7 +1,7 @@
 package com.toonpick.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toonpick.dto.request.WebtoonUpdateCommandWrapper;
+import com.toonpick.dto.message.WebtoonUpdateResultMessage;
 import com.toonpick.service.WebtoonService;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class UpdatedWebtoonListener {
     public void handle(String message) {
         try {
             log.info("데이터 픽업");
-            WebtoonUpdateCommandWrapper wrapper = objectMapper.readValue(message, WebtoonUpdateCommandWrapper.class);
+            WebtoonUpdateResultMessage wrapper = objectMapper.readValue(message, WebtoonUpdateResultMessage.class);
             webtoonService.updateWebtoon(wrapper.getUpdatedWebtoon());
         } catch (Exception e) {
             log.error("웹툰 업데이트 처리 실패. 메시지: {}", message, e);
