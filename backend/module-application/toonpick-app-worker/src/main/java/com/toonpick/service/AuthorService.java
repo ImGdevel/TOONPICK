@@ -1,6 +1,6 @@
 package com.toonpick.service;
 
-import com.toonpick.dto.request.WebtoonCreateCommand;
+import com.toonpick.dto.result.WebtoonCreateResult;
 import com.toonpick.entity.Author;
 import com.toonpick.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class AuthorService {
     /**
      * Author 등록 혹은 조회
      */
-    public Author findOrCreateAuthor(WebtoonCreateCommand.AuthorRequest request) {
+    public Author findOrCreateAuthor(WebtoonCreateResult.AuthorRequest request) {
         return authorRepository.findByUid(request.getUid())
                 .orElseGet(() -> {
                     Author newAuthor = Author.builder()

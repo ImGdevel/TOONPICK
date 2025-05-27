@@ -1,7 +1,7 @@
 package com.toonpick.mapper;
 
-import com.toonpick.dto.request.WebtoonCreateCommand;
-import com.toonpick.dto.request.WebtoonUpdatePayload;
+import com.toonpick.dto.result.WebtoonCreateResult;
+import com.toonpick.dto.command.WebtoonUpdateCommand;
 import com.toonpick.entity.Author;
 import com.toonpick.entity.Genre;
 import com.toonpick.entity.Webtoon;
@@ -9,8 +9,6 @@ import com.toonpick.entity.Webtoon;
 import com.toonpick.service.AuthorService;
 import com.toonpick.service.GenreService;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -26,7 +24,7 @@ public class WebtoonMapper {
 
     private final GenreService genreService;
 
-    public Webtoon toWebtoon(WebtoonCreateCommand request) {
+    public Webtoon toWebtoon(WebtoonCreateResult request) {
         if (request == null) {
             return null;
         }
@@ -46,22 +44,22 @@ public class WebtoonMapper {
     }
 
 
-    public WebtoonUpdatePayload toWebtoonUpdatePayload(Webtoon webtoon){
+    public WebtoonUpdateCommand toWebtoonUpdateCommand(Webtoon webtoon){
         if (webtoon.getPlatforms().isEmpty()) {
             return null;
         }
-        return WebtoonUpdatePayload.builder()
+        return WebtoonUpdateCommand.builder()
                 .id(webtoon.getId())
                 .platform(webtoon.getPlatforms().get(0).getPlatform().getName())
                 .url(webtoon.getPlatforms().get(0).getLink())
                 .build();
     }
 
-    public WebtoonUpdatePayload toEpisodeUpdatePayload(Webtoon webtoon){
+    public WebtoonUpdateCommand toWebtoonEpisodeUpdateCommand(Webtoon webtoon){
         if (webtoon.getPlatforms().isEmpty()) {
             return null;
         }
-        return WebtoonUpdatePayload.builder()
+        return WebtoonUpdateCommand.builder()
                 .id(webtoon.getId())
                 .platform(webtoon.getPlatforms().get(0).getPlatform().getName())
                 .url(webtoon.getPlatforms().get(0).getLink())
@@ -70,7 +68,7 @@ public class WebtoonMapper {
     }
 
 
-    private Set<Author> mapAuthors(Set<WebtoonCreateCommand.AuthorRequest> authorDTOs) {
+    private Set<Author> mapAuthors(Set<WebtoonCreateResult.AuthorRequest> authorDTOs) {
         if (authorDTOs == null) {
             return new HashSet<>();
         }
