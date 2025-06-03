@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,6 +35,9 @@ public class Author {
 
     @Column(name = "link")
     private String link;
+
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AuthorSNS> authorSNSs;
 
     @Builder
     public Author(String uid, String name, AuthorRole role, String link) {
