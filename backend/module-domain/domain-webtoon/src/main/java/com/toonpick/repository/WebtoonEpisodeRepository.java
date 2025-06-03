@@ -8,12 +8,12 @@ import java.util.List;
 public interface WebtoonEpisodeRepository extends JpaRepository<WebtoonEpisode, Long> {
 
     /**
-     * 웹툰 별 에피소드 조회
+     * 웹툰 별 에피소드 조회 + 에피소드 번호 정렬
      */
-    List<WebtoonEpisode> findByWebtoonId(Long webtoonId);
+    List<WebtoonEpisode> findByWebtoonIdOrderByEpisodeNumberAsc(Long webtoonId);
 
     /**
-     * 시즌 별 에피소드 조회
+     * 시즌 별 에피소드 조회 + 에피소드 번호 정렬
      */
-    List<WebtoonEpisode> findByWebtoonSeasonId(Long seasonId);
+    List<WebtoonEpisode> findByWebtoonSeasonIdOrderByEpisodeNumberAsc(Long seasonId);
 }
