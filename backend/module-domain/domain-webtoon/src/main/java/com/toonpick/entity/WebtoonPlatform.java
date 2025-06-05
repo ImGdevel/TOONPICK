@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "webtoon_platform")
@@ -41,4 +40,11 @@ public class WebtoonPlatform {
     @Column(name = "rank")
     private Integer rank; // 플랫폼 정렬 순위
 
+    @Builder
+    public WebtoonPlatform(Webtoon webtoon, Platform platform, String link, Integer rank) {
+        this.webtoon = webtoon;
+        this.platform = platform;
+        this.link = link;
+        this.rank = rank;
+    }
 }

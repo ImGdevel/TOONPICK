@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,4 +38,11 @@ public class WebtoonEpisodeLink {
     @Column(name = "viewer_type")
     private EpisodeViewerType viewerType;
 
+    @Builder
+    public WebtoonEpisodeLink(WebtoonEpisode episode, Platform platform, String url, EpisodeViewerType viewerType) {
+        this.episode = episode;
+        this.platform = platform;
+        this.url = url;
+        this.viewerType = viewerType;
+    }
 }

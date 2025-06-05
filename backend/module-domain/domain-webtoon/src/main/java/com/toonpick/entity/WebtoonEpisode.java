@@ -3,6 +3,7 @@ package com.toonpick.entity;
 import com.toonpick.enums.EpisodePricingType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -39,4 +40,14 @@ public class WebtoonEpisode {
 
     @OneToMany(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<WebtoonEpisodeLink> episodeUrls = new ArrayList<>();
+
+    @Builder
+    public WebtoonEpisode(Webtoon webtoon, WebtoonSeason webtoonSeason, int episodeNumber, String title, EpisodePricingType pricingType, List<WebtoonEpisodeLink> episodeUrls) {
+        this.webtoon = webtoon;
+        this.webtoonSeason = webtoonSeason;
+        this.episodeNumber = episodeNumber;
+        this.title = title;
+        this.pricingType = pricingType;
+        this.episodeUrls = episodeUrls;
+    }
 }
