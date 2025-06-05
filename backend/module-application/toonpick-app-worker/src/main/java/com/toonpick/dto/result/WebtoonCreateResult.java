@@ -28,7 +28,7 @@ public class WebtoonCreateResult {
     private String externalId;
 
     @JsonProperty("platform")
-    private Platform platform;
+    private String platform;
 
     @JsonProperty("day_of_week")
     private DayOfWeek dayOfWeek;
