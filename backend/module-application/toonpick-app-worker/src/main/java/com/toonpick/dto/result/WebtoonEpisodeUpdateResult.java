@@ -11,9 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WebtoonEpisodeUpdateResult {
-    private Long id;
+    private Long webtoonId;
 
     private String platform;
 
     private String url;
+
+    private String viewerType;
+
+    private String title;
+
+    private int episodeNumber;
+
+    private String pricingType;
 }
