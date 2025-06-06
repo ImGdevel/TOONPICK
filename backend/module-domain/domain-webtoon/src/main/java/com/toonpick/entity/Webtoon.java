@@ -123,8 +123,10 @@ public class Webtoon {
                    SerializationStatus status,
                    LocalDate publishStartDate,
                    LocalDate lastUpdatedDate,
+                   List<WebtoonPlatform> platforms,
                    Set<Author> authors,
-                   Set<Genre> genres) {
+                   Set<Genre> genres
+    ) {
         this.id = id;
         this.title = title;
         this.dayOfWeek = dayOfWeek;
@@ -134,6 +136,7 @@ public class Webtoon {
         this.serializationStatus = status;
         this.publishStartDate = publishStartDate;
         this.lastUpdatedDate = lastUpdatedDate;
+        this.platforms = platforms;
         this.authors = authors != null ? authors : new HashSet<>();
         this.genres = genres != null ? genres : new HashSet<>();
     }
