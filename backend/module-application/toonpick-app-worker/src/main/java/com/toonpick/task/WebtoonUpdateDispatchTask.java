@@ -1,4 +1,4 @@
-package com.toonpick.service;
+package com.toonpick.task;
 
 import com.toonpick.dto.command.WebtoonUpdateCommand;
 import com.toonpick.entity.Webtoon;
@@ -22,7 +22,7 @@ import java.util.Objects;
  */
 @Service
 @RequiredArgsConstructor
-public class WebtoonMetadataUpdateService {
+public class WebtoonUpdateDispatchTask {
 
     private final WebtoonRepository webtoonRepository;
     private final WebtoonUpdatePublisher webtoonUpdatePublisher;
@@ -30,7 +30,7 @@ public class WebtoonMetadataUpdateService {
 
     private static final int BATCH_SIZE = 20;
 
-    private final Logger logger = LoggerFactory.getLogger(WebtoonMetadataUpdateService.class);
+    private final Logger logger = LoggerFactory.getLogger(WebtoonUpdateDispatchTask.class);
 
     /**
      * 매일 연재 중인 웹툰에 대한 웹데이트 Request 전송
@@ -55,7 +55,7 @@ public class WebtoonMetadataUpdateService {
         for (int i = 0; i < payloads.size(); i += BATCH_SIZE) {
             int end = Math.min(i + BATCH_SIZE, payloads.size());
             List<WebtoonUpdateCommand> batch = payloads.subList(i, end);
-            webtoonUpdatePublisher.publishRequests(batch);
+            webtoonUpdatePublisher.sendWebtoonUpdateRequest(batch);
         }
     }
 
@@ -84,11 +84,12 @@ public class WebtoonMetadataUpdateService {
         for (int i = 0; i < payloads.size(); i += BATCH_SIZE) {
             int end = Math.min(i + BATCH_SIZE, payloads.size());
             List<WebtoonUpdateCommand> batch = payloads.subList(i, end);
-            webtoonUpdatePublisher.publishRequests(batch);
+            webtoonUpdatePublisher.sendWebtoonEpisodeUpdateRequest(batch);
         }
     }
 
     public void dispatchNewWebtoonUpdateRequests() {
         // 새로운 웹툰 업데이트 요청
+        webtoonUpdatePublisher.sendNewWebtoonDiscoveryRequest();
     }
 }

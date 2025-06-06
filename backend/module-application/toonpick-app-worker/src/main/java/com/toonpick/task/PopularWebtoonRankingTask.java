@@ -1,4 +1,4 @@
-package com.toonpick.service;
+package com.toonpick.task;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class PopularWebtoonRankingService {
+public class PopularWebtoonRankingTask {
 
     /**
      * 주간 랭킹 업데이트

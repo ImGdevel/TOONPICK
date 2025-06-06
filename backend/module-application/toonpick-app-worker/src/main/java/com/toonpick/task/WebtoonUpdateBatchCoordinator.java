@@ -1,4 +1,4 @@
-package com.toonpick.service;
+package com.toonpick.task;
 
 
 import lombok.RequiredArgsConstructor;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class WebtoonUpdateBatchCoordinator {
 
-    private final WebtoonMetadataUpdateService webtoonMetadataUpdateService;
-    private final PopularWebtoonRankingService popularWebtoonRankingService;
-    private final SimilarWebtoonMappingService similarWebtoonMappingService;
-    private final WebtoonStatusUpdateService webtoonStatusUpdateService;
-    private final WebtoonStatisticsAggregationService webtoonStatisticsAggregationService;
+    private final WebtoonUpdateDispatchTask webtoonUpdateDispatchTask;
+    private final PopularWebtoonRankingTask popularWebtoonRankingTask;
+    private final SimilarWebtoonMappingTask similarWebtoonMappingTask;
+    private final WebtoonStatusUpdateTask webtoonStatusUpdateTask;
+    private final WebtoonStatisticsAggregationTask webtoonStatisticsAggregationTask;
 
     /**
      * 모든 배치 작업 실행
@@ -28,7 +28,7 @@ public class WebtoonUpdateBatchCoordinator {
      * 웹툰 정보 업데이트 작업 실행
      */
     public void executeMetadataSync(){
-        webtoonMetadataUpdateService.dispatchEpisodeUpdateRequests();
+        webtoonUpdateDispatchTask.dispatchEpisodeUpdateRequests();
     }
 
 
@@ -38,8 +38,8 @@ public class WebtoonUpdateBatchCoordinator {
      * 5분마다 실행되는 상태 정기 업데이트
      */
     public void executeRegularStatusSync() {
-        webtoonStatusUpdateService.updateCompletedWebtoons();
-        webtoonStatusUpdateService.updateCanceledWebtoons();
+        webtoonStatusUpdateTask.updateCompletedWebtoons();
+        webtoonStatusUpdateTask.updateCanceledWebtoons();
     }
 
 }

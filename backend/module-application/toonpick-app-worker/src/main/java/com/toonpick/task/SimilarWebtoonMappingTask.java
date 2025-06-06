@@ -1,4 +1,4 @@
-package com.toonpick.service;
+package com.toonpick.task;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class SimilarWebtoonMappingService {
+public class SimilarWebtoonMappingTask {
 
     /**
      * 웹툰간 유사도 재계산

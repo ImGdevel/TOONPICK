@@ -1,7 +1,7 @@
 package com.toonpick.scheduler;
 
 import com.toonpick.internal.webhook.slack.annotation.NotifyJobResult;
-import com.toonpick.service.WebtoonUpdateBatchCoordinator;
+import com.toonpick.task.WebtoonUpdateBatchCoordinator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

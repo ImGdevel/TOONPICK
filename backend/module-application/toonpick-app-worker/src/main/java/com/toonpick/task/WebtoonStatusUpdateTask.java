@@ -1,4 +1,4 @@
-package com.toonpick.service;
+package com.toonpick.task;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class WebtoonStatusUpdateService {
+public class WebtoonStatusUpdateTask {
 
     /**
      * 완결 기준(에피소드 종료 후 7일이후)에 부합하는
