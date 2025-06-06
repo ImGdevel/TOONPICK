@@ -1,5 +1,7 @@
 package com.toonpick.publisher;
 
+import com.toonpick.common.type.SQSEventType;
+import com.toonpick.dto.message.SQSRequestMessage;
 import com.toonpick.dto.message.WebtoonUpdateCommandMessage;
 import com.toonpick.dto.command.WebtoonUpdateCommand;
 import com.toonpick.service.AwsSqsPublisher;
@@ -12,19 +14,41 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class WebtoonUpdatePublisher {
-    private final AwsSqsPublisher publisher;
+    private final AwsSqsPublisher sqsPublisher;
 
     @Value("${spring.cloud.aws.sqs.queue.webtoon-update-request}")
     private String queueName;
 
-    public void publishRequests(List<WebtoonUpdateCommand> webtoonUpdateCommands) {
-
-        WebtoonUpdateCommandMessage msg = WebtoonUpdateCommandMessage.builder()
-                .size(webtoonUpdateCommands.size())
-                .requests(webtoonUpdateCommands)
+    /**
+     * 웹툰 정보 일괄 업데이트 요청
+     */
+    public void sendWebtoonUpdateRequest(List<WebtoonUpdateCommand> updateCommands) {
+        SQSRequestMessage<Object> request = SQSRequestMessage.builder()
+                .eventType(SQSEventType.CRAWL_WEBTOON_ALL)
+                .data(updateCommands)
                 .build();
 
+        sqsPublisher.publisher(queueName, request);
+    }
 
-        publisher.publisher(queueName, msg);
+    /**
+     * 에피소드 신규 탐색 요청
+     */
+    public void sendWebtoonEpisodeUpdateRequest(List<WebtoonUpdateCommand> webtoonUpdateCommands) {
+        SQSRequestMessage<Object> request = SQSRequestMessage.builder()
+                .eventType(SQSEventType.CRAWL_WEBTOON_EPISODE)
+                .data(webtoonUpdateCommands)
+                .build();
+        sqsPublisher.publisher(queueName, request);
+    }
+
+    /**
+     * 신규 웹툰 탐색 요청
+     */
+    public void sendNewWebtoonDiscoveryRequest() {
+        SQSRequestMessage<Object> request = SQSRequestMessage.builder()
+                .eventType(SQSEventType.CRAWL_WEBTOON_NEW)
+                .build();
+        sqsPublisher.publisher(queueName, request);
     }
 }
