@@ -1,7 +1,13 @@
 package com.toonpick.listener;
 
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toonpick.dto.message.WebtoonUpdateResultMessage;
+import com.toonpick.common.type.SQSEventType;
+import com.toonpick.dto.command.WebtoonCreateCommend;
+import com.toonpick.dto.command.WebtoonEpisodeUpdateCommend;
+import com.toonpick.dto.message.SQSResponseMessage;
 import com.toonpick.service.WebtoonRegistrationService;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +28,31 @@ public class UpdatedWebtoonListener {
     @SqsListener(value = "${spring.cloud.aws.sqs.queue.webtoon-update-complete}")
     public void handle(String message) {
         try {
-            log.info("데이터 픽업");
-            WebtoonUpdateResultMessage wrapper = objectMapper.readValue(message, WebtoonUpdateResultMessage.class);
-            webtoonRegistrationService.updateWebtoon(wrapper.getUpdatedWebtoon());
+            log.info("웹툰 업데이트 메시지 수신");
+
+            // 먼저 eventType 파싱
+            JsonNode root = objectMapper.readTree(message);
+            SQSEventType eventType = SQSEventType.valueOf(root.get("eventType").asText());
+
+            // 이벤트 타입에 따라 파싱
+            switch (eventType) {
+                case CRAWL_WEBTOON_EPISODE: {
+                    SQSResponseMessage<WebtoonEpisodeUpdateCommend> responseMessage =
+                            objectMapper.readValue(message, new TypeReference<SQSResponseMessage<WebtoonEpisodeUpdateCommend>>() {});
+                    
+                    break;
+                }
+                case CRAWL_WEBTOON_ALL:
+
+                    break;
+
+                case CRAWL_WEBTOON_NEW:
+                    SQSResponseMessage<WebtoonCreateCommend> responseMessage =
+                            objectMapper.readValue(message, new TypeReference<SQSResponseMessage<WebtoonCreateCommend>>() {});
+                    webtoonRegistrationService.createWebtoon(responseMessage.getData());
+                    break;
+            }
+
         } catch (Exception e) {
             log.error("웹툰 업데이트 처리 실패. 메시지: {}", message, e);
         }

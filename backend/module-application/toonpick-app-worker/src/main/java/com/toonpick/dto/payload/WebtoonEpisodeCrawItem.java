@@ -1,5 +1,4 @@
-package com.toonpick.dto.command;
-
+package com.toonpick.dto.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WebtoonCreateCommand {
+public class WebtoonEpisodeCrawItem {
+
     private Long id;
+    private String platform;
+    private String url;
+    private int episodeCount;
+
 }
+

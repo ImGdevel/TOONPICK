@@ -1,4 +1,4 @@
-package com.toonpick.dto.result;
+package com.toonpick.dto.command;
 
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WebtoonEpisodeUpdateResult {
+public class WebtoonEpisodeUpdateCommend {
     private Long webtoonId;
 
     private String platform;

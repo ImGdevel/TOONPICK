@@ -1,7 +1,6 @@
 package com.toonpick.mapper;
 
-import com.toonpick.dto.result.WebtoonCreateResult;
-import com.toonpick.dto.command.WebtoonUpdateCommand;
+import com.toonpick.dto.command.WebtoonCreateCommend;
 import com.toonpick.entity.Author;
 import com.toonpick.entity.Genre;
 import com.toonpick.entity.Webtoon;
@@ -24,7 +23,7 @@ public class WebtoonMapper {
 
     private final GenreService genreService;
 
-    public Webtoon toWebtoon(WebtoonCreateResult request) {
+    public Webtoon toWebtoon(WebtoonCreateCommend request) {
         if (request == null) {
             return null;
         }
@@ -43,32 +42,7 @@ public class WebtoonMapper {
                 .build();
     }
 
-
-    public WebtoonUpdateCommand toWebtoonUpdateCommand(Webtoon webtoon){
-        if (webtoon.getPlatforms().isEmpty()) {
-            return null;
-        }
-        return WebtoonUpdateCommand.builder()
-                .id(webtoon.getId())
-                .platform(webtoon.getPlatforms().get(0).getPlatform().getName())
-                .url(webtoon.getPlatforms().get(0).getLink())
-                .build();
-    }
-
-    public WebtoonUpdateCommand toWebtoonEpisodeUpdateCommand(Webtoon webtoon){
-        if (webtoon.getPlatforms().isEmpty()) {
-            return null;
-        }
-        return WebtoonUpdateCommand.builder()
-                .id(webtoon.getId())
-                .platform(webtoon.getPlatforms().get(0).getPlatform().getName())
-                .url(webtoon.getPlatforms().get(0).getLink())
-                .episodeCount(webtoon.getStatistics().getEpisodeCount())
-                .build();
-    }
-
-
-    private Set<Author> mapAuthors(Set<WebtoonCreateResult.AuthorRequest> authorDTOs) {
+    private Set<Author> mapAuthors(Set<WebtoonCreateCommend.AuthorRequest> authorDTOs) {
         if (authorDTOs == null) {
             return new HashSet<>();
         }

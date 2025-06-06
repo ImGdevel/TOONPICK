@@ -1,8 +1,10 @@
 package com.toonpick.task;
 
-import com.toonpick.dto.command.WebtoonUpdateCommand;
+import com.toonpick.dto.payload.WebtoonCrawItem;
+import com.toonpick.dto.payload.WebtoonEpisodeCrawItem;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.enums.SerializationStatus;
+import com.toonpick.mapper.WebtoonCrawItemMapper;
 import com.toonpick.mapper.WebtoonMapper;
 import com.toonpick.publisher.WebtoonUpdatePublisher;
 import com.toonpick.repository.WebtoonRepository;
@@ -27,6 +29,7 @@ public class WebtoonUpdateDispatchTask {
     private final WebtoonRepository webtoonRepository;
     private final WebtoonUpdatePublisher webtoonUpdatePublisher;
     private final WebtoonMapper webtoonMapper;
+    private final WebtoonCrawItemMapper webtoonCrawItemMapper;
 
     private static final int BATCH_SIZE = 20;
 
@@ -44,8 +47,8 @@ public class WebtoonUpdateDispatchTask {
         if (webtoonsToUpdate.isEmpty()) return;
 
         // Payload 매핑
-        List<WebtoonUpdateCommand> payloads = webtoonsToUpdate.stream()
-                .map(webtoonMapper::toWebtoonUpdateCommand)
+        List<WebtoonCrawItem> payloads = webtoonsToUpdate.stream()
+                .map(webtoonCrawItemMapper::toWebtoonCrawItem)
                 .filter(Objects::nonNull)
                 .toList();
 
@@ -54,7 +57,7 @@ public class WebtoonUpdateDispatchTask {
         // Batch 단위로 전송
         for (int i = 0; i < payloads.size(); i += BATCH_SIZE) {
             int end = Math.min(i + BATCH_SIZE, payloads.size());
-            List<WebtoonUpdateCommand> batch = payloads.subList(i, end);
+            List<WebtoonCrawItem> batch = payloads.subList(i, end);
             webtoonUpdatePublisher.sendWebtoonUpdateRequest(batch);
         }
     }
@@ -63,6 +66,7 @@ public class WebtoonUpdateDispatchTask {
      * 매일 웹툰의 최신 에피소드 업데이트 요청
      */
     public void dispatchEpisodeUpdateRequests(){
+        // 조회 대상 조건 정의
         List<SerializationStatus> statuses = List.of(SerializationStatus.ONGOING, SerializationStatus.HIATUS);
         LocalDateTime now = LocalDateTime.now();
         DayOfWeek today = now.getDayOfWeek();
@@ -74,8 +78,8 @@ public class WebtoonUpdateDispatchTask {
         if (webtoonsToUpdate.isEmpty()) return;
 
         // Payload 매핑
-        List<WebtoonUpdateCommand> payloads = webtoonsToUpdate.stream()
-                .map(webtoonMapper::toWebtoonEpisodeUpdateCommand)
+        List<WebtoonEpisodeCrawItem> payloads = webtoonsToUpdate.stream()
+                .map(webtoonCrawItemMapper::toWebtoonEpisodeCrawItem)
                 .filter(Objects::nonNull)
                 .toList();
 
@@ -83,7 +87,7 @@ public class WebtoonUpdateDispatchTask {
 
         for (int i = 0; i < payloads.size(); i += BATCH_SIZE) {
             int end = Math.min(i + BATCH_SIZE, payloads.size());
-            List<WebtoonUpdateCommand> batch = payloads.subList(i, end);
+            List<WebtoonEpisodeCrawItem> batch = payloads.subList(i, end);
             webtoonUpdatePublisher.sendWebtoonEpisodeUpdateRequest(batch);
         }
     }

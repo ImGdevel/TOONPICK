@@ -1,6 +1,6 @@
 package com.toonpick.service;
 
-import com.toonpick.dto.result.WebtoonEpisodeUpdateResult;
+import com.toonpick.dto.command.WebtoonEpisodeUpdateCommend;
 import com.toonpick.entity.Platform;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.entity.WebtoonEpisode;
@@ -30,7 +30,7 @@ public class WebtoonEpisodeUpdateService {
     /**
      * 새로운 에피소드 등록
      */
-    public void createNewEpisode(WebtoonEpisodeUpdateResult result){
+    public void createNewEpisode(WebtoonEpisodeUpdateCommend result){
         Webtoon webtoon = webtoonRepository.findById(result.getWebtoonId())
                 .orElseThrow(()-> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND));
 

@@ -2,8 +2,8 @@ package com.toonpick.publisher;
 
 import com.toonpick.common.type.SQSEventType;
 import com.toonpick.dto.message.SQSRequestMessage;
-import com.toonpick.dto.message.WebtoonUpdateCommandMessage;
-import com.toonpick.dto.command.WebtoonUpdateCommand;
+import com.toonpick.dto.payload.WebtoonCrawItem;
+import com.toonpick.dto.payload.WebtoonEpisodeCrawItem;
 import com.toonpick.service.AwsSqsPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ public class WebtoonUpdatePublisher {
     /**
      * 웹툰 정보 일괄 업데이트 요청
      */
-    public void sendWebtoonUpdateRequest(List<WebtoonUpdateCommand> updateCommands) {
+    public void sendWebtoonUpdateRequest(List<WebtoonCrawItem> updateCommands) {
         SQSRequestMessage<Object> request = SQSRequestMessage.builder()
                 .eventType(SQSEventType.CRAWL_WEBTOON_ALL)
                 .data(updateCommands)
@@ -34,7 +34,7 @@ public class WebtoonUpdatePublisher {
     /**
      * 에피소드 신규 탐색 요청
      */
-    public void sendWebtoonEpisodeUpdateRequest(List<WebtoonUpdateCommand> webtoonUpdateCommands) {
+    public void sendWebtoonEpisodeUpdateRequest(List<WebtoonEpisodeCrawItem> webtoonUpdateCommands) {
         SQSRequestMessage<Object> request = SQSRequestMessage.builder()
                 .eventType(SQSEventType.CRAWL_WEBTOON_EPISODE)
                 .data(webtoonUpdateCommands)

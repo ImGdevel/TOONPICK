@@ -1,10 +1,9 @@
-package com.toonpick.dto.result;
+package com.toonpick.dto.command;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.toonpick.enums.AgeRating;
 import com.toonpick.enums.AuthorRole;
-import com.toonpick.enums.Platform;
 import com.toonpick.enums.SerializationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +18,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WebtoonCreateResult {
+public class WebtoonCreateCommend {
 
     @JsonProperty("title")
     private String title;

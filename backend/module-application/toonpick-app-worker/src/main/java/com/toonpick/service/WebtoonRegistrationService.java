@@ -1,7 +1,7 @@
 package com.toonpick.service;
 
 
-import com.toonpick.dto.result.WebtoonCreateResult;
+import com.toonpick.dto.command.WebtoonCreateCommend;
 import com.toonpick.entity.*;
 import com.toonpick.exception.DuplicateResourceException;
 import com.toonpick.exception.EntityNotFoundException;
@@ -30,7 +30,7 @@ public class WebtoonRegistrationService {
     /**
      *  새로운 웹툰을 등록합니다.
      */
-    public void createWebtoon(WebtoonCreateResult request) {
+    public void createWebtoon(WebtoonCreateCommend request) {
         // 동일한 웹툰(제목+작가) 찾기
         //  *  웹툰이 동일하다고 판단을 내리는 기준은 다음과 같다. > 웹툰 제목이 동일하면서 연재 작가 이름이 동일한 경우
         Optional<Webtoon> existingWebtoonOpt = findExistingWebtoon(request);
@@ -55,7 +55,7 @@ public class WebtoonRegistrationService {
     /**
      * 완전히 새로운 웹툰 등록
      */
-    private void registerNewWebtoon(WebtoonCreateResult request) {
+    private void registerNewWebtoon(WebtoonCreateCommend request) {
         Webtoon webtoon = webtoonMapper.toWebtoon(request);
         WebtoonStatistics statistics = new WebtoonStatistics(webtoon);
         statistics.setEpisodeCount(request.getEpisodeCount());
@@ -68,7 +68,7 @@ public class WebtoonRegistrationService {
     /**
      * 기존 웹툰에 새로운 플랫폼 추가
      */
-    private void addPlatform(Webtoon webtoon, WebtoonCreateResult request) {
+    private void addPlatform(Webtoon webtoon, WebtoonCreateCommend request) {
         Platform platform = platformRepository.findByName(request.getPlatform())
                 .orElseThrow(()-> new EntityNotFoundException(ErrorCode.PLATFORM_NOT_FOUND));
 
@@ -84,7 +84,7 @@ public class WebtoonRegistrationService {
     /**
      * 제목+작가가 동일한 기존 웹툰을 찾는다
      */
-    private Optional<Webtoon> findExistingWebtoon(WebtoonCreateResult request) {
+    private Optional<Webtoon> findExistingWebtoon(WebtoonCreateCommend request) {
         List<Webtoon> candidates = webtoonRepository.findAllByTitle(request.getTitle());
 
         for (Webtoon candidate : candidates) {
@@ -99,14 +99,14 @@ public class WebtoonRegistrationService {
     /**
      * 동일한 작가인지 비교
      */
-    private boolean isSameAuthors(Set<Author> existing, Set<WebtoonCreateResult.AuthorRequest> incoming) {
+    private boolean isSameAuthors(Set<Author> existing, Set<WebtoonCreateCommend.AuthorRequest> incoming) {
         Set<String> existingNames = new HashSet<>();
         for (Author author : existing) {
             existingNames.add(author.getName());
         }
 
         Set<String> incomingNames = new HashSet<>();
-        for (WebtoonCreateResult.AuthorRequest author : incoming) {
+        for (WebtoonCreateCommend.AuthorRequest author : incoming) {
             incomingNames.add(author.getName());
         }
 
