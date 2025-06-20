@@ -1,6 +1,7 @@
 package com.toonpick.service;
 
-import com.toonpick.dto.command.WebtoonEpisodeUpdateCommend;
+import com.toonpick.dto.command.EpisodeInfo;
+import com.toonpick.dto.command.WebtoonEpisodeUpdateCommand;
 import com.toonpick.entity.Platform;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.entity.WebtoonEpisode;
@@ -27,23 +28,30 @@ public class WebtoonEpisodeUpdateService {
     private final WebtoonRepository webtoonRepository;
     private final PlatformRepository platformRepository;
 
-    /**
-     * 새로운 에피소드 등록
-     */
-    public void createNewEpisode(WebtoonEpisodeUpdateCommend result){
+    public void registerEpisodes(WebtoonEpisodeUpdateCommand result){
         Webtoon webtoon = webtoonRepository.findById(result.getWebtoonId())
                 .orElseThrow(()-> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND));
 
+        for(EpisodeInfo episodeInfo : result.getEpisodes()){
+            createNewEpisode(webtoon, result.getPlatform(), episodeInfo);
+        }
+    }
+
+    /**
+     * 새로운 에피소드 등록
+     */
+    public void createNewEpisode(Webtoon webtoon, String platform, EpisodeInfo info){
+
         WebtoonEpisode webtoonEpisode  = WebtoonEpisode.builder()
                 .webtoon(webtoon)
-                .title(result.getTitle())
-                .episodeNumber(result.getEpisodeNumber())
-                .pricingType(EpisodePricingType.valueOf(result.getPricingType()))
+                .title(info.getTitle())
+                .episodeNumber(info.getEpisodeNumber())
+                .pricingType(EpisodePricingType.valueOf(info.getPricingType()))
                 .build();
 
         webtoonEpisodeRepository.save(webtoonEpisode);
 
-        createWebtoonEpisodeLink(webtoonEpisode, result.getUrl(), result.getPlatform(), result.getViewerType());
+        createWebtoonEpisodeLink(webtoonEpisode, info.getUrl(), platform, info.getViewerType());
     }
 
     /**

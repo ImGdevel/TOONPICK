@@ -1,6 +1,7 @@
 package com.toonpick.service;
 
-import com.toonpick.dto.command.WebtoonEpisodeUpdateCommend;
+import com.toonpick.dto.command.EpisodeInfo;
+import com.toonpick.dto.command.WebtoonEpisodeUpdateCommand;
 import com.toonpick.entity.Platform;
 import com.toonpick.entity.Webtoon;
 import com.toonpick.entity.WebtoonEpisode;
@@ -20,11 +21,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @Tag("UnitTest")
@@ -48,7 +49,7 @@ class WebtoonEpisodeUpdateServiceTest {
 
     @Test
     @DisplayName("새로운 에피소드 생성에 성공하면 에피소드 및 링크가 저장된다")
-    void createNewEpisode_성공하면_에피소드와_링크가_저장된다() {
+    void registerEpisodes_성공하면_에피소드와_링크가_저장된다() {
         // given
         Long webtoonId = 1L;
         String platformName = "Naver";
@@ -57,21 +58,25 @@ class WebtoonEpisodeUpdateServiceTest {
         Webtoon webtoon = Webtoon.builder().id(webtoonId).build();
         Platform platform = Platform.builder().name(platformName).build();
 
-        WebtoonEpisodeUpdateCommend commend = WebtoonEpisodeUpdateCommend.builder()
-                .webtoonId(webtoonId)
+        EpisodeInfo episodeInfo = EpisodeInfo.builder()
                 .title("1화")
                 .episodeNumber(1)
                 .pricingType("FREE")
                 .url("http://test.com")
-                .platform(platformName)
                 .viewerType(viewerType)
+                .build();
+
+        WebtoonEpisodeUpdateCommand command = WebtoonEpisodeUpdateCommand.builder()
+                .webtoonId(webtoonId)
+                .platform(platformName)
+                .episodes(List.of(episodeInfo))
                 .build();
 
         when(webtoonRepository.findById(webtoonId)).thenReturn(Optional.of(webtoon));
         when(platformRepository.findByName(platformName)).thenReturn(Optional.of(platform));
 
         // when
-        webtoonEpisodeUpdateService.createNewEpisode(commend);
+        webtoonEpisodeUpdateService.registerEpisodes(command);
 
         // then
         ArgumentCaptor<WebtoonEpisode> episodeCaptor = ArgumentCaptor.forClass(WebtoonEpisode.class);
@@ -92,24 +97,28 @@ class WebtoonEpisodeUpdateServiceTest {
 
     @Test
     @DisplayName("웹툰 ID가 존재하지 않으면 예외가 발생한다")
-    void createNewEpisode_웹툰이_존재하지_않으면_예외가_발생한다() {
+    void registerEpisodes_웹툰이_존재하지_않으면_예외가_발생한다() {
         // given
         Long webtoonId = 999L;
-        WebtoonEpisodeUpdateCommend commend = WebtoonEpisodeUpdateCommend.builder()
-                .webtoonId(webtoonId)
+        EpisodeInfo episodeInfo = EpisodeInfo.builder()
                 .title("제목")
                 .episodeNumber(1)
                 .pricingType("FREE")
                 .url("http://test.com")
-                .platform("Kakao")
                 .viewerType("PAGE")
+                .build();
+
+        WebtoonEpisodeUpdateCommand command = WebtoonEpisodeUpdateCommand.builder()
+                .webtoonId(webtoonId)
+                .platform("Kakao")
+                .episodes(List.of(episodeInfo))
                 .build();
 
         when(webtoonRepository.findById(webtoonId)).thenReturn(Optional.empty());
 
         // when & then
         assertThrows(EntityNotFoundException.class, () ->
-                webtoonEpisodeUpdateService.createNewEpisode(commend)
+                webtoonEpisodeUpdateService.registerEpisodes(command)
         );
 
         verify(webtoonEpisodeRepository, never()).save(any());
