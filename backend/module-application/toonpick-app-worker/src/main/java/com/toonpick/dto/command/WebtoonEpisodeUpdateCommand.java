@@ -18,6 +18,8 @@ public class WebtoonEpisodeUpdateCommand {
 
     private Long webtoonId;
     private String platform;
-    private List<EpisodeInfo> episodes;
+    private List<EpisodeInfo> latestFreeEpisodes;
+    private List<EpisodeInfo> latestPreviewEpisodes;
+    private String lastUpdatedDate;
     private String status;
 }
