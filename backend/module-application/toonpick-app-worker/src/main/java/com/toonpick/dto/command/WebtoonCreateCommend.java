@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -19,6 +20,12 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WebtoonCreateCommend {
+
+    @JsonProperty("id")
+    private String id;
+
+    @JsonProperty("url")
+    private String url;
 
     @JsonProperty("title")
     private String title;
@@ -48,10 +55,13 @@ public class WebtoonCreateCommend {
     private SerializationStatus serializationStatus;
 
     @JsonProperty("episode_count")
-    private int episodeCount;
+    private Integer episodeCount;
+
+    @JsonProperty("preview_count")
+    private Integer previewCount;
 
     @JsonProperty("platform_rating")
-    private float platformRating;
+    private Float platformRating;
 
     @JsonProperty("publish_start_date")
     private LocalDate publishStartDate;
@@ -64,6 +74,18 @@ public class WebtoonCreateCommend {
 
     @JsonProperty("genres")
     private Set<String> genres;
+
+    @JsonProperty("latest_free_episode")
+    private EpisodeInfo latestFreeEpisode;
+
+    @JsonProperty("episodes")
+    private List<EpisodeInfo> episodes;
+
+    @JsonProperty("related_novels")
+    private List<RelatedNovelRequest> relatedNovels;
+
+    @JsonProperty("related_webtoon_ids")
+    private List<String> relatedWebtoonIds;
 
     @Getter
     @Builder
@@ -79,5 +101,27 @@ public class WebtoonCreateCommend {
 
         @JsonProperty("role")
         private AuthorRole role;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RelatedNovelRequest {
+
+        @JsonProperty("title")
+        private String title;
+
+        @JsonProperty("link")
+        private String link;
+
+        @JsonProperty("thumbnail_url")
+        private String thumbnailUrl;
+
+        @JsonProperty("type")
+        private String type; // ORIGINAL, BOOK
+
+        @JsonProperty("free_episode_count")
+        private Integer freeEpisodeCount;
     }
 }

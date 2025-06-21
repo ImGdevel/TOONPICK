@@ -48,12 +48,11 @@ class WebtoonEpisodeUpdateServiceTest {
     private PlatformRepository platformRepository;
 
     @Test
-    @DisplayName("새로운 에피소드 생성에 성공하면 에피소드 및 링크가 저장된다")
-    void registerEpisodes_성공하면_에피소드와_링크가_저장된다() {
+    @DisplayName("새로운 에피소드 생성에 성공하면 에피소드 및 웹/모바일 링크가 모두 저장된다")
+    void registerEpisodes_성공하면_에피소드와_모든링크가_저장된다() {
         // given
         Long webtoonId = 1L;
         String platformName = "Naver";
-        String viewerType = "WEB";
 
         Webtoon webtoon = Webtoon.builder().id(webtoonId).build();
         Platform platform = Platform.builder().name(platformName).build();
@@ -62,8 +61,8 @@ class WebtoonEpisodeUpdateServiceTest {
                 .title("1화")
                 .episodeNumber(1)
                 .pricingType("FREE")
-                .url("http://test.com")
-                .viewerType(viewerType)
+                .webUrl("http://test.com")
+                .mobileUrl("http://test.com2")
                 .build();
 
         WebtoonEpisodeUpdateCommand command = WebtoonEpisodeUpdateCommand.builder()
@@ -79,6 +78,7 @@ class WebtoonEpisodeUpdateServiceTest {
         webtoonEpisodeUpdateService.registerEpisodes(command);
 
         // then
+        // 에피소드 저장 검증
         ArgumentCaptor<WebtoonEpisode> episodeCaptor = ArgumentCaptor.forClass(WebtoonEpisode.class);
         verify(webtoonEpisodeRepository).save(episodeCaptor.capture());
 
@@ -86,14 +86,28 @@ class WebtoonEpisodeUpdateServiceTest {
         assertEquals("1화", savedEpisode.getTitle());
         assertEquals(1, savedEpisode.getEpisodeNumber());
 
+        // 링크 저장 검증 - 총 2번 저장되어야 함
         ArgumentCaptor<WebtoonEpisodeLink> linkCaptor = ArgumentCaptor.forClass(WebtoonEpisodeLink.class);
-        verify(webtoonEpisodeLinkRepository).save(linkCaptor.capture());
+        verify(webtoonEpisodeLinkRepository, times(2)).save(linkCaptor.capture());
 
-        WebtoonEpisodeLink savedLink = linkCaptor.getValue();
-        assertEquals("http://test.com", savedLink.getUrl());
-        assertEquals(platform, savedLink.getPlatform());
-        assertEquals(EpisodeViewerType.valueOf(viewerType), savedLink.getViewerType());
+        List<WebtoonEpisodeLink> savedLinks = linkCaptor.getAllValues();
+        assertEquals(2, savedLinks.size());
+
+        // 각 링크 검증
+        WebtoonEpisodeLink webLink = savedLinks.stream()
+                .filter(link -> link.getViewerType() == EpisodeViewerType.WEB)
+                .findFirst().orElseThrow();
+
+        WebtoonEpisodeLink mobileLink = savedLinks.stream()
+                .filter(link -> link.getViewerType() == EpisodeViewerType.MOBILE)
+                .findFirst().orElseThrow();
+
+        assertEquals("http://test.com", webLink.getUrl());
+        assertEquals("http://test.com2", mobileLink.getUrl());
+        assertEquals(platform, webLink.getPlatform());
+        assertEquals(platform, mobileLink.getPlatform());
     }
+
 
     @Test
     @DisplayName("웹툰 ID가 존재하지 않으면 예외가 발생한다")
@@ -104,8 +118,8 @@ class WebtoonEpisodeUpdateServiceTest {
                 .title("제목")
                 .episodeNumber(1)
                 .pricingType("FREE")
-                .url("http://test.com")
-                .viewerType("PAGE")
+                .webUrl("http://test.com")
+                .mobileUrl("http://test.com2")
                 .build();
 
         WebtoonEpisodeUpdateCommand command = WebtoonEpisodeUpdateCommand.builder()
@@ -137,7 +151,7 @@ class WebtoonEpisodeUpdateServiceTest {
         // when & then
         assertThrows(EntityNotFoundException.class, () ->
                 webtoonEpisodeUpdateService.createWebtoonEpisodeLink(
-                        dummyEpisode, "http://test.com", invalidPlatform, "SCROLL"
+                        dummyEpisode, "http://test.com", invalidPlatform, EpisodeViewerType.MOBILE
                 )
         );
 

@@ -50,8 +50,15 @@ public class WebtoonEpisodeUpdateService {
                 .build();
 
         webtoonEpisodeRepository.save(webtoonEpisode);
-
-        createWebtoonEpisodeLink(webtoonEpisode, info.getUrl(), platform, info.getViewerType());
+        
+        // 웹 링크 등록
+        if(!info.getWebUrl().isEmpty()){
+            createWebtoonEpisodeLink(webtoonEpisode, info.getWebUrl(), platform, EpisodeViewerType.WEB);
+        }
+        // 모바일 링크 등록
+        if(!info.getMobileUrl().isEmpty()){
+            createWebtoonEpisodeLink(webtoonEpisode, info.getMobileUrl(), platform, EpisodeViewerType.MOBILE);
+        }
     }
 
     /**
@@ -61,7 +68,7 @@ public class WebtoonEpisodeUpdateService {
             WebtoonEpisode episode,
             String url,
             String platformName,
-            String viewerType
+            EpisodeViewerType viewerType
             ){
         Platform platform = platformRepository.findByName(platformName)
                 .orElseThrow(()-> new EntityNotFoundException(ErrorCode.PLATFORM_NOT_FOUND));
@@ -70,7 +77,7 @@ public class WebtoonEpisodeUpdateService {
                 .episode(episode)
                 .url(url)
                 .platform(platform)
-                .viewerType(EpisodeViewerType.valueOf(viewerType))
+                .viewerType(viewerType)
                 .build();
 
         webtoonEpisodeLinkRepository.save(webtoonEpisodeLink);
