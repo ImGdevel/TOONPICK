@@ -21,16 +21,13 @@ import java.util.Set;
 @AllArgsConstructor
 public class WebtoonCreateCommend {
 
-    @JsonProperty("id")
-    private String id;
-
     @JsonProperty("url")
     private String url;
 
     @JsonProperty("title")
     private String title;
 
-    @JsonProperty("external_id")
+    @JsonProperty("id")
     private String externalId;
 
     @JsonProperty("platform")
@@ -119,7 +116,7 @@ public class WebtoonCreateCommend {
         private String thumbnailUrl;
 
         @JsonProperty("type")
-        private String type; // ORIGINAL, BOOK
+        private String type;
 
         @JsonProperty("free_episode_count")
         private Integer freeEpisodeCount;
