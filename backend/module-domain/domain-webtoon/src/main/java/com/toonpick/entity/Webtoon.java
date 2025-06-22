@@ -59,6 +59,9 @@ public class Webtoon {
     @Column(name = "normalized_title", nullable = false)
     private String normalizedTitle;
 
+    @Column(name = "external_id", nullable = true)
+    private String externalId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week")
     private DayOfWeek dayOfWeek;
@@ -116,6 +119,7 @@ public class Webtoon {
     @Builder
     public Webtoon(Long id,
                    String title,
+                   String externalId,
                    DayOfWeek dayOfWeek,
                    String thumbnailUrl,
                    AgeRating ageRating,
@@ -129,6 +133,7 @@ public class Webtoon {
     ) {
         this.id = id;
         this.title = title;
+        this.externalId = externalId;
         this.dayOfWeek = dayOfWeek;
         this.thumbnailUrl = thumbnailUrl;
         this.ageRating = ageRating;

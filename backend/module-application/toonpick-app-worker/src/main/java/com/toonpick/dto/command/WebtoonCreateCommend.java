@@ -1,6 +1,7 @@
 package com.toonpick.dto.command;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.toonpick.enums.AgeRating;
 import com.toonpick.enums.AuthorRole;
@@ -19,6 +20,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WebtoonCreateCommend {
 
     @JsonProperty("id")
@@ -63,9 +65,6 @@ public class WebtoonCreateCommend {
     @JsonProperty("authors")
     private List<AuthorRequest> authors;
 
-    @JsonProperty("latestFreeEpisode")
-    private EpisodeInfo latestFreeEpisode;
-
     @JsonProperty("publishStartDate")
     private String publishStartDate;
 
@@ -85,6 +84,7 @@ public class WebtoonCreateCommend {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class AuthorRequest {
 
         @JsonProperty("id")
@@ -101,6 +101,7 @@ public class WebtoonCreateCommend {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class RelatedNovelRequest {
 
         @JsonProperty("title")
