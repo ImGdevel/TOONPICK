@@ -2,6 +2,7 @@ package com.toonpick.service;
 
 import com.toonpick.dto.command.WebtoonCreateCommend;
 import com.toonpick.entity.Author;
+import com.toonpick.enums.AuthorRole;
 import com.toonpick.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,25 @@ public class AuthorService {
      * Author 등록 혹은 조회
      */
     public Author findOrCreateAuthor(WebtoonCreateCommend.AuthorRequest request) {
-        return authorRepository.findByUid(request.getUid())
+        return authorRepository.findByUid(request.getId())
                 .orElseGet(() -> {
                     Author newAuthor = Author.builder()
-                            .uid(request.getUid())
+                            .uid(request.getId())
                             .name(request.getName())
-                            .role(request.getRole())
+                            .role(parseAuthorRole(request.getRole()))
                             .build();
                     return authorRepository.save(newAuthor);
                 });
     }
 
+    private com.toonpick.enums.AuthorRole parseAuthorRole(String role) {
+        if (role == null) {
+            return AuthorRole.ORIGINAL;
+        }
+        try {
+            return com.toonpick.enums.AuthorRole.valueOf(role.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return AuthorRole.ORIGINAL;
+        }
+    }
 }

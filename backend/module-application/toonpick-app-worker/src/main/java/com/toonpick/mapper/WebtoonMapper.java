@@ -4,13 +4,17 @@ import com.toonpick.dto.command.WebtoonCreateCommend;
 import com.toonpick.entity.Author;
 import com.toonpick.entity.Genre;
 import com.toonpick.entity.Webtoon;
-
+import com.toonpick.enums.SerializationStatus;
 import com.toonpick.service.AuthorService;
 import com.toonpick.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,7 +24,6 @@ import java.util.stream.Collectors;
 public class WebtoonMapper {
 
     private final AuthorService authorService;
-
     private final GenreService genreService;
 
     public Webtoon toWebtoon(WebtoonCreateCommend request) {
@@ -30,19 +33,19 @@ public class WebtoonMapper {
 
         return Webtoon.builder()
                 .title(request.getTitle())
-                .dayOfWeek(request.getDayOfWeek())
+                .dayOfWeek(parseDayOfWeek(request.getDayOfWeek()))
                 .thumbnailUrl(request.getThumbnailUrl())
                 .ageRating(request.getAgeRating())
-                .summary(request.getSummary())
-                .status(request.getSerializationStatus())
-                .publishStartDate(request.getPublishStartDate())
-                .lastUpdatedDate(request.getLastUpdatedDate())
+                .summary(request.getDescription())
+                .serializationStatus(parseSerializationStatus(request.getStatus()))
+                .publishStartDate(parseDate(request.getPublishStartDate()))
+                .lastUpdatedDate(parseDate(request.getLastUpdatedDate()))
                 .authors(mapAuthors(request.getAuthors()))
                 .genres(mapGenres(request.getGenres()))
                 .build();
     }
 
-    private Set<Author> mapAuthors(Set<WebtoonCreateCommend.AuthorRequest> authorDTOs) {
+    private Set<Author> mapAuthors(List<WebtoonCreateCommend.AuthorRequest> authorDTOs) {
         if (authorDTOs == null) {
             return new HashSet<>();
         }
@@ -52,7 +55,7 @@ public class WebtoonMapper {
                 .collect(Collectors.toSet());
     }
 
-    private Set<Genre> mapGenres(Set<String> genreNames) {
+    private Set<Genre> mapGenres(List<String> genreNames) {
         if (genreNames == null) {
             return new HashSet<>();
         }
@@ -60,5 +63,34 @@ public class WebtoonMapper {
         return genreNames.stream()
                 .map(genreService::findOrCreateGenre)
                 .collect(Collectors.toSet());
+    }
+
+    private DayOfWeek parseDayOfWeek(String dayOfWeek) {
+        if (dayOfWeek == null) {
+            return null;
+        }
+        try {
+            return DayOfWeek.valueOf(dayOfWeek.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private SerializationStatus parseSerializationStatus(SerializationStatus status) {
+        if (status == null) {
+            return SerializationStatus.ONGOING;
+        }
+        return status;
+    }
+
+    private LocalDate parseDate(String dateString) {
+        if (dateString == null || dateString.isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

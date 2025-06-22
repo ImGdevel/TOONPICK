@@ -46,17 +46,17 @@ public class WebtoonEpisodeUpdateService {
                 .webtoon(webtoon)
                 .title(info.getTitle())
                 .episodeNumber(info.getEpisodeNumber())
-                .pricingType(EpisodePricingType.valueOf(info.getPricingType()))
+                .pricingType(parsePricingType(info.getPricingType()))
                 .build();
 
         webtoonEpisodeRepository.save(webtoonEpisode);
         
         // 웹 링크 등록
-        if(!info.getWebUrl().isEmpty()){
-            createWebtoonEpisodeLink(webtoonEpisode, info.getWebUrl(), platform, EpisodeViewerType.WEB);
+        if(info.getLink() != null && !info.getLink().isEmpty()){
+            createWebtoonEpisodeLink(webtoonEpisode, info.getLink(), platform, EpisodeViewerType.WEB);
         }
         // 모바일 링크 등록
-        if(!info.getMobileUrl().isEmpty()){
+        if(info.getMobileUrl() != null && !info.getMobileUrl().isEmpty()){
             createWebtoonEpisodeLink(webtoonEpisode, info.getMobileUrl(), platform, EpisodeViewerType.MOBILE);
         }
     }
@@ -83,4 +83,14 @@ public class WebtoonEpisodeUpdateService {
         webtoonEpisodeLinkRepository.save(webtoonEpisodeLink);
     }
 
+    private EpisodePricingType parsePricingType(String pricingType) {
+        if (pricingType == null) {
+            return EpisodePricingType.FREE;
+        }
+        try {
+            return EpisodePricingType.valueOf(pricingType.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return EpisodePricingType.FREE;
+        }
+    }
 }

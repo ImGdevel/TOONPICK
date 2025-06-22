@@ -1,6 +1,7 @@
 package com.toonpick.service;
 
 
+import com.toonpick.dto.command.EpisodeInfo;
 import com.toonpick.dto.command.WebtoonCreateCommend;
 import com.toonpick.entity.*;
 import com.toonpick.exception.DuplicateResourceException;
@@ -17,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class WebtoonRegistrationService {
     private final WebtoonRepository webtoonRepository;
     private final WebtoonMapper webtoonMapper;
     private final PlatformRepository platformRepository;
+    private final WebtoonEpisodeUpdateService webtoonEpisodeUpdateService;
 
     /**
      *  새로운 웹툰을 등록합니다.
@@ -58,11 +61,16 @@ public class WebtoonRegistrationService {
     private void registerNewWebtoon(WebtoonCreateCommend request) {
         Webtoon webtoon = webtoonMapper.toWebtoon(request);
         WebtoonStatistics statistics = new WebtoonStatistics(webtoon);
-        statistics.setEpisodeCount(request.getEpisodeCount());
+        statistics.setEpisodeCount(request.getEpisodeCount() != null ? request.getEpisodeCount() : 0);
 
         webtoonRepository.save(webtoon);
 
         addPlatform(webtoon, request);
+        
+        // 에피소드 등록
+        if (request.getEpisodes() != null && !request.getEpisodes().isEmpty()) {
+            registerEpisodes(webtoon, request);
+        }
     }
 
     /**
@@ -73,12 +81,21 @@ public class WebtoonRegistrationService {
                 .orElseThrow(()-> new EntityNotFoundException(ErrorCode.PLATFORM_NOT_FOUND));
 
         WebtoonPlatform webtoonPlatform = WebtoonPlatform.builder()
-                .link(request.getLink())
+                .link(request.getUrl())
                 .platform(platform)
                 .webtoon(webtoon)
                 .build();
 
         webtoon.getPlatforms().add(webtoonPlatform);
+    }
+
+    /**
+     * 에피소드 등록
+     */
+    private void registerEpisodes(Webtoon webtoon, WebtoonCreateCommend request) {
+        for (EpisodeInfo episodeInfo : request.getEpisodes()) {
+            webtoonEpisodeUpdateService.createNewEpisode(webtoon, request.getPlatform(), episodeInfo);
+        }
     }
 
     /**
@@ -99,16 +116,18 @@ public class WebtoonRegistrationService {
     /**
      * 동일한 작가인지 비교
      */
-    private boolean isSameAuthors(Set<Author> existing, Set<WebtoonCreateCommend.AuthorRequest> incoming) {
-        Set<String> existingNames = new HashSet<>();
-        for (Author author : existing) {
-            existingNames.add(author.getName());
+    private boolean isSameAuthors(Set<Author> existing, List<WebtoonCreateCommend.AuthorRequest> incoming) {
+        if (incoming == null || incoming.isEmpty()) {
+            return existing.isEmpty();
         }
 
-        Set<String> incomingNames = new HashSet<>();
-        for (WebtoonCreateCommend.AuthorRequest author : incoming) {
-            incomingNames.add(author.getName());
-        }
+        Set<String> existingNames = existing.stream()
+                .map(Author::getName)
+                .collect(Collectors.toSet());
+
+        Set<String> incomingNames = incoming.stream()
+                .map(WebtoonCreateCommend.AuthorRequest::getName)
+                .collect(Collectors.toSet());
 
         return existingNames.equals(incomingNames);
     }

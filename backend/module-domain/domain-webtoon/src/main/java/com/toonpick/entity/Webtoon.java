@@ -120,7 +120,7 @@ public class Webtoon {
                    String thumbnailUrl,
                    AgeRating ageRating,
                    String summary,
-                   SerializationStatus status,
+                   SerializationStatus serializationStatus,
                    LocalDate publishStartDate,
                    LocalDate lastUpdatedDate,
                    List<WebtoonPlatform> platforms,
@@ -133,7 +133,7 @@ public class Webtoon {
         this.thumbnailUrl = thumbnailUrl;
         this.ageRating = ageRating;
         this.summary = summary;
-        this.serializationStatus = status;
+        this.serializationStatus = serializationStatus;
         this.publishStartDate = publishStartDate;
         this.lastUpdatedDate = lastUpdatedDate;
         this.platforms = platforms;
