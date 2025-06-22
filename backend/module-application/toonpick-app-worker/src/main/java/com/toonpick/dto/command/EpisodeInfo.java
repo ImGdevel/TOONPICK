@@ -15,16 +15,27 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EpisodeInfo {
 
-    private Long episodeId;
+    @JsonProperty("title")
     private String title;
-    private String thumbnailUrl;
+
+    @JsonProperty("uploadDate")
     private String uploadDate;
-    private int episodeNumber;
 
     @JsonProperty("link")
-    private String webUrl;
+    private String link;
 
-    private String mobileUrl;
+    @JsonProperty("episodeNumber")
+    private Integer episodeNumber;
 
+    @JsonProperty("thumbnailUrl")
+    private String thumbnailUrl;
+
+    @JsonProperty("pricingType")
     private String pricingType;
+
+    @JsonProperty("daysUntilFree")
+    private Integer daysUntilFree;
+
+    @JsonProperty("mobileUrl")
+    private String mobileUrl;
 }

@@ -21,67 +21,64 @@ import java.util.Set;
 @AllArgsConstructor
 public class WebtoonCreateCommend {
 
+    @JsonProperty("id")
+    private String titleId;
+
     @JsonProperty("url")
     private String url;
 
     @JsonProperty("title")
     private String title;
 
-    @JsonProperty("id")
-    private String externalId;
+    @JsonProperty("uniqueId")
+    private String uniqueId;
 
     @JsonProperty("platform")
     private String platform;
 
-    @JsonProperty("day_of_week")
-    private DayOfWeek dayOfWeek;
+    @JsonProperty("description")
+    private String description;
 
-    @JsonProperty("thumbnail_url")
+    @JsonProperty("thumbnailUrl")
     private String thumbnailUrl;
 
-    @JsonProperty("link")
-    private String link;
+    @JsonProperty("dayOfWeek")
+    private String dayOfWeek;
 
-    @JsonProperty("age_rating")
+    @JsonProperty("status")
+    private SerializationStatus status;
+
+    @JsonProperty("ageRating")
     private AgeRating ageRating;
 
-    @JsonProperty("description")
-    private String summary;
-
-    @JsonProperty("serialization_status")
-    private SerializationStatus serializationStatus;
-
-    @JsonProperty("episode_count")
+    @JsonProperty("episodeCount")
     private Integer episodeCount;
 
-    @JsonProperty("preview_count")
+    @JsonProperty("previewCount")
     private Integer previewCount;
 
-    @JsonProperty("platform_rating")
-    private Float platformRating;
-
-    @JsonProperty("publish_start_date")
-    private LocalDate publishStartDate;
-
-    @JsonProperty("last_updated_date")
-    private LocalDate lastUpdatedDate;
+    @JsonProperty("genres")
+    private List<String> genres;
 
     @JsonProperty("authors")
-    private Set<AuthorRequest> authors;
+    private List<AuthorRequest> authors;
 
-    @JsonProperty("genres")
-    private Set<String> genres;
-
-    @JsonProperty("latest_free_episode")
+    @JsonProperty("latestFreeEpisode")
     private EpisodeInfo latestFreeEpisode;
+
+    @JsonProperty("publishStartDate")
+    private String publishStartDate;
+
+    @JsonProperty("lastUpdatedDate")
+    private String lastUpdatedDate;
 
     @JsonProperty("episodes")
     private List<EpisodeInfo> episodes;
 
-    @JsonProperty("related_novels")
+    @JsonProperty("relatedNovels")
     private List<RelatedNovelRequest> relatedNovels;
 
-    @JsonProperty("related_webtoon_ids")
+    @JsonProperty("relatedWebtoonIds")
     private List<String> relatedWebtoonIds;
 
     @Getter
@@ -90,14 +87,14 @@ public class WebtoonCreateCommend {
     @AllArgsConstructor
     public static class AuthorRequest {
 
-        @JsonProperty("uid")
-        private String uid;
+        @JsonProperty("id")
+        private String id;
 
         @JsonProperty("name")
         private String name;
 
         @JsonProperty("role")
-        private AuthorRole role;
+        private String role;
     }
 
     @Getter
@@ -112,13 +109,13 @@ public class WebtoonCreateCommend {
         @JsonProperty("link")
         private String link;
 
-        @JsonProperty("thumbnail_url")
+        @JsonProperty("thumbnailUrl")
         private String thumbnailUrl;
 
         @JsonProperty("type")
         private String type;
 
-        @JsonProperty("free_episode_count")
+        @JsonProperty("freeEpisodeCount")
         private Integer freeEpisodeCount;
     }
 }
