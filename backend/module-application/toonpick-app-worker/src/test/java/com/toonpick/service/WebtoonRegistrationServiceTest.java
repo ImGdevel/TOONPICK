@@ -39,12 +39,15 @@ class WebtoonRegistrationServiceTest {
     @Mock
     private PlatformRepository platformRepository;
 
+    @Mock
+    private WebtoonEpisodeUpdateService webtoonEpisodeUpdateService;
+
     @Test
     @DisplayName("동일한 제목과 작가의 웹툰이 없을 경우 새 웹툰과 플랫폼을 등록한다")
     void createWebtoon_신규_웹툰이면_웹툰과_플랫폼_등록한다() {
         // given
         WebtoonCreateCommend request = createCommend(
-                "전지적 독자 시점", Set.of("싱숑"), "NAVER", "https://naver.com/1", 10);
+                "전지적 독자 시점", List.of("싱숑"), "NAVER", "https://naver.com/1", 10);
 
         Webtoon newWebtoon = Webtoon.builder()
                 .title(request.getTitle())
@@ -76,7 +79,7 @@ class WebtoonRegistrationServiceTest {
     void createWebtoon_동일한_웹툰과_플랫폼이_존재하면_예외_발생() {
         // given
         WebtoonCreateCommend request = createCommend(
-                "전지적 독자 시점", Set.of("싱숑"), "NAVER", "https://naver.com/1", 10);
+                "전지적 독자 시점", List.of("싱숑"), "NAVER", "https://naver.com/1", 10);
 
         Platform existingPlatform = Platform.builder().name("NAVER").build();
         Webtoon existingWebtoon = Webtoon.builder()
@@ -102,7 +105,7 @@ class WebtoonRegistrationServiceTest {
     void createWebtoon_동일한_웹툰이지만_다른_플랫폼이면_플랫폼_추가된다() {
         // given
         WebtoonCreateCommend request = createCommend(
-                "전지적 독자 시점", Set.of("싱숑"), "KAKAO", "https://naver.com/1", 10);
+                "전지적 독자 시점", List.of("싱숑"), "KAKAO", "https://naver.com/1", 10);
 
         Platform existingPlatform = Platform.builder().name("NAVER").build();
         Webtoon existingWebtoon = Webtoon.builder()
@@ -130,7 +133,7 @@ class WebtoonRegistrationServiceTest {
     void createWebtoon_플랫폼이_존재하지_않으면_예외_발생() {
         // given
         WebtoonCreateCommend request = createCommend(
-                "전지적 독자 시점", Set.of("싱숑"), "NAVER", "https://naver.com/1", 10);
+                "전지적 독자 시점", List.of("싱숑"), "NAVER", "https://naver.com/1", 10);
 
         Webtoon newWebtoon = Webtoon.builder()
                 .title(request.getTitle())
@@ -151,21 +154,39 @@ class WebtoonRegistrationServiceTest {
     // WebtoonCommend 생성 메서드
     private WebtoonCreateCommend createCommend(
             String title,
-            Set<String> authors,
+            List<String> authors,
             String platform,
-            String link,
-            int episodeCount
+            String url,
+            Integer episodeCount
     ) {
-        Set<WebtoonCreateCommend.AuthorRequest> authorRequests = authors.stream()
-                .map(name -> WebtoonCreateCommend.AuthorRequest.builder().name(name).build())
-                .collect(Collectors.toSet());
+        List<WebtoonCreateCommend.AuthorRequest> authorRequests = authors.stream()
+                .map(name -> WebtoonCreateCommend.AuthorRequest.builder()
+                        .id("author_" + name)
+                        .name(name)
+                        .role("WRITER")
+                        .build())
+                .collect(Collectors.toList());
 
         return WebtoonCreateCommend.builder()
+                .titleId("title_" + title)
                 .title(title)
-                .authors(authorRequests)
+                .uniqueId("unique_" + title)
+                .url(url)
                 .platform(platform)
-                .link(link)
+                .description("웹툰 설명")
+                .thumbnailUrl("https://thumbnail.com/image.jpg")
+                .dayOfWeek("MONDAY")
+                .status(com.toonpick.enums.SerializationStatus.ONGOING)
+                .ageRating(com.toonpick.enums.AgeRating.ALL)
                 .episodeCount(episodeCount)
+                .previewCount(0)
+                .genres(List.of("액션", "판타지"))
+                .authors(authorRequests)
+                .publishStartDate("2023-01-01")
+                .lastUpdatedDate("2024-01-01")
+                .episodes(List.of())
+                .relatedNovels(List.of())
+                .relatedWebtoonIds(List.of())
                 .build();
     }
 }

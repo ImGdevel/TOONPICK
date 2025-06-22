@@ -61,7 +61,7 @@ class WebtoonEpisodeUpdateServiceTest {
                 .title("1화")
                 .episodeNumber(1)
                 .pricingType("FREE")
-                .webUrl("http://test.com")
+                .link("http://test.com")
                 .mobileUrl("http://test.com2")
                 .build();
 
@@ -118,7 +118,7 @@ class WebtoonEpisodeUpdateServiceTest {
                 .title("제목")
                 .episodeNumber(1)
                 .pricingType("FREE")
-                .webUrl("http://test.com")
+                .link("http://test.com")
                 .mobileUrl("http://test.com2")
                 .build();
 
