@@ -33,7 +33,7 @@ public class WebtoonMapper {
                 .thumbnailUrl(request.getThumbnailUrl())
                 .ageRating(request.getAgeRating())
                 .summary(request.getSummary())
-                .status(request.getSerializationStatus())
+                .serializationStatus(request.getSerializationStatus())
                 .publishStartDate(request.getPublishStartDate())
                 .lastUpdatedDate(request.getLastUpdatedDate())
                 .authors(mapAuthors(request.getAuthors()))
