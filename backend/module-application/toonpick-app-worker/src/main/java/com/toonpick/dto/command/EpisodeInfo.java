@@ -21,8 +21,8 @@ public class EpisodeInfo {
     @JsonProperty("uploadDate")
     private String uploadDate;
 
-    @JsonProperty("link")
-    private String link;
+    @JsonProperty("url")
+    private String webUrl;
 
     @JsonProperty("episodeNumber")
     private Integer episodeNumber;

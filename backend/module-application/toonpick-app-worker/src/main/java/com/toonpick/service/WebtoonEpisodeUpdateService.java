@@ -29,11 +29,20 @@ public class WebtoonEpisodeUpdateService {
     private final PlatformRepository platformRepository;
 
     public void registerEpisodes(WebtoonEpisodeUpdateCommand result){
-        Webtoon webtoon = webtoonRepository.findById(result.getWebtoonId())
+        Long webtoonId = parseWebtoonId(result.getWebtoonId());
+        Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(()-> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND));
 
         for(EpisodeInfo episodeInfo : result.getEpisodes()){
             createNewEpisode(webtoon, result.getPlatform(), episodeInfo);
+        }
+    }
+
+    private Long parseWebtoonId(String webtoonId) {
+        try {
+            return Long.parseLong(webtoonId);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid webtoonId: " + webtoonId);
         }
     }
 
@@ -52,8 +61,8 @@ public class WebtoonEpisodeUpdateService {
         webtoonEpisodeRepository.save(webtoonEpisode);
         
         // 웹 링크 등록
-        if(info.getLink() != null && !info.getLink().isEmpty()){
-            createWebtoonEpisodeLink(webtoonEpisode, info.getLink(), platform, EpisodeViewerType.WEB);
+        if(info.getWebUrl() != null && !info.getWebUrl().isEmpty()){
+            createWebtoonEpisodeLink(webtoonEpisode, info.getWebUrl(), platform, EpisodeViewerType.WEB);
         }
         // 모바일 링크 등록
         if(info.getMobileUrl() != null && !info.getMobileUrl().isEmpty()){

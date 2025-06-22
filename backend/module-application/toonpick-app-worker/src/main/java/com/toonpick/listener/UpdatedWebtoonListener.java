@@ -53,11 +53,10 @@ public class UpdatedWebtoonListener {
     }
 
     private void handleEpisodeUpdate(String message) throws Exception {
-        String bodyJson = extractBodyFromMessage(message);
-        WebtoonEpisodeUpdateCommand command = objectMapper.readValue(bodyJson, WebtoonEpisodeUpdateCommand.class);
+        WebtoonEpisodeUpdateCommand command = extractEpisodeUpdateCommand(message);
 
         if (command.getWebtoonId() == null || command.getEpisodes() == null) {
-            log.error("역직렬화된 WebtoonEpisodeUpdateCommand에 필수 필드 누락. 원본 메시지: {}", bodyJson);
+            log.error("역직렬화된 WebtoonEpisodeUpdateCommand에 필수 필드 누락. 원본 메시지: {}", message);
             return;
         }
 
@@ -65,15 +64,38 @@ public class UpdatedWebtoonListener {
     }
 
     private void handleWebtoonCreate(String message) throws Exception {
-        String bodyJson = extractBodyFromMessage(message);
-        WebtoonCreateCommend command = objectMapper.readValue(bodyJson, WebtoonCreateCommend.class);
+        WebtoonCreateCommend command = extractWebtoonCreateCommand(message);
 
         if (command == null) {
-            log.error("역직렬화된 WebtoonCreateCommend가 null입니다. 원본 메시지: {}", bodyJson);
+            log.error("역직렬화된 WebtoonCreateCommend가 null입니다. 원본 메시지: {}", message);
             return;
         }
 
         webtoonRegistrationService.createWebtoon(command);
+    }
+
+    private WebtoonEpisodeUpdateCommand extractEpisodeUpdateCommand(String message) throws Exception {
+        JsonNode root = objectMapper.readTree(message);
+        JsonNode dataNode = root.get("data");
+        
+        if (dataNode == null) {
+            log.error("data 필드가 없습니다. 원본 메시지: {}", message);
+            throw new IllegalArgumentException("data 필드가 없습니다.");
+        }
+
+        return objectMapper.treeToValue(dataNode, WebtoonEpisodeUpdateCommand.class);
+    }
+
+    private WebtoonCreateCommend extractWebtoonCreateCommand(String message) throws Exception {
+        JsonNode root = objectMapper.readTree(message);
+        JsonNode dataNode = root.get("data");
+        
+        if (dataNode == null) {
+            log.error("data 필드가 없습니다. 원본 메시지: {}", message);
+            throw new IllegalArgumentException("data 필드가 없습니다.");
+        }
+
+        return objectMapper.treeToValue(dataNode, WebtoonCreateCommend.class);
     }
 
     private String extractBodyFromMessage(String message) throws Exception {
