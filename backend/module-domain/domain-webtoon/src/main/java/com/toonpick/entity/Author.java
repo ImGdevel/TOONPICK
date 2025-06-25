@@ -33,23 +33,18 @@ public class Author {
     @Column(name = "role", nullable = false)
     private AuthorRole role;
 
-    @Column(name = "link")
-    private String link;
-
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<AuthorSNS> authorSNSs;
 
     @Builder
-    public Author(String uid, String name, AuthorRole role, String link) {
+    public Author(String uid, String name, AuthorRole role) {
         this.uid = uid;
         this.name = name;
         this.role = role;
-        this.link = link;
     }
 
-    public void update(String name, AuthorRole role, String link) {
+    public void update(String name, AuthorRole role) {
         this.name = name;
         this.role = role;
-        this.link = link;
     }
 }
