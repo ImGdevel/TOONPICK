@@ -20,7 +20,7 @@ import java.util.List;
 public class WebtoonEpisodeUpdateCommand {
 
     @JsonProperty("webtoonId")
-    private String webtoonId;
+    private Long webtoonId;
     
     @JsonProperty("title")
     private String title;
@@ -29,7 +29,7 @@ public class WebtoonEpisodeUpdateCommand {
     private String platform;
     
     @JsonProperty("episodes")
-    private List<EpisodeInfo> episodes;
+    private List<EpisodeRequest> episodes;
     
     @JsonProperty("lastUpdatedDate")
     private String lastUpdatedDate;

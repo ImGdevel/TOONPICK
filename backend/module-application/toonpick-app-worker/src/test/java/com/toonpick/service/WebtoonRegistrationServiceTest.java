@@ -1,5 +1,6 @@
 package com.toonpick.service;
 
+import com.toonpick.dto.command.AuthorRequest;
 import com.toonpick.dto.command.WebtoonCreateCommend;
 import com.toonpick.entity.Author;
 import com.toonpick.entity.Platform;
@@ -159,8 +160,8 @@ class WebtoonRegistrationServiceTest {
             String url,
             Integer episodeCount
     ) {
-        List<WebtoonCreateCommend.AuthorRequest> authorRequests = authors.stream()
-                .map(name -> WebtoonCreateCommend.AuthorRequest.builder()
+        List<AuthorRequest> authorRequests = authors.stream()
+                .map(name -> AuthorRequest.builder()
                         .id("author_" + name)
                         .name(name)
                         .role("WRITER")

@@ -1,22 +1,23 @@
 package com.toonpick.listener;
 
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toonpick.common.type.SQSEventType;
 import com.toonpick.dto.command.WebtoonCreateCommend;
 import com.toonpick.dto.command.WebtoonEpisodeUpdateCommand;
-import com.toonpick.dto.message.SQSResponseMessage;
 import com.toonpick.service.WebtoonEpisodeUpdateService;
 import com.toonpick.service.WebtoonRegistrationService;
 import io.awspring.cloud.sqs.annotation.SqsListener;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import java.util.Set;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +26,8 @@ public class UpdatedWebtoonListener {
     private final WebtoonRegistrationService webtoonRegistrationService;
     private final WebtoonEpisodeUpdateService webtoonEpisodeUpdateService;
     private final ObjectMapper objectMapper;
+
+    private final Validator validator;
 
     @Value("${spring.cloud.aws.sqs.queue.webtoon-update-complete}")
     private String queueName;
@@ -60,6 +63,14 @@ public class UpdatedWebtoonListener {
             return;
         }
 
+        Set<ConstraintViolation<WebtoonEpisodeUpdateCommand>> violations = validator.validate(command);
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<WebtoonEpisodeUpdateCommand> violation : violations) {
+                log.error("WebtoonEpisodeUpdateCommand 유효성 실패 - {}: {}", violation.getPropertyPath(), violation.getMessage());
+            }
+            return;
+        }
+
         webtoonEpisodeUpdateService.registerEpisodes(command);
     }
 
@@ -68,6 +79,14 @@ public class UpdatedWebtoonListener {
 
         if (command == null) {
             log.error("역직렬화된 WebtoonCreateCommend가 null입니다. 원본 메시지: {}", message);
+            return;
+        }
+
+        Set<ConstraintViolation<WebtoonCreateCommend>> violations = validator.validate(command);
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<WebtoonCreateCommend> violation : violations) {
+                log.error("WebtoonCreateCommend 유효성 실패 - {}: {}", violation.getPropertyPath(), violation.getMessage());
+            }
             return;
         }
 
@@ -96,19 +115,5 @@ public class UpdatedWebtoonListener {
         }
 
         return objectMapper.treeToValue(dataNode, WebtoonCreateCommend.class);
-    }
-
-    private String extractBodyFromMessage(String message) throws Exception {
-        SQSResponseMessage<Map<String, Object>> rawResponse =
-                objectMapper.readValue(message, new TypeReference<SQSResponseMessage<Map<String, Object>>>() {});
-
-        Object rawData = rawResponse.getData().get("body");
-
-        if (rawData == null) {
-            log.error("body가 비어 있습니다. 원본 메시지: {}", message);
-            throw new IllegalArgumentException("body가 비어 있습니다.");
-        }
-
-        return rawData.toString();
     }
 }

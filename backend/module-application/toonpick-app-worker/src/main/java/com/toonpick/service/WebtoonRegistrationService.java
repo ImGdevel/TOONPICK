@@ -1,7 +1,8 @@
 package com.toonpick.service;
 
 
-import com.toonpick.dto.command.EpisodeInfo;
+import com.toonpick.dto.command.AuthorRequest;
+import com.toonpick.dto.command.EpisodeRequest;
 import com.toonpick.dto.command.WebtoonCreateCommend;
 import com.toonpick.entity.*;
 import com.toonpick.exception.DuplicateResourceException;
@@ -12,14 +13,15 @@ import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -59,6 +61,8 @@ public class WebtoonRegistrationService {
      * 완전히 새로운 웹툰 등록
      */
     private void registerNewWebtoon(WebtoonCreateCommend request) {
+        log.info("웹툰 등록을 시도합니다.");
+
         Webtoon webtoon = webtoonMapper.toWebtoon(request);
         WebtoonStatistics statistics = new WebtoonStatistics(webtoon);
         statistics.setEpisodeCount(request.getEpisodeCount() != null ? request.getEpisodeCount() : 0);
@@ -93,11 +97,15 @@ public class WebtoonRegistrationService {
      * 에피소드 등록
      */
     private void registerEpisodes(Webtoon webtoon, WebtoonCreateCommend request) {
-        for (EpisodeInfo episodeInfo : request.getEpisodes()) {
-            webtoonEpisodeUpdateService.createNewEpisode(webtoon, request.getPlatform(), episodeInfo);
+        for (EpisodeRequest episodeRequest : request.getEpisodes()) {
+            webtoonEpisodeUpdateService.createNewEpisode(webtoon, request.getPlatform(), episodeRequest);
         }
     }
 
+    /// ///
+    /// 같은 웹툰 찾기
+    /// ///
+    
     /**
      * 제목+작가가 동일한 기존 웹툰을 찾는다
      */
@@ -116,7 +124,7 @@ public class WebtoonRegistrationService {
     /**
      * 동일한 작가인지 비교
      */
-    private boolean isSameAuthors(Set<Author> existing, List<WebtoonCreateCommend.AuthorRequest> incoming) {
+    private boolean isSameAuthors(Set<Author> existing, List<AuthorRequest> incoming) {
         if (incoming == null || incoming.isEmpty()) {
             return existing.isEmpty();
         }
@@ -126,7 +134,7 @@ public class WebtoonRegistrationService {
                 .collect(Collectors.toSet());
 
         Set<String> incomingNames = incoming.stream()
-                .map(WebtoonCreateCommend.AuthorRequest::getName)
+                .map(AuthorRequest::getName)
                 .collect(Collectors.toSet());
 
         return existingNames.equals(incomingNames);

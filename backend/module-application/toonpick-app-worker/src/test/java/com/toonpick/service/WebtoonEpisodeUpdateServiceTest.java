@@ -1,6 +1,6 @@
 package com.toonpick.service;
 
-import com.toonpick.dto.command.EpisodeInfo;
+import com.toonpick.dto.command.EpisodeRequest;
 import com.toonpick.dto.command.WebtoonEpisodeUpdateCommand;
 import com.toonpick.entity.Platform;
 import com.toonpick.entity.Webtoon;
@@ -57,18 +57,18 @@ class WebtoonEpisodeUpdateServiceTest {
         Webtoon webtoon = Webtoon.builder().id(webtoonId).build();
         Platform platform = Platform.builder().name(platformName).build();
 
-        EpisodeInfo episodeInfo = EpisodeInfo.builder()
+        EpisodeRequest episodeRequest = EpisodeRequest.builder()
                 .title("1화")
                 .episodeNumber(1)
                 .pricingType("FREE")
-                .link("http://test.com")
+                .webUrl("http://test.com")
                 .mobileUrl("http://test.com2")
                 .build();
 
         WebtoonEpisodeUpdateCommand command = WebtoonEpisodeUpdateCommand.builder()
                 .webtoonId(webtoonId)
                 .platform(platformName)
-                .episodes(List.of(episodeInfo))
+                .episodes(List.of(episodeRequest))
                 .build();
 
         when(webtoonRepository.findById(webtoonId)).thenReturn(Optional.of(webtoon));
@@ -114,18 +114,18 @@ class WebtoonEpisodeUpdateServiceTest {
     void registerEpisodes_웹툰이_존재하지_않으면_예외가_발생한다() {
         // given
         Long webtoonId = 999L;
-        EpisodeInfo episodeInfo = EpisodeInfo.builder()
+        EpisodeRequest episodeRequest = EpisodeRequest.builder()
                 .title("제목")
                 .episodeNumber(1)
                 .pricingType("FREE")
-                .link("http://test.com")
+                .webUrl("http://test.com")
                 .mobileUrl("http://test.com2")
                 .build();
 
         WebtoonEpisodeUpdateCommand command = WebtoonEpisodeUpdateCommand.builder()
                 .webtoonId(webtoonId)
                 .platform("Kakao")
-                .episodes(List.of(episodeInfo))
+                .episodes(List.of(episodeRequest))
                 .build();
 
         when(webtoonRepository.findById(webtoonId)).thenReturn(Optional.empty());

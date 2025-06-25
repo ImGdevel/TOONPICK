@@ -34,7 +34,7 @@ public class WebtoonPlatform {
     @JoinColumn(name = "platform_id", nullable = false)
     private Platform platform;
 
-    @Column(name = "link")
+    @Column(name = "link", nullable = false)
     private String link;
 
     @Column(name = "rank")

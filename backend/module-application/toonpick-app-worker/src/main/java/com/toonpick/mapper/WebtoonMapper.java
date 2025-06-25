@@ -1,5 +1,6 @@
 package com.toonpick.mapper;
 
+import com.toonpick.dto.command.AuthorRequest;
 import com.toonpick.dto.command.WebtoonCreateCommend;
 import com.toonpick.entity.Author;
 import com.toonpick.entity.Genre;
@@ -45,7 +46,7 @@ public class WebtoonMapper {
                 .build();
     }
 
-    private Set<Author> mapAuthors(List<WebtoonCreateCommend.AuthorRequest> authorDTOs) {
+    private Set<Author> mapAuthors(List<AuthorRequest> authorDTOs) {
         if (authorDTOs == null) {
             return new HashSet<>();
         }

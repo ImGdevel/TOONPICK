@@ -1,6 +1,6 @@
 package com.toonpick.service;
 
-import com.toonpick.dto.command.EpisodeInfo;
+import com.toonpick.dto.command.EpisodeRequest;
 import com.toonpick.dto.command.WebtoonEpisodeUpdateCommand;
 import com.toonpick.entity.Platform;
 import com.toonpick.entity.Webtoon;
@@ -16,8 +16,10 @@ import com.toonpick.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -29,28 +31,20 @@ public class WebtoonEpisodeUpdateService {
     private final PlatformRepository platformRepository;
 
     public void registerEpisodes(WebtoonEpisodeUpdateCommand result){
-        Long webtoonId = parseWebtoonId(result.getWebtoonId());
+        Long webtoonId = result.getWebtoonId();
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
                 .orElseThrow(()-> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND));
 
-        for(EpisodeInfo episodeInfo : result.getEpisodes()){
-            createNewEpisode(webtoon, result.getPlatform(), episodeInfo);
-        }
-    }
-
-    private Long parseWebtoonId(String webtoonId) {
-        try {
-            return Long.parseLong(webtoonId);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid webtoonId: " + webtoonId);
+        for(EpisodeRequest episodeRequest : result.getEpisodes()){
+            createNewEpisode(webtoon, result.getPlatform(), episodeRequest);
         }
     }
 
     /**
      * 새로운 에피소드 등록
      */
-    public void createNewEpisode(Webtoon webtoon, String platform, EpisodeInfo info){
-
+    public void createNewEpisode(Webtoon webtoon, String platform, EpisodeRequest info){
+        log.info("에피소드를 등록을 시도합니다.");
         WebtoonEpisode webtoonEpisode  = WebtoonEpisode.builder()
                 .webtoon(webtoon)
                 .title(info.getTitle())
@@ -61,15 +55,18 @@ public class WebtoonEpisodeUpdateService {
         webtoonEpisodeRepository.save(webtoonEpisode);
         
         // 웹 링크 등록
-        if(info.getWebUrl() != null && !info.getWebUrl().isEmpty()){
+        if(isValidUrl(info.getWebUrl())){
             createWebtoonEpisodeLink(webtoonEpisode, info.getWebUrl(), platform, EpisodeViewerType.WEB);
         }
         // 모바일 링크 등록
-        if(info.getMobileUrl() != null && !info.getMobileUrl().isEmpty()){
+        if(isValidUrl(info.getMobileUrl())){
             createWebtoonEpisodeLink(webtoonEpisode, info.getMobileUrl(), platform, EpisodeViewerType.MOBILE);
         }
     }
 
+    private boolean isValidUrl(String url) {
+        return url != null && !url.isEmpty() && !url.contains("null");
+    }
     /**
      * 에피소드내 플랫폼 및 viewer애 따른 링크를 생성하고 등록합니다.
      */
@@ -92,6 +89,11 @@ public class WebtoonEpisodeUpdateService {
         webtoonEpisodeLinkRepository.save(webtoonEpisodeLink);
     }
 
+    /**
+     * 구매 타입
+     * @param pricingType
+     * @return
+     */
     private EpisodePricingType parsePricingType(String pricingType) {
         if (pricingType == null) {
             return EpisodePricingType.FREE;
