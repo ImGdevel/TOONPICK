@@ -1,10 +1,10 @@
 package com.toonpick.auth.service;
 
 import com.toonpick.dto.JoinRequest;
-import com.toonpick.entity.Member;
-import com.toonpick.enums.MemberRole;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.domain.member.enums.MemberRole;
 import com.toonpick.exception.DuplicateResourceException;
-import com.toonpick.repository.MemberRepository;
+import com.toonpick.domain.member.repository.MemberRepository;
 import com.toonpick.type.ErrorCode;
 import com.toonpick.utils.ShortIdUtil;
 import lombok.RequiredArgsConstructor;

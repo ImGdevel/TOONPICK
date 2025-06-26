@@ -1,9 +1,9 @@
 package com.toonpick.test.unit.auth.service;
 
 import com.toonpick.auth.service.MemberJoinService;
-import com.toonpick.entity.Member;
+import com.toonpick.domain.member.entity.Member;
 import com.toonpick.exception.DuplicateResourceException;
-import com.toonpick.repository.MemberRepository;
+import com.toonpick.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

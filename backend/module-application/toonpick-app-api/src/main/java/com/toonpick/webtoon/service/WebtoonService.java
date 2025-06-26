@@ -1,11 +1,11 @@
 package com.toonpick.webtoon.service;
 
 
-import com.toonpick.dto.PagedResponseDTO;
-import com.toonpick.dto.WebtoonFilterDTO;
-import com.toonpick.entity.Webtoon;
+import com.toonpick.domain.dto.PagedResponseDTO;
+import com.toonpick.domain.webtoon.dto.WebtoonFilterDTO;
+import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.exception.EntityNotFoundException;
-import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;

@@ -2,13 +2,15 @@ package com.toonpick.integration.service;
 
 import com.toonpick.dto.command.AuthorRequest;
 import com.toonpick.dto.command.WebtoonCreateCommend;
-import com.toonpick.entity.Platform;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.entity.WebtoonPlatform;
+import com.toonpick.domain.webtoon.entity.Platform;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.domain.webtoon.entity.WebtoonPlatform;
 import com.toonpick.exception.DuplicateResourceException;
 import com.toonpick.exception.EntityNotFoundException;
-import com.toonpick.repository.PlatformRepository;
-import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.domain.webtoon.enums.AgeRating;
+import com.toonpick.domain.webtoon.enums.SerializationStatus;
+import com.toonpick.domain.webtoon.repository.PlatformRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import com.toonpick.service.WebtoonRegistrationService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,8 +119,8 @@ class WebtoonRegistrationServiceIntegrationTest {
                 .description("웹툰 설명")
                 .thumbnailUrl("https://thumbnail.com/image.jpg")
                 .dayOfWeek("MONDAY")
-                .status(com.toonpick.enums.SerializationStatus.ONGOING)
-                .ageRating(com.toonpick.enums.AgeRating.ALL)
+                .status(SerializationStatus.ONGOING)
+                .ageRating(AgeRating.ALL)
                 .episodeCount(episodeCount)
                 .previewCount(0)
                 .genres(List.of("액션", "판타지"))

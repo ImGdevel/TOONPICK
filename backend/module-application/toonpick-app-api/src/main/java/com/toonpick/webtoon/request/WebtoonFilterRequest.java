@@ -1,10 +1,10 @@
 package com.toonpick.webtoon.request;
 
-import com.toonpick.dto.WebtoonFilterDTO;
-import com.toonpick.enums.AgeRating;
+import com.toonpick.domain.webtoon.dto.WebtoonFilterDTO;
+import com.toonpick.domain.webtoon.enums.AgeRating;
 import lombok.Builder;
 import lombok.Data;
-import com.toonpick.enums.SerializationStatus;
+import com.toonpick.domain.webtoon.enums.SerializationStatus;
 
 import java.time.DayOfWeek;
 import java.util.Set;

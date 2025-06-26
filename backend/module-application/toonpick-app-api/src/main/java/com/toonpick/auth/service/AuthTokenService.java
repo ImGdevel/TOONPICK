@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.toonpick.jwt.JwtTokenProvider;
 import com.toonpick.jwt.JwtTokenValidator;
-import com.toonpick.service.RefreshTokenService;
+import com.toonpick.domain.auth.service.RefreshTokenService;
 
 
 @Service

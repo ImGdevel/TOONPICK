@@ -1,9 +1,9 @@
-import com.toonpick.entity.Member;
-import com.toonpick.entity.ToonCollection;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.domain.member.entity.ToonCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.toonpick.entity.Webtoon;
+import com.toonpick.domain.webtoon.entity.Webtoon;
 
 
 import java.util.List;

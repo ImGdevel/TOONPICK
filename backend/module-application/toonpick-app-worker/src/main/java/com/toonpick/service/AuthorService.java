@@ -1,9 +1,9 @@
 package com.toonpick.service;
 
 import com.toonpick.dto.command.AuthorRequest;
-import com.toonpick.entity.Author;
-import com.toonpick.enums.AuthorRole;
-import com.toonpick.repository.AuthorRepository;
+import com.toonpick.domain.webtoon.entity.Author;
+import com.toonpick.domain.webtoon.enums.AuthorRole;
+import com.toonpick.domain.webtoon.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,12 +31,12 @@ public class AuthorService {
                 });
     }
 
-    private com.toonpick.enums.AuthorRole parseAuthorRole(String role) {
+    private AuthorRole parseAuthorRole(String role) {
         if (role == null) {
             return AuthorRole.ORIGINAL;
         }
         try {
-            return com.toonpick.enums.AuthorRole.valueOf(role.toUpperCase());
+            return AuthorRole.valueOf(role.toUpperCase());
         } catch (IllegalArgumentException e) {
             return AuthorRole.ORIGINAL;
         }

@@ -1,6 +1,6 @@
 package com.toonpick.toon_collection.mapper;
 
-import com.toonpick.entity.ToonCollection;
+import com.toonpick.domain.member.entity.ToonCollection;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import com.toonpick.toon_collection.response.ToonCollectionResponseDTO;

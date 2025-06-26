@@ -1,7 +1,7 @@
 package com.toonpick.member.request;
 
-import com.toonpick.entity.MemberWebtoonInteraction;
-import com.toonpick.enums.WatchingStatus;
+import com.toonpick.domain.member.entity.MemberWebtoonInteraction;
+import com.toonpick.domain.member.enums.WatchingStatus;
 import lombok.Builder;
 import lombok.Data;
 

@@ -2,10 +2,10 @@ package com.toonpick.mapper;
 
 import com.toonpick.dto.command.AuthorRequest;
 import com.toonpick.dto.command.WebtoonCreateCommend;
-import com.toonpick.entity.Author;
-import com.toonpick.entity.Genre;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.enums.SerializationStatus;
+import com.toonpick.domain.webtoon.entity.Author;
+import com.toonpick.domain.webtoon.entity.Genre;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.domain.webtoon.enums.SerializationStatus;
 import com.toonpick.service.AuthorService;
 import com.toonpick.service.GenreService;
 import lombok.RequiredArgsConstructor;

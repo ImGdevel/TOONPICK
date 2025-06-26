@@ -1,10 +1,10 @@
 package com.toonpick.service;
 
-import com.toonpick.entity.Platform;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.entity.WebtoonPlatform;
-import com.toonpick.repository.PlatformRepository;
-import com.toonpick.repository.WebtoonPlatformRepository;
+import com.toonpick.domain.webtoon.entity.Platform;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.domain.webtoon.entity.WebtoonPlatform;
+import com.toonpick.domain.webtoon.repository.PlatformRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonPlatformRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

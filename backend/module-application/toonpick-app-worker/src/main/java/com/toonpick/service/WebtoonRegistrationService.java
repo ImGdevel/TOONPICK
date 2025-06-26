@@ -1,15 +1,15 @@
 package com.toonpick.service;
 
 
+import com.toonpick.domain.webtoon.entity.*;
 import com.toonpick.dto.command.AuthorRequest;
 import com.toonpick.dto.command.EpisodeRequest;
 import com.toonpick.dto.command.WebtoonCreateCommend;
-import com.toonpick.entity.*;
 import com.toonpick.exception.DuplicateResourceException;
 import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.mapper.WebtoonMapper;
-import com.toonpick.repository.PlatformRepository;
-import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.domain.webtoon.repository.PlatformRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import com.toonpick.type.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

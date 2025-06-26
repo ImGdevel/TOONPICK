@@ -1,14 +1,14 @@
 package com.toonpick.test.unit.webtoon.service;
 
-import com.toonpick.entity.Webtoon;
+import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.entity.WebtoonAnalysisDataDocument;
-import com.toonpick.enums.AgeRating;
-import com.toonpick.enums.SerializationStatus;
+import com.toonpick.domain.webtoon.enums.AgeRating;
+import com.toonpick.domain.webtoon.enums.SerializationStatus;
 import com.toonpick.exception.EntityNotFoundException;
-import com.toonpick.repository.AuthorRepository;
-import com.toonpick.repository.GenreRepository;
+import com.toonpick.domain.webtoon.repository.AuthorRepository;
+import com.toonpick.domain.webtoon.repository.GenreRepository;
 import com.toonpick.repository.WebtoonAnalysisRepository;
-import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
 import com.toonpick.webtoon.response.WebtoonResponse;

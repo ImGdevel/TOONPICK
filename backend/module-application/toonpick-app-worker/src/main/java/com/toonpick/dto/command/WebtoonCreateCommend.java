@@ -3,8 +3,8 @@ package com.toonpick.dto.command;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.toonpick.enums.AgeRating;
-import com.toonpick.enums.SerializationStatus;
+import com.toonpick.domain.webtoon.enums.AgeRating;
+import com.toonpick.domain.webtoon.enums.SerializationStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

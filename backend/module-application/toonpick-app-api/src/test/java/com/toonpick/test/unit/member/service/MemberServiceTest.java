@@ -1,7 +1,7 @@
 package com.toonpick.test.unit.member.service;
 
-import com.toonpick.entity.Member;
-import com.toonpick.enums.MemberRole;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.domain.member.enums.MemberRole;
 import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.member.mapper.MemberMapper;
 import com.toonpick.member.request.MemberProfileRequestDTO;
@@ -9,7 +9,7 @@ import com.toonpick.member.response.MemberProfileDetailsResponse;
 import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
-import com.toonpick.repository.MemberRepository;
+import com.toonpick.domain.member.repository.MemberRepository;
 import com.toonpick.service.AwsS3StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

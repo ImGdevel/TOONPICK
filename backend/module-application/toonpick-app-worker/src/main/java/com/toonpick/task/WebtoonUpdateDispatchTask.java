@@ -2,12 +2,12 @@ package com.toonpick.task;
 
 import com.toonpick.dto.payload.WebtoonCrawItem;
 import com.toonpick.dto.payload.WebtoonEpisodeCrawItem;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.enums.SerializationStatus;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.domain.webtoon.enums.SerializationStatus;
 import com.toonpick.mapper.WebtoonCrawItemMapper;
 import com.toonpick.mapper.WebtoonMapper;
 import com.toonpick.publisher.WebtoonUpdatePublisher;
-import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

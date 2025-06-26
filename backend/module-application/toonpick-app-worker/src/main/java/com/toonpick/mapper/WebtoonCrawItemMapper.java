@@ -2,8 +2,8 @@ package com.toonpick.mapper;
 
 import com.toonpick.dto.payload.WebtoonCrawItem;
 import com.toonpick.dto.payload.WebtoonEpisodeCrawItem;
-import com.toonpick.entity.Platform;
-import com.toonpick.entity.Webtoon;
+import com.toonpick.domain.webtoon.entity.Platform;
+import com.toonpick.domain.webtoon.entity.Webtoon;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
