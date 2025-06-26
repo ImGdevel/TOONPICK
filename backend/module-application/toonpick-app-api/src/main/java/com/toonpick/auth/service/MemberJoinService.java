@@ -1,6 +1,6 @@
 package com.toonpick.auth.service;
 
-import com.toonpick.dto.JoinRequest;
+import com.toonpick.internal.security.dto.JoinRequest;
 import com.toonpick.domain.member.entity.Member;
 import com.toonpick.domain.member.enums.MemberRole;
 import com.toonpick.common.exception.DuplicateResourceException;

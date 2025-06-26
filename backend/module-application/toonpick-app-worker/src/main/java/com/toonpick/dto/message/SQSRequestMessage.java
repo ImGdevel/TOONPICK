@@ -2,7 +2,7 @@ package com.toonpick.dto.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toonpick.common.type.SQSEventType;
-import com.toonpick.message.SQSMessage;
+import com.toonpick.internal.aws.sqs.message.SQSMessage;
 import com.toonpick.common.utils.UUIDUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

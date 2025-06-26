@@ -1,6 +1,5 @@
 package com.toonpick.webtoon.controller;
 
-import com.toonpick.response.ListResponse;
 import com.toonpick.webtoon.response.RecommendWebtoonGroups;
 import com.toonpick.webtoon.service.RecommendWebtoonGroupService;
 import lombok.RequiredArgsConstructor;

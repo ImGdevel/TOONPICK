@@ -2,9 +2,9 @@ package com.toonpick.auth.handler;
 
 import com.toonpick.utils.CookieUtils;
 import com.toonpick.auth.user.CustomOAuth2UserDetails;
-import com.toonpick.handler.OAuth2SuccessHandler;
-import com.toonpick.jwt.TokenIssuer;
-import com.toonpick.repository.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.toonpick.internal.security.handler.OAuth2SuccessHandler;
+import com.toonpick.internal.security.jwt.TokenIssuer;
+import com.toonpick.internal.security.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

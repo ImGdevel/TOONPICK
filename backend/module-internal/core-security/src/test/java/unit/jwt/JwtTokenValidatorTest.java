@@ -1,8 +1,8 @@
 package unit.jwt;
 
-import com.toonpick.exception.ExpiredJwtTokenException;
-import com.toonpick.exception.InvalidJwtTokenException;
-import com.toonpick.exception.MissingJwtTokenException;
+import com.toonpick.internal.security.exception.ExpiredJwtTokenException;
+import com.toonpick.internal.security.exception.InvalidJwtTokenException;
+import com.toonpick.internal.security.exception.MissingJwtTokenException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.toonpick.jwt.JwtTokenProvider;
-import com.toonpick.jwt.JwtTokenValidator;
+import com.toonpick.internal.security.jwt.JwtTokenProvider;
+import com.toonpick.internal.security.jwt.JwtTokenValidator;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

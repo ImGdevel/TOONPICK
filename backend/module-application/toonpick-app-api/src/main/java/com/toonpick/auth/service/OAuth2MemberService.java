@@ -1,10 +1,10 @@
 package com.toonpick.auth.service;
 
 
-import com.toonpick.dto.OAuth2ResponseFactory;
+import com.toonpick.internal.security.dto.OAuth2ResponseFactory;
 import com.toonpick.auth.user.CustomOAuth2UserDetails;
 import com.toonpick.domain.member.dto.MemberDTO;
-import com.toonpick.dto.OAuth2Response;
+import com.toonpick.internal.security.dto.OAuth2Response;
 import com.toonpick.domain.member.entity.Member;
 import com.toonpick.domain.member.entity.MemberSocialLogin;
 import com.toonpick.domain.member.enums.MemberRole;

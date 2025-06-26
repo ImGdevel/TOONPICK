@@ -1,14 +1,14 @@
 package com.toonpick.auth.service;
 
-import com.toonpick.exception.RefreshTokenNotFoundException;
-import com.toonpick.jwt.TokenIssuer;
+import com.toonpick.internal.security.exception.RefreshTokenNotFoundException;
+import com.toonpick.internal.security.jwt.TokenIssuer;
 import com.toonpick.common.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import com.toonpick.jwt.JwtTokenProvider;
-import com.toonpick.jwt.JwtTokenValidator;
+import com.toonpick.internal.security.jwt.JwtTokenProvider;
+import com.toonpick.internal.security.jwt.JwtTokenValidator;
 import com.toonpick.domain.auth.service.RefreshTokenService;
 
 

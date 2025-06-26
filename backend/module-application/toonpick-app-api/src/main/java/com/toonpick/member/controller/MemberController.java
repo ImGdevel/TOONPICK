@@ -1,11 +1,11 @@
 package com.toonpick.member.controller;
 
-import com.toonpick.annotation.CurrentUser;
+import com.toonpick.internal.security.annotation.CurrentUser;
 import com.toonpick.member.request.MemberProfileRequestDTO;
 import com.toonpick.member.response.MemberProfileDetailsResponse;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
-import com.toonpick.dto.CustomUserDetails;
+import com.toonpick.internal.security.dto.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

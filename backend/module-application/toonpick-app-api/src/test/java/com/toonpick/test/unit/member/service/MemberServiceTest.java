@@ -10,7 +10,7 @@ import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
 import com.toonpick.domain.member.repository.MemberRepository;
-import com.toonpick.service.AwsS3StorageService;
+import com.toonpick.internal.storage.service.AwsS3StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

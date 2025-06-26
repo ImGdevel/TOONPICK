@@ -11,7 +11,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import com.toonpick.common.type.ErrorCode;
-import com.toonpick.service.AwsS3StorageService;
+import com.toonpick.internal.storage.service.AwsS3StorageService;
 
 import java.io.IOException;
 

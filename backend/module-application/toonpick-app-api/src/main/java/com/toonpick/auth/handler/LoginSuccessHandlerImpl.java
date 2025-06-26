@@ -1,8 +1,8 @@
 package com.toonpick.auth.handler;
 
 import com.toonpick.utils.CookieUtils;
-import com.toonpick.handler.LoginSuccessHandler;
-import com.toonpick.jwt.TokenIssuer;
+import com.toonpick.internal.security.handler.LoginSuccessHandler;
+import com.toonpick.internal.security.jwt.TokenIssuer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
