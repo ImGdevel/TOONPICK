@@ -61,7 +61,6 @@ public class WebtoonRegistrationService {
      * 완전히 새로운 웹툰 등록
      */
     private void registerNewWebtoon(WebtoonCreateCommend request) {
-        log.info("웹툰 등록을 시도합니다. : {}", request.toString() );
 
         Webtoon webtoon = webtoonMapper.toWebtoon(request);
         WebtoonStatistics statistics = new WebtoonStatistics(webtoon);
@@ -72,11 +71,9 @@ public class WebtoonRegistrationService {
         addPlatform(webtoon, request);
         
         // 에피소드 등록
-        log.info("에피소드를 등록합니다. {}", request.getEpisodes().size());
         if (request.getEpisodes() != null && !request.getEpisodes().isEmpty()) {
             registerEpisodes(webtoon, request);
         }
-        log.info("웹툰 등록을 완료합니다. {}", saved.toString());
     }
 
     /**
