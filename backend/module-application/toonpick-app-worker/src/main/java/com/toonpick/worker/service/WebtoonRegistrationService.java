@@ -61,6 +61,7 @@ public class WebtoonRegistrationService {
      * 완전히 새로운 웹툰 등록
      */
     private void registerNewWebtoon(WebtoonCreateCommend request) {
+        log.debug( "== [process - 웹툰 등록 : {} ] ==", request.getTitle());
 
         Webtoon webtoon = webtoonMapper.toWebtoon(request);
         WebtoonStatistics statistics = new WebtoonStatistics(webtoon);
@@ -74,6 +75,8 @@ public class WebtoonRegistrationService {
         if (request.getEpisodes() != null && !request.getEpisodes().isEmpty()) {
             registerEpisodes(webtoon, request);
         }
+
+        log.debug("== [웹툰 등록 완료] ==");
     }
 
     /**
@@ -96,9 +99,30 @@ public class WebtoonRegistrationService {
      * 에피소드 등록
      */
     private void registerEpisodes(Webtoon webtoon, WebtoonCreateCommend request) {
-        for (EpisodeRequest episodeRequest : request.getEpisodes()) {
-            webtoonEpisodeUpdateService.createNewEpisode(webtoon, request.getPlatform(), episodeRequest);
+        int totalEpisodes = request.getEpisodes() != null ? request.getEpisodes().size() : 0;
+        int successCount = 0;
+        int failureCount = 0;
+
+        log.info("에피소드 등록 시작 | 웹툰: {} (ID: {})", webtoon.getTitle(), webtoon.getId());
+        
+        if (totalEpisodes == 0) {
+            log.debug("등록할 에피소드가 없습니다.");
+            return;
         }
+        
+        for (EpisodeRequest episodeRequest : request.getEpisodes()) {
+            try {
+                webtoonEpisodeUpdateService.createNewEpisode(webtoon, request.getPlatform(), episodeRequest);
+                successCount++;
+                log.debug("에피소드 등록 성공: {}화", episodeRequest.getEpisodeNumber());
+            } catch (Exception e) {
+                failureCount++;
+                log.error("에피소드 등록 실패: {}화 - 에러: {}", 
+                    episodeRequest.getEpisodeNumber(), e.getMessage(), e);
+            }
+        }
+
+        log.info("성공: {}개, 실패: {}개, 총: {}개", successCount, failureCount, totalEpisodes);
     }
 
     /// ///

@@ -44,7 +44,6 @@ public class WebtoonEpisodeUpdateService {
      * 새로운 에피소드 등록
      */
     public void createNewEpisode(Webtoon webtoon, String platform, EpisodeRequest info){
-        log.info("에피소드를 등록을 시도합니다.");
         WebtoonEpisode webtoonEpisode  = WebtoonEpisode.builder()
                 .webtoon(webtoon)
                 .title(info.getTitle())

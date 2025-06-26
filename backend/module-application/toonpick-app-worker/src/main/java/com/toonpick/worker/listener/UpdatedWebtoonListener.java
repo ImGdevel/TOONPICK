@@ -38,8 +38,6 @@ public class UpdatedWebtoonListener {
             JsonNode root = objectMapper.readTree(message);
             SQSEventType eventType = SQSEventType.valueOf(root.get("eventType").asText());
 
-            log.info("웹툰 업데이트 메시지 수신 : {} | {}", eventType, message);
-
             switch (eventType) {
                 case CRAWL_WEBTOON_EPISODE:
                     handleEpisodeUpdate(message);
@@ -51,7 +49,7 @@ public class UpdatedWebtoonListener {
             }
 
         } catch (Exception e) {
-            log.error("웹툰 업데이트 처리 실패. 메시지: {}", message, e);
+            log.error("웹툰 업데이트 처리 실패.{}  메시지: {} ", e, message);
         }
     }
 
