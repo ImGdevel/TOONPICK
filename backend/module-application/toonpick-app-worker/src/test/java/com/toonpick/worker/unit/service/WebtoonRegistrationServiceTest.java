@@ -1,27 +1,25 @@
 package com.toonpick.worker.unit.service;
 
-import com.toonpick.worker.dto.command.AuthorRequest;
-import com.toonpick.worker.dto.command.WebtoonCreateCommend;
+import com.toonpick.common.exception.DuplicateResourceException;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.domain.webtoon.entity.Author;
 import com.toonpick.domain.webtoon.entity.Platform;
 import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.domain.webtoon.entity.WebtoonPlatform;
-import com.toonpick.common.exception.DuplicateResourceException;
-import com.toonpick.common.exception.EntityNotFoundException;
-import com.toonpick.worker.mapper.WebtoonMapper;
 import com.toonpick.domain.webtoon.enums.AgeRating;
 import com.toonpick.domain.webtoon.enums.SerializationStatus;
 import com.toonpick.domain.webtoon.repository.PlatformRepository;
 import com.toonpick.domain.webtoon.repository.WebtoonRepository;
+import com.toonpick.worker.config.UnitTest;
+import com.toonpick.worker.dto.command.AuthorRequest;
+import com.toonpick.worker.dto.command.WebtoonCreateCommend;
+import com.toonpick.worker.mapper.WebtoonMapper;
 import com.toonpick.worker.service.WebtoonEpisodeUpdateService;
 import com.toonpick.worker.service.WebtoonRegistrationService;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,8 +28,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Tag("UnitTest")
-@ExtendWith(MockitoExtension.class)
+@UnitTest
+@DisplayName("WebtoonRegistrationService 유닛 테스트")
 class WebtoonRegistrationServiceTest {
 
     @InjectMocks

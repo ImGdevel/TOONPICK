@@ -1,26 +1,24 @@
 package com.toonpick.worker.unit.service;
 
-import com.toonpick.worker.dto.command.EpisodeRequest;
-import com.toonpick.worker.dto.command.WebtoonEpisodeUpdateCommand;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.domain.webtoon.entity.Platform;
 import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.domain.webtoon.entity.WebtoonEpisode;
 import com.toonpick.domain.webtoon.entity.WebtoonEpisodeLink;
 import com.toonpick.domain.webtoon.enums.EpisodeViewerType;
-import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.domain.webtoon.repository.PlatformRepository;
 import com.toonpick.domain.webtoon.repository.WebtoonEpisodeLinkRepository;
 import com.toonpick.domain.webtoon.repository.WebtoonEpisodeRepository;
 import com.toonpick.domain.webtoon.repository.WebtoonRepository;
+import com.toonpick.worker.config.UnitTest;
+import com.toonpick.worker.dto.command.EpisodeRequest;
+import com.toonpick.worker.dto.command.WebtoonEpisodeUpdateCommand;
 import com.toonpick.worker.service.WebtoonEpisodeUpdateService;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@Tag("UnitTest")
-@ExtendWith(MockitoExtension.class)
+
+@UnitTest
+@DisplayName("WebtoonEpisodeUpdateService 유닛 테스트")
 class WebtoonEpisodeUpdateServiceTest {
 
     @InjectMocks

@@ -9,30 +9,22 @@ import com.toonpick.domain.webtoon.enums.AgeRating;
 import com.toonpick.domain.webtoon.enums.SerializationStatus;
 import com.toonpick.domain.webtoon.repository.PlatformRepository;
 import com.toonpick.domain.webtoon.repository.WebtoonRepository;
-import com.toonpick.worker.config.TestDataSourceConfig;
+import com.toonpick.worker.config.IntegrationTest;
 import com.toonpick.worker.dto.command.AuthorRequest;
 import com.toonpick.worker.dto.command.WebtoonCreateCommend;
 import com.toonpick.worker.service.WebtoonRegistrationService;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@ActiveProfiles("test")
-@Import(TestDataSourceConfig.class)
-@EntityScan("com.toonpick")
-@ComponentScan(basePackages = {"com.toonpick"})
+@IntegrationTest
 @DisplayName("Webtoon 등록 통합 테스트")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class WebtoonRegistrationServiceIntegrationTest {
 
     @Autowired
