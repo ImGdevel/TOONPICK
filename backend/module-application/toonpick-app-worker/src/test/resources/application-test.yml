@@ -1,13 +1,46 @@
-# src/test/resources/application-test.yml
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    data:
+      url: jdbc:h2:mem:data-db;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      driver-class-name: org.h2.Driver
+      username: sa
+      password:
+    meta:
+      url: jdbc:h2:mem:meta-db;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      driver-class-name: org.h2.Driver
+      username: sa
+      password:
+
   jpa:
     hibernate:
       ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+
+  batch:
+    jdbc:
+      initialize-schema: always
+
+  cloud:
+    aws:
+      credentials:
+        access-key: temp
+        secret-key: temp
+      region:
+        static: temp
+      s3:
+        bucket: temp
+      sqs:
+        queue:
+          webtoon-create-request: temp
+          webtoon-update-request: temp
+          webtoon-create-complete: temp
+          webtoon-update-complete: temp
+        auto-create: false
+        enabled: false
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace

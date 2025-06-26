@@ -9,43 +9,47 @@ import com.toonpick.exception.DuplicateResourceException;
 import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.repository.PlatformRepository;
 import com.toonpick.repository.WebtoonRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@SpringBootTest
-@Transactional
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
+@Import(TestDataSourceConfig.class)
+@EntityScan("com.toonpick.entity")
+@ComponentScan(basePackages = {"com.toonpick"})
+@DisplayName("Webtoon 등록 통합 테스트")
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class WebtoonRegistrationServiceIntegrationTest {
 
     @Autowired
     private WebtoonRegistrationService webtoonRegistrationService;
-    @Autowired
-    private WebtoonRepository webtoonRepository;
-    @Autowired
-    private PlatformRepository platformRepository;
+    @Autowired private WebtoonRepository webtoonRepository;
+    @Autowired private PlatformRepository platformRepository;
 
     @BeforeEach
     void setUp() {
-        // 테스트용 플랫폼 미리 저장
+        // 삭제 순서 중요: 관계 자식 테이블 → 부모 테이블 순
+        webtoonRepository.deleteAll();
+        platformRepository.deleteAll();
+
+        // 테스트용 플랫폼 데이터 재삽입
         platformRepository.save(Platform.builder().name("NAVER").build());
         platformRepository.save(Platform.builder().name("KAKAO").build());
     }
 
+
     @Test
-    @DisplayName("신규 웹툰 등록 - DB에 저장 및 플랫폼 연관관계 확인")
-    void createWebtoon_newWebtoon_success() {
+    void 신규_웹툰_등록_및_플랫폼_연관관계_확인() {
         WebtoonCreateCommend request = createCommend("테스트웹툰", List.of("작가1"), "NAVER", "https://naver.com/1", 5);
 
         webtoonRegistrationService.createWebtoon(request);
@@ -60,12 +64,10 @@ class WebtoonRegistrationServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("동일 웹툰에 다른 플랫폼 추가 - 플랫폼 추가됨 확인")
-    void createWebtoon_sameTitleAuthor_addPlatform() {
-        // 1차 등록 (NAVER)
+    void 동일_웹툰_다른_플랫폼_등록_시_플랫폼_추가됨() {
         WebtoonCreateCommend req1 = createCommend("테스트웹툰", List.of("작가1"), "NAVER", "https://naver.com/1", 5);
         webtoonRegistrationService.createWebtoon(req1);
-        // 2차 등록 (KAKAO)
+
         WebtoonCreateCommend req2 = createCommend("테스트웹툰", List.of("작가1"), "KAKAO", "https://kakao.com/1", 5);
         webtoonRegistrationService.createWebtoon(req2);
 
@@ -73,42 +75,35 @@ class WebtoonRegistrationServiceIntegrationTest {
         assertThat(found).hasSize(1);
         Webtoon webtoon = found.get(0);
         assertThat(webtoon.getPlatforms()).hasSize(2);
-        assertThat(webtoon.getPlatforms().stream().map(p -> p.getPlatform().getName()).collect(Collectors.toSet()))
+        assertThat(webtoon.getPlatforms().stream().map(p -> p.getPlatform().getName()))
                 .containsExactlyInAnyOrder("NAVER", "KAKAO");
     }
 
     @Test
-    @DisplayName("동일 웹툰+플랫폼 중복 등록 시 예외 발생")
-    void createWebtoon_duplicateWebtoonPlatform_throwsException() {
+    void 동일_플랫폼_중복_등록시_예외_발생() {
         WebtoonCreateCommend req = createCommend("테스트웹툰", List.of("작가1"), "NAVER", "https://naver.com/1", 5);
         webtoonRegistrationService.createWebtoon(req);
+
         assertThatThrownBy(() -> webtoonRegistrationService.createWebtoon(req))
                 .isInstanceOf(DuplicateResourceException.class);
     }
 
     @Test
-    @DisplayName("존재하지 않는 플랫폼 등록 시 예외 발생")
-    void createWebtoon_platformNotFound_throwsException() {
+    void 존재하지_않는_플랫폼_등록시_예외_발생() {
         WebtoonCreateCommend req = createCommend("테스트웹툰2", List.of("작가2"), "NOT_EXIST", "https://none.com/1", 5);
+
         assertThatThrownBy(() -> webtoonRegistrationService.createWebtoon(req))
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    // WebtoonCommend 생성 메서드
-    private WebtoonCreateCommend createCommend(
-            String title,
-            List<String> authors,
-            String platform,
-            String url,
-            Integer episodeCount
-    ) {
+    private WebtoonCreateCommend createCommend(String title, List<String> authors, String platform, String url, Integer episodeCount) {
         List<AuthorRequest> authorRequests = authors.stream()
                 .map(name -> AuthorRequest.builder()
                         .id("author_" + name)
                         .name(name)
                         .role("WRITER")
                         .build())
-                .collect(Collectors.toList());
+                .toList();
 
         return WebtoonCreateCommend.builder()
                 .titleId("title_" + title)
@@ -132,4 +127,4 @@ class WebtoonRegistrationServiceIntegrationTest {
                 .relatedWebtoonIds(List.of())
                 .build();
     }
-} 
+}

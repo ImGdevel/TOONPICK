@@ -6,6 +6,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -16,6 +17,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 
 @Configuration
+@Profile("!test")
 @EnableJpaRepositories(
         basePackages = "com.toonpick",
         entityManagerFactoryRef = "dataEntityManager",
@@ -34,7 +36,7 @@ public class DataDBConfig {
     public LocalContainerEntityManagerFactoryBean dataEntityManager() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataDBSource());
-        em.setPackagesToScan("com.toonpick");
+        em.setPackagesToScan("com.toonpick.entity");
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         HashMap<String, Object> properties = new HashMap<>();

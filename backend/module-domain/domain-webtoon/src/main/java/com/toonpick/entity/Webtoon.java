@@ -141,7 +141,7 @@ public class Webtoon {
         this.serializationStatus = serializationStatus;
         this.publishStartDate = publishStartDate;
         this.lastUpdatedDate = lastUpdatedDate;
-        this.platforms = platforms;
+        this.platforms = platforms != null ? platforms : new ArrayList<>();
         this.authors = authors != null ? authors : new HashSet<>();
         this.genres = genres != null ? genres : new HashSet<>();
     }
@@ -160,6 +160,7 @@ public class Webtoon {
         this.dayOfWeek = dayOfWeek;
         this.thumbnailUrl = thumbnailUrl;
         this.ageRating = ageRating;
+        this.platforms = platforms != null ? platforms : new ArrayList<>();
         this.authors = authors != null ? authors : this.authors;
         this.genres = genres != null ? genres : this.genres;
     }
