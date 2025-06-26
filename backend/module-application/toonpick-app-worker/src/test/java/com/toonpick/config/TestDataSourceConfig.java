@@ -1,4 +1,4 @@
-package com.toonpick.service;
+package com.toonpick.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.boot.jdbc.DataSourceBuilder;

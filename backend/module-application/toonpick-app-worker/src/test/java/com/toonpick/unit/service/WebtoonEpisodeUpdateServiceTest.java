@@ -1,4 +1,4 @@
-package com.toonpick.service;
+package com.toonpick.unit.service;
 
 import com.toonpick.dto.command.EpisodeRequest;
 import com.toonpick.dto.command.WebtoonEpisodeUpdateCommand;
@@ -12,6 +12,7 @@ import com.toonpick.repository.PlatformRepository;
 import com.toonpick.repository.WebtoonEpisodeLinkRepository;
 import com.toonpick.repository.WebtoonEpisodeRepository;
 import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.service.WebtoonEpisodeUpdateService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

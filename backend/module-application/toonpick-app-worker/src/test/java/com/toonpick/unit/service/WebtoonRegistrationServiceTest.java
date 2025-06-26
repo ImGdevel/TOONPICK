@@ -1,4 +1,4 @@
-package com.toonpick.service;
+package com.toonpick.unit.service;
 
 import com.toonpick.dto.command.AuthorRequest;
 import com.toonpick.dto.command.WebtoonCreateCommend;
@@ -11,7 +11,10 @@ import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.mapper.WebtoonMapper;
 import com.toonpick.repository.PlatformRepository;
 import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.service.WebtoonEpisodeUpdateService;
+import com.toonpick.service.WebtoonRegistrationService;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
 class WebtoonRegistrationServiceTest {
 

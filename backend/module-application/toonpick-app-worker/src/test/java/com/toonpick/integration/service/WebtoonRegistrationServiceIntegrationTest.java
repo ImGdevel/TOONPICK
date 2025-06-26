@@ -1,4 +1,4 @@
-package com.toonpick.service;
+package com.toonpick.integration.service;
 
 import com.toonpick.dto.command.AuthorRequest;
 import com.toonpick.dto.command.WebtoonCreateCommend;
@@ -9,6 +9,7 @@ import com.toonpick.exception.DuplicateResourceException;
 import com.toonpick.exception.EntityNotFoundException;
 import com.toonpick.repository.PlatformRepository;
 import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.service.WebtoonRegistrationService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -24,7 +25,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-@Import(TestDataSourceConfig.class)
+@Import(com.toonpick.service.TestDataSourceConfig.class)
 @EntityScan("com.toonpick.entity")
 @ComponentScan(basePackages = {"com.toonpick"})
 @DisplayName("Webtoon 등록 통합 테스트")
