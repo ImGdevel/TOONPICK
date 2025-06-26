@@ -118,27 +118,10 @@ jobs:
           path: backend/module-application/toonpick-app-admin/build/libs/*.jar
           retention-days: 1
 
-  docker-build-and-push:
+  docker-build-and-push-api:
     needs: build
+    if: ${{ github.event.inputs.build_api == 'true' }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        module:
-          - name: api
-            dir: toonpick-app-api
-            jar: toonpick-api-0.0.1-SNAPSHOT.jar
-            repo: toonpick-service-api
-            build_flag: ${{ github.event.inputs.build_api }}
-          - name: worker
-            dir: toonpick-app-worker
-            jar: toonpick-worker-0.0.1-SNAPSHOT.jar
-            repo: toonpick-service-worker
-            build_flag: ${{ github.event.inputs.build_worker }}
-          - name: admin
-            dir: toonpick-app-admin
-            jar: toonpick-admin-0.0.1-SNAPSHOT.jar
-            repo: toonpick-service-admin
-            build_flag: ${{ github.event.inputs.build_admin }}
 
     steps:
       - name: 저장소 체크아웃
@@ -146,55 +129,141 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: 모듈별 아티팩트 다운로드
-        if: ${{ matrix.build_flag == 'true' }}
+      - name: API 아티팩트 다운로드
         uses: actions/download-artifact@v4
         with:
-          name: toonpick-${{ matrix.module.name }}
-          path: backend/module-application/${{ matrix.module.dir }}/build/libs
+          name: toonpick-api
+          path: backend/module-application/toonpick-app-api/build/libs
 
       - name: JAR 파일 목록 출력
-        if: ${{ matrix.build_flag == 'true' }}
         run: |
-          echo "=== 다운로드된 JAR 목록: ${{ matrix.module.name }} ==="
-          ls -al backend/module-application/${{ matrix.module.dir }}/build/libs
+          echo "=== 다운로드된 JAR 목록: API ==="
+          ls -al backend/module-application/toonpick-app-api/build/libs
 
       - name: JAR 파일을 app.jar로 이름 변경
-        if: ${{ matrix.build_flag == 'true' }}
         run: |
-          mv backend/module-application/${{ matrix.module.dir }}/build/libs/${{ matrix.module.jar }} \
-            backend/module-application/${{ matrix.module.dir }}/build/libs/app.jar
+          mv backend/module-application/toonpick-app-api/build/libs/toonpick-api-0.0.1-SNAPSHOT.jar \
+            backend/module-application/toonpick-app-api/build/libs/app.jar
 
       - name: Docker Login
-        if: ${{ matrix.build_flag == 'true' }}
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         run: echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
 
-      - name: Docker Build & Push - ${{ matrix.module.name }}
-        if: ${{ matrix.build_flag == 'true' }}
+      - name: Docker Build & Push - API
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           IMAGE_TAG: "${{ github.event.inputs.version }}"
         run: |
-          echo "=== Docker Build 시작: ${{ matrix.module.name }} ==="
+          echo "=== Docker Build 시작: API ==="
           docker build \
-            -t $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:$IMAGE_TAG \
-            -t $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:latest \
-            -f backend/module-application/${{ matrix.module.dir }}/Dockerfile \
-            backend/module-application/${{ matrix.module.dir }}
+            -t $DOCKER_HUB_USERNAME/toonpick-service-api:$IMAGE_TAG \
+            -t $DOCKER_HUB_USERNAME/toonpick-service-api:latest \
+            -f backend/module-application/toonpick-app-api/Dockerfile \
+            backend/module-application/toonpick-app-api
 
-          docker push $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:$IMAGE_TAG
-          docker push $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:latest
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-api:$IMAGE_TAG
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-api:latest
 
-      - name: Skip Docker Build - ${{ matrix.module.name }}
-        if: ${{ matrix.build_flag != 'true' }}
+  docker-build-and-push-worker:
+    needs: build
+    if: ${{ github.event.inputs.build_worker == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Worker 아티팩트 다운로드
+        uses: actions/download-artifact@v4
+        with:
+          name: toonpick-worker
+          path: backend/module-application/toonpick-app-worker/build/libs
+
+      - name: JAR 파일 목록 출력
         run: |
-          echo "=== ${{ matrix.module.name }} 모듈은 선택되지 않아 Docker Build를 건너뜁니다 ==="
+          echo "=== 다운로드된 JAR 목록: Worker ==="
+          ls -al backend/module-application/toonpick-app-worker/build/libs
+
+      - name: JAR 파일을 app.jar로 이름 변경
+        run: |
+          mv backend/module-application/toonpick-app-worker/build/libs/toonpick-worker-0.0.1-SNAPSHOT.jar \
+            backend/module-application/toonpick-app-worker/build/libs/app.jar
+
+      - name: Docker Login
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        run: echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+
+      - name: Docker Build & Push - Worker
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          IMAGE_TAG: "${{ github.event.inputs.version }}"
+        run: |
+          echo "=== Docker Build 시작: Worker ==="
+          docker build \
+            -t $DOCKER_HUB_USERNAME/toonpick-service-worker:$IMAGE_TAG \
+            -t $DOCKER_HUB_USERNAME/toonpick-service-worker:latest \
+            -f backend/module-application/toonpick-app-worker/Dockerfile \
+            backend/module-application/toonpick-app-worker
+
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-worker:$IMAGE_TAG
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-worker:latest
+
+  docker-build-and-push-admin:
+    needs: build
+    if: ${{ github.event.inputs.build_admin == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Admin 아티팩트 다운로드
+        uses: actions/download-artifact@v4
+        with:
+          name: toonpick-admin
+          path: backend/module-application/toonpick-app-admin/build/libs
+
+      - name: JAR 파일 목록 출력
+        run: |
+          echo "=== 다운로드된 JAR 목록: Admin ==="
+          ls -al backend/module-application/toonpick-app-admin/build/libs
+
+      - name: JAR 파일을 app.jar로 이름 변경
+        run: |
+          mv backend/module-application/toonpick-app-admin/build/libs/toonpick-admin-0.0.1-SNAPSHOT.jar \
+            backend/module-application/toonpick-app-admin/build/libs/app.jar
+
+      - name: Docker Login
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        run: echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+
+      - name: Docker Build & Push - Admin
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          IMAGE_TAG: "${{ github.event.inputs.version }}"
+        run: |
+          echo "=== Docker Build 시작: Admin ==="
+          docker build \
+            -t $DOCKER_HUB_USERNAME/toonpick-service-admin:$IMAGE_TAG \
+            -t $DOCKER_HUB_USERNAME/toonpick-service-admin:latest \
+            -f backend/module-application/toonpick-app-admin/Dockerfile \
+            backend/module-application/toonpick-app-admin
+
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-admin:$IMAGE_TAG
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-admin:latest
 
   trigger-aws-deploy:
-    needs: docker-build-and-push
+    needs: [docker-build-and-push-api, docker-build-and-push-worker, docker-build-and-push-admin]
     if: ${{ github.event.inputs.deploy_to_aws == 'true' }}
     runs-on: ubuntu-latest
     
@@ -215,7 +284,7 @@ jobs:
             console.log('AWS 배포 워크플로우가 트리거되었습니다.');
 
   slack-notification:
-    needs: [docker-build-and-push, trigger-aws-deploy]
+    needs: [docker-build-and-push-api, docker-build-and-push-worker, docker-build-and-push-admin, trigger-aws-deploy]
     if: always()
     runs-on: ubuntu-latest
     
@@ -238,7 +307,19 @@ jobs:
             SELECTED_MODULES="선택된 모듈 없음"
           fi
 
-          if [ "${{ needs.docker-build-and-push.result }}" == "success" ]; then
+          # Docker 빌드 결과 확인
+          DOCKER_SUCCESS=true
+          if [ "${{ github.event.inputs.build_api }}" == "true" ] && [ "${{ needs.docker-build-and-push-api.result }}" != "success" ]; then
+            DOCKER_SUCCESS=false
+          fi
+          if [ "${{ github.event.inputs.build_worker }}" == "true" ] && [ "${{ needs.docker-build-and-push-worker.result }}" != "success" ]; then
+            DOCKER_SUCCESS=false
+          fi
+          if [ "${{ github.event.inputs.build_admin }}" == "true" ] && [ "${{ needs.docker-build-and-push-admin.result }}" != "success" ]; then
+            DOCKER_SUCCESS=false
+          fi
+
+          if [ "$DOCKER_SUCCESS" == "true" ]; then
             if [ "${{ github.event.inputs.deploy_to_aws }}" == "true" ]; then
               STATUS=":white_check_mark: *Build & Docker 성공*"
               COLOR="#2EB67D"
@@ -251,7 +332,7 @@ jobs:
           else
             STATUS=":x: *Build & Docker 실패*"
             COLOR="#D00000"
-            MESSAGE="TOONPICK Build & Docker 파이프라인 실패 :warning:\n실패 Job: \`${{ needs.docker-build-and-push.result }}\`"
+            MESSAGE="TOONPICK Build & Docker 파이프라인 실패 :warning:"
           fi
 
           curl -X POST -H 'Content-type: application/json' --data "{
