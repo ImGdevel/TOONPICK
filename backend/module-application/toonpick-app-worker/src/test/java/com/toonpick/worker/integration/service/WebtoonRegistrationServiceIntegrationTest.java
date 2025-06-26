@@ -36,11 +36,9 @@ class WebtoonRegistrationServiceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // 삭제 순서 중요: 관계 자식 테이블 → 부모 테이블 순
         webtoonRepository.deleteAll();
         platformRepository.deleteAll();
 
-        // 테스트용 플랫폼 데이터 재삽입
         platformRepository.save(Platform.builder().name("NAVER").build());
         platformRepository.save(Platform.builder().name("KAKAO").build());
     }
@@ -48,7 +46,7 @@ class WebtoonRegistrationServiceIntegrationTest {
 
     @Test
     void 신규_웹툰_등록_및_플랫폼_연관관계_확인() {
-        WebtoonCreateCommend request = createCommend("테스트웹툰", List.of("작가1"), "NAVER", "https://naver.com/1", 5);
+        WebtoonCreateCommend request = createCommend("테스트웹툰", List.of("작가1"), "NAVER", "http://naver.com/1");
 
         webtoonRegistrationService.createWebtoon(request);
 
@@ -58,15 +56,15 @@ class WebtoonRegistrationServiceIntegrationTest {
         assertThat(webtoon.getPlatforms()).hasSize(1);
         WebtoonPlatform platform = webtoon.getPlatforms().iterator().next();
         assertThat(platform.getPlatform().getName()).isEqualTo("NAVER");
-        assertThat(platform.getLink()).isEqualTo("https://naver.com/1");
+        assertThat(platform.getLink()).isEqualTo("http://naver.com/1");
     }
 
     @Test
     void 동일_웹툰_다른_플랫폼_등록_시_플랫폼_추가됨() {
-        WebtoonCreateCommend req1 = createCommend("테스트웹툰", List.of("작가1"), "NAVER", "https://naver.com/1", 5);
+        WebtoonCreateCommend req1 = createCommend("테스트웹툰", List.of("작가1"), "NAVER", "http://naver.com/1");
         webtoonRegistrationService.createWebtoon(req1);
 
-        WebtoonCreateCommend req2 = createCommend("테스트웹툰", List.of("작가1"), "KAKAO", "https://kakao.com/1", 5);
+        WebtoonCreateCommend req2 = createCommend("테스트웹툰", List.of("작가1"), "KAKAO", "http://kakao.com/1");
         webtoonRegistrationService.createWebtoon(req2);
 
         List<Webtoon> found = webtoonRepository.findAllByTitle("테스트웹툰");
@@ -79,7 +77,7 @@ class WebtoonRegistrationServiceIntegrationTest {
 
     @Test
     void 동일_플랫폼_중복_등록시_예외_발생() {
-        WebtoonCreateCommend req = createCommend("테스트웹툰", List.of("작가1"), "NAVER", "https://naver.com/1", 5);
+        WebtoonCreateCommend req = createCommend("테스트웹툰", List.of("작가1"), "NAVER", "https://naver.com/1");
         webtoonRegistrationService.createWebtoon(req);
 
         assertThatThrownBy(() -> webtoonRegistrationService.createWebtoon(req))
@@ -88,13 +86,19 @@ class WebtoonRegistrationServiceIntegrationTest {
 
     @Test
     void 존재하지_않는_플랫폼_등록시_예외_발생() {
-        WebtoonCreateCommend req = createCommend("테스트웹툰2", List.of("작가2"), "NOT_EXIST", "https://none.com/1", 5);
+        WebtoonCreateCommend req = createCommend("테스트웹툰2", List.of("작가2"), "NOT_EXIST", "https://none.com/1");
 
         assertThatThrownBy(() -> webtoonRegistrationService.createWebtoon(req))
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    private WebtoonCreateCommend createCommend(String title, List<String> authors, String platform, String url, Integer episodeCount) {
+
+    private WebtoonCreateCommend createCommend(
+            String title,
+            List<String> authors,
+            String platform,
+            String url
+    ) {
         List<AuthorRequest> authorRequests = authors.stream()
                 .map(name -> AuthorRequest.builder()
                         .id("author_" + name)
@@ -114,7 +118,7 @@ class WebtoonRegistrationServiceIntegrationTest {
                 .dayOfWeek("MONDAY")
                 .status(SerializationStatus.ONGOING)
                 .ageRating(AgeRating.ALL)
-                .episodeCount(episodeCount)
+                .episodeCount(5)
                 .previewCount(0)
                 .genres(List.of("액션", "판타지"))
                 .authors(authorRequests)
