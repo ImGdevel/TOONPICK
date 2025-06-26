@@ -1,42 +1,19 @@
 spring:
-  datasource:
-    data:
-      url: jdbc:h2:mem:data-db;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      driver-class-name: org.h2.Driver
-      username: sa
-      password:
-    meta:
-      url: jdbc:h2:mem:meta-db;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      driver-class-name: org.h2.Driver
-      username: sa
-      password:
-
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-
-  batch:
-    jdbc:
-      initialize-schema: always
-
   cloud:
     aws:
       credentials:
-        access-key: temp
-        secret-key: temp
+        access-key: test
+        secret-key: test
       region:
-        static: temp
+        static: test
       s3:
-        bucket: temp
+        bucket: test
       sqs:
         queue:
-          webtoon-create-request: temp
-          webtoon-update-request: temp
-          webtoon-create-complete: temp
-          webtoon-update-complete: temp
+          webtoon-create-request: test
+          webtoon-update-request: test
+          webtoon-create-complete: test
+          webtoon-update-complete: test
         auto-create: false
         enabled: false
 

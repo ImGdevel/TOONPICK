@@ -44,10 +44,9 @@ public class TestDataSourceConfig {
                 .dataSource(dataSource())
                 .packages("com.toonpick")
                 .properties(Map.of(
-                        "hibernate.hbm2ddl.auto",
-                        "create-drop",
-                        "hibernate.dialect",
-                        "org.hibernate.dialect.H2Dialect"
+                        "hibernate.hbm2ddl.auto", "create-drop",
+                        "hibernate.dialect", "org.hibernate.dialect.H2Dialect",
+                        "hibernate.show_sql", "false"
                 ))
                 .build();
     }
