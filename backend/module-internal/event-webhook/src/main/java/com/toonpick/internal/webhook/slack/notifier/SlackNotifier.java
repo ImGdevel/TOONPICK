@@ -2,7 +2,7 @@ package com.toonpick.internal.webhook.slack.notifier;
 
 import com.toonpick.internal.webhook.slack.dto.SlackMessage;
 import com.toonpick.internal.webhook.slack.enums.AlertLevel;
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

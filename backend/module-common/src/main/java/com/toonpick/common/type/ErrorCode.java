@@ -1,4 +1,4 @@
-package com.toonpick.type;
+package com.toonpick.common.type;
 
 import lombok.AccessLevel;
 import lombok.Getter;

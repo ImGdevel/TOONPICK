@@ -3,7 +3,7 @@ package com.toonpick.test.unit.toon_collection.service;
 import com.toonpick.domain.member.entity.Member;
 import com.toonpick.domain.member.entity.ToonCollection;
 import com.toonpick.domain.webtoon.entity.Webtoon;
-import com.toonpick.exception.EntityNotFoundException;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.domain.member.repository.MemberRepository;
 import com.toonpick.domain.member.repository.ToonCollectionRepository;

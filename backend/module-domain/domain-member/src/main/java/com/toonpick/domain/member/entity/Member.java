@@ -4,7 +4,7 @@ import com.toonpick.domain.entity.BaseTimeEntity;
 import com.toonpick.domain.member.enums.Gender;
 import com.toonpick.domain.member.enums.MemberRole;
 import com.toonpick.domain.member.enums.MemberStatus;
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

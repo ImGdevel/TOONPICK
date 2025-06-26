@@ -1,6 +1,6 @@
-package com.toonpick.exception;
+package com.toonpick.common.exception;
 
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 
 /**
  * 기본 베이스가 되는 Error입니다.

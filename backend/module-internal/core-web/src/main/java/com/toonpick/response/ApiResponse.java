@@ -1,6 +1,6 @@
 package com.toonpick.response;
 
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

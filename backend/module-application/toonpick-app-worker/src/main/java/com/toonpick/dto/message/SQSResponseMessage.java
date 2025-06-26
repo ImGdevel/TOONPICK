@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toonpick.common.type.SQSEventType;
 import com.toonpick.message.SQSMessage;
-import com.toonpick.utils.UUIDUtils;
+import com.toonpick.common.utils.UUIDUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

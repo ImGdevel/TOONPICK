@@ -1,6 +1,6 @@
 package com.toonpick.exception;
 
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 
 /**
  * 만료되어 유효하지 않는 JWT Token 예외

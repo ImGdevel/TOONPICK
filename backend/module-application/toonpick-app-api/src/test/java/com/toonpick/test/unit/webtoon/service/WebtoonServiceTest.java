@@ -4,7 +4,7 @@ import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.entity.WebtoonAnalysisDataDocument;
 import com.toonpick.domain.webtoon.enums.AgeRating;
 import com.toonpick.domain.webtoon.enums.SerializationStatus;
-import com.toonpick.exception.EntityNotFoundException;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.domain.webtoon.repository.AuthorRepository;
 import com.toonpick.domain.webtoon.repository.GenreRepository;
 import com.toonpick.repository.WebtoonAnalysisRepository;

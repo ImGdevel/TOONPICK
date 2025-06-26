@@ -1,4 +1,4 @@
-package com.toonpick.constants;
+package com.toonpick.common.constants;
 
 public class ValidationPatterns {
 

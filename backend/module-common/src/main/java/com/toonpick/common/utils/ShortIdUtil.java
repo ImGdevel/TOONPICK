@@ -1,4 +1,4 @@
-package com.toonpick.utils;
+package com.toonpick.common.utils;
 
 import java.security.SecureRandom;
 

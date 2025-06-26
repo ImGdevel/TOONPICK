@@ -1,12 +1,12 @@
 package com.toonpick.handler;
 
-import com.toonpick.exception.AccessDeniedException;
-import com.toonpick.exception.AuthenticationException;
-import com.toonpick.exception.BadRequestException;
-import com.toonpick.exception.BusinessException;
-import com.toonpick.exception.DuplicateResourceException;
-import com.toonpick.exception.EntityNotFoundException;
-import com.toonpick.exception.InternalServerException;
+import com.toonpick.common.exception.AccessDeniedException;
+import com.toonpick.common.exception.AuthenticationException;
+import com.toonpick.common.exception.BadRequestException;
+import com.toonpick.common.exception.BusinessException;
+import com.toonpick.common.exception.DuplicateResourceException;
+import com.toonpick.common.exception.EntityNotFoundException;
+import com.toonpick.common.exception.InternalServerException;
 
 import com.toonpick.response.ApiResponse;
 import org.slf4j.Logger;

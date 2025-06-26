@@ -1,6 +1,6 @@
 package com.toonpick.exception;
 
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 
 /**
  * 유효하지 않는 형식의 JWT 토큰 형식 예외

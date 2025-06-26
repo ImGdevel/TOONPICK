@@ -9,7 +9,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 
 import java.io.IOException;
 

@@ -2,10 +2,10 @@ package com.toonpick.service;
 
 import com.toonpick.dto.response.WebtoonReviewResponse;
 import com.toonpick.domain.review.entity.WebtoonReview;
-import com.toonpick.exception.EntityNotFoundException;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.mapper.WebtoonReviewMapper;
 import com.toonpick.domain.review.repository.WebtoonReviewRepository;
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

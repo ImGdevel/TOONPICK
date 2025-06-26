@@ -1,6 +1,6 @@
 package com.toonpick.handler;
 
-import com.toonpick.exception.AuthenticationException;
+import com.toonpick.common.exception.AuthenticationException;
 import com.toonpick.exception.ExpiredJwtTokenException;
 import com.toonpick.exception.InvalidJwtTokenException;
 import com.toonpick.exception.MissingJwtTokenException;

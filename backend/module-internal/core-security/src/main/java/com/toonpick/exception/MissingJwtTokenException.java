@@ -1,6 +1,6 @@
 package com.toonpick.exception;
 
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 
 /**
  * 요청에서 Jwt 토큰을 찾을 수 없는 경우 예외

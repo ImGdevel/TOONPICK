@@ -4,9 +4,7 @@ package com.toonpick.jwt;
 import com.toonpick.exception.ExpiredJwtTokenException;
 import com.toonpick.exception.InvalidJwtTokenException;
 import com.toonpick.exception.MissingJwtTokenException;
-import com.toonpick.type.ErrorCode;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+import com.toonpick.common.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -5,7 +5,7 @@ import com.toonpick.exception.CustomAuthenticationException;
 import com.toonpick.exception.ExpiredJwtTokenException;
 import com.toonpick.exception.InvalidJwtTokenException;
 import com.toonpick.jwt.JwtTokenProvider;
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

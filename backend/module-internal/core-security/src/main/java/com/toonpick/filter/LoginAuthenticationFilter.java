@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toonpick.exception.CustomAuthenticationException;
 import com.toonpick.handler.LoginSuccessHandler;
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

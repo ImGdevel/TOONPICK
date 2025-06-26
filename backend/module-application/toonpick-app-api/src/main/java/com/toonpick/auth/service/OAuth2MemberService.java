@@ -12,7 +12,7 @@ import com.toonpick.domain.member.enums.Provider;
 import com.toonpick.member.mapper.MemberMapper;
 import com.toonpick.domain.member.repository.MemberRepository;
 import com.toonpick.domain.member.repository.MemberSocialLoginRepository;
-import com.toonpick.utils.ShortIdUtil;
+import com.toonpick.common.utils.ShortIdUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

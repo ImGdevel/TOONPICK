@@ -2,7 +2,7 @@ package com.toonpick.auth.service;
 
 import com.toonpick.domain.member.entity.Member;
 import com.toonpick.domain.member.repository.MemberRepository;
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

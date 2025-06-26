@@ -1,6 +1,6 @@
-package com.toonpick.exception;
+package com.toonpick.common.exception;
 
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 
 /**
  * BadRequestException (400)

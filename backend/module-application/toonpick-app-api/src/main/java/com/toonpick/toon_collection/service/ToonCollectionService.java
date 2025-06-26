@@ -1,6 +1,6 @@
 package com.toonpick.toon_collection.service;
 
-import com.toonpick.exception.EntityNotFoundException;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.toon_collection.response.ToonCollectionResponseDTO;
 import com.toonpick.domain.member.entity.Member;
 import com.toonpick.domain.member.entity.ToonCollection;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.domain.member.repository.ToonCollectionRepository;
 import com.toonpick.domain.webtoon.repository.WebtoonRepository;
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 
 import java.util.List;
 

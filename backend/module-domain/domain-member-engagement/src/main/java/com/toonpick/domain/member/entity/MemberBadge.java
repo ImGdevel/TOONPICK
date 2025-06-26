@@ -1,5 +1,6 @@
 package com.toonpick.domain.member.entity;
 
+import com.toonpick.domain.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

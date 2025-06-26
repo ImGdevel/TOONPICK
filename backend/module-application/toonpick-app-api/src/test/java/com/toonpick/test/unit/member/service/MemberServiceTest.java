@@ -2,7 +2,7 @@ package com.toonpick.test.unit.member.service;
 
 import com.toonpick.domain.member.entity.Member;
 import com.toonpick.domain.member.enums.MemberRole;
-import com.toonpick.exception.EntityNotFoundException;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.member.mapper.MemberMapper;
 import com.toonpick.member.request.MemberProfileRequestDTO;
 import com.toonpick.member.response.MemberProfileDetailsResponse;

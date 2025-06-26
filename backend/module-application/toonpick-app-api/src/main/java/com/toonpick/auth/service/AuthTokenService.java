@@ -2,7 +2,7 @@ package com.toonpick.auth.service;
 
 import com.toonpick.exception.RefreshTokenNotFoundException;
 import com.toonpick.jwt.TokenIssuer;
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

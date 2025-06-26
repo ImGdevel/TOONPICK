@@ -7,7 +7,7 @@ import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.domain.webtoon.entity.WebtoonEpisode;
 import com.toonpick.domain.webtoon.entity.WebtoonEpisodeLink;
 import com.toonpick.domain.webtoon.enums.EpisodeViewerType;
-import com.toonpick.exception.EntityNotFoundException;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.domain.webtoon.repository.PlatformRepository;
 import com.toonpick.domain.webtoon.repository.WebtoonEpisodeLinkRepository;
 import com.toonpick.domain.webtoon.repository.WebtoonEpisodeRepository;
