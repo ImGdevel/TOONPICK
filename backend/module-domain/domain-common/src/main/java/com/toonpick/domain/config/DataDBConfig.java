@@ -19,7 +19,7 @@ import java.util.HashMap;
 @Configuration
 @Profile("!test")
 @EnableJpaRepositories(
-        basePackages = "com.toonpick",
+        basePackages = "com.toonpick.domain",
         entityManagerFactoryRef = "dataEntityManager",
         transactionManagerRef = "dataTransactionManager"
 )
@@ -36,7 +36,7 @@ public class DataDBConfig {
     public LocalContainerEntityManagerFactoryBean dataEntityManager() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataDBSource());
-        em.setPackagesToScan("com.toonpick");
+        em.setPackagesToScan("com.toonpick.domain");
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         HashMap<String, Object> properties = new HashMap<>();
