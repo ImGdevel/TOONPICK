@@ -36,6 +36,7 @@ public class WebtoonEpisode {
     private String title;
 
     @Column(name = "pricing_type")
+    @Enumerated(EnumType.STRING)
     private EpisodePricingType pricingType;
 
     @OneToMany(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

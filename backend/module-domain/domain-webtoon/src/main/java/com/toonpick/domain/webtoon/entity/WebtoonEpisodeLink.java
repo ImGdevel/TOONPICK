@@ -29,6 +29,7 @@ public class WebtoonEpisodeLink {
     private String url;
 
     @Column(name = "viewer_type")
+    @Enumerated(EnumType.STRING)
     private EpisodeViewerType viewerType;
 
     @Builder
