@@ -25,7 +25,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-@Import(com.toonpick.service.TestDataSourceConfig.class)
+@Import(com.toonpick.config.TestDataSourceConfig.class)
 @EntityScan("com.toonpick.entity")
 @ComponentScan(basePackages = {"com.toonpick"})
 @DisplayName("Webtoon 등록 통합 테스트")
@@ -34,8 +34,10 @@ class WebtoonRegistrationServiceIntegrationTest {
 
     @Autowired
     private WebtoonRegistrationService webtoonRegistrationService;
-    @Autowired private WebtoonRepository webtoonRepository;
-    @Autowired private PlatformRepository platformRepository;
+    @Autowired
+    private WebtoonRepository webtoonRepository;
+    @Autowired 
+    private PlatformRepository platformRepository;
 
     @BeforeEach
     void setUp() {
