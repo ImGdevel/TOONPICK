@@ -43,23 +43,23 @@ public class WebtoonEpisodeUpdateService {
     /**
      * 새로운 에피소드 등록
      */
-    public void createNewEpisode(Webtoon webtoon, String platform, EpisodeRequest info){
+    public void createNewEpisode(Webtoon webtoon, String platform, EpisodeRequest request){
         WebtoonEpisode webtoonEpisode  = WebtoonEpisode.builder()
                 .webtoon(webtoon)
-                .title(info.getTitle())
-                .episodeNumber(info.getEpisodeNumber())
-                .pricingType(parsePricingType(info.getPricingType()))
+                .title(request.getTitle())
+                .episodeNumber(request.getEpisodeNumber())
+                .pricingType(EpisodePricingType.valueOf(request.getPricingType()))
                 .build();
 
         webtoonEpisodeRepository.save(webtoonEpisode);
         
         // 웹 링크 등록
-        if(isValidUrl(info.getWebUrl())){
-            createWebtoonEpisodeLink(webtoonEpisode, info.getWebUrl(), platform, EpisodeViewerType.WEB);
+        if(isValidUrl(request.getWebUrl())){
+            createWebtoonEpisodeLink(webtoonEpisode, request.getWebUrl(), platform, EpisodeViewerType.WEB);
         }
         // 모바일 링크 등록
-        if(isValidUrl(info.getMobileUrl())){
-            createWebtoonEpisodeLink(webtoonEpisode, info.getMobileUrl(), platform, EpisodeViewerType.MOBILE);
+        if(isValidUrl(request.getMobileUrl())){
+            createWebtoonEpisodeLink(webtoonEpisode, request.getMobileUrl(), platform, EpisodeViewerType.MOBILE);
         }
     }
 
@@ -86,21 +86,5 @@ public class WebtoonEpisodeUpdateService {
                 .build();
 
         webtoonEpisodeLinkRepository.save(webtoonEpisodeLink);
-    }
-
-    /**
-     * 구매 타입
-     * @param pricingType
-     * @return
-     */
-    private EpisodePricingType parsePricingType(String pricingType) {
-        if (pricingType == null) {
-            return EpisodePricingType.FREE;
-        }
-        try {
-            return EpisodePricingType.valueOf(pricingType.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return EpisodePricingType.FREE;
-        }
     }
 }
