@@ -38,23 +38,28 @@ public class WebtoonRegistrationService {
     public void createWebtoon(WebtoonCreateCommend request) {
         // 동일한 웹툰(제목+작가) 찾기
         //  *  웹툰이 동일하다고 판단을 내리는 기준은 다음과 같다. > 웹툰 제목이 동일하면서 연재 작가 이름이 동일한 경우
-        Optional<Webtoon> existingWebtoonOpt = findExistingWebtoon(request);
-
-        if (existingWebtoonOpt.isPresent()) {
-            // 만약 이미 존재하는 웹툰이라면 플랫폼 등록
-            //  *  다음과 같은 경우에는 동일한 웹툰이지만 플랫품이 다른 경우 추가 등록해야한다. > 따라서 플랫폼 이 동일한지 체크하고 동맇하지 않다면 추가 플랫폼을 등록한다.
-            Webtoon existingWebtoon = existingWebtoonOpt.get();
-
-            if (hasPlatform(existingWebtoon, request.getPlatform())) {
-                throw new DuplicateResourceException(ErrorCode.WEBTOON_ALREADY_EXISTS);
+        try{
+            Optional<Webtoon> existingWebtoonOpt = findExistingWebtoon(request);
+            if (existingWebtoonOpt.isPresent()) {
+                // 만약 이미 존재하는 웹툰이라면 플랫폼 등록
+                //  *  다음과 같은 경우에는 동일한 웹툰이지만 플랫품이 다른 경우 추가 등록해야한다. > 따라서 플랫폼 이 동일한지 체크하고 동맇하지 않다면 추가 플랫폼을 등록한다.
+                Webtoon existingWebtoon = existingWebtoonOpt.get();
+                if (hasPlatform(existingWebtoon, request.getPlatform())) {
+                    throw new DuplicateResourceException(ErrorCode.WEBTOON_ALREADY_EXISTS);
+                }
+                addPlatform(existingWebtoon, request);
+                return;
             }
+            // 완전히 새로운 웹툰 등록
+            registerNewWebtoon(request);
 
-            addPlatform(existingWebtoon, request);
-            return;
         }
-        
-        // 완전히 새로운 웹툰 등록
-        registerNewWebtoon(request);
+        catch (DuplicateResourceException e){
+            log.warn("이미 등록된 웹툰입니다: title - {}", request.getTitle());
+        }
+        catch (EntityNotFoundException e){
+            log.warn("등록 대상의 카테고리가 존재하지 않습니다: {}", e.getMessage());
+        }
     }
 
     /**
