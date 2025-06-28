@@ -11,7 +11,7 @@ public enum SerializationStatus {
     ONGOING("연재중"),
     HIATUS("휴재"),
     COMPLETED("완결"),
-    CANCELLED("연재중지"),
+    CANCELED("연재중지"),
     ;
 
     private final String name;
