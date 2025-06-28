@@ -62,10 +62,7 @@ public class WebtoonEpisodeUpdateService {
             createWebtoonEpisodeLink(webtoonEpisode, request.getMobileUrl(), platform, EpisodeViewerType.MOBILE);
         }
     }
-
-    private boolean isValidUrl(String url) {
-        return url != null && !url.isEmpty() && !url.contains("null");
-    }
+    
     /**
      * 에피소드내 플랫폼 및 viewer애 따른 링크를 생성하고 등록합니다.
      */
@@ -86,5 +83,12 @@ public class WebtoonEpisodeUpdateService {
                 .build();
 
         webtoonEpisodeLinkRepository.save(webtoonEpisodeLink);
+    }
+
+    /*
+    유효성 검사
+     */
+    private boolean isValidUrl(String url) {
+        return url != null && !url.isEmpty() && !url.contains("null");
     }
 }
