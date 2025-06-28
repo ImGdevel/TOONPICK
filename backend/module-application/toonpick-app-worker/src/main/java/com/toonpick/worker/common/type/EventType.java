@@ -1,9 +1,0 @@
-package com.toonpick.worker.common.type;
-
-public enum EventType {
-    NEW_WEBTOON_CHECK_REQUESTED,
-    WEBTOON_CREATED,
-    WEBTOON_UPDATE_CHECK_REQUESTED,
-    WEBTOON_UPDATED,
-    WEBTOON_UPDATE_NOTIFICATION_REQUESTED
-}
