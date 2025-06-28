@@ -1,4 +1,4 @@
-package com.toonpick.worker.publisher;
+package com.toonpick.worker.infrastructure.messaging.publisher;
 
 import com.toonpick.worker.common.type.SQSEventType;
 import com.toonpick.worker.dto.message.SQSRequestMessage;

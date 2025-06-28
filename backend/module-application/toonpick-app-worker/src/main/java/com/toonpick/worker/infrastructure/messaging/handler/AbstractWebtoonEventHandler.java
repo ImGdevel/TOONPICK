@@ -1,8 +1,7 @@
-package com.toonpick.worker.listener.handler;
+package com.toonpick.worker.infrastructure.messaging.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toonpick.worker.common.type.SQSEventType;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;

@@ -1,9 +1,10 @@
-package com.toonpick.worker.listener.handler;
+package com.toonpick.worker.infrastructure.messaging.handler.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toonpick.worker.common.type.SQSEventType;
 import com.toonpick.worker.dto.command.WebtoonEpisodeUpdateCommand;
-import com.toonpick.worker.service.WebtoonEpisodeUpdateService;
+import com.toonpick.worker.domain.service.WebtoonEpisodeUpdateService;
+import com.toonpick.worker.infrastructure.messaging.handler.AbstractWebtoonEventHandler;
 import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

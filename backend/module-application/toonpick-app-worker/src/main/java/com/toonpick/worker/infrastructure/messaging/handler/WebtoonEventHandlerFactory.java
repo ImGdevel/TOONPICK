@@ -1,4 +1,4 @@
-package com.toonpick.worker.listener.handler;
+package com.toonpick.worker.infrastructure.messaging.handler;
 
 import com.toonpick.worker.common.type.SQSEventType;
 import lombok.extern.slf4j.Slf4j;

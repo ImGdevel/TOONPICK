@@ -1,6 +1,7 @@
-package com.toonpick.worker.task;
+package com.toonpick.worker.task.coordinator;
 
 
+import com.toonpick.worker.task.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

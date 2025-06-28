@@ -12,7 +12,7 @@ import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import com.toonpick.worker.config.IntegrationTest;
 import com.toonpick.worker.dto.command.AuthorRequest;
 import com.toonpick.worker.dto.command.WebtoonCreateCommend;
-import com.toonpick.worker.service.WebtoonRegistrationService;
+import com.toonpick.worker.domain.service.WebtoonRegistrationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

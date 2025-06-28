@@ -1,4 +1,4 @@
-package com.toonpick.worker.service;
+package com.toonpick.worker.domain.service;
 
 import com.toonpick.worker.dto.command.AuthorRequest;
 import com.toonpick.domain.webtoon.entity.Author;

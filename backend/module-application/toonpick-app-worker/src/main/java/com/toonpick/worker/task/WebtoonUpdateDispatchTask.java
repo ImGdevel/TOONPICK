@@ -6,7 +6,7 @@ import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.domain.webtoon.enums.SerializationStatus;
 import com.toonpick.worker.mapper.WebtoonCrawItemMapper;
 import com.toonpick.worker.mapper.WebtoonMapper;
-import com.toonpick.worker.publisher.WebtoonUpdatePublisher;
+import com.toonpick.worker.infrastructure.messaging.publisher.WebtoonUpdatePublisher;
 import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

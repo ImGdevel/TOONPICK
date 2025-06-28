@@ -15,7 +15,7 @@ import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import com.toonpick.worker.config.IntegrationTest;
 import com.toonpick.worker.dto.command.EpisodeRequest;
 import com.toonpick.worker.dto.command.WebtoonEpisodeUpdateCommand;
-import com.toonpick.worker.service.WebtoonEpisodeUpdateService;
+import com.toonpick.worker.domain.service.WebtoonEpisodeUpdateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

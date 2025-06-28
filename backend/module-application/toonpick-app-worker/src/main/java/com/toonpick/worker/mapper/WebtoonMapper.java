@@ -6,8 +6,8 @@ import com.toonpick.domain.webtoon.entity.Author;
 import com.toonpick.domain.webtoon.entity.Genre;
 import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.domain.webtoon.enums.SerializationStatus;
-import com.toonpick.worker.service.AuthorService;
-import com.toonpick.worker.service.GenreService;
+import com.toonpick.worker.domain.service.AuthorService;
+import com.toonpick.worker.domain.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

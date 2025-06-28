@@ -1,9 +1,9 @@
-package com.toonpick.worker.listener;
+package com.toonpick.worker.infrastructure.messaging.listener;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toonpick.worker.common.type.SQSEventType;
-import com.toonpick.worker.listener.handler.WebtoonEventHandlerFactory;
+import com.toonpick.worker.infrastructure.messaging.handler.WebtoonEventHandlerFactory;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

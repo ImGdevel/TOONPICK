@@ -1,7 +1,7 @@
-package com.toonpick.worker.exception;
+package com.toonpick.worker.application.exception;
 
 import com.toonpick.common.exception.BadRequestException;
-import com.toonpick.worker.controller.AdminWorkerController;
+import com.toonpick.worker.application.controller.AdminWorkerController;
 import com.toonpick.worker.dto.WebtoonTriggerResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

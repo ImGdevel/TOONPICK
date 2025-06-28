@@ -1,8 +1,8 @@
-package com.toonpick.worker.controller;
+package com.toonpick.worker.application.controller;
 
 import com.toonpick.worker.dto.WebtoonTriggerRequest;
 import com.toonpick.worker.dto.WebtoonTriggerResponse;
-import com.toonpick.worker.service.AdminWorkerService;
+import com.toonpick.worker.task.AdminWorkerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

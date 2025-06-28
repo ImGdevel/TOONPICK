@@ -1,9 +1,9 @@
-package com.toonpick.worker.service;
+package com.toonpick.worker.task;
 
 import com.toonpick.common.exception.BadRequestException;
 import com.toonpick.worker.dto.WebtoonTriggerRequest;
 import com.toonpick.worker.dto.payload.WebtoonCrawItem;
-import com.toonpick.worker.publisher.WebtoonUpdatePublisher;
+import com.toonpick.worker.infrastructure.messaging.publisher.WebtoonUpdatePublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
