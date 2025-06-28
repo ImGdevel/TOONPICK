@@ -2,7 +2,7 @@ package com.toonpick.worker.application.exception;
 
 import com.toonpick.common.exception.BadRequestException;
 import com.toonpick.worker.application.controller.AdminWorkerController;
-import com.toonpick.worker.dto.WebtoonTriggerResponse;
+import com.toonpick.worker.dto.response.WebtoonTriggerResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,6 @@ public class WorkerExceptionHandler {
         WebtoonTriggerResponse response = WebtoonTriggerResponse.builder()
             .message(ex.getMessage())
             .processedCount(0)
-            .status("ERROR")
             .timestamp(System.currentTimeMillis())
             .build();
             
@@ -40,7 +39,6 @@ public class WorkerExceptionHandler {
         WebtoonTriggerResponse response = WebtoonTriggerResponse.builder()
             .message(ex.getMessage())
             .processedCount(0)
-            .status("ERROR")
             .timestamp(System.currentTimeMillis())
             .build();
             
@@ -57,7 +55,6 @@ public class WorkerExceptionHandler {
         WebtoonTriggerResponse response = WebtoonTriggerResponse.builder()
             .message("잘못된 숫자 형식입니다: " + ex.getMessage())
             .processedCount(0)
-            .status("ERROR")
             .timestamp(System.currentTimeMillis())
             .build();
             
@@ -74,7 +71,6 @@ public class WorkerExceptionHandler {
         WebtoonTriggerResponse response = WebtoonTriggerResponse.builder()
             .message("서버 내부 오류가 발생했습니다: " + ex.getMessage())
             .processedCount(0)
-            .status("ERROR")
             .timestamp(System.currentTimeMillis())
             .build();
             
