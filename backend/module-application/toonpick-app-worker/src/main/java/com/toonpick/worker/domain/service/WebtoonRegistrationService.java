@@ -56,9 +56,11 @@ public class WebtoonRegistrationService {
         }
         catch (DuplicateResourceException e){
             log.warn("이미 등록된 웹툰입니다: title - {}", request.getTitle());
+            throw  e;
         }
         catch (EntityNotFoundException e){
             log.warn("등록 대상의 카테고리가 존재하지 않습니다: {}", e.getMessage());
+            throw  e;
         }
     }
 
