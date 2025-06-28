@@ -17,10 +17,10 @@ public class WebtoonUpdateScheduler {
 
     final private Logger logger = LoggerFactory.getLogger(WebtoonUpdateScheduler.class);
 
-    // 매일 22:30 ~ 23:30까지 1분 간격 실행
+    // 매일 22:30 ~ 23:30까지 5분 간격 실행
     @NotifyJobResult(jobName = "TOONPICK worker - data update job")
-    @Scheduled(cron = "0 30-59/1 22 * * *")
-    @Scheduled(cron = "0 0-30/1 23 * * *")
+    @Scheduled(cron = "0 30-59/5 22 * * *")
+    @Scheduled(cron = "0 0-30/5 23 * * *")
     public void updatePeak() {
         webtoonUpdateService.executeMetadataSync();
     }
@@ -34,10 +34,4 @@ public class WebtoonUpdateScheduler {
         webtoonUpdateService.executeMetadataSync();
     }
 
-    @NotifyJobResult(jobName = "TOONPICK worker - periodic data update job")
-    @Scheduled(cron = "0 0/2 * * * *")
-    public void updatePeriodically() {
-        logger.info("작업 수행");
-        webtoonUpdateService.executeMetadataSync();
-    }
 }
