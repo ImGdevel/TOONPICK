@@ -1,8 +1,6 @@
 package com.toonpick.worker.domain.service;
 
-
 import com.toonpick.domain.webtoon.entity.*;
-import com.toonpick.worker.dto.command.AuthorRequest;
 import com.toonpick.worker.dto.command.EpisodeRequest;
 import com.toonpick.worker.dto.command.WebtoonCreateCommend;
 import com.toonpick.common.exception.DuplicateResourceException;
@@ -18,9 +16,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
+/**
+ * 웹툰 등록 서비스
+ * 웹툰 등록과 관련된 비즈니스 로직을 처리하는 서비스
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -31,36 +31,43 @@ public class WebtoonRegistrationService {
     private final WebtoonMapper webtoonMapper;
     private final PlatformRepository platformRepository;
     private final WebtoonEpisodeUpdateService webtoonEpisodeUpdateService;
+    private final WebtoonDuplicateCheckService duplicateCheckService;
 
     /**
-     *  새로운 웹툰을 등록합니다.
+     * 새로운 웹툰을 등록합니다.
+     * 중복 체크 후 적절한 처리(신규 등록 또는 플랫폼 추가)를 수행합니다.
      */
+    @Transactional
     public void createWebtoon(WebtoonCreateCommend request) {
-        // 동일한 웹툰(제목+작가) 찾기
-        //  *  웹툰이 동일하다고 판단을 내리는 기준은 다음과 같다. > 웹툰 제목이 동일하면서 연재 작가 이름이 동일한 경우
-        try{
-            Optional<Webtoon> existingWebtoonOpt = findExistingWebtoon(request);
-            if (existingWebtoonOpt.isPresent()) {
-                // 만약 이미 존재하는 웹툰이라면 플랫폼 등록
-                //  *  다음과 같은 경우에는 동일한 웹툰이지만 플랫품이 다른 경우 추가 등록해야한다. > 따라서 플랫폼 이 동일한지 체크하고 동맇하지 않다면 추가 플랫폼을 등록한다.
-                Webtoon existingWebtoon = existingWebtoonOpt.get();
-                if (hasPlatform(existingWebtoon, request.getPlatform())) {
-                    throw new DuplicateResourceException(ErrorCode.WEBTOON_ALREADY_EXISTS);
-                }
-                addPlatform(existingWebtoon, request);
-                return;
-            }
-            // 완전히 새로운 웹툰 등록
-            registerNewWebtoon(request);
+        try {
+            // 중복 체크 수행
+            Optional<Webtoon> existingWebtoonOpt = duplicateCheckService.findDuplicateWebtoon(request);
 
-        }
-        catch (DuplicateResourceException e){
+            if (existingWebtoonOpt.isPresent()) {
+                handleDuplicateWebtoon(existingWebtoonOpt.get(), request);
+            } else {
+                registerNewWebtoon(request);
+            }
+
+        } catch (DuplicateResourceException e) {
             log.warn("이미 등록된 웹툰입니다: title - {}", request.getTitle());
-            throw  e;
-        }
-        catch (EntityNotFoundException e){
+            throw e;
+        } catch (EntityNotFoundException e) {
             log.warn("등록 대상의 카테고리가 존재하지 않습니다: {}", e.getMessage());
-            throw  e;
+            throw e;
+        }
+    }
+
+    /**
+     * 중복된 웹툰 처리
+     */
+    private void handleDuplicateWebtoon(Webtoon existingWebtoon, WebtoonCreateCommend request) {
+        if (duplicateCheckService.hasPlatform(existingWebtoon, request.getPlatform())) {
+            // 동일한 플랫폼에 이미 등록된 경우
+            throw new DuplicateResourceException(ErrorCode.WEBTOON_ALREADY_EXISTS);
+        } else {
+            // 다른 플랫폼에 등록된 경우 - 플랫폼 추가
+            addPlatform(existingWebtoon, request);
         }
     }
 
@@ -72,7 +79,7 @@ public class WebtoonRegistrationService {
         WebtoonStatistics statistics = new WebtoonStatistics(webtoon);
         statistics.setEpisodeCount(request.getEpisodeCount() != null ? request.getEpisodeCount() : 0);
 
-        Webtoon saved =  webtoonRepository.save(webtoon);
+        Webtoon saved = webtoonRepository.save(webtoon);
 
         addPlatform(webtoon, request);
         
@@ -87,7 +94,7 @@ public class WebtoonRegistrationService {
      */
     private void addPlatform(Webtoon webtoon, WebtoonCreateCommend request) {
         Platform platform = platformRepository.findByName(request.getPlatform())
-                .orElseThrow(()-> new EntityNotFoundException(ErrorCode.PLATFORM_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.PLATFORM_NOT_FOUND));
 
         WebtoonPlatform webtoonPlatform = WebtoonPlatform.builder()
                 .link(request.getUrl())
@@ -105,55 +112,5 @@ public class WebtoonRegistrationService {
         for (EpisodeRequest episodeRequest : request.getEpisodes()) {
             webtoonEpisodeUpdateService.createNewEpisode(webtoon, request.getPlatform(), episodeRequest);
         }
-    }
-
-    /// ///
-    /// 같은 웹툰 찾기
-    /// ///
-    
-    /**
-     * 제목+작가가 동일한 기존 웹툰을 찾는다
-     */
-    private Optional<Webtoon> findExistingWebtoon(WebtoonCreateCommend request) {
-        List<Webtoon> candidates = webtoonRepository.findAllByTitle(request.getTitle());
-
-        for (Webtoon candidate : candidates) {
-            if (isSameAuthors(candidate.getAuthors(), request.getAuthors())) {
-                return Optional.of(candidate);
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    /**
-     * 동일한 작가인지 비교
-     */
-    private boolean isSameAuthors(Set<Author> existing, List<AuthorRequest> incoming) {
-        if (incoming == null || incoming.isEmpty()) {
-            return existing.isEmpty();
-        }
-
-        Set<String> existingNames = existing.stream()
-                .map(Author::getName)
-                .collect(Collectors.toSet());
-
-        Set<String> incomingNames = incoming.stream()
-                .map(AuthorRequest::getName)
-                .collect(Collectors.toSet());
-
-        return existingNames.equals(incomingNames);
-    }
-
-    /**
-     * 동일 플랫폼 존재 여부 확인
-     */
-    private boolean hasPlatform(Webtoon webtoon, String platformName) {
-        for (WebtoonPlatform platform : webtoon.getPlatforms()) {
-            if (platform.getPlatform().getName().equals(platformName)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
