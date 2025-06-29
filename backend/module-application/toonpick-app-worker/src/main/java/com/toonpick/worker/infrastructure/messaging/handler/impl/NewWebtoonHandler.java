@@ -31,7 +31,7 @@ public class NewWebtoonHandler extends AbstractWebtoonEventHandler {
     protected void processCommand(Object command) {
         WebtoonCreateCommend createCommand = (WebtoonCreateCommend) command;
         webtoonRegistrationService.createWebtoon(createCommand);
-        log.info("새 웹툰 등록 처리 완료 - 제목: {}", createCommand.getTitle());
+        log.info("웹툰 생성/업데이트 처리 완료 - 제목: {}, 플랫폼: {}", createCommand.getTitle(), createCommand.getPlatform());
     }
 
     @Override

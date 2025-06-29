@@ -31,7 +31,8 @@ public class UpdatedWebtoonListener {
             handlerFactory.getHandler(eventType).handle(message);
             
         } catch (Exception e) {
-            log.error("웹툰 업데이트 처리 실패. 메시지: {} // ", message, e);
+            log.error("웹툰 업데이트 처리 실패.: {} ", e.getMessage());
+            // todo : 웹툰 등록 실패 사실을 알려야 함
         }
     }
 }

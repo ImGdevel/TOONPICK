@@ -2,6 +2,10 @@ package com.toonpick.worker.infrastructure.messaging.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.toonpick.common.exception.BadRequestException;
+import com.toonpick.common.exception.DuplicateResourceException;
+import com.toonpick.common.exception.EntityNotFoundException;
+import com.toonpick.common.type.ErrorCode;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +42,18 @@ public abstract class AbstractWebtoonEventHandler implements WebtoonEventHandler
 
             processCommand(command);
             
-        } catch (Exception e) {
-            log.error("이벤트 처리 실패. 이벤트 타입: {}, 메시지: {}", getSupportedEventType(), message, e);
+        } catch (EntityNotFoundException e) {
+            log.error("엔티티를 찾을 수 없습니다. - 이벤트 타입: {}, 메시지: {}", getSupportedEventType(), e.getMessage());
+            throw e;
+        }
+        catch (BadRequestException e) {
+            log.error("잘못된 요청 형식입니다. - 이벤트 타입: {}, 메시지: {}", getSupportedEventType(), e.getMessage());
+        }
+        catch (DuplicateResourceException e){
+            log.warn("이미 등록된 웹툰입니다. - 이벤트 타입: {}, 메시지: {}", getSupportedEventType(), e.getMessage());
+        }
+        catch (Exception e) {
+            log.error("이벤트 처리 실패. - 이벤트 타입: {}, 메시지: {}", getSupportedEventType(), message, e);
         }
     }
 
@@ -51,8 +65,7 @@ public abstract class AbstractWebtoonEventHandler implements WebtoonEventHandler
         JsonNode dataNode = root.get("data");
         
         if (dataNode == null) {
-            log.error("data 필드가 없습니다. 원본 메시지: {}", message);
-            throw new IllegalArgumentException("data 필드가 없습니다.");
+            throw new BadRequestException(ErrorCode.INVALID_JSON_FORMAT, "메시지 구조가 올바르지 않습니다. 'data' 필드가 필요합니다.");
         }
 
         return objectMapper.treeToValue(dataNode, getCommandClass());
@@ -65,8 +78,7 @@ public abstract class AbstractWebtoonEventHandler implements WebtoonEventHandler
         Set<ConstraintViolation<Object>> violations = validator.validate(command);
         if (!violations.isEmpty()) {
             for (ConstraintViolation<Object> violation : violations) {
-                log.error("Command 유효성 실패 - {}: {}", 
-                    violation.getPropertyPath(), violation.getMessage());
+                throw new BadRequestException(ErrorCode.INVALID_JSON_FORMAT, "메시지 구조가 올바르지 않습니다.:" + violation.getMessage());
             }
             return false;
         }

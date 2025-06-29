@@ -31,7 +31,7 @@ public class EpisodeUpdateHandler extends AbstractWebtoonEventHandler {
     protected void processCommand(Object command) {
         WebtoonEpisodeUpdateCommand episodeCommand = (WebtoonEpisodeUpdateCommand) command;
         webtoonEpisodeUpdateService.registerEpisodes(episodeCommand);
-        log.info("에피소드 업데이트 처리 완료 - 웹툰 ID: {}", episodeCommand.getWebtoonId());
+        log.info("웹툰 에피소드 업데이트 처리 완료 - 제목: {}, 플랫폼: {}", episodeCommand.getTitle(), episodeCommand.getPlatform());
     }
 
     @Override

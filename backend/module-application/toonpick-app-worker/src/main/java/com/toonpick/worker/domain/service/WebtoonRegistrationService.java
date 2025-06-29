@@ -1,20 +1,22 @@
 package com.toonpick.worker.domain.service;
 
-import com.toonpick.domain.webtoon.entity.*;
-import com.toonpick.worker.dto.command.EpisodeRequest;
-import com.toonpick.worker.dto.command.WebtoonCreateCommend;
 import com.toonpick.common.exception.DuplicateResourceException;
 import com.toonpick.common.exception.EntityNotFoundException;
-import com.toonpick.worker.mapper.WebtoonMapper;
+import com.toonpick.common.type.ErrorCode;
+import com.toonpick.domain.webtoon.entity.Platform;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.domain.webtoon.entity.WebtoonPlatform;
+import com.toonpick.domain.webtoon.entity.WebtoonStatistics;
 import com.toonpick.domain.webtoon.repository.PlatformRepository;
 import com.toonpick.domain.webtoon.repository.WebtoonRepository;
-import com.toonpick.common.type.ErrorCode;
+import com.toonpick.worker.dto.command.EpisodeRequest;
+import com.toonpick.worker.dto.command.WebtoonCreateCommend;
+import com.toonpick.worker.mapper.WebtoonMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -39,22 +41,13 @@ public class WebtoonRegistrationService {
      */
     @Transactional
     public void createWebtoon(WebtoonCreateCommend request) {
-        try {
-            // 중복 체크 수행
-            Optional<Webtoon> existingWebtoonOpt = duplicateCheckService.findDuplicateWebtoon(request);
+        // 중복 체크 수행
+        Optional<Webtoon> existingWebtoonOpt = duplicateCheckService.findDuplicateWebtoon(request);
 
-            if (existingWebtoonOpt.isPresent()) {
-                handleDuplicateWebtoon(existingWebtoonOpt.get(), request);
-            } else {
-                registerNewWebtoon(request);
-            }
-
-        } catch (DuplicateResourceException e) {
-            log.warn("이미 등록된 웹툰입니다: title - {}", request.getTitle());
-            throw e;
-        } catch (EntityNotFoundException e) {
-            log.warn("등록 대상의 카테고리가 존재하지 않습니다: {}", e.getMessage());
-            throw e;
+        if (existingWebtoonOpt.isPresent()) {
+            handleDuplicateWebtoon(existingWebtoonOpt.get(), request);
+        } else {
+            registerNewWebtoon(request);
         }
     }
 
@@ -63,10 +56,9 @@ public class WebtoonRegistrationService {
      */
     private void handleDuplicateWebtoon(Webtoon existingWebtoon, WebtoonCreateCommend request) {
         if (duplicateCheckService.hasPlatform(existingWebtoon, request.getPlatform())) {
-            // 동일한 플랫폼에 이미 등록된 경우
-            throw new DuplicateResourceException(ErrorCode.WEBTOON_ALREADY_EXISTS);
+
+            throw new DuplicateResourceException("이미 등록된 웹툰입니다: " + request.getTitle() + " " + request.getPlatform());
         } else {
-            // 다른 플랫폼에 등록된 경우 - 플랫폼 추가
             addPlatform(existingWebtoon, request);
         }
     }
