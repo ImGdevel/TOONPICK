@@ -1,10 +1,10 @@
 package com.toonpick.worker.application.service;
 
-import com.toonpick.worker.common.type.TaskType;
 import com.toonpick.worker.dto.request.WebtoonTriggerRequest;
 import com.toonpick.worker.dto.response.WebtoonTriggerResponse;
-import com.toonpick.worker.task.coordinator.TaskCoordinator;
-import com.toonpick.worker.task.strategy.TaskContext;
+import com.toonpick.worker.task.strategy.BatchProcessingResult;
+import com.toonpick.worker.task.strategy.BatchProcessingStrategy;
+import com.toonpick.worker.task.strategy.StrategyFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminWorkerService {
     
-    private final TaskCoordinator taskCoordinator;
-    private final BatchProcessor batchProcessor;
+    private final StrategyFactory strategyFactory;
     
     /**
      * 웹툰 트리거 요청을 배치로 처리합니다.
@@ -35,11 +34,15 @@ public class AdminWorkerService {
         log.info("웹툰 트리거 요청 배치 처리 시작: {} 개의 웹툰, taskId: {}", requests.size(), taskId);
         
         try {
-            BatchProcessingResult result = batchProcessor.processBatches(requests, taskId, taskCoordinator);
+            // 웹툰 트리거 배치 처리 전략 가져오기
+            BatchProcessingStrategy batchStrategy = strategyFactory.getBatchProcessingStrategy("WEBTOON_TRIGGER_BATCH_PROCESSING");
             
-            log.info("웹툰 트리거 요청 배치 처리 완료: taskId={}, 성공: {}/{}, 배치: {}/{}, 소요시간: {}ms", 
+            // 배치 처리 실행 및 결과 받기
+            BatchProcessingResult result = batchStrategy.processBatchWithResult(requests);
+            
+            log.info("웹툰 트리거 요청 배치 처리 완료: taskId={}, 성공: {}/{}, 배치: {}/{}", 
                     taskId, result.getProcessedCount(), requests.size(), 
-                    result.getSuccessBatchCount(), result.getTotalBatchCount(), result.getProcessingTime());
+                    result.getSuccessBatchCount(), result.getTotalBatchCount());
             
             return createResponse(result, taskId);
             
