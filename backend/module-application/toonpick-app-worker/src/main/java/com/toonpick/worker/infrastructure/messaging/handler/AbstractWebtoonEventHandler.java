@@ -43,18 +43,16 @@ public abstract class AbstractWebtoonEventHandler implements WebtoonEventHandler
             processCommand(command);
         }
         catch (BadRequestException e) {
-            log.error("잘못된 요청 형식입니다. - 이벤트 타입: {}, 메시지: {}", getSupportedEventType(), e.getMessage());
-        }  
-        
+            log.error("잘못된 요청 형식입니다. - 이벤트 타입: {}, 에러 메시지: {}", getSupportedEventType(), e.getMessage());
+        }
         catch (DuplicateResourceException e){
-            log.warn("이미 등록된 웹툰입니다. - 이벤트 타입: {}, 메시지: {}", getSupportedEventType(), e.getMessage());
+            log.warn("이미 등록된 웹툰입니다. - 이벤트 타입: {}, 에러 메시지: {}", getSupportedEventType(), e.getMessage());
         }
         catch (EntityNotFoundException e) {
-            log.error("엔티티를 찾을 수 없습니다. - 이벤트 타입: {}, 메시지: {}", getSupportedEventType(), e.getMessage());
-            throw e;
+            log.error("엔티티를 찾을 수 없습니다. - 이벤트 타입: {}, 에러 메시지: {}", getSupportedEventType(), e.getMessage());
         }
         catch (Exception e) {
-            log.error("이벤트 처리 실패. - 이벤트 타입: {}, 메시지: {}", getSupportedEventType(), message, e);
+            log.error("이벤트 처리 실패. - 이벤트 타입: {}, 에러 메시지: {}", getSupportedEventType(), e.getMessage());
         }
     }
 
