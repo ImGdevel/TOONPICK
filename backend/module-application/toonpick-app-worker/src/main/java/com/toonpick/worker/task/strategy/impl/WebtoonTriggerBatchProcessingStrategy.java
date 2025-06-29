@@ -26,7 +26,7 @@ public class WebtoonTriggerBatchProcessingStrategy implements BatchProcessingStr
     private final RetryProcessor retryProcessor;
     private final BatchResultAggregator resultAggregator;
     
-    @Value("${batch.size:5}")
+    @Value("${batch.size:3}")
     private int batchSize;
     
     @Value("${batch.delay-ms:1000}")
