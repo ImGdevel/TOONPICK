@@ -1,15 +1,14 @@
 package com.toonpick.worker.dto.message;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toonpick.worker.common.type.SQSEventType;
-import com.toonpick.internal.aws.sqs.message.SQSMessage;
 import com.toonpick.common.utils.UUIDUtils;
+import com.toonpick.internal.aws.sqs.message.SQSMessage;
+import com.toonpick.worker.common.type.SQSEventType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Getter
 @Builder

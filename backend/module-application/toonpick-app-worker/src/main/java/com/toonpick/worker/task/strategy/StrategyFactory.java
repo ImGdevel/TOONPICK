@@ -1,11 +1,11 @@
 package com.toonpick.worker.task.strategy;
 
 import com.toonpick.worker.common.type.TaskType;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;

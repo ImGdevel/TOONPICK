@@ -1,16 +1,16 @@
 package com.toonpick.worker.task.executor;
 
-import com.toonpick.worker.common.type.TaskType;
-import com.toonpick.worker.task.strategy.TaskContext;
-import com.toonpick.worker.task.strategy.TaskExecutionStrategy;
-import com.toonpick.worker.task.strategy.StrategyFactory;
-import com.toonpick.worker.dto.payload.WebtoonCrawItem;
-import com.toonpick.worker.dto.payload.WebtoonEpisodeCrawItem;
 import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.domain.webtoon.enums.SerializationStatus;
-import com.toonpick.worker.mapper.WebtoonCrawItemMapper;
-import com.toonpick.worker.infrastructure.messaging.publisher.WebtoonUpdatePublisher;
 import com.toonpick.domain.webtoon.repository.WebtoonRepository;
+import com.toonpick.worker.common.type.TaskType;
+import com.toonpick.worker.dto.payload.WebtoonCrawItem;
+import com.toonpick.worker.dto.payload.WebtoonEpisodeCrawItem;
+import com.toonpick.worker.infrastructure.messaging.publisher.WebtoonUpdatePublisher;
+import com.toonpick.worker.mapper.WebtoonCrawItemMapper;
+import com.toonpick.worker.task.strategy.StrategyFactory;
+import com.toonpick.worker.task.strategy.TaskContext;
+import com.toonpick.worker.task.strategy.TaskExecutionStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

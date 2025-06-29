@@ -1,8 +1,8 @@
 package com.toonpick.worker.task.strategy.impl;
 
 import com.toonpick.worker.common.type.TaskType;
-import com.toonpick.worker.task.strategy.TaskExecutionStrategy;
 import com.toonpick.worker.task.strategy.TaskContext;
+import com.toonpick.worker.task.strategy.TaskExecutionStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,9 +1,9 @@
 package com.toonpick.worker.domain.service;
 
-import com.toonpick.worker.dto.command.AuthorRequest;
 import com.toonpick.domain.webtoon.entity.Author;
 import com.toonpick.domain.webtoon.enums.AuthorRole;
 import com.toonpick.domain.webtoon.repository.AuthorRepository;
+import com.toonpick.worker.dto.command.AuthorRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

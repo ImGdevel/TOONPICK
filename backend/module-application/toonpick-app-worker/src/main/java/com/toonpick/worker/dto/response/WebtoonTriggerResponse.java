@@ -1,9 +1,9 @@
 package com.toonpick.worker.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 /**
  * 웹툰 트리거 응답 DTO

@@ -1,10 +1,10 @@
 package com.toonpick.worker.application.service;
 
 import com.toonpick.worker.common.type.TaskType;
-import com.toonpick.worker.task.coordinator.TaskCoordinator;
-import com.toonpick.worker.task.strategy.TaskContext;
 import com.toonpick.worker.dto.request.WebtoonTriggerRequest;
 import com.toonpick.worker.dto.response.WebtoonTriggerResponse;
+import com.toonpick.worker.task.coordinator.TaskCoordinator;
+import com.toonpick.worker.task.strategy.TaskContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

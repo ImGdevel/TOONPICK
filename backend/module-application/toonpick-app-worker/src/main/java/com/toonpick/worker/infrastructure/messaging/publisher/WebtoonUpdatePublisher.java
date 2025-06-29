@@ -1,10 +1,10 @@
 package com.toonpick.worker.infrastructure.messaging.publisher;
 
+import com.toonpick.internal.aws.sqs.service.AwsSqsPublisher;
 import com.toonpick.worker.common.type.SQSEventType;
 import com.toonpick.worker.dto.message.SQSRequestMessage;
 import com.toonpick.worker.dto.payload.WebtoonCrawItem;
 import com.toonpick.worker.dto.payload.WebtoonEpisodeCrawItem;
-import com.toonpick.internal.aws.sqs.service.AwsSqsPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

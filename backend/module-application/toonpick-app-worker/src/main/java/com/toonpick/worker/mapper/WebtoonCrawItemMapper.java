@@ -1,9 +1,9 @@
 package com.toonpick.worker.mapper;
 
-import com.toonpick.worker.dto.payload.WebtoonCrawItem;
-import com.toonpick.worker.dto.payload.WebtoonEpisodeCrawItem;
 import com.toonpick.domain.webtoon.entity.Platform;
 import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.worker.dto.payload.WebtoonCrawItem;
+import com.toonpick.worker.dto.payload.WebtoonEpisodeCrawItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
