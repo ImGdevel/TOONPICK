@@ -3,7 +3,7 @@ package com.toonpick.worker.application.scheduler;
 import com.toonpick.internal.webhook.slack.annotation.NotifyJobResult;
 import com.toonpick.worker.common.type.TaskType;
 import com.toonpick.worker.task.coordinator.TaskCoordinator;
-import com.toonpick.worker.task.strategy.TaskContext;
+import com.toonpick.worker.task.context.TaskContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

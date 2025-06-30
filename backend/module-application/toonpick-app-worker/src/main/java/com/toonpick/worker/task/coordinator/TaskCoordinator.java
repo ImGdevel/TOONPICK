@@ -1,7 +1,7 @@
 package com.toonpick.worker.task.coordinator;
 
 import com.toonpick.worker.common.type.TaskType;
-import com.toonpick.worker.task.strategy.TaskContext;
+import com.toonpick.worker.task.context.TaskContext;
 
 /**
  * 작업 조정자 인터페이스
@@ -33,11 +33,5 @@ public interface TaskCoordinator {
      * @param context 작업 컨텍스트
      */
     void cleanup(TaskType taskType, TaskContext context);
-    
-    /**
-     * 조정자의 이름을 반환합니다.
-     * 
-     * @return 조정자 이름
-     */
-    String getCoordinatorName();
+
 } 

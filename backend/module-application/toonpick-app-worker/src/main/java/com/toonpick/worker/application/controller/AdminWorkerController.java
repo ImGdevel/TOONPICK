@@ -1,8 +1,8 @@
 package com.toonpick.worker.application.controller;
 
+import com.toonpick.internal.web.response.ApiResponse;
 import com.toonpick.worker.application.service.AdminWorkerService;
 import com.toonpick.worker.dto.request.WebtoonTriggerRequest;
-import com.toonpick.worker.dto.response.WebtoonTriggerResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,18 +29,11 @@ public class AdminWorkerController {
      * @return 처리 결과
      */
     @PostMapping("/webtoon/trigger")
-    public ResponseEntity<WebtoonTriggerResponse> triggerWebtoonUpdate(
+    public ResponseEntity<ApiResponse> triggerWebtoonUpdate(
             @RequestBody List<WebtoonTriggerRequest> requests) {
-        
-        log.info("웹툰 트리거 요청 수신: {} 개의 웹툰", requests.size());
-        
-        WebtoonTriggerResponse response = adminWorkerService.processWebtoonTriggerRequests(requests);
-        
-        if (response.isSuccess()) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.badRequest().body(response);
-        }
+
+
+        return ResponseEntity.ok(ApiResponse.success());
     }
     
     /**

@@ -24,7 +24,7 @@ public class ExecutorFactory {
         this.taskExecutors = taskExecutors;
         this.executorMap = taskExecutors.stream()
                 .collect(Collectors.toMap(
-                        TaskExecutor::getSupportedTaskType,
+                        TaskExecutor::getTaskType,
                         Function.identity()
                 ));
     }
@@ -77,7 +77,7 @@ public class ExecutorFactory {
      */
     public List<TaskType> getSupportedTaskTypes() {
         return taskExecutors.stream()
-                .map(TaskExecutor::getSupportedTaskType)
+                .map(TaskExecutor::getTaskType)
                 .distinct()
                 .collect(Collectors.toList());
     }
@@ -91,10 +91,10 @@ public class ExecutorFactory {
     public List<TaskType> getTaskTypesByDomain(String domain) {
         return taskExecutors.stream()
                 .filter(executor -> {
-                    TaskType supportedType = executor.getSupportedTaskType();
+                    TaskType supportedType = executor.getTaskType();
                     return supportedType.getDomain().equals(domain);
                 })
-                .map(TaskExecutor::getSupportedTaskType)
+                .map(TaskExecutor::getTaskType)
                 .collect(Collectors.toList());
     }
 } 

@@ -3,7 +3,7 @@ package com.toonpick.worker.task.coordinator;
 import com.toonpick.worker.common.type.TaskType;
 import com.toonpick.worker.task.executor.ExecutorFactory;
 import com.toonpick.worker.task.executor.TaskExecutor;
-import com.toonpick.worker.task.strategy.TaskContext;
+import com.toonpick.worker.task.context.TaskContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -92,9 +92,5 @@ public class DefaultTaskCoordinator implements TaskCoordinator {
             // 정리 작업 실패는 전체 작업 실패로 처리하지 않음
         }
     }
-    
-    @Override
-    public String getCoordinatorName() {
-        return "DefaultTaskCoordinator";
-    }
+
 } 
