@@ -13,7 +13,6 @@ project(':module-application:toonpick-app-api') {
 
         implementation project(':module-internal')
         implementation project(':module-internal:core-web')
-        implementation project(':module-internal:core-web-support')
         implementation project(':module-internal:event-webhook')
         implementation project(':module-internal:client-storage')
         implementation project(':module-internal:core-security')
@@ -33,6 +32,7 @@ project(':module-application:toonpick-app-worker') {
         implementation project(':module-domain:domain-review')
 
         implementation project(':module-internal')
+        implementation project(':module-internal:core-web')
         implementation project(':module-internal:event-sqs')
         implementation project(':module-internal:event-webhook')
 

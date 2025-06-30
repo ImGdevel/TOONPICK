@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import com.toonpick.auth.controller.TokenReissueController;
 import com.toonpick.internal.security.jwt.JwtTokenProvider;
 import com.toonpick.internal.security.jwt.JwtTokenValidator;
-import com.toonpick.utils.CookieUtils;
+import com.toonpick.internal.security.utils.CookieUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

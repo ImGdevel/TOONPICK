@@ -1,6 +1,6 @@
 package com.toonpick.auth.handler;
 
-import com.toonpick.utils.CookieUtils;
+import com.toonpick.internal.security.utils.CookieUtils;
 import com.toonpick.auth.user.CustomOAuth2UserDetails;
 import com.toonpick.internal.security.handler.OAuth2SuccessHandler;
 import com.toonpick.internal.security.jwt.TokenIssuer;

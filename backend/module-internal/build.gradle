@@ -17,20 +17,11 @@ project(':module-internal:client-storage') {
 project(':module-internal:core-security') {
     dependencies {
         implementation project(':module-common')
-        implementation project(':module-internal:core-web-support')
     }
     bootJar.enabled = false
 }
 
 project(':module-internal:core-web') {
-    dependencies {
-        implementation project(':module-common')
-        implementation project(':module-internal:core-web-support')
-    }
-    bootJar.enabled = false
-}
-
-project(':module-internal:core-web-support') {
     dependencies {
         implementation project(':module-common')
     }

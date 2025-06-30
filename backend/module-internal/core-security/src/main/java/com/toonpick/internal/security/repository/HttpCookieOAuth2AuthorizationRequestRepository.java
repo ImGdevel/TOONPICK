@@ -1,6 +1,6 @@
 package com.toonpick.internal.security.repository;
 
-import com.toonpick.utils.CookieUtils;
+import com.toonpick.internal.security.utils.CookieUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;

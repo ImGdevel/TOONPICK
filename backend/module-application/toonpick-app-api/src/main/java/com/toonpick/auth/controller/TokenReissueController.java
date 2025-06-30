@@ -3,7 +3,7 @@ package com.toonpick.auth.controller;
 import com.toonpick.internal.security.jwt.JwtTokenProvider;
 import com.toonpick.internal.security.jwt.JwtTokenValidator;
 import com.toonpick.internal.security.jwt.TokenIssuer;
-import com.toonpick.utils.CookieUtils;
+import com.toonpick.internal.security.utils.CookieUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;

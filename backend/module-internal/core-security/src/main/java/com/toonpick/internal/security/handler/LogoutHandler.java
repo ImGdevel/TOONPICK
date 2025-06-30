@@ -3,7 +3,7 @@ package com.toonpick.internal.security.handler;
 import com.toonpick.internal.security.exception.ExpiredJwtTokenException;
 import com.toonpick.internal.security.exception.InvalidJwtTokenException;
 import com.toonpick.internal.security.jwt.JwtTokenValidator;
-import com.toonpick.utils.CookieUtils;
+import com.toonpick.internal.security.utils.CookieUtils;
 import com.toonpick.internal.security.jwt.TokenIssuer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

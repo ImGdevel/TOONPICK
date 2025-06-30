@@ -1,4 +1,4 @@
-package com.toonpick.utils;
+package com.toonpick.internal.security.utils;
 
 
 import jakarta.servlet.http.Cookie;
