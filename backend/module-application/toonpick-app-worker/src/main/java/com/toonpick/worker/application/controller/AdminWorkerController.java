@@ -12,7 +12,6 @@ import java.util.List;
 
 /**
  * 관리자 Worker 컨트롤러
- * 관리자가 웹툰 관련 작업을 트리거할 수 있는 API 엔드포인트
  */
 @Slf4j
 @RestController
@@ -24,22 +23,18 @@ public class AdminWorkerController {
     
     /**
      * 웹툰 트리거 요청을 처리합니다.
-     * 
-     * @param requests 웹툰 트리거 요청 리스트
-     * @return 처리 결과
      */
     @PostMapping("/webtoon/trigger")
     public ResponseEntity<ApiResponse> triggerWebtoonUpdate(
             @RequestBody List<WebtoonTriggerRequest> requests) {
 
-
+        // todo : 웹툰 등록 비즈니스 로직 작성
+        
         return ResponseEntity.ok(ApiResponse.success());
     }
     
     /**
-     * 헬스 체크 엔드포인트
-     * 
-     * @return 서비스 상태
+     * health 체크 엔드포인트
      */
     @GetMapping("/health")
     public ResponseEntity<String> healthCheck() {
