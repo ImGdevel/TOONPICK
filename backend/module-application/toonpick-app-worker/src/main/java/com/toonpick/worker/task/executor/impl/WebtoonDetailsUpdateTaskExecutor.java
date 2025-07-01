@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WebtoonCreateTaskExecutor implements TaskExecutor {
+public class WebtoonDetailsUpdateTaskExecutor implements TaskExecutor {
 
     final private WebtoonUpdatePublisher publisher;
 
