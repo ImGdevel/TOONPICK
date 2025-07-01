@@ -1,12 +1,12 @@
 package com.toonpick.auth.service;
 
-import com.toonpick.dto.JoinRequest;
-import com.toonpick.entity.Member;
-import com.toonpick.enums.MemberRole;
-import com.toonpick.exception.UserAlreadyRegisteredException;
-import com.toonpick.repository.MemberRepository;
-import com.toonpick.type.ErrorCode;
-import com.toonpick.utils.ShortIdUtil;
+import com.toonpick.internal.security.dto.JoinRequest;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.domain.member.enums.MemberRole;
+import com.toonpick.common.exception.DuplicateResourceException;
+import com.toonpick.domain.member.repository.MemberRepository;
+import com.toonpick.common.type.ErrorCode;
+import com.toonpick.common.utils.ShortIdUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,17 +25,29 @@ public class MemberJoinService {
 
     @Transactional
     public Member registerMember(JoinRequest joinRequest) {
+
+        // 이미 존재하는 Member인지 검증
+        String username = joinRequest.getEmail();
+        if (memberRepository.existsByUsername(username)) {
+            throw new DuplicateResourceException(ErrorCode.USER_ALREADY_REGISTERED, username);
+        }
+
+        // Member 등록
+        Member newMember = createNewMember(joinRequest);
+        Member savedMember = memberRepository.save(newMember);
+
+        return savedMember;
+    }
+
+    /**
+     * 새로운 Member 생성
+     */
+    private Member createNewMember(JoinRequest joinRequest){
         String username = joinRequest.getEmail();
         String nickname = generateNickname();
         String password = bCryptPasswordEncoder.encode(joinRequest.getPassword());
         String email = joinRequest.getEmail();
 
-        // 이미 존재하는 유저인지 검증
-        if (memberRepository.existsByUsername(username)) {
-            throw new UserAlreadyRegisteredException(ErrorCode.USER_ALREADY_REGISTERED, username);
-        }
-
-        // Member 생성 기본 양식
         Member member = Member.builder()
                 .username(username)
                 .nickname(nickname)
@@ -48,11 +60,12 @@ public class MemberJoinService {
         member.agreeTerms();
         member.activateAccount();
 
-        Member savedMember = memberRepository.save(member);
-        LOGGER.info("Member {} created successfully.", username);
-        return savedMember;
+        return member;
     }
 
+    /**
+     * 무작위 Nickname 생성
+     */
     private String generateNickname() {
         String nickname;
         do {

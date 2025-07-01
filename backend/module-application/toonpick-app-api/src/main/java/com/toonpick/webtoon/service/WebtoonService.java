@@ -1,14 +1,12 @@
 package com.toonpick.webtoon.service;
 
 
-import com.toonpick.dto.PagedResponseDTO;
-import com.toonpick.dto.WebtoonFilterDTO;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.exception.ResourceNotFoundException;
-import com.toonpick.repository.WebtoonAnalysisRepository;
-import com.toonpick.repository.WebtoonRepository;
-import com.toonpick.type.ErrorCode;
-import com.toonpick.webtoon.mapper.WebtoonAnalysisMapper;
+import com.toonpick.domain.dto.PagedResponseDTO;
+import com.toonpick.domain.webtoon.dto.WebtoonFilterDTO;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.common.exception.EntityNotFoundException;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
+import com.toonpick.common.type.ErrorCode;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
 import com.toonpick.webtoon.response.WebtoonResponse;
@@ -31,8 +29,6 @@ public class WebtoonService {
 
     private final WebtoonRepository webtoonRepository;
     private final WebtoonMapper webtoonMapper;
-    private final WebtoonAnalysisRepository analysisRepository;
-    private final WebtoonAnalysisMapper analysisMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(WebtoonService.class);
 
@@ -42,7 +38,7 @@ public class WebtoonService {
     @Transactional(readOnly = true)
     public WebtoonResponse getWebtoon(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, String.valueOf(id)));
         return webtoonMapper.toWebtoonResponse(webtoon);
     }
 
@@ -51,15 +47,12 @@ public class WebtoonService {
      */
     public WebtoonDetailsResponse getWebtoonDetails(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, id));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, String.valueOf(id)));
 
         // 기본 정보 매핑
         WebtoonDetailsResponse webtoonDetails = webtoonMapper.toWebtoonDetailsResponse(webtoon);
 
         // 분석 데이터 조회 및 매핑
-        analysisRepository.findByWebtoonId(id)
-                .map(analysisMapper::toDto)
-                .ifPresent(webtoonDetails::setAnalysisData);
 
         // todo : 유사 웹툰 (옵션) 추가 예정
 

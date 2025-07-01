@@ -1,7 +1,7 @@
 package com.toonpick.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.toonpick.enums.AuthorRole;
+import com.toonpick.domain.webtoon.enums.AuthorRole;
 import lombok.Builder;
 import lombok.Getter;
 

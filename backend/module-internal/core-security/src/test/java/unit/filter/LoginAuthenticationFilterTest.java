@@ -1,8 +1,8 @@
 package unit.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toonpick.dto.LoginRequest;
-import com.toonpick.exception.CustomAuthenticationException;
+import com.toonpick.internal.security.dto.LoginRequest;
+import com.toonpick.internal.security.exception.CustomAuthenticationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import com.toonpick.filter.LoginAuthenticationFilter;
+import com.toonpick.internal.security.filter.LoginAuthenticationFilter;
 
 import java.nio.charset.StandardCharsets;
 

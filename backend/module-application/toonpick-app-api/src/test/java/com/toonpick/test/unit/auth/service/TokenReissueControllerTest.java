@@ -1,7 +1,7 @@
 package com.toonpick.test.unit.auth.service;
 
 import com.toonpick.auth.service.AuthTokenService;
-import com.toonpick.exception.InvalidJwtTokenException;
+import com.toonpick.internal.security.exception.InvalidJwtTokenException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,17 +16,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.toonpick.auth.controller.TokenReissueController;
-import com.toonpick.jwt.JwtTokenProvider;
-import com.toonpick.jwt.JwtTokenValidator;
-import com.toonpick.utils.CookieUtils;
+import com.toonpick.internal.security.jwt.JwtTokenProvider;
+import com.toonpick.internal.security.jwt.JwtTokenValidator;
+import com.toonpick.internal.security.utils.CookieUtils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TokenReissueControllerTest {
@@ -52,33 +48,46 @@ class TokenReissueControllerTest {
         String refreshToken = "valid-refresh-token";
         String newAccessToken = "new-access-token";
 
-        when(jwtTokenValidator.extractRefreshTokenFromCookies(request)).thenReturn(refreshToken);
-        doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
-        when(authTokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
-        when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(false);
+        try (MockedStatic<CookieUtils> mockedStatic = Mockito.mockStatic(CookieUtils.class)) {
+            mockedStatic
+                    .when(() -> CookieUtils.extractCookiesFromRequest(request, "refresh"))
+                    .thenReturn(refreshToken);
 
-        ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
+            doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
+            when(authTokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
+            when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(false);
 
-        verify(response).setHeader("Authorization", "Bearer " + newAccessToken);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+            ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
+
+            verify(response).setHeader("Authorization", "Bearer " + newAccessToken);
+            assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        }
     }
 
     @Test
     @DisplayName("유효하지 않은 Refresh Token으로 요청 시 오류 발생")
     void testReissue_InvalidRefreshToken() {
+        // given
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
-
         String invalidRefreshToken = "invalid-refresh-token";
 
-        when(jwtTokenValidator.extractRefreshTokenFromCookies(request)).thenReturn(invalidRefreshToken);
-        doThrow(new InvalidJwtTokenException("Invalid token")).when(jwtTokenValidator).validateRefreshToken(invalidRefreshToken);
+        try (MockedStatic<CookieUtils> mockedStatic = Mockito.mockStatic(CookieUtils.class)) {
+            mockedStatic
+                .when(() -> CookieUtils.extractCookiesFromRequest(request, "refresh"))
+                .thenReturn(invalidRefreshToken);
 
-        ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
+            // jwtTokenValidator에서 예외 발생하도록 설정
+            doThrow(new InvalidJwtTokenException("Invalid token"))
+                .when(jwtTokenValidator).validateRefreshToken(invalidRefreshToken);
 
-        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
-        assertEquals("Invalid token", responseEntity.getBody());
+            // when & then
+            assertThrows(InvalidJwtTokenException.class, () -> {
+                tokenReissueController.reissue(request, response);
+            });
+        }
     }
+
 
     @Test
     @DisplayName("Access Token 갱신 시 Refresh Token 만료 임박으로 새 Refresh Token 발급")
@@ -90,14 +99,18 @@ class TokenReissueControllerTest {
         String newAccessToken = "new-access-token";
         String newRefreshToken = "new-refresh-token";
 
-        when(jwtTokenValidator.extractRefreshTokenFromCookies(request)).thenReturn(refreshToken);
-        doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
-        when(authTokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
-        when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(true);
-        when(authTokenService.reissueRefreshToken(refreshToken)).thenReturn(newRefreshToken);
-        try (MockedStatic<CookieUtils> mockedCookieUtils = Mockito.mockStatic(CookieUtils.class)) {
-            mockedCookieUtils.when(() -> CookieUtils.createRefreshCookie(newRefreshToken))
+        try (MockedStatic<CookieUtils> mockedStatic = Mockito.mockStatic(CookieUtils.class)) {
+            mockedStatic
+                    .when(() -> CookieUtils.extractCookiesFromRequest(request, "refresh"))
+                    .thenReturn(refreshToken);
+            mockedStatic
+                    .when(() -> CookieUtils.createRefreshCookie(newRefreshToken))
                     .thenReturn(new Cookie("refresh", newRefreshToken));
+
+            doNothing().when(jwtTokenValidator).validateRefreshToken(refreshToken);
+            when(authTokenService.reissueAccessToken(refreshToken)).thenReturn(newAccessToken);
+            when(jwtTokenProvider.isRefreshTokenAboutToExpire(refreshToken)).thenReturn(true);
+            when(authTokenService.reissueRefreshToken(refreshToken)).thenReturn(newRefreshToken);
 
             ResponseEntity<?> responseEntity = tokenReissueController.reissue(request, response);
 
@@ -106,5 +119,6 @@ class TokenReissueControllerTest {
             assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         }
     }
+
 
 }

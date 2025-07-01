@@ -1,32 +1,33 @@
 package com.toonpick.review.service;
 
-import com.toonpick.dto.PagedResponseDTO;
-import com.toonpick.entity.Member;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.exception.DatabaseOperationException;
-import com.toonpick.exception.ResourceNotFoundException;
-import com.toonpick.repository.MemberRepository;
-import com.toonpick.repository.WebtoonRepository;
-import com.toonpick.repository.ReviewLikeRepository;
-import com.toonpick.repository.WebtoonReviewRepository;
+import com.toonpick.domain.dto.PagedResponseDTO;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.domain.review.entity.ReviewLike;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.domain.review.entity.WebtoonReview;
+import com.toonpick.common.exception.EntityNotFoundException;
+import com.toonpick.common.exception.InternalServerException;
+import com.toonpick.domain.member.repository.MemberRepository;
+import com.toonpick.domain.review.repository.ReviewLikeRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
+import com.toonpick.domain.review.repository.WebtoonReviewRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonStatisticsRepository;
+import com.toonpick.review.mapper.WebtoonReviewMapper;
 import com.toonpick.review.request.WebtoonReviewCreateRequest;
 import com.toonpick.review.request.WebtoonReviewUpdateRequest;
 import com.toonpick.review.response.WebtoonReviewResponse;
-import com.toonpick.type.ErrorCode;
+import com.toonpick.common.type.ErrorCode;
+
 import jakarta.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.toonpick.entity.ReviewLike;
-import com.toonpick.entity.WebtoonReview;
-import com.toonpick.review.mapper.WebtoonReviewMapper;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ public class WebtoonReviewService {
     private final ReviewLikeRepository reviewLikeRepository;
     private final MemberRepository memberRepository;
     private final WebtoonRepository webtoonRepository;
+    private final WebtoonStatisticsRepository webtoonStatisticsRepository;
 
     private final WebtoonReviewMapper webtoonReviewMapper = WebtoonReviewMapper.INSTANCE;
 
@@ -51,9 +53,9 @@ public class WebtoonReviewService {
     @Transactional
     public WebtoonReviewResponse createReview(WebtoonReviewCreateRequest reviewCreateRequest, String username) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         Webtoon webtoon = webtoonRepository.findById(reviewCreateRequest.getWebtoonId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, reviewCreateRequest.getWebtoonId()));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, String.valueOf(reviewCreateRequest.getWebtoonId())));
 
         WebtoonReview review = WebtoonReview.builder()
                 .member(member)
@@ -66,7 +68,7 @@ public class WebtoonReviewService {
         WebtoonReview savedReview = webtoonReviewRepository.save(review);
 
         // todo : Webtoon 평점에 반영(업데이트/비동기 로직 고려)
-        webtoonRepository.addReview(webtoon.getId(), reviewCreateRequest.getRating());
+        webtoonStatisticsRepository.addReview(webtoon.getId(), reviewCreateRequest.getRating());
 
         return webtoonReviewMapper.toWebtoonReviewResponse(savedReview);
     }
@@ -75,7 +77,7 @@ public class WebtoonReviewService {
     @Transactional(readOnly = true)
     public WebtoonReviewResponse getReview(Long reviewId) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.REVIEW_NOT_FOUND, reviewId));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.REVIEW_NOT_FOUND, String.valueOf(reviewId)));
 
         return webtoonReviewMapper.toWebtoonReviewResponse(review);
     }
@@ -84,7 +86,7 @@ public class WebtoonReviewService {
     @Transactional
     public WebtoonReviewResponse updateReview(Long reviewId, WebtoonReviewUpdateRequest reviewUpdateRequest) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.REVIEW_NOT_FOUND, reviewId));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.REVIEW_NOT_FOUND, String.valueOf(reviewId)));
         float oldRating = review.getRating();
 
         review.updateRating(reviewUpdateRequest.getRating());
@@ -93,7 +95,7 @@ public class WebtoonReviewService {
         WebtoonReview updatedReview = webtoonReviewRepository.save(review);
 
         // todo : Webtoon 평점 업데이트
-        webtoonRepository.updateReview(review.getWebtoon().getId(), oldRating, reviewUpdateRequest.getRating());
+        webtoonStatisticsRepository.updateReview(review.getWebtoon().getId(), oldRating, reviewUpdateRequest.getRating());
 
         return webtoonReviewMapper.toWebtoonReviewResponse(updatedReview);
     }
@@ -102,8 +104,8 @@ public class WebtoonReviewService {
     @Transactional
     public void deleteReview(Long reviewId) {
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.REVIEW_NOT_FOUND, reviewId));
-        webtoonRepository.removeReview(review.getWebtoon().getId(), review.getRating());
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.REVIEW_NOT_FOUND, String.valueOf(reviewId)));
+        webtoonStatisticsRepository.removeReview(review.getWebtoon().getId(), review.getRating());
 
         webtoonReviewRepository.delete(review);
     }
@@ -113,9 +115,9 @@ public class WebtoonReviewService {
     @Transactional
     public CompletableFuture<Boolean> toggleLike(String username, Long reviewId) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         WebtoonReview review = webtoonReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.REVIEW_NOT_FOUND, reviewId));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.REVIEW_NOT_FOUND, String.valueOf(reviewId)));
 
         try {
             Optional<ReviewLike> existingLike = reviewLikeRepository.findByMemberAndReview(member, review);
@@ -132,9 +134,9 @@ public class WebtoonReviewService {
                 return CompletableFuture.completedFuture(true);
             }
         } catch (DataAccessException e) {
-            throw new DatabaseOperationException(ErrorCode.DATABASE_ERROR, e);
+            throw new InternalServerException(ErrorCode.DATABASE_ERROR, e);
         } catch (Exception e) {
-            throw new RuntimeException(ErrorCode.UNKNOWN_ERROR.getMessage(), e);
+            throw new InternalServerException(ErrorCode.UNKNOWN_ERROR.getMessage(), e);
         }
     }
 
@@ -147,7 +149,7 @@ public class WebtoonReviewService {
                 webtoonReviewRepository.decrementLikes(reviewId);
             }
         } catch (DataAccessException e) {
-            throw new DatabaseOperationException(ErrorCode.LIKE_COUNT_UPDATE_ERROR, e);
+            throw new InternalServerException(ErrorCode.LIKE_COUNT_UPDATE_ERROR, e);
         }
         return CompletableFuture.completedFuture(null);
     }
@@ -159,12 +161,12 @@ public class WebtoonReviewService {
             Long webtoonId, String sortBy, int page, int size, @Nullable String username) {
 
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, webtoonId));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, String.valueOf(webtoonId)));
 
         Member member = null;
         if (username != null) {
             member = memberRepository.findByUsername(username)
-                    .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         }
 
         Sort sort = "best".equalsIgnoreCase(sortBy)
@@ -204,9 +206,9 @@ public class WebtoonReviewService {
     @Transactional(readOnly = true)
     public Optional<WebtoonReviewResponse> getUserReviewForWebtoon(String username, Long webtoonId) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         Webtoon webtoon = webtoonRepository.findById(webtoonId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, webtoonId));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, String.valueOf(webtoonId)));
 
         Optional<WebtoonReview> reviewOpt = webtoonReviewRepository.findWebtoonReviewByMemberAndWebtoon(member, webtoon);
         return reviewOpt.map(webtoonReviewMapper::toWebtoonReviewResponse);

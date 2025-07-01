@@ -1,18 +1,20 @@
 package com.toonpick.member.service;
 
-import com.toonpick.member.response.MemberResponseDTO;
-import com.toonpick.entity.Member;
+
+
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.member.mapper.MemberMapper;
-import com.toonpick.repository.MemberRepository;
-import com.toonpick.service.AwsS3StorageService;
+import com.toonpick.member.request.MemberProfileRequestDTO;
+import com.toonpick.member.response.MemberProfileDetailsResponse;
+import com.toonpick.member.response.MemberProfileResponse;
+import com.toonpick.member.response.MemberResponseDTO;
+import com.toonpick.domain.member.repository.MemberRepository;
+import com.toonpick.internal.storage.service.AwsS3StorageService;
+import com.toonpick.common.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.toonpick.member.response.MemberProfileDetailsResponse;
-import com.toonpick.member.request.MemberProfileRequestDTO;
-import com.toonpick.member.response.MemberProfileResponse;
-import com.toonpick.type.ErrorCode;
-import com.toonpick.exception.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
@@ -29,7 +31,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberProfileResponse getProfile(String username) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         return memberMapper.memberToProfileResponseDTO(member);
     }
 
@@ -37,7 +39,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberProfileDetailsResponse getProfileDetails(String username) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         return memberMapper.memberToProfileDetailsResponseDTO(member);
     }
 
@@ -45,7 +47,7 @@ public class MemberService {
     @Transactional
     public void updateProfile(String username, MemberProfileRequestDTO memberProfileRequestDTO) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
         member.updateNickname(
                 memberProfileRequestDTO.getNickname()
@@ -60,7 +62,7 @@ public class MemberService {
     @Transactional
     public void changePassword(String username, String newPassword) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
         member.changePassword(newPassword);
 
@@ -73,7 +75,7 @@ public class MemberService {
     public String updateProfileImage(String username, MultipartFile imageFile) {
 
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
         String fileName = "profile-images/" + username + "/" + UUID.randomUUID() + ".webp";
         String profileImageUrl = awsS3StorageService.uploadFile(imageFile, fileName);
@@ -89,7 +91,7 @@ public class MemberService {
     @Transactional
     public void verifyAdult(String username) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
 
         member.verifyAdult();
 
@@ -100,7 +102,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberResponseDTO getMemberByUsername(String username) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, username));
         return memberMapper.memberToMemberResponseDTO(member);
     }
 

@@ -1,6 +1,6 @@
 package com.toonpick.auth.controller;
 
-import com.toonpick.dto.JoinRequest;
+import com.toonpick.internal.security.dto.JoinRequest;
 import com.toonpick.auth.service.MemberJoinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
