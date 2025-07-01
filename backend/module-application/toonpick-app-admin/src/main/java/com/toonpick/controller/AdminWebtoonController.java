@@ -3,7 +3,7 @@ package com.toonpick.controller;
 
 import com.toonpick.dto.request.WebtoonCreateRequest;
 import com.toonpick.dto.request.WebtoonUpdateRequest;
-import com.toonpick.response.ApiResponse;
+import com.toonpick.internal.web.response.ApiResponse;
 import com.toonpick.service.WebtoonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

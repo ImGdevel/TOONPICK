@@ -1,6 +1,6 @@
 package com.toonpick.auth.user;
 
-import com.toonpick.dto.MemberDTO;
+import com.toonpick.domain.member.dto.MemberDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

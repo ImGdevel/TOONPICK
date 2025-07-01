@@ -17,6 +17,8 @@ include 'module-domain:domain-common'
 findProject(':module-domain:domain-common')?.name = 'domain-common'
 include 'module-domain:domain-member'
 findProject(':module-domain:domain-member')?.name = 'domain-member'
+include 'module-domain:domain-auth'
+findProject(':module-domain:domain-auth')?.name = 'domain-auth'
 include 'module-domain:domain-webtoon'
 findProject(':module-domain:domain-webtoon')?.name = 'domain-webtoon'
 include 'module-domain:domain-member-engagement'
@@ -33,9 +35,6 @@ findProject(':module-domain:domain-webtoon-recommend')?.name = 'domain-webtoon-r
 
 // 내부 모듈
 include 'module-internal'
-
-include 'module-domain:domain-auth'
-findProject(':module-domain:domain-auth')?.name = 'domain-auth'
 include 'module-internal:core-security'
 findProject(':module-internal:core-security')?.name = 'core-security'
 include 'module-internal:client-storage'
@@ -48,8 +47,6 @@ include 'module-internal:client-auth'
 findProject(':module-internal:client-auth')?.name = 'client-auth'
 include 'module-internal:core-web'
 findProject(':module-internal:core-web')?.name = 'core-web'
-include 'module-internal:core-web-support'
-findProject(':module-internal:core-web-support')?.name = 'core-web-support'
 
 // 공통 모듈
 include 'module-common'

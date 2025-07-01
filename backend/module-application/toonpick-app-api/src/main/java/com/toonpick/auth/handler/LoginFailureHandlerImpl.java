@@ -1,8 +1,7 @@
 package com.toonpick.auth.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toonpick.handler.LoginFailureHandler;
-import com.toonpick.handler.LoginSuccessHandler;
+import com.toonpick.internal.security.handler.LoginFailureHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;

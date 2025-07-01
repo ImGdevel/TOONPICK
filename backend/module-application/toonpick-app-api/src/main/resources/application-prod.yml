@@ -8,6 +8,14 @@ spring:
       jdbc-url: jdbc:mariadb://${DB_MARIADB_HOST}:${DB_MARIADB_PORT}/${DB_MARIADB_NAME}?useSSL=false&useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Seoul{DB_MARIADB_ADDITIONAL_PARAMS}
       username: ${DB_MARIADB_USERNAME}
       password: ${DB_MARIADB_PASSWORD}
+      hikari:
+        max-lifetime: 1800000
+        idle-timeout: 600000
+        minimum-idle: 5
+        maximum-pool-size: 20
+        validation-timeout: 5000
+        keepalive-time: 300000
+        connection-test-query: SELECT 1
 
   data:
     redis:
@@ -65,14 +73,13 @@ spring:
         bucket: ${AWS_S3_BUCKET}
       sqs:
         queue:
-          request:
-            name: ${AWS_SQS_UPDATE_REQUEST_QUEUE_NAME}
-            url: ${AWS_SQS_UPDATE_REQUEST_QUEUE_URL}
-          response:
-            name: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_NAME}
-            url: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_URL}
+          webtoon-create-request: ${AWS_SQS_WEBTOON_CREATE_REQUEST}
+          webtoon-update-request: ${AWS_SQS_WEBTOON_UPDATE_REQUEST}
+          webtoon-create-complete: ${AWS_SQS_WEBTOON_CREATE_COMPLETE}
+          webtoon-update-complete: ${AWS_SQS_WEBTOON_UPDATE_COMPLETE}
         auto-create: false
         enabled: false
+
 
 logging:
   level:

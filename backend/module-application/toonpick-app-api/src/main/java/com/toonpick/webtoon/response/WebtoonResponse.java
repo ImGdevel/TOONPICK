@@ -2,8 +2,8 @@ package com.toonpick.webtoon.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.toonpick.enums.AgeRating;
-import com.toonpick.enums.SerializationStatus;
+import com.toonpick.domain.webtoon.enums.AgeRating;
+import com.toonpick.domain.webtoon.enums.SerializationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;

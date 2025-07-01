@@ -1,15 +1,15 @@
 package com.toonpick.test.unit.member.service;
 
-import com.toonpick.entity.Member;
-import com.toonpick.entity.MemberWebtoonInteraction;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.enums.WatchingStatus;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.domain.member.entity.MemberWebtoonInteraction;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.domain.member.enums.WatchingStatus;
 import com.toonpick.member.request.LastReadUpdateRequest;
 import com.toonpick.member.request.WebtoonInteractionResponse;
 import com.toonpick.member.service.MemberWebtoonInteractionService;
-import com.toonpick.repository.MemberRepository;
-import com.toonpick.repository.MemberWebtoonInteractionRepository;
-import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.domain.member.repository.MemberRepository;
+import com.toonpick.domain.member.repository.MemberWebtoonInteractionRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

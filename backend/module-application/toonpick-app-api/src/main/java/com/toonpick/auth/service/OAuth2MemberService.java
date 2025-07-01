@@ -1,18 +1,18 @@
 package com.toonpick.auth.service;
 
 
-import com.toonpick.dto.OAuth2ResponseFactory;
+import com.toonpick.internal.security.dto.OAuth2ResponseFactory;
 import com.toonpick.auth.user.CustomOAuth2UserDetails;
-import com.toonpick.dto.MemberDTO;
-import com.toonpick.dto.OAuth2Response;
-import com.toonpick.entity.Member;
-import com.toonpick.entity.MemberSocialLogin;
-import com.toonpick.enums.MemberRole;
-import com.toonpick.enums.Provider;
+import com.toonpick.domain.member.dto.MemberDTO;
+import com.toonpick.internal.security.dto.OAuth2Response;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.domain.member.entity.MemberSocialLogin;
+import com.toonpick.domain.member.enums.MemberRole;
+import com.toonpick.domain.member.enums.Provider;
 import com.toonpick.member.mapper.MemberMapper;
-import com.toonpick.repository.MemberRepository;
-import com.toonpick.repository.MemberSocialLoginRepository;
-import com.toonpick.utils.ShortIdUtil;
+import com.toonpick.domain.member.repository.MemberRepository;
+import com.toonpick.domain.member.repository.MemberSocialLoginRepository;
+import com.toonpick.common.utils.ShortIdUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

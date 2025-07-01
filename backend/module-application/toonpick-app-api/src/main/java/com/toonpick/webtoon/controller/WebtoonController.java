@@ -1,7 +1,7 @@
 package com.toonpick.webtoon.controller;
 
-import com.toonpick.dto.PagedResponseDTO;
-import com.toonpick.dto.WebtoonFilterDTO;
+import com.toonpick.domain.dto.PagedResponseDTO;
+import com.toonpick.domain.webtoon.dto.WebtoonFilterDTO;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
 import com.toonpick.webtoon.response.WebtoonResponse;
 import com.toonpick.webtoon.service.WebtoonService;

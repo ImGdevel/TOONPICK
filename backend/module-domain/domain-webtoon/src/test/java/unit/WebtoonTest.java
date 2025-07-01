@@ -3,11 +3,11 @@ package unit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.toonpick.entity.Author;
-import com.toonpick.entity.Genre;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.enums.AgeRating;
-import com.toonpick.enums.SerializationStatus;
+import com.toonpick.domain.webtoon.entity.Author;
+import com.toonpick.domain.webtoon.entity.Genre;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.domain.webtoon.enums.AgeRating;
+import com.toonpick.domain.webtoon.enums.SerializationStatus;
 
 
 import java.time.DayOfWeek;

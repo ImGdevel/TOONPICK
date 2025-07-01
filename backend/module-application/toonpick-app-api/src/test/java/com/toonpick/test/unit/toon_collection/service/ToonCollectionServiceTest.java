@@ -1,13 +1,13 @@
 package com.toonpick.test.unit.toon_collection.service;
 
-import com.toonpick.entity.Member;
-import com.toonpick.entity.ToonCollection;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.exception.EntityNotFoundException;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.domain.member.entity.ToonCollection;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.member.response.MemberProfileResponse;
-import com.toonpick.repository.MemberRepository;
-import com.toonpick.repository.ToonCollectionRepository;
-import com.toonpick.repository.WebtoonRepository;
+import com.toonpick.domain.member.repository.MemberRepository;
+import com.toonpick.domain.member.repository.ToonCollectionRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import com.toonpick.toon_collection.mapper.ToonCollectionMapper;
 import com.toonpick.toon_collection.response.ToonCollectionResponseDTO;
 import com.toonpick.toon_collection.service.ToonCollectionService;
@@ -20,7 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.webjars.NotFoundException;
 
 
 import java.util.List;

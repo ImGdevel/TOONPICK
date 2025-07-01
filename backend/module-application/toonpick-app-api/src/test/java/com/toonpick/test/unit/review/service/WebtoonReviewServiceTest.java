@@ -1,15 +1,15 @@
 package com.toonpick.test.unit.review.service;
 
-import com.toonpick.dto.PagedResponseDTO;
-import com.toonpick.entity.Member;
-import com.toonpick.entity.ReviewLike;
-import com.toonpick.entity.Webtoon;
-import com.toonpick.entity.WebtoonReview;
-import com.toonpick.repository.MemberRepository;
-import com.toonpick.repository.ReviewLikeRepository;
-import com.toonpick.repository.WebtoonRepository;
-import com.toonpick.repository.WebtoonReviewRepository;
-import com.toonpick.repository.WebtoonStatisticsRepository;
+import com.toonpick.domain.dto.PagedResponseDTO;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.domain.review.entity.ReviewLike;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.domain.review.entity.WebtoonReview;
+import com.toonpick.domain.member.repository.MemberRepository;
+import com.toonpick.domain.review.repository.ReviewLikeRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
+import com.toonpick.domain.review.repository.WebtoonReviewRepository;
+import com.toonpick.domain.webtoon.repository.WebtoonStatisticsRepository;
 import com.toonpick.review.request.WebtoonReviewCreateRequest;
 import com.toonpick.review.request.WebtoonReviewUpdateRequest;
 import com.toonpick.review.response.WebtoonReviewResponse;

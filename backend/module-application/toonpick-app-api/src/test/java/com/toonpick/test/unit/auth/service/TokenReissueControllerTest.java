@@ -1,7 +1,7 @@
 package com.toonpick.test.unit.auth.service;
 
 import com.toonpick.auth.service.AuthTokenService;
-import com.toonpick.exception.InvalidJwtTokenException;
+import com.toonpick.internal.security.exception.InvalidJwtTokenException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,9 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.toonpick.auth.controller.TokenReissueController;
-import com.toonpick.jwt.JwtTokenProvider;
-import com.toonpick.jwt.JwtTokenValidator;
-import com.toonpick.utils.CookieUtils;
+import com.toonpick.internal.security.jwt.JwtTokenProvider;
+import com.toonpick.internal.security.jwt.JwtTokenValidator;
+import com.toonpick.internal.security.utils.CookieUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

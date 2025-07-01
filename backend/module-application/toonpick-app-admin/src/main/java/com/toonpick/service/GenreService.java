@@ -1,8 +1,8 @@
 package com.toonpick.service;
 
 
-import com.toonpick.entity.Genre;
-import com.toonpick.repository.GenreRepository;
+import com.toonpick.domain.webtoon.entity.Genre;
+import com.toonpick.domain.webtoon.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

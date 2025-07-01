@@ -1,6 +1,6 @@
 package com.toonpick.auth.request;
 
-import com.toonpick.constants.ValidationPatterns;
+import com.toonpick.common.constants.ValidationPatterns;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
