@@ -20,10 +20,3 @@ management:
     health:
       show-details: always
 
-# 배치 처리 설정
-batch:
-  size: 5
-  delay-ms: 1000
-  retry:
-    count: 2
-    base-delay-ms: 1000
