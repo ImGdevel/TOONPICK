@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    aws:
+      credentials:
+        access-key: test
+        secret-key: test
+      region:
+        static: test
+      s3:
+        bucket: test
+      sqs:
+        queue:
+          webtoon-create-request: test
+          webtoon-update-request: test
+          webtoon-create-complete: test
+          webtoon-update-complete: test
+        auto-create: false
+        enabled: false
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
