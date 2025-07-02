@@ -4,18 +4,14 @@ import com.toonpick.internal.security.constants.SecurityConstants;
 import com.toonpick.internal.security.filter.CustomLogoutFilter;
 import com.toonpick.internal.security.filter.JwtAuthorizationFilter;
 import com.toonpick.internal.security.filter.LoginAuthenticationFilter;
-import com.toonpick.internal.security.handler.LoginFailureHandler;
-import com.toonpick.internal.security.handler.LoginSuccessHandler;
-import com.toonpick.internal.security.handler.LogoutHandler;
-import com.toonpick.internal.security.handler.OAuth2SuccessHandler;
-import com.toonpick.internal.security.handler.RestAccessDeniedHandler;
-import com.toonpick.internal.security.handler.RestAuthenticationEntryPoint;
+import com.toonpick.internal.security.handler.*;
 import com.toonpick.internal.security.jwt.JwtTokenProvider;
 import com.toonpick.internal.security.jwt.JwtTokenValidator;
 import com.toonpick.internal.security.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,6 +30,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 
+@Profile("!test")
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor

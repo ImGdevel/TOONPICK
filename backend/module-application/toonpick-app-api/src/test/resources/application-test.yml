@@ -8,14 +8,11 @@ spring:
         static: test
       s3:
         bucket: test
-      sqs:
-        queue:
-          webtoon-create-request: test
-          webtoon-update-request: test
-          webtoon-create-complete: test
-          webtoon-update-complete: test
-        auto-create: false
-        enabled: false
+
+  jwt:
+    secret: 1234
+    access-token-expiration: 600
+    refresh-token-expiration: 3600
 
 logging:
   level:
