@@ -1,12 +1,10 @@
 package com.toonpick.webtoon.response;
 
-import com.toonpick.domain.webtoon.enums.SerializationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,9 +24,9 @@ public class WebtoonSummaryResponse {
 
     private String thumbnailUrl;
 
-    private SerializationStatus status;
+    private String status;
 
-    private DayOfWeek dayOfWeek;
+    private String dayOfWeek;
 
     private Float averageRating;
 

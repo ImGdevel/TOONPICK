@@ -39,14 +39,14 @@ class WebtoonServiceIntegrationTest {
             .title("테스트 웹툰")
             .externalId("EXT-1")
             .dayOfWeek(java.time.DayOfWeek.MONDAY)
-            .thumbnailUrl("http://test.com/thumb.png")
+            .thumbnailUrl("http://test.com/image.png")
             .ageRating(AgeRating.ALL)
             .summary("테스트 웹툰 요약")
             .serializationStatus(SerializationStatus.ONGOING)
             .publishStartDate(java.time.LocalDate.now().minusDays(10))
             .lastUpdatedDate(java.time.LocalDate.now())
             .build();
-        webtoonRepository.save(webtoon);
+        Webtoon webtoonSaved =  webtoonRepository.save(webtoon);
     }
 
     @Test
@@ -69,6 +69,24 @@ class WebtoonServiceIntegrationTest {
     }
 
     @Test
+    @DisplayName("웹툰 목록 조회 및 필터 적용 목록 조회 - 실제 데이터 값 검증")
+    void getWebtoonsByFilter_실제_값_검증() throws Exception {
+        WebtoonFilterDTO filter = new WebtoonFilterDTO();
+
+        mockMvc.perform(post("/api/v1/webtoons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(filter))
+                        .param("page", "0")
+                        .param("size", "10")
+                        .param("sortBy", "title")
+                        .param("sortDir", "asc"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].title").value("테스트 웹툰"))
+                .andExpect(jsonPath("$.data[0].status").value("ONGOING"))
+        ;
+    }
+
+    @Test
     @DisplayName("웹툰 상세 정보 조회")
     void getWebtoonDetails_상세_조회_기본_동작_테스트() throws Exception {
         // given
@@ -78,5 +96,21 @@ class WebtoonServiceIntegrationTest {
         mockMvc.perform(get("/api/v1/webtoons/detail/{id}", webtoonId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(webtoonId));
+    }
+
+    @Test
+    @DisplayName("웹툰 상세 정보 조회 - 실제 데이터 값 검증")
+    void getWebtoonDetails_상세_조회_실제_값_검증() throws Exception {
+        Webtoon webtoon = webtoonRepository.findAll().get(0);
+        Long webtoonId = webtoon.getId();
+
+        mockMvc.perform(get("/api/v1/webtoons/detail/{id}", webtoonId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(webtoonId))
+                .andExpect(jsonPath("$.title").value("테스트 웹툰"))
+                .andExpect(jsonPath("$.summary").value("테스트 웹툰 요약"))
+                .andExpect(jsonPath("$.ageRating").value("ALL"))
+                .andExpect(jsonPath("$.status").value("ONGOING"))
+                .andExpect(jsonPath("$.thumbnailUrl").value("http://test.com/image.png"));
     }
 } 
