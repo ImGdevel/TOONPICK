@@ -1,13 +1,11 @@
 package com.toonpick.webtoon.response;
 
 import com.toonpick.domain.webtoon.enums.AgeRating;
-import com.toonpick.domain.webtoon.enums.SerializationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,15 +19,17 @@ import java.util.List;
 @NoArgsConstructor
 public class WebtoonDetailsResponse {
 
+    /// 기본 상세 정보
+    
     private Long id;
 
     private String title;
 
-    private String description;
+    private String summary;
 
-    private SerializationStatus status;
+    private String status;
 
-    private DayOfWeek dayOfWeek;
+    private String dayOfWeek;
 
     private String thumbnailUrl;
 
@@ -51,4 +51,11 @@ public class WebtoonDetailsResponse {
 
     private LocalDate lastUpdateDate;
 
+
+    /// 추가 상세정보
+
+    // todo : 추가 - 비슷한 웹툰 필드 추가
+    // todo : 추가 -
+
+    // todo : 추가 - 웹툰 분석 데이터
 }
