@@ -9,7 +9,7 @@ import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import com.toonpick.test.config.UnitTest;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
-import com.toonpick.webtoon.response.WebtoonResponse;
+import com.toonpick.webtoon.response.WebtoonSummaryResponse;
 import com.toonpick.webtoon.service.WebtoonService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,17 +41,17 @@ class WebtoonServiceTest {
         // given
         Long id = 1L;
         Webtoon webtoon = mock(Webtoon.class);
-        WebtoonResponse response = mock(WebtoonResponse.class);
+        WebtoonSummaryResponse response = mock(WebtoonSummaryResponse.class);
         when(webtoonRepository.findById(id)).thenReturn(Optional.of(webtoon));
-        when(webtoonMapper.toWebtoonResponse(webtoon)).thenReturn(response);
+        when(webtoonMapper.toWebtoonSummaryResponse(webtoon)).thenReturn(response);
 
         // when
-        WebtoonResponse result = webtoonService.getWebtoon(id);
+        WebtoonSummaryResponse result = webtoonService.getWebtoon(id);
 
         // then
         assertEquals(response, result);
         verify(webtoonRepository).findById(id);
-        verify(webtoonMapper).toWebtoonResponse(webtoon);
+        verify(webtoonMapper).toWebtoonSummaryResponse(webtoon);
     }
 
     @Test
@@ -105,20 +105,20 @@ class WebtoonServiceTest {
         int page = 0, size = 10;
         String sortBy = "title", sortDir = "ASC";
         Webtoon webtoon = mock(Webtoon.class);
-        WebtoonResponse response = mock(WebtoonResponse.class);
+        WebtoonSummaryResponse response = mock(WebtoonSummaryResponse.class);
         List<Webtoon> webtoonList = List.of(webtoon);
         Page<Webtoon> webtoonPage = new PageImpl<>(webtoonList, PageRequest.of(page, size), 1);
         when(webtoonRepository.findWebtoonsByFilterOptions(filter, PageRequest.of(page, size, Sort.Direction.ASC, sortBy))).thenReturn(webtoonPage);
-        when(webtoonMapper.toWebtoonResponse(webtoon)).thenReturn(response);
+        when(webtoonMapper.toWebtoonSummaryResponse(webtoon)).thenReturn(response);
 
         // when
-        PagedResponseDTO<WebtoonResponse> result = webtoonService.getWebtoonsOptions(filter, page, size, sortBy, sortDir);
+        PagedResponseDTO<WebtoonSummaryResponse> result = webtoonService.getWebtoonsOptions(filter, page, size, sortBy, sortDir);
 
         // then
         assertNotNull(result);
         assertEquals(1, result.getData().size());
         assertEquals(response, result.getData().get(0));
         verify(webtoonRepository).findWebtoonsByFilterOptions(filter, PageRequest.of(page, size, Sort.Direction.ASC, sortBy));
-        verify(webtoonMapper).toWebtoonResponse(webtoon);
+        verify(webtoonMapper).toWebtoonSummaryResponse(webtoon);
     }
 } 
