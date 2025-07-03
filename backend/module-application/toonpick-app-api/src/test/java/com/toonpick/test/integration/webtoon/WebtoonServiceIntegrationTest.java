@@ -65,22 +65,7 @@ class WebtoonServiceIntegrationTest {
                         .param("sortDir", "asc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
-                .andExpect(jsonPath("$.page").value(0));
-    }
-
-    @Test
-    @DisplayName("웹툰 목록 조회 및 필터 적용 목록 조회 - 실제 데이터 값 검증")
-    void getWebtoonsByFilter_실제_값_검증() throws Exception {
-        WebtoonFilterDTO filter = new WebtoonFilterDTO();
-
-        mockMvc.perform(post("/api/v1/webtoons")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(filter))
-                        .param("page", "0")
-                        .param("size", "10")
-                        .param("sortBy", "title")
-                        .param("sortDir", "asc"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page").value(0))
                 .andExpect(jsonPath("$.data[0].title").value("테스트 웹툰"))
                 .andExpect(jsonPath("$.data[0].status").value("ONGOING"))
         ;
@@ -90,27 +75,20 @@ class WebtoonServiceIntegrationTest {
     @DisplayName("웹툰 상세 정보 조회")
     void getWebtoonDetails_상세_조회_기본_동작_테스트() throws Exception {
         // given
-        Long webtoonId = 1L;
+        Webtoon webtoon = webtoonRepository.findAll().get(0);
+        Long webtoonId = webtoon.getId();
 
         // when & then
         mockMvc.perform(get("/api/v1/webtoons/detail/{id}", webtoonId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(webtoonId));
-    }
-
-    @Test
-    @DisplayName("웹툰 상세 정보 조회 - 실제 데이터 값 검증")
-    void getWebtoonDetails_상세_조회_실제_값_검증() throws Exception {
-        Webtoon webtoon = webtoonRepository.findAll().get(0);
-        Long webtoonId = webtoon.getId();
-
-        mockMvc.perform(get("/api/v1/webtoons/detail/{id}", webtoonId))
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(webtoonId))
-                .andExpect(jsonPath("$.title").value("테스트 웹툰"))
-                .andExpect(jsonPath("$.summary").value("테스트 웹툰 요약"))
-                .andExpect(jsonPath("$.ageRating").value("ALL"))
-                .andExpect(jsonPath("$.status").value("ONGOING"))
-                .andExpect(jsonPath("$.thumbnailUrl").value("http://test.com/image.png"));
+                .andExpect(jsonPath("$.id").value(webtoonId))
+                .andExpect(jsonPath("$.title").value(webtoon.getTitle()))
+                .andExpect(jsonPath("$.summary").value(webtoon.getSummary()))
+                .andExpect(jsonPath("$.ageRating").value(webtoon.getAgeRating().name()))
+                .andExpect(jsonPath("$.status").value(webtoon.getSerializationStatus().name()))
+                .andExpect(jsonPath("$.thumbnailUrl").value(webtoon.getThumbnailUrl()));
+
+        ;
     }
 } 
