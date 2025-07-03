@@ -33,7 +33,7 @@ public class TestSecurityConfig {
             .formLogin(AbstractHttpConfigurer::disable)
             .oauth2Login(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll() // 모든 요청을 허용하여 500 에러 방지
+                .anyRequest().permitAll()
             );
         
         return http.build();

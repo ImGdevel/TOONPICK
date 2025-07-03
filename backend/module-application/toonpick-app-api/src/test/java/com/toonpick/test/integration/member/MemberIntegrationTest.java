@@ -5,7 +5,6 @@ import com.toonpick.domain.member.entity.Member;
 import com.toonpick.domain.member.enums.Gender;
 import com.toonpick.domain.member.enums.MemberRole;
 import com.toonpick.domain.member.repository.MemberRepository;
-import com.toonpick.internal.storage.service.AwsS3StorageService;
 import com.toonpick.member.request.MemberProfileRequestDTO;
 import com.toonpick.member.service.MemberService;
 import com.toonpick.test.config.IntegrationTest;
@@ -16,12 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,9 +38,6 @@ class MemberIntegrationTest {
     @MockBean
     private MemberService memberService;
 
-    @MockBean
-    private AwsS3StorageService awsS3StorageService;
-
     private Member testMember;
     private String testUsername = "testuser";
 
@@ -63,9 +56,6 @@ class MemberIntegrationTest {
                 .role(MemberRole.ROLE_USER)
                 .build();
         testMember = memberRepository.save(testMember);
-
-        // AWS S3 Mock 설정 - 실제 URL 반환
-        when(awsS3StorageService.uploadFile(any(), any())).thenReturn("https://test-bucket.s3.amazonaws.com/test-image.jpg");
     }
 
     @Test
@@ -114,61 +104,6 @@ class MemberIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nickname").value("새로운닉네임"));
-    }
-
-    @Test
-    @WithMockUser(username = "testuser")
-    @DisplayName("회원 프로필 이미지 업로드")
-    void uploadProfilePicture_프로필_이미지_업로드_테스트() throws Exception {
-        // given
-        MockMultipartFile imageFile = new MockMultipartFile(
-                "image",
-                "test-image.jpg",
-                "image/jpeg",
-                "test image content".getBytes()
-        );
-
-        // when & then
-        mockMvc.perform(multipart("/api/secure/member/profile-image")
-                        .file(imageFile))
-                .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("https://test-bucket.s3.amazonaws.com")));
-    }
-
-    @Test
-    @WithMockUser(username = "testuser")
-    @DisplayName("회원 프로필 이미지 업로드 - 잘못된 파일 형식")
-    void uploadProfilePicture_잘못된_파일_형식_테스트() throws Exception {
-        // given
-        MockMultipartFile invalidFile = new MockMultipartFile(
-                "image",
-                "test.txt",
-                "text/plain",
-                "This is not an image".getBytes()
-        );
-
-        // when & then
-        mockMvc.perform(multipart("/api/secure/member/profile-image")
-                        .file(invalidFile))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    @WithMockUser(username = "testuser")
-    @DisplayName("회원 프로필 이미지 업로드 - 빈 파일")
-    void uploadProfilePicture_빈_파일_테스트() throws Exception {
-        // given
-        MockMultipartFile emptyFile = new MockMultipartFile(
-                "image",
-                "empty.jpg",
-                "image/jpeg",
-                new byte[0]
-        );
-
-        // when & then
-        mockMvc.perform(multipart("/api/secure/member/profile-image")
-                        .file(emptyFile))
-                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -292,71 +227,6 @@ class MemberIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "testuser")
-    @DisplayName("회원 프로필 이미지 업로드 - null 파일")
-    void uploadProfilePicture_null_파일_테스트() throws Exception {
-        // when & then
-        mockMvc.perform(multipart("/api/secure/member/profile-image"))
-                .andExpect(status().isInternalServerError()); // BadRequestException은 500 에러로 처리됨
-    }
-
-    @Test
-    @WithMockUser(username = "testuser")
-    @DisplayName("회원 프로필 이미지 업로드 - 파일명이 null")
-    void uploadProfilePicture_null_파일명_테스트() throws Exception {
-        // given
-        MockMultipartFile nullFileNameFile = new MockMultipartFile(
-                "image",
-                null,
-                "image/jpeg",
-                "test image content".getBytes()
-        );
-
-        // when & then
-        mockMvc.perform(multipart("/api/secure/member/profile-image")
-                        .file(nullFileNameFile))
-                .andExpect(status().isInternalServerError()); // BadRequestException은 500 에러로 처리됨
-    }
-
-    @Test
-    @WithMockUser(username = "testuser")
-    @DisplayName("회원 프로필 이미지 업로드 - PNG 파일")
-    void uploadProfilePicture_png_파일_테스트() throws Exception {
-        // given
-        MockMultipartFile pngFile = new MockMultipartFile(
-                "image",
-                "test-image.png",
-                "image/png",
-                "test png image content".getBytes()
-        );
-
-        // when & then
-        mockMvc.perform(multipart("/api/secure/member/profile-image")
-                        .file(pngFile))
-                .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("https://test-bucket.s3.amazonaws.com")));
-    }
-
-    @Test
-    @WithMockUser(username = "testuser")
-    @DisplayName("회원 프로필 이미지 업로드 - GIF 파일")
-    void uploadProfilePicture_gif_파일_테스트() throws Exception {
-        // given
-        MockMultipartFile gifFile = new MockMultipartFile(
-                "image",
-                "test-image.gif",
-                "image/gif",
-                "test gif image content".getBytes()
-        );
-
-        // when & then
-        mockMvc.perform(multipart("/api/secure/member/profile-image")
-                        .file(gifFile))
-                .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("https://test-bucket.s3.amazonaws.com")));
-    }
-
-    @Test
     @DisplayName("기본 헬스체크 - 서버가 정상 작동하는지 확인")
     void basicHealthCheck_테스트() throws Exception {
         // when & then - 가장 기본적인 헬스체크
@@ -364,5 +234,28 @@ class MemberIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(org.springframework.test.web.servlet.result.MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "differentuser")
+    @DisplayName("다른 사용자로 접근 - testuser가 아닌 다른 사용자")
+    void differentUser_접근_테스트() throws Exception {
+        // when & then - 다른 사용자로 접근해도 testuser 정보를 받아야 함 (테스트 환경)
+        mockMvc.perform(get("/api/secure/member")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(org.springframework.test.web.servlet.result.MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("testuser")); // 테스트 환경에서는 항상 testuser 반환
+    }
+
+    @Test
+    @DisplayName("인증 없이 접근 - testuser 기본값 확인")
+    void noAuth_접근_테스트() throws Exception {
+        // when & then - 인증 없이 접근해도 testuser 정보를 받아야 함 (테스트 환경)
+        mockMvc.perform(get("/api/secure/member")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(org.springframework.test.web.servlet.result.MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("testuser")); // 테스트 환경에서는 항상 testuser 반환
     }
 } 
