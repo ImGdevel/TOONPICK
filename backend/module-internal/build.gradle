@@ -6,21 +6,8 @@ sourceSets {
     }
 }
 
-project(':module-internal:client-auth') {
-    dependencies {
-        implementation project(':module-common')
-    }
-    bootJar.enabled = false
-}
 
 project(':module-internal:client-storage') {
-    dependencies {
-        implementation project(':module-common')
-    }
-    bootJar.enabled = false
-}
-
-project(':module-internal:core-exception') {
     dependencies {
         implementation project(':module-common')
     }
@@ -30,20 +17,11 @@ project(':module-internal:core-exception') {
 project(':module-internal:core-security') {
     dependencies {
         implementation project(':module-common')
-        implementation project(':module-internal:core-web-support')
     }
     bootJar.enabled = false
 }
 
 project(':module-internal:core-web') {
-    dependencies {
-        implementation project(':module-common')
-        implementation project(':module-internal:core-web-support')
-    }
-    bootJar.enabled = false
-}
-
-project(':module-internal:core-web-support') {
     dependencies {
         implementation project(':module-common')
     }

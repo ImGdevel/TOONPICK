@@ -1,3 +1,6 @@
+server:
+  port: 8082
+
 spring:
   config:
     import: optional:file:.env
@@ -14,13 +17,23 @@ spring:
       username: root
       password: 1234
 
-  redis:
-    host: localhost
-    port: 6380
-
   data:
+    redis:
+      host: localhost
+      port: 6380
+      timeout: 10000ms
+      jedis:
+        enabled: false
+
     mongodb:
       uri: mongodb://localhost:27017/webtoon-db
+
+  batch:
+    job:
+      enabled: true
+    jdbc:
+      initialize-schema: always
+
 
   cloud:
     aws:
@@ -39,3 +52,13 @@ spring:
           webtoon-update-complete: ${AWS_SQS_WEBTOON_UPDATE_COMPLETE}
         auto-create: false
         enabled: false
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
+      hibernate:
+        SQL: DEBUG
+  file:
+    name: logs/dev-application.log
+    max-size: 10MB

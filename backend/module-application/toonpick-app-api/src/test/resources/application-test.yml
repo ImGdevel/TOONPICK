@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    aws:
+      credentials:
+        access-key: test
+        secret-key: test
+      region:
+        static: test
+      s3:
+        bucket: test
+
+  jwt:
+    secret: 1234
+    access-token-expiration: 600
+    refresh-token-expiration: 3600
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+    org.springframework.security: debug
+    com.toonpick: debug
+    org.springframework.web: debug

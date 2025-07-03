@@ -1,104 +1,61 @@
 package com.toonpick.webtoon.response;
 
-import lombok.Data;
-import lombok.experimental.SuperBuilder;
+import com.toonpick.domain.webtoon.enums.AgeRating;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
-@Data
-@SuperBuilder
-public class WebtoonDetailsResponse extends WebtoonResponse {
 
-    private List<WebtoonResponse> similarWebtoons;
-    private WebtoonAnalysisData analysisData;
+/**
+ * 웹툰 상세 페이지 정보 Response DTO 객체
+ */
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class WebtoonDetailsResponse {
 
-    public static class WebtoonAnalysisData {
-        public int totalViews;
-        public int totalSubscribers;
-        public double averageViewTime;
-        public double completionRate;
-        public ReaderDemographics readerDemographics;
-        public List<RatingDistribution> ratingDistribution;
-        public ReviewSentiment reviewSentiment;
-        public ContentAnalysis contentAnalysis;
-        public GrowthMetrics growthMetrics;
-        public List<PlatformComparison> platformComparison;
-        public PredictionMetrics predictionMetrics;
+    /// 기본 상세 정보
+    
+    private Long id;
 
-        public static class ReaderDemographics {
-            public List<AgeGroup> ageGroups;
-            public List<GenderDistribution> genderDistribution;
-            public List<RegionDistribution> regionDistribution;
-        }
+    private String title;
 
-        public static class AgeGroup {
-            public String age;
-            public double percentage;
-        }
+    private String summary;
 
-        public static class GenderDistribution {
-            public String gender;
-            public double percentage;
-        }
+    private String status;
 
-        public static class RegionDistribution {
-            public String region;
-            public double percentage;
-        }
+    private String dayOfWeek;
 
-        public static class RatingDistribution {
-            public int rating;
-            public int count;
-        }
+    private String thumbnailUrl;
 
-        public static class ReviewSentiment {
-            public int positive;
-            public int neutral;
-            public int negative;
-        }
+    private boolean isAdult;
 
-        public static class ContentAnalysis {
-            public List<GenreDistribution> genreDistribution;
-            public List<TagDistribution> tagDistribution;
-            public List<CharacterPopularity> characterPopularity;
-        }
+    private AgeRating ageRating;
 
-        public static class GenreDistribution {
-            public String genre;
-            public double percentage;
-        }
+    private List<AuthorResponse> authors;
 
-        public static class TagDistribution {
-            public String tag;
-            public int count;
-        }
+    private List<GenreResponse> genres;
 
-        public static class CharacterPopularity {
-            public String character;
-            public int popularity;
-        }
+    private List<PlatformResponse> platforms;
 
-        public static class GrowthMetrics {
-            public List<DailyMetric> dailyViews;
-            public List<DailyMetric> dailySubscribers;
-            public List<DailyMetric> dailyComments;
-        }
+    private int episodeCount;
 
-        public static class DailyMetric {
-            public String date;
-            public int count;
-        }
+    private Float averageRating;
 
-        public static class PlatformComparison {
-            public String platform;
-            public double averageRating;
-            public int totalViews;
-        }
+    private LocalDate publishStartDate;
 
-        public static class PredictionMetrics {
-            public double expectedGrowth;
-            public double retentionRate;
-            public double churnRate;
-        }
-    }
+    private LocalDate lastUpdateDate;
+
+
+    /// 추가 상세정보
+
+    // todo : 추가 - 비슷한 웹툰 필드 추가
+    // todo : 추가 -
+
+    // todo : 추가 - 웹툰 분석 데이터
 }

@@ -1,9 +1,9 @@
 package com.toonpick.review.controller;
 
-import com.toonpick.annotation.CurrentUser;
-import com.toonpick.dto.PagedResponseDTO;
+import com.toonpick.internal.security.annotation.CurrentUser;
+import com.toonpick.domain.dto.PagedResponseDTO;
 import com.toonpick.review.response.WebtoonReviewResponse;
-import com.toonpick.user.CustomUserDetails;
+import com.toonpick.internal.security.dto.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,9 +1,9 @@
 package com.toonpick.test.unit.auth.service;
 
 import com.toonpick.auth.service.MemberJoinService;
-import com.toonpick.entity.Member;
-import com.toonpick.exception.UserAlreadyRegisteredException;
-import com.toonpick.repository.MemberRepository;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.common.exception.DuplicateResourceException;
+import com.toonpick.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import com.toonpick.dto.JoinRequest;
+import com.toonpick.internal.security.dto.JoinRequest;
 
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -53,6 +53,6 @@ class JoinServiceTest {
         when(memberRepository.existsByUsername("test@example.com")).thenReturn(true);
 
         assertThatThrownBy(() -> memberJoinService.registerMember(joinRequest))
-                .isInstanceOf(UserAlreadyRegisteredException.class);
+                .isInstanceOf(DuplicateResourceException.class);
     }
 }

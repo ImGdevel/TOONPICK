@@ -1,7 +1,7 @@
 package com.toonpick.toon_collection.response;
 
 import com.toonpick.member.response.MemberProfileResponse;
-import com.toonpick.webtoon.response.WebtoonResponse;
+import com.toonpick.webtoon.response.WebtoonSummaryResponse;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,5 +12,5 @@ import java.util.List;
 public class ToonCollectionResponseDTO {
     private String title;
     private MemberProfileResponse member;
-    private List<WebtoonResponse> webtoons;
+    private List<WebtoonSummaryResponse> webtoons;
 }

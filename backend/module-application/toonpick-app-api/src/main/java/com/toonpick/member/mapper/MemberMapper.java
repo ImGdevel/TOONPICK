@@ -3,10 +3,10 @@ package com.toonpick.member.mapper;
 
 import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.member.response.MemberResponseDTO;
-import com.toonpick.entity.Member;
+import com.toonpick.domain.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import com.toonpick.dto.MemberDTO;
+import com.toonpick.domain.member.dto.MemberDTO;
 import com.toonpick.member.response.MemberProfileDetailsResponse;
 
 @Mapper(componentModel = "spring")

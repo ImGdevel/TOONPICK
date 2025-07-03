@@ -41,6 +41,8 @@ subprojects {
 
     test {
         useJUnitPlatform()
+        jvmArgs += ["-XX:+EnableDynamicAgentLoading"]
+        jvmArgs += ["-Xshare:off"]
     }
 }
 

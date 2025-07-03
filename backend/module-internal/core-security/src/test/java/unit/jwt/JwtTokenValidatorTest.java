@@ -1,10 +1,8 @@
 package unit.jwt;
 
-import com.toonpick.exception.ExpiredJwtTokenException;
-import com.toonpick.exception.InvalidJwtTokenException;
-import com.toonpick.exception.MissingJwtTokenException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+import com.toonpick.internal.security.exception.ExpiredJwtTokenException;
+import com.toonpick.internal.security.exception.InvalidJwtTokenException;
+import com.toonpick.internal.security.exception.MissingJwtTokenException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,8 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.toonpick.jwt.JwtTokenProvider;
-import com.toonpick.jwt.JwtTokenValidator;
+import com.toonpick.internal.security.jwt.JwtTokenProvider;
+import com.toonpick.internal.security.jwt.JwtTokenValidator;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -26,26 +24,6 @@ class JwtTokenValidatorTest {
 
     @Mock
     private JwtTokenProvider jwtTokenProvider;
-
-    @Nested
-    @DisplayName("extractAccessToken 메서드")
-    class ExtractAccessTokenTest {
-
-        @Test
-        @DisplayName("Bearer 토큰이 있으면 토큰 반환")
-        void returnToken() {
-            String header = "Bearer abc.def.ghi";
-            String token = jwtTokenValidator.extractAccessToken(header);
-            assertEquals("abc.def.ghi", token);
-        }
-
-        @Test
-        @DisplayName("헤더가 null이거나 Bearer 형식이 아니면 null 반환")
-        void returnNull() {
-            assertNull(jwtTokenValidator.extractAccessToken(null));
-            assertNull(jwtTokenValidator.extractAccessToken("Basic abc"));
-        }
-    }
 
     @Nested
     @DisplayName("validateAccessToken 메서드")
@@ -80,41 +58,6 @@ class JwtTokenValidatorTest {
             when(jwtTokenProvider.getCategory(token)).thenReturn("access");
 
             assertDoesNotThrow(() -> jwtTokenValidator.validateAccessToken(token));
-        }
-    }
-
-    @Nested
-    @DisplayName("extractRefreshTokenFromCookies 메서드")
-    class ExtractRefreshTokenFromCookiesTest {
-
-        @Test
-        @DisplayName("refresh 쿠키가 있으면 반환")
-        void hasRefreshCookie() {
-            Cookie[] cookies = { new Cookie("refresh", "token123") };
-            HttpServletRequest request = mock(HttpServletRequest.class);
-            when(request.getCookies()).thenReturn(cookies);
-
-            String token = jwtTokenValidator.extractRefreshTokenFromCookies(request);
-            assertEquals("token123", token);
-        }
-
-        @Test
-        @DisplayName("refresh 쿠키가 없으면 null 반환")
-        void noRefreshCookie() {
-            Cookie[] cookies = { new Cookie("other", "value") };
-            HttpServletRequest request = mock(HttpServletRequest.class);
-            when(request.getCookies()).thenReturn(cookies);
-
-            assertNull(jwtTokenValidator.extractRefreshTokenFromCookies(request));
-        }
-
-        @Test
-        @DisplayName("쿠키가 null이면 null 반환")
-        void nullCookies() {
-            HttpServletRequest request = mock(HttpServletRequest.class);
-            when(request.getCookies()).thenReturn(null);
-
-            assertNull(jwtTokenValidator.extractRefreshTokenFromCookies(request));
         }
     }
 

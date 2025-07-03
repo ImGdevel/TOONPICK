@@ -1,146 +1,124 @@
 package com.toonpick.test.unit.webtoon.service;
 
-import com.toonpick.entity.Webtoon;
-import com.toonpick.entity.WebtoonAnalysisDataDocument;
-import com.toonpick.enums.AgeRating;
-import com.toonpick.enums.Platform;
-import com.toonpick.enums.SerializationStatus;
-import com.toonpick.exception.ResourceNotFoundException;
-import com.toonpick.repository.AuthorRepository;
-import com.toonpick.repository.GenreRepository;
-import com.toonpick.repository.WebtoonAnalysisRepository;
-import com.toonpick.repository.WebtoonRepository;
-import com.toonpick.webtoon.mapper.WebtoonAnalysisMapper;
+import com.toonpick.common.exception.EntityNotFoundException;
+import com.toonpick.common.type.ErrorCode;
+import com.toonpick.domain.dto.PagedResponseDTO;
+import com.toonpick.domain.webtoon.dto.WebtoonFilterDTO;
+import com.toonpick.domain.webtoon.entity.Webtoon;
+import com.toonpick.domain.webtoon.repository.WebtoonRepository;
+import com.toonpick.test.config.UnitTest;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
-import com.toonpick.webtoon.response.WebtoonResponse;
+import com.toonpick.webtoon.response.WebtoonSummaryResponse;
 import com.toonpick.webtoon.service.WebtoonService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.*;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@Tag("UnitTest")
-@ExtendWith(MockitoExtension.class)
+@UnitTest
+@DisplayName("WebtoonService 유닛 테스트")
 class WebtoonServiceTest {
+
+    @InjectMocks
+    private WebtoonService webtoonService;
 
     @Mock
     private WebtoonRepository webtoonRepository;
 
     @Mock
-    private AuthorRepository authorRepository;
-
-    @Mock
-    private GenreRepository genreRepository;
-
-    @Mock
     private WebtoonMapper webtoonMapper;
 
-    @Mock
-    private WebtoonAnalysisRepository analysisRepository;
+    @Test
+    @DisplayName("존재하는 ID로 웹툰을 조회하면 WebtoonResponse를 반환한다")
+    void getWebtoon_존재하는_ID_조회() {
+        // given
+        Long id = 1L;
+        Webtoon webtoon = mock(Webtoon.class);
+        WebtoonSummaryResponse response = mock(WebtoonSummaryResponse.class);
+        when(webtoonRepository.findById(id)).thenReturn(Optional.of(webtoon));
+        when(webtoonMapper.toWebtoonSummaryResponse(webtoon)).thenReturn(response);
 
-    @Mock
-    private WebtoonAnalysisMapper analysisMapper;
+        // when
+        WebtoonSummaryResponse result = webtoonService.getWebtoon(id);
 
-    @InjectMocks
-    private WebtoonService webtoonService;
-
-    private Webtoon webtoon;
-    private WebtoonResponse responseDTO;
-    private WebtoonDetailsResponse detailsResponse;
-    private WebtoonAnalysisDataDocument analysisDocument;
-    private WebtoonDetailsResponse.WebtoonAnalysisData analysisDto;
-
-    @BeforeEach
-    void setUp() {
-        webtoon = Webtoon.builder()
-                .id(1L)
-                .externalId("ext123")
-                .title("Test Webtoon")
-                .platform(Platform.NAVER)
-                .dayOfWeek(DayOfWeek.MONDAY)
-                .thumbnailUrl("http://example.com/thumb.jpg")
-                .link("http://example.com/webtoon")
-                .ageRating(AgeRating.ADULT)
-                .summary("Test Summary")
-                .serializationStatus(SerializationStatus.ONGOING)
-                .episodeCount(10)
-                .platformRating(4.5f)
-                .publishStartDate(LocalDate.now())
-                .lastUpdatedDate(LocalDate.now())
-                .authors(new HashSet<>())
-                .genres(new HashSet<>())
-                .build();
-
-        responseDTO = WebtoonResponse.builder()
-                .id(1L)
-                .title("Test Webtoon")
-                .platform(Platform.NAVER)
-                .dayOfWeek(DayOfWeek.MONDAY)
-                .thumbnailUrl("http://example.com/thumb.jpg")
-                .link("http://example.com/webtoon")
-                .ageRating(AgeRating.ADULT)
-                .description("Test Description")
-                .serializationStatus(SerializationStatus.ONGOING)
-                .episodeCount(10)
-                .build();
-
-        detailsResponse = WebtoonDetailsResponse.builder()
-                .id(1L)
-                .title("Test Webtoon")
-                .build();
-
-        analysisDocument = WebtoonAnalysisDataDocument.builder()
-                .webtoonId(1L)
-                .totalViews(1000)
-                .build();
-
-        analysisDto = new WebtoonDetailsResponse.WebtoonAnalysisData();
-        analysisDto.totalViews = 1000;
+        // then
+        assertEquals(response, result);
+        verify(webtoonRepository).findById(id);
+        verify(webtoonMapper).toWebtoonSummaryResponse(webtoon);
     }
 
-    @DisplayName("Id로 웹툰 조회 유닛 테스트")
     @Test
-    void testGetWebtoon_Success() {
-        when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
-        when(webtoonMapper.toWebtoonResponse(webtoon)).thenReturn(responseDTO);
+    @DisplayName("존재하지 않는 ID로 웹툰을 조회하면 예외가 발생한다")
+    void getWebtoon_존재하지_않는_ID_예외() {
+        // given
+        Long id = 999L;
+        when(webtoonRepository.findById(id)).thenReturn(Optional.empty());
 
-        WebtoonResponse result = webtoonService.getWebtoon(1L);
+        // when & then
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> webtoonService.getWebtoon(id));
+        assertEquals(ErrorCode.WEBTOON_NOT_FOUND, ex.getErrorCode());
+    }
 
+    @Test
+    @DisplayName("존재하는 ID로 웹툰 상세 정보를 조회하면 WebtoonDetailsResponse를 반환한다")
+    void getWebtoonDetails_존재하는_ID_조회() {
+        // given
+        Long id = 1L;
+        Webtoon webtoon = mock(Webtoon.class);
+        WebtoonDetailsResponse response = mock(WebtoonDetailsResponse.class);
+        when(webtoonRepository.findById(id)).thenReturn(Optional.of(webtoon));
+        when(webtoonMapper.toWebtoonDetailsResponse(webtoon)).thenReturn(response);
+
+        // when
+        WebtoonDetailsResponse result = webtoonService.getWebtoonDetails(id);
+
+        // then
+        assertEquals(response, result);
+        verify(webtoonRepository).findById(id);
+        verify(webtoonMapper).toWebtoonDetailsResponse(webtoon);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 ID로 웹툰 상세 정보를 조회하면 예외가 발생한다")
+    void getWebtoonDetails_존재하지_않는_ID_예외() {
+        // given
+        Long id = 999L;
+        when(webtoonRepository.findById(id)).thenReturn(Optional.empty());
+
+        // when & then
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> webtoonService.getWebtoonDetails(id));
+        assertEquals(ErrorCode.WEBTOON_NOT_FOUND, ex.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("필터와 페이지 옵션으로 웹툰 리스트를 조회하면 PagedResponseDTO를 반환한다")
+    void getWebtoonsOptions_정상_조회() {
+        // given
+        WebtoonFilterDTO filter = mock(WebtoonFilterDTO.class);
+        int page = 0, size = 10;
+        String sortBy = "title", sortDir = "ASC";
+        Webtoon webtoon = mock(Webtoon.class);
+        WebtoonSummaryResponse response = mock(WebtoonSummaryResponse.class);
+        List<Webtoon> webtoonList = List.of(webtoon);
+        Page<Webtoon> webtoonPage = new PageImpl<>(webtoonList, PageRequest.of(page, size), 1);
+        when(webtoonRepository.findWebtoonsByFilterOptions(filter, PageRequest.of(page, size, Sort.Direction.ASC, sortBy))).thenReturn(webtoonPage);
+        when(webtoonMapper.toWebtoonSummaryResponse(webtoon)).thenReturn(response);
+
+        // when
+        PagedResponseDTO<WebtoonSummaryResponse> result = webtoonService.getWebtoonsOptions(filter, page, size, sortBy, sortDir);
+
+        // then
         assertNotNull(result);
-        assertEquals("Test Webtoon", result.getTitle());
+        assertEquals(1, result.getData().size());
+        assertEquals(response, result.getData().get(0));
+        verify(webtoonRepository).findWebtoonsByFilterOptions(filter, PageRequest.of(page, size, Sort.Direction.ASC, sortBy));
+        verify(webtoonMapper).toWebtoonSummaryResponse(webtoon);
     }
-
-    @DisplayName("Id로 웹툰 조회 예외 유닛 테스트")
-    @Test
-    void testGetWebtoon_NotFound() {
-        when(webtoonRepository.findById(2L)).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class, () -> webtoonService.getWebtoon(2L));
-    }
-
-    @DisplayName("웹툰 상세 조회 유닛 테스트")
-    @Test
-    void testGetWebtoonDetails_Success() {
-        when(webtoonRepository.findById(1L)).thenReturn(Optional.of(webtoon));
-        when(webtoonMapper.toWebtoonDetailsResponse(webtoon)).thenReturn(detailsResponse);
-        when(analysisRepository.findByWebtoonId(1L)).thenReturn(Optional.of(analysisDocument));
-        when(analysisMapper.toDto(analysisDocument)).thenReturn(analysisDto);
-
-        WebtoonDetailsResponse result = webtoonService.getWebtoonDetails(1L);
-
-        assertNotNull(result);
-        assertEquals(1000, result.getAnalysisData().totalViews);
-    }
-}
+} 

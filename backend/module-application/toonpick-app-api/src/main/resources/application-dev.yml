@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   config:
     import: optional:file:.env
@@ -8,17 +11,15 @@ spring:
       jdbc-url: jdbc:mariadb://localhost:3306/toonpick-database?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
       username: root
       password: 1234
-    meta:
-      driver-class-name: org.mariadb.jdbc.Driver
-      jdbc-url: jdbc:mariadb://localhost:3306/meta?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-      username: root
-      password: 1234
-
-  redis:
-    host: localhost
-    port: 6380
 
   data:
+    redis:
+      host: localhost
+      port: 6380
+      timeout: 10000ms
+      jedis:
+        enabled: false
+
     mongodb:
       uri: mongodb://localhost:27017/webtoon-db
 
@@ -35,7 +36,7 @@ spring:
             client-name: google
             client-id: ${OAUTH_GOOGLE_CLIENT_ID}
             client-secret: ${OAUTH_GOOGLE_CLIENT_SECRET}
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            redirect-uri: ${OAUTH_GOOGLE_REDIRECT_URL}
             authorization-grant-type: authorization_code
             scope:
               - profile
@@ -44,7 +45,7 @@ spring:
             client-name: naver
             client-id: ${OAUTH_NAVER_CLIENT_ID}
             client-secret: ${OAUTH_NAVER_CLIENT_SECRET}
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            redirect-uri: ${OAUTH_NAVER_REDIRECT_URL}
             authorization-grant-type: authorization_code
             scope:
               - name
@@ -65,13 +66,13 @@ spring:
         static: ${AWS_REGION}
       s3:
         bucket: ${AWS_S3_BUCKET}
-      sqs:
-        queue:
-          request:
-            name: ${AWS_SQS_UPDATE_REQUEST_QUEUE_NAME}
-            url: ${AWS_SQS_UPDATE_REQUEST_QUEUE_URL}
-          response:
-            name: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_NAME}
-            url: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_URL}
-        auto-create: false
-        enabled: false
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
+      hibernate:
+        SQL: DEBUG
+  file:
+    name: logs/dev-application.log
+    max-size: 10MB

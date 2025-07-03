@@ -1,4 +1,4 @@
-name: TOONPICK Backend CD Pipeline
+name: TOONPICK Backend Build & Docker Pipeline
 
 on:
   workflow_dispatch:
@@ -7,6 +7,26 @@ on:
         description: '배포 버전'
         required: true
         default: 'latest'
+      build_api:
+        description: 'API 모듈 빌드 및 Docker Push'
+        required: false
+        default: false
+        type: boolean
+      build_worker:
+        description: 'Worker 모듈 빌드 및 Docker Push'
+        required: false
+        default: false
+        type: boolean
+      build_admin:
+        description: 'Admin 모듈 빌드 및 Docker Push'
+        required: false
+        default: false
+        type: boolean
+      deploy_to_aws:
+        description: 'AWS 배포까지 진행할지 여부'
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -35,25 +55,47 @@ jobs:
       - name: Gradle 실행 권한 추가
         run: chmod +x backend/gradlew
 
-      - name: Gradle 빌드 & 테스트 실행
+      - name: API 모듈 빌드
+        if: ${{ github.event.inputs.build_api == 'true' }}
         working-directory: backend
         run: |
-          echo "[INFO] toonpick-app 메시지 빌드 시작"
+          echo "[INFO] toonpick-app-api 빌드 시작"
           ./gradlew :module-application:toonpick-app-api:clean :module-application:toonpick-app-api:bootjar \
-                     :module-application:toonpick-app-worker:clean :module-application:toonpick-app-worker:bootjar \
-                     :module-application:toonpick-app-admin:clean :module-application:toonpick-app-admin:bootjar \
+                     -x test --no-daemon --parallel --configure-on-demand
+
+      - name: Worker 모듈 빌드
+        if: ${{ github.event.inputs.build_worker == 'true' }}
+        working-directory: backend
+        run: |
+          echo "[INFO] toonpick-app-worker 빌드 시작"
+          ./gradlew :module-application:toonpick-app-worker:clean :module-application:toonpick-app-worker:bootjar \
+                     -x test --no-daemon --parallel --configure-on-demand
+
+      - name: Admin 모듈 빌드
+        if: ${{ github.event.inputs.build_admin == 'true' }}
+        working-directory: backend
+        run: |
+          echo "[INFO] toonpick-app-admin 빌드 시작"
+          ./gradlew :module-application:toonpick-app-admin:clean :module-application:toonpick-app-admin:bootjar \
                      -x test --no-daemon --parallel --configure-on-demand
 
       - name: 빌드 결과 확인
         run: |
-          echo "=== toonpick-app-api JAR ==="
-          ls -al backend/module-application/toonpick-app-api/build/libs
-          echo "=== toonpick-app-worker JAR ==="
-          ls -al backend/module-application/toonpick-app-worker/build/libs
-          echo "=== toonpick-app-admin JAR ==="
-          ls -al backend/module-application/toonpick-app-admin/build/libs
+          if [ "${{ github.event.inputs.build_api }}" == "true" ]; then
+            echo "=== toonpick-app-api JAR ==="
+            ls -al backend/module-application/toonpick-app-api/build/libs
+          fi
+          if [ "${{ github.event.inputs.build_worker }}" == "true" ]; then
+            echo "=== toonpick-app-worker JAR ==="
+            ls -al backend/module-application/toonpick-app-worker/build/libs
+          fi
+          if [ "${{ github.event.inputs.build_admin }}" == "true" ]; then
+            echo "=== toonpick-app-admin JAR ==="
+            ls -al backend/module-application/toonpick-app-admin/build/libs
+          fi
 
       - name: toonpick-api JAR 업로드
+        if: ${{ github.event.inputs.build_api == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: toonpick-api
@@ -61,6 +103,7 @@ jobs:
           retention-days: 1
 
       - name: toonpick-worker JAR 업로드
+        if: ${{ github.event.inputs.build_worker == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: toonpick-worker
@@ -68,32 +111,17 @@ jobs:
           retention-days: 1
 
       - name: toonpick-admin JAR 업로드
+        if: ${{ github.event.inputs.build_admin == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: toonpick-admin
           path: backend/module-application/toonpick-app-admin/build/libs/*.jar
           retention-days: 1
 
-
-
-  docker-build-and-push:
+  docker-build-and-push-api:
     needs: build
+    if: ${{ github.event.inputs.build_api == 'true' }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        module:
-          - name: api
-            dir: toonpick-app-api
-            jar: toonpick-api-0.0.1-SNAPSHOT.jar
-            repo: toonpick-service-api
-          - name: worker
-            dir: toonpick-app-worker
-            jar: toonpick-worker-0.0.1-SNAPSHOT.jar
-            repo: toonpick-service-worker
-          - name: admin
-            dir: toonpick-app-admin
-            jar: toonpick-admin-0.0.1-SNAPSHOT.jar
-            repo: toonpick-service-admin
 
     steps:
       - name: 저장소 체크아웃
@@ -101,21 +129,21 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: 모듈별 아티팩트 다운로드
+      - name: API 아티팩트 다운로드
         uses: actions/download-artifact@v4
         with:
-          name: toonpick-${{ matrix.module.name }}
-          path: backend/module-application/${{ matrix.module.dir }}/build/libs
+          name: toonpick-api
+          path: backend/module-application/toonpick-app-api/build/libs
 
       - name: JAR 파일 목록 출력
         run: |
-          echo "=== 다운로드된 JAR 목록 ==="
-          ls -al backend/module-application/${{ matrix.module.dir }}/build/libs
+          echo "=== 다운로드된 JAR 목록: API ==="
+          ls -al backend/module-application/toonpick-app-api/build/libs
 
       - name: JAR 파일을 app.jar로 이름 변경
         run: |
-          mv backend/module-application/${{ matrix.module.dir }}/build/libs/${{ matrix.module.jar }} \
-            backend/module-application/${{ matrix.module.dir }}/build/libs/app.jar
+          mv backend/module-application/toonpick-app-api/build/libs/toonpick-api-0.0.1-SNAPSHOT.jar \
+            backend/module-application/toonpick-app-api/build/libs/app.jar
 
       - name: Docker Login
         env:
@@ -123,187 +151,188 @@ jobs:
           DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         run: echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
 
-      - name: Docker Build & Push - ${{ matrix.module.name }}
+      - name: Docker Build & Push - API
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           IMAGE_TAG: "${{ github.event.inputs.version }}"
         run: |
-          echo "=== Docker Build 시작: ${{ matrix.module.name }} ==="
+          echo "=== Docker Build 시작: API ==="
           docker build \
-            -t $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:$IMAGE_TAG \
-            -t $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:latest \
-            -f backend/module-application/${{ matrix.module.dir }}/Dockerfile \
-            backend/module-application/${{ matrix.module.dir }}
+            -t $DOCKER_HUB_USERNAME/toonpick-service-api:$IMAGE_TAG \
+            -t $DOCKER_HUB_USERNAME/toonpick-service-api:latest \
+            -f backend/module-application/toonpick-app-api/Dockerfile \
+            backend/module-application/toonpick-app-api
 
-          docker push $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:$IMAGE_TAG
-          docker push $DOCKER_HUB_USERNAME/${{ matrix.module.repo }}:latest
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-api:$IMAGE_TAG
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-api:latest
 
-
-
-  deploy:
-    needs: docker-build-and-push
+  docker-build-and-push-worker:
+    needs: build
+    if: ${{ github.event.inputs.build_worker == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
       - name: 저장소 체크아웃
         uses: actions/checkout@v3
-
-      - name: AWS 자격증명 설정
-        uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
+          token: ${{ secrets.PAT_TOKEN }}
 
-      - name: EC2 인스턴스 생성
+      - name: Worker 아티팩트 다운로드
+        uses: actions/download-artifact@v4
+        with:
+          name: toonpick-worker
+          path: backend/module-application/toonpick-app-worker/build/libs
+
+      - name: JAR 파일 목록 출력
         run: |
-          echo "[INFO] EC2 생성 시작"
-          INSTANCE_ID=$(aws ec2 run-instances \
-            --region ap-northeast-2 \
-            --image-id ${{ secrets.BASE_AMI_ID }} \
-            --instance-type t2.micro \
-            --key-name ${{ secrets.EC2_KEY }} \
-            --security-group-ids ${{ secrets.SECURITY_GROUP_ID }} \
-            --subnet-id ${{ secrets.SUBNET_ID }} \
-            --iam-instance-profile Arn=${{ secrets.EC2_INSTANCE_PROFILE_ARN }} \
-            --query 'Instances[?State.Name==`pending`].InstanceId' \
-            --output text)
+          echo "=== 다운로드된 JAR 목록: Worker ==="
+          ls -al backend/module-application/toonpick-app-worker/build/libs
 
-          echo "INSTANCE_ID=${INSTANCE_ID}" >> $GITHUB_ENV
-          echo "[INFO] EC2 생성 완료: ${INSTANCE_ID}"
-
-      - name: EC2 Public IP 획득
+      - name: JAR 파일을 app.jar로 이름 변경
         run: |
-          echo "[INFO] Public IP 획득 중..."
-          sleep 20
-          NEW_INSTANCE_IP=$(aws ec2 describe-instances \
-            --instance-ids $INSTANCE_ID \
-            --query 'Reservations[0].Instances[0].PublicIpAddress' \
-            --output text)
+          mv backend/module-application/toonpick-app-worker/build/libs/toonpick-worker-0.0.1-SNAPSHOT.jar \
+            backend/module-application/toonpick-app-worker/build/libs/app.jar
 
-          echo "NEW_INSTANCE_IP=${NEW_INSTANCE_IP}" >> $GITHUB_ENV
-          echo "[INFO] Public IP: ${NEW_INSTANCE_IP}"
+      - name: Docker Login
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        run: echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
 
-      - name: docker-compose.yaml EC2로 이동
-        uses: appleboy/scp-action@v0.1.4
+      - name: Docker Build & Push - Worker
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          IMAGE_TAG: "${{ github.event.inputs.version }}"
+        run: |
+          echo "=== Docker Build 시작: Worker ==="
+          docker build \
+            -t $DOCKER_HUB_USERNAME/toonpick-service-worker:$IMAGE_TAG \
+            -t $DOCKER_HUB_USERNAME/toonpick-service-worker:latest \
+            -f backend/module-application/toonpick-app-worker/Dockerfile \
+            backend/module-application/toonpick-app-worker
+
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-worker:$IMAGE_TAG
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-worker:latest
+
+  docker-build-and-push-admin:
+    needs: build
+    if: ${{ github.event.inputs.build_admin == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v3
         with:
-          host: ${{ env.NEW_INSTANCE_IP }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: ./backend/docker-compose.yaml
-          target: /home/${{ secrets.SSH_USER }}/TOONPICK/
-          strip_components: 2
-          overwrite: true
+          token: ${{ secrets.PAT_TOKEN }}
 
-      - name: EC2에 환경변수 세팅
-        uses: appleboy/ssh-action@v0.1.10
+      - name: Admin 아티팩트 다운로드
+        uses: actions/download-artifact@v4
         with:
-          host: ${{ env.NEW_INSTANCE_IP }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          name: toonpick-admin
+          path: backend/module-application/toonpick-app-admin/build/libs
+
+      - name: JAR 파일 목록 출력
+        run: |
+          echo "=== 다운로드된 JAR 목록: Admin ==="
+          ls -al backend/module-application/toonpick-app-admin/build/libs
+
+      - name: JAR 파일을 app.jar로 이름 변경
+        run: |
+          mv backend/module-application/toonpick-app-admin/build/libs/toonpick-admin-0.0.1-SNAPSHOT.jar \
+            backend/module-application/toonpick-app-admin/build/libs/app.jar
+
+      - name: Docker Login
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        run: echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+
+      - name: Docker Build & Push - Admin
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          IMAGE_TAG: "${{ github.event.inputs.version }}"
+        run: |
+          echo "=== Docker Build 시작: Admin ==="
+          docker build \
+            -t $DOCKER_HUB_USERNAME/toonpick-service-admin:$IMAGE_TAG \
+            -t $DOCKER_HUB_USERNAME/toonpick-service-admin:latest \
+            -f backend/module-application/toonpick-app-admin/Dockerfile \
+            backend/module-application/toonpick-app-admin
+
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-admin:$IMAGE_TAG
+          docker push $DOCKER_HUB_USERNAME/toonpick-service-admin:latest
+
+  trigger-aws-deploy:
+    needs: [docker-build-and-push-api, docker-build-and-push-worker, docker-build-and-push-admin]
+    if: ${{ github.event.inputs.deploy_to_aws == 'true' }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: AWS 배포 워크플로우 트리거
+        uses: actions/github-script@v6
+        with:
           script: |
-            echo "[INFO] SSM Parameter Store에서 환경변수 가져오기"
-            SERVICE_NAME="TOONPICK"
-            ENVIRONMENT="prod"
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'backend-aws-deploy.yml',
+              ref: context.ref,
+              inputs: {
+                version: '${{ github.event.inputs.version }}'
+              }
+            });
+            console.log('AWS 배포 워크플로우가 트리거되었습니다.');
 
-            aws ssm get-parameters-by-path \
-              --path "/${SERVICE_NAME}/${ENVIRONMENT}/" \
-              --with-decryption \
-              --recursive \
-              --output text \
-              --query "Parameters[*].[Name,Value]" | \
-              sed -E "s|/${SERVICE_NAME}/${ENVIRONMENT}/[^/]+/||g" | \
-              awk '{print "export " $1"=\"" $2"\""}' > /tmp/env.sh
-
-            echo "[INFO] 환경변수 스크립트 생성 완료"
-
-      - name: 환경변수 적용 및 확인
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ env.NEW_INSTANCE_IP }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            echo "[INFO] 환경변수 적용 시작"
-            set -a
-            source /tmp/env.sh
-            set +a
-      
-            echo "[INFO] 환경변수 적용 대기 중..."
-            sleep 5
-
-            echo "[INFO] 환경변수 검증 중..."
-            if [ -z "$AWS_REGION" ] || [ -z "$REDIS_HOST" ]; then
-              echo "[ERROR] 필수 환경변수 로드 실패"
-              exit 1
-            fi
-
-            echo "[INFO] 환경변수 적용 성공"
-
-      - name: 새로운 EC2에 SSH 접속하여 배포 실행
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ env.NEW_INSTANCE_IP }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            export DOCKER_HUB_USERNAME="${{ secrets.DOCKER_HUB_USERNAME }}"
-            export DOCKER_HUB_PASSWORD="${{ secrets.DOCKER_HUB_PASSWORD }}"
-
-            echo "[INFO] Docker Hub 로그인..."
-            echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-
-            cd ~/TOONPICK
-            echo "[INFO] 기존 서비스 정지..."
-            docker-compose -f docker-compose.yaml down || true
-
-            echo "[INFO] Docker 컨테이너 실행..."
-            docker-compose -f docker-compose.yaml up -d --force-recreate
-
-      - name: 새 AMI 생성
-        run: |
-          NEW_AMI_ID=$(aws ec2 create-image \
-            --instance-id $INSTANCE_ID \
-            --name "ToonPick-AMI-${{ github.run_id }}" \
-            --no-reboot \
-            --query 'ImageId' \
-            --output text)
-
-          echo "NEW_AMI_ID=${NEW_AMI_ID}" >> $GITHUB_ENV
-          echo "[INFO] AMI 생성 완료: ${NEW_AMI_ID}"
-
-      - name: Launch Template 바로가기 업데이트
-        run: |
-          NEW_VERSION=$(aws ec2 create-launch-template-version \
-            --launch-template-id ${{ secrets.LAUNCH_TEMPLATE_ID }} \
-            --version-description "Updated AMI from run ${{ github.run_id }}" \
-            --source-version 1 \
-            --launch-template-data "{\"ImageId\":\"${{ env.NEW_AMI_ID }}\"}" \
-            --query 'LaunchTemplateVersion.VersionNumber' \
-            --output text)
-
-          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
-          echo "[INFO] Launch Template 새로운 버전 생성: ${NEW_VERSION}"
-
-      - name: Auto Scaling Group 업데이트
-        run: |
-          echo "[INFO] Auto Scaling Group 업데이트 시작"
-          aws autoscaling update-auto-scaling-group \
-            --auto-scaling-group-name ${{ secrets.AUTO_SCALING_GROUP_NAME }} \
-            --launch-template LaunchTemplateId=${{ secrets.LAUNCH_TEMPLATE_ID }},Version=${{ env.NEW_VERSION }}
-          echo "[INFO] Auto Scaling Group 업데이트 완료"
-
+  slack-notification:
+    needs: [docker-build-and-push-api, docker-build-and-push-worker, docker-build-and-push-admin, trigger-aws-deploy]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
       - name: Slack Webhook 알림 전송
-        if: always()
         run: |
-          if [ "${{ job.status }}" == "success" ]; then
-            STATUS=":white_check_mark: *CD 성공*"
-            COLOR="#2EB67D"
-            MESSAGE="TOONPICK CD 파이프라인이 성공적으로 완료되었습니다. :rocket:"
+          # 선택된 모듈 목록 생성
+          SELECTED_MODULES=""
+          if [ "${{ github.event.inputs.build_api }}" == "true" ]; then
+            SELECTED_MODULES="${SELECTED_MODULES}API "
+          fi
+          if [ "${{ github.event.inputs.build_worker }}" == "true" ]; then
+            SELECTED_MODULES="${SELECTED_MODULES}Worker "
+          fi
+          if [ "${{ github.event.inputs.build_admin }}" == "true" ]; then
+            SELECTED_MODULES="${SELECTED_MODULES}Admin "
+          fi
+          
+          if [ -z "$SELECTED_MODULES" ]; then
+            SELECTED_MODULES="선택된 모듈 없음"
+          fi
+
+          # Docker 빌드 결과 확인
+          DOCKER_SUCCESS=true
+          if [ "${{ github.event.inputs.build_api }}" == "true" ] && [ "${{ needs.docker-build-and-push-api.result }}" != "success" ]; then
+            DOCKER_SUCCESS=false
+          fi
+          if [ "${{ github.event.inputs.build_worker }}" == "true" ] && [ "${{ needs.docker-build-and-push-worker.result }}" != "success" ]; then
+            DOCKER_SUCCESS=false
+          fi
+          if [ "${{ github.event.inputs.build_admin }}" == "true" ] && [ "${{ needs.docker-build-and-push-admin.result }}" != "success" ]; then
+            DOCKER_SUCCESS=false
+          fi
+
+          if [ "$DOCKER_SUCCESS" == "true" ]; then
+            if [ "${{ github.event.inputs.deploy_to_aws }}" == "true" ]; then
+              STATUS=":white_check_mark: *Build & Docker 성공*"
+              COLOR="#2EB67D"
+              MESSAGE="TOONPICK Build & Docker 파이프라인이 성공적으로 완료되었습니다. AWS 배포가 트리거되었습니다. :rocket:"
+            else
+              STATUS=":white_check_mark: *Build & Docker 성공*"
+              COLOR="#2EB67D"
+              MESSAGE="TOONPICK Build & Docker 파이프라인이 성공적으로 완료되었습니다. AWS 배포는 건너뛰었습니다. :package:"
+            fi
           else
-            STATUS=":x: *CD 실패*"
+            STATUS=":x: *Build & Docker 실패*"
             COLOR="#D00000"
-            MESSAGE="TOONPICK CD 파이프라인 실패 :warning:\n실패 Job: \`${{ github.job }}\`"
+            MESSAGE="TOONPICK Build & Docker 파이프라인 실패 :warning:"
           fi
 
           curl -X POST -H 'Content-type: application/json' --data "{
@@ -326,6 +355,16 @@ jobs:
                   {
                     \"title\": \"커밋자\",
                     \"value\": \"${{ github.actor }}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"선택된 모듈\",
+                    \"value\": \"${SELECTED_MODULES}\",
+                    \"short\": true
+                  },
+                  {
+                    \"title\": \"AWS 배포\",
+                    \"value\": \"${{ github.event.inputs.deploy_to_aws }}\",
                     \"short\": true
                   },
                   {

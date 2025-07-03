@@ -1,13 +1,15 @@
 package com.toonpick.service;
 
 import com.toonpick.dto.request.AuthorRequest;
-import com.toonpick.entity.Author;
-import com.toonpick.repository.AuthorRepository;
+import com.toonpick.domain.webtoon.entity.Author;
+import com.toonpick.domain.webtoon.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthorService {
 
     private final AuthorRepository authorRepository;

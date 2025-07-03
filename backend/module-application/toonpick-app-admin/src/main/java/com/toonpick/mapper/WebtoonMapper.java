@@ -2,9 +2,9 @@ package com.toonpick.mapper;
 
 import com.toonpick.dto.request.AuthorRequest;
 import com.toonpick.dto.request.WebtoonCreateRequest;
-import com.toonpick.entity.Author;
-import com.toonpick.entity.Genre;
-import com.toonpick.entity.Webtoon;
+import com.toonpick.domain.webtoon.entity.Author;
+import com.toonpick.domain.webtoon.entity.Genre;
+import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.service.AuthorService;
 import com.toonpick.service.GenreService;
 import lombok.RequiredArgsConstructor;
@@ -28,17 +28,12 @@ public class WebtoonMapper {
         }
 
         return Webtoon.builder()
-                .externalId(request.getExternalId())
                 .title(request.getTitle())
-                .platform(request.getPlatform())
                 .dayOfWeek(request.getDayOfWeek())
                 .thumbnailUrl(request.getThumbnailUrl())
-                .link(request.getLink())
                 .ageRating(request.getAgeRating())
                 .summary(request.getSummary())
                 .serializationStatus(request.getSerializationStatus())
-                .episodeCount(request.getEpisodeCount())
-                .platformRating(request.getPlatformRating())
                 .publishStartDate(request.getPublishStartDate())
                 .lastUpdatedDate(request.getLastUpdatedDate())
                 .authors(mapAuthors(request.getAuthors()))

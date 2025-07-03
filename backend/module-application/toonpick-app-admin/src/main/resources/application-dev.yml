@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   config:
     import: optional:file:.env
@@ -9,12 +12,13 @@ spring:
       username: root
       password: 1234
 
-  redis:
-    host: localhost
-    port: 6380
-    timeout: 10000ms
-    jedis:
-      enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6380
+      timeout: 10000ms
+      jedis:
+        enabled: false
 
   jwt:
     secret: devjwtsecretkeydevjwtsecretkeydevjwtsecretkeydevjwtsecretkeydevjwtsecretkeydevjwtsecretkey
@@ -40,3 +44,13 @@ spring:
             url: ${AWS_SQS_UPDATE_RESPONSE_QUEUE_URL}
         auto-create: false
         enabled: false
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
+      hibernate:
+        SQL: DEBUG
+  file:
+    name: logs/dev-application.log
+    max-size: 10MB

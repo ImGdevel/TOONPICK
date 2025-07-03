@@ -1,15 +1,16 @@
 package com.toonpick.test.unit.member.service;
 
-import com.toonpick.entity.Member;
-import com.toonpick.enums.MemberRole;
+import com.toonpick.domain.member.entity.Member;
+import com.toonpick.domain.member.enums.MemberRole;
+import com.toonpick.common.exception.EntityNotFoundException;
 import com.toonpick.member.mapper.MemberMapper;
 import com.toonpick.member.request.MemberProfileRequestDTO;
 import com.toonpick.member.response.MemberProfileDetailsResponse;
 import com.toonpick.member.response.MemberProfileResponse;
 import com.toonpick.member.response.MemberResponseDTO;
 import com.toonpick.member.service.MemberService;
-import com.toonpick.repository.MemberRepository;
-import com.toonpick.service.AwsS3StorageService;
+import com.toonpick.domain.member.repository.MemberRepository;
+import com.toonpick.internal.storage.service.AwsS3StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -19,7 +20,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.toonpick.exception.ResourceNotFoundException;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.web.multipart.MultipartFile;
@@ -103,7 +103,7 @@ class MemberServiceTest {
         when(memberRepository.findByUsername("nonexistentuser")).thenReturn(Optional.empty());
 
         // when
-        assertThrows(ResourceNotFoundException.class, () -> memberService.getProfile("nonexistentuser"));
+        assertThrows(EntityNotFoundException.class, () -> memberService.getProfile("nonexistentuser"));
     }
 
     @DisplayName("사용자 상세 프로필 조회 단위 테스트")
@@ -342,16 +342,6 @@ class MemberServiceTest {
         member.deactivateAccount();
 
         assertEquals("DELETED", member.getStatus().name());
-    }
-
-    @DisplayName("레벨 업데이트 처리")
-    @Test
-    void testUpdateLevel() {
-        Member member = Member.builder().build();
-
-        member.updateLevel(5);
-
-        assertEquals(5, member.getLevel());
     }
 
 }

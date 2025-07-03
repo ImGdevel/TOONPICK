@@ -34,14 +34,6 @@ project(':module-domain:domain-webtoon') {
     bootJar.enabled = false
 }
 
-project(':module-domain:domain-analysis') {
-    dependencies {
-        implementation project(':module-common')
-        implementation project(':module-domain:domain-common')
-    }
-    bootJar.enabled = false
-}
-
 project(':module-domain:domain-review') {
     dependencies {
         implementation project(':module-common')
@@ -67,6 +59,28 @@ project(':module-domain:domain-toon-collection') {
         implementation project(':module-domain:domain-common')
         implementation project(':module-domain:domain-member')
         implementation project(':module-domain:domain-webtoon')
+        implementation project(':module-common')
+    }
+    bootJar.enabled = false
+}
+
+project(':module-domain:domain-report') {
+    dependencies {
+        implementation project(':module-domain:domain-common')
+        implementation project(':module-domain:domain-member')
+        implementation project(':module-domain:domain-review')
+        implementation project(':module-domain:domain-webtoon')
+
+        implementation project(':module-common')
+    }
+    bootJar.enabled = false
+}
+
+project(':module-domain:domain-webtoon-recommend') {
+    dependencies {
+        implementation project(':module-domain:domain-common')
+        implementation project(':module-domain:domain-webtoon')
+
         implementation project(':module-common')
     }
     bootJar.enabled = false
