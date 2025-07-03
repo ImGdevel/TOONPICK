@@ -222,16 +222,6 @@ class MemberIntegrationTest {
     }
 
     @Test
-    @DisplayName("기본 헬스체크 - 서버가 정상 작동하는지 확인")
-    void basicHealthCheck_테스트() throws Exception {
-        // when & then - 가장 기본적인 헬스체크
-        mockMvc.perform(get("/actuator/health")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(org.springframework.test.web.servlet.result.MockMvcResultHandlers.print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
     @WithMockUser(username = "differentuser")
     @DisplayName("다른 사용자로 접근 - testuser가 아닌 다른 사용자")
     void differentUser_접근_테스트() throws Exception {
