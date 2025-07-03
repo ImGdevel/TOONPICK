@@ -17,7 +17,7 @@ public class RecommendWebtoonGroups {
 
     private String description;
 
-    List<WebtoonResponse> webtoonItems;
+    List<WebtoonSummaryResponse> webtoonItems;
 
     int totalItemSize;
 }

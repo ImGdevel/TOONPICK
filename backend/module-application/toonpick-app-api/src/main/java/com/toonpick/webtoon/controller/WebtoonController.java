@@ -3,7 +3,7 @@ package com.toonpick.webtoon.controller;
 import com.toonpick.domain.dto.PagedResponseDTO;
 import com.toonpick.domain.webtoon.dto.WebtoonFilterDTO;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
-import com.toonpick.webtoon.response.WebtoonResponse;
+import com.toonpick.webtoon.response.WebtoonSummaryResponse;
 import com.toonpick.webtoon.service.WebtoonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,7 +26,7 @@ public class WebtoonController {
     @Operation(summary = "웹툰 필터 조회", description = "필터 옵션과 페이징 정보를 통해 웹툰 리스트를 조회합니다")
     @ApiResponse(responseCode = "200", description = "필터링된 웹툰 리스트를 성공적으로 반환")
     @PostMapping()
-    public ResponseEntity<PagedResponseDTO<WebtoonResponse>> getWebtoonsByFilter(
+    public ResponseEntity<PagedResponseDTO<WebtoonSummaryResponse>> getWebtoonsByFilter(
             @Parameter(description = "필터 옵션 (제목, 장르 등)", required = false)
             @RequestBody WebtoonFilterDTO filter,
             @Parameter(description = "페이지 번호 (0부터 시작)", required = false, example = "0")
@@ -38,7 +38,7 @@ public class WebtoonController {
             @Parameter(description = "정렬 방향 (asc/desc)", required = false, example = "asc")
             @RequestParam(defaultValue = "asc") String sortDir
     ) {
-        PagedResponseDTO<WebtoonResponse> webtoons = webtoonService.getWebtoonsOptions(filter, page, size, sortBy, sortDir);
+        PagedResponseDTO<WebtoonSummaryResponse> webtoons = webtoonService.getWebtoonsOptions(filter, page, size, sortBy, sortDir);
         return ResponseEntity.ok(webtoons);
     }
 

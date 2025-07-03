@@ -9,7 +9,7 @@ import com.toonpick.domain.webtoon.entity.Webtoon;
 import com.toonpick.domain.webtoon.repository.WebtoonRepository;
 import com.toonpick.webtoon.mapper.WebtoonMapper;
 import com.toonpick.webtoon.response.WebtoonDetailsResponse;
-import com.toonpick.webtoon.response.WebtoonResponse;
+import com.toonpick.webtoon.response.WebtoonSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -37,10 +37,10 @@ public class WebtoonService {
      * id 기반으로 웹툰 조회
      */
     @Transactional(readOnly = true)
-    public WebtoonResponse getWebtoon(Long id) {
+    public WebtoonSummaryResponse getWebtoon(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEBTOON_NOT_FOUND, String.valueOf(id)));
-        return webtoonMapper.toWebtoonResponse(webtoon);
+        return webtoonMapper.toWebtoonSummaryResponse(webtoon);
     }
 
     /**
@@ -65,17 +65,17 @@ public class WebtoonService {
      * Filter 옵션 및 page 에 맞춰 Webtoon 리스트 가져오기
      */
     @Transactional(readOnly = true)
-    public PagedResponseDTO<WebtoonResponse> getWebtoonsOptions(
+    public PagedResponseDTO<WebtoonSummaryResponse> getWebtoonsOptions(
             WebtoonFilterDTO filter, int page, int size, String sortBy, String sortDir) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortBy);
         Page<Webtoon> webtoonPage = webtoonRepository.findWebtoonsByFilterOptions(filter, pageable);
 
-        List<WebtoonResponse> webtoonDTOs = webtoonPage.getContent().stream()
-                .map(webtoonMapper::toWebtoonResponse)
+        List<WebtoonSummaryResponse> webtoonDTOs = webtoonPage.getContent().stream()
+                .map(webtoonMapper::toWebtoonSummaryResponse)
                 .collect(Collectors.toList());
 
-        return PagedResponseDTO.<WebtoonResponse>builder()
+        return PagedResponseDTO.<WebtoonSummaryResponse>builder()
                 .data(webtoonDTOs)
                 .page(webtoonPage.getNumber())
                 .size(webtoonPage.getSize())
