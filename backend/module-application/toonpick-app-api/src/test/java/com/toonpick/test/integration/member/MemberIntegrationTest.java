@@ -6,14 +6,12 @@ import com.toonpick.domain.member.enums.Gender;
 import com.toonpick.domain.member.enums.MemberRole;
 import com.toonpick.domain.member.repository.MemberRepository;
 import com.toonpick.member.request.MemberProfileRequestDTO;
-import com.toonpick.member.service.MemberService;
 import com.toonpick.test.config.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,9 +32,6 @@ class MemberIntegrationTest {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @MockBean
-    private MemberService memberService;
 
     private Member testMember;
     private String testUsername = "testuser";
@@ -133,7 +128,7 @@ class MemberIntegrationTest {
         mockMvc.perform(get("/api/secure/member/profile")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.adultVerified").value(true));
+                .andExpect(jsonPath("$.isAdultVerified").value(true));
     }
 
     @Test
