@@ -20,7 +20,7 @@ class WebtoonService {
   // 웹툰 간단 정보 조회
   public async getWebtoonById(id: number): Promise<Response<Webtoon>> {
     try {
-      const response = await api.get<Webtoon>(`/api/public/webtoons/${id}`);
+      const response = await api.get<Webtoon>(`/api/v1/webtoons/${id}`);
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);
@@ -30,7 +30,7 @@ class WebtoonService {
   // 웹툰 상제 정보 조회
   public async getWebtoonDetails(id: number): Promise<Response<Webtoon>> {
     try {
-      const response = await api.get<Webtoon>(`/api/public/webtoons/${id}`);
+      const response = await api.get<Webtoon>(`/api/v1/webtoons/${id}`);
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);
@@ -53,7 +53,7 @@ class WebtoonService {
     }
   ): Promise<PagedResponse<Webtoon[]>> {
     try {
-      const response = await api.post<PagedResponse<Webtoon[]>>('/api/public/webtoons/filter', 
+      const response = await api.post<PagedResponse<Webtoon[]>>('/api/v1/webtoons/filter', 
         {
           platforms: options.platforms,
           genres: options.genres,
@@ -90,7 +90,7 @@ class WebtoonService {
   // 인기 웹툰 조회
   public async getPopularWebtoons(size: number = 10): Promise<Response<Webtoon[]>> {
     try {
-      const response = await api.get<Webtoon[]>(`/api/public/webtoons/popular`, { params: { size } });
+      const response = await api.get<Webtoon[]>(`/api/v1/webtoons/popular`, { params: { size } });
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);
@@ -100,7 +100,7 @@ class WebtoonService {
   // 최신 웹툰 조회
   public async getRecentWebtoons(size: number = 10): Promise<Response<Webtoon[]>> {
     try {
-      const response = await api.get<Webtoon[]>(`/api/public/webtoons/recent`, { params: { size } });
+      const response = await api.get<Webtoon[]>(`/api/v1/webtoons/recent`, { params: { size } });
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);
