@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @IntegrationTest
 @DisplayName("Webtoon 통합 테스트")
-class WebtoonServiceIntegrationTest {
+class WebtoonIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

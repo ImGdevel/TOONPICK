@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 @AutoConfigureWebMvc
 @DisplayName("Member 통합 테스트")
-class MemberServiceIntegrationTest {
+class MemberIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
